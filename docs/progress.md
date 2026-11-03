@@ -5,7 +5,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | Görev | Durum | Branch/PR | Not |
 | --- | --- | --- | --- |
 | S1 · Tauri + Python sidecar (risk denemesi) | bitti | `task/S1-tauri-sidecar` · #1 | 13/13 kontrol geçti. Kurulum paketi 15,2 MB, onedir 30,3 MB, ilk `/health` ~1,1 sn, `tez --help` 16 ms. Ayrıntı: ADR 0001 |
-| 1 · Monorepo ve araçlar | incelemede | `task/1-monorepo-tooling` | `pnpm check`: ruff, pyright, pytest, ESLint, tsc, Vitest, Prettier, cargo fmt/clippy. Tauri iskeleti burada kuruldu. Ayrıntı: ADR 0002 |
+| 1 · Monorepo ve araçlar | bitti | `task/1-monorepo-tooling` · #2 | `pnpm check`: ruff, pyright, pytest, ESLint, tsc, Vitest, Prettier, cargo fmt/clippy. Tauri iskeleti burada kuruldu. Ayrıntı: ADR 0002 |
 | 2 · CI | bekliyor | | |
 | 3 · Arka uç çekirdeği | bekliyor | | |
 | 4 · Veritabanı | bekliyor | | |
