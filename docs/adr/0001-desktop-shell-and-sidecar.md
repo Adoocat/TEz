@@ -87,6 +87,7 @@ Keep the planned architecture. Specifically:
 - CORS middleware must be the **outermost** middleware so 401s carry CORS headers; otherwise the webview sees a network error instead of 401. The webview origin on Windows is `http://tauri.localhost`.
 - The CSP allows `connect-src http://127.0.0.1:*` and `worker-src blob:` for pdf.js; keep it explicit.
 - Frontend code that runs before the backend is ready must handle both orders: the `backend-ready` event may fire before or after the UI subscribes (the spike calls `backend_info` after subscribing).
+- WebView2 follows the Windows app theme. With Windows in dark mode, native controls get light text even when the page styles them light, so the spike's buttons rendered white on white. Every surface the UI styles must set both foreground and background from tokens, and the root must declare `color-scheme` to match the active theme (Task 8).
 - `tez` must canonicalize relative paths before forwarding (the receiving process has a different cwd) and strip the `\\?\` prefix.
 - The backend's `cli` mode must force UTF-8 stdout. Windows PowerShell 5.1 pipelines still decode with the OEM code page; document `[Console]::OutputEncoding = [Text.UTF8Encoding]::new()` for `--json` users.
 - Licensing (rule 6): PyInstaller is GPL-2.0 **with the bootloader exception**, so bundling does not affect TEz's MIT license. To be restated in the Task 21 license notes.
@@ -107,7 +108,7 @@ Keep the planned architecture. Specifically:
 - **Launch → Rust `main` ≈ 600 ms.** Probably real-time antivirus scanning an unsigned, freshly installed binary; to re-measure with a signed build (Phase 6). Code signing cost is still open (plan, "Kod imzalama").
 - **Sidecar starts only after Tauri plugin/runtime init (~330 ms).** Spawning it at the top of `run()` with `std::process` (same job object, same stdin/stdout contract) would overlap Python start-up with WebView2 start-up and save ~300 ms. Candidate for Task 3/8; not required.
 - **WebView2 memory** grows from 170 MB to ~410 MB private after skimming 80 pages; the JS heap stays at 5 MB, so most of it is GPU/compositor cache that the browser manages. Acceptable for a desktop app; re-check in Task 20 with real papers and the reader UI.
-- **Scroll smoothness was measured, not eyeballed** — the owner should confirm by hand (`TEz.exe`, "300 sayfalık PDF'i aç").
+- **Scroll smoothness** was measured and then confirmed by hand by the owner (scrolled to page 300).
 - **SmartScreen** warns on the unsigned installer (expected).
 - **macOS / Linux** were not tested (Phase 6); WKWebView and WebKitGTK pdf.js performance remain open as the plan's "Webview farkları" risk.
 - **Windows Defender** did not flag the PyInstaller binary in this spike; it is known to do so occasionally.
