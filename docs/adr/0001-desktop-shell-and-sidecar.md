@@ -1,6 +1,6 @@
 # 0001 — Desktop shell, Python sidecar and `tez` launcher
 
-- **Status:** Accepted (pending owner review of this PR)
+- **Status:** Accepted
 - **Date:** 2026-11-03
 - **Task:** S1 (risk spike), code in `spikes/s1-tauri-sidecar/` (throwaway)
 

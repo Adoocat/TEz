@@ -4,7 +4,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 | Görev | Durum | Branch/PR | Not |
 | --- | --- | --- | --- |
-| S1 · Tauri + Python sidecar (risk denemesi) | incelemede | `task/S1-tauri-sidecar` | 13/13 kontrol geçti. Kurulum paketi 15,2 MB, onedir 30,3 MB, ilk `/health` ~1,1 sn, `tez --help` 16 ms. Ayrıntı: ADR 0001 |
+| S1 · Tauri + Python sidecar (risk denemesi) | bitti | `task/S1-tauri-sidecar` · #1 | 13/13 kontrol geçti. Kurulum paketi 15,2 MB, onedir 30,3 MB, ilk `/health` ~1,1 sn, `tez --help` 16 ms. Ayrıntı: ADR 0001 |
 | 1 · Monorepo ve araçlar | bekliyor | | |
 | 2 · CI | bekliyor | | |
 | 3 · Arka uç çekirdeği | bekliyor | | |
