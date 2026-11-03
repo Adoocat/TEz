@@ -154,12 +154,12 @@ class Database:
 
     @contextmanager
     def session(self) -> Generator[Session]:
-        """Read-only by convention: never commits, so stray writes are discarded."""
+        """Read-only by convention: never commits, so stray writes are discarded.
+
+        Closing (not rolling back) keeps the loaded objects usable after the block.
+        """
         with self._read() as s:
-            try:
-                yield s
-            finally:
-                s.rollback()
+            yield s
 
     @contextmanager
     def write_session(self) -> Generator[Session]:
