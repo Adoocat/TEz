@@ -26,6 +26,11 @@ class ErrorCode(StrEnum):
     HTTP_METHOD_NOT_ALLOWED = "http.method_not_allowed"
     HTTP_ERROR = "http.error"
     INTERNAL_UNEXPECTED = "internal.unexpected"
+    LIBRARY_NOT_FOUND = "library.not_found"
+    LIBRARY_NOT_EMPTY = "library.not_empty"
+    LIBRARY_LOCKED = "library.locked"
+    LIBRARY_TOO_NEW = "library.too_new"
+    LIBRARY_NOT_OPEN = "library.not_open"
 
 
 class TezError(Exception):

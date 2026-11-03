@@ -9,7 +9,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 2 · CI | bitti | `task/2-ci` · #3 | GitHub Actions: python (3.12, 3.13), web, rust işleri; her biri `pnpm check <grup>` çalıştırır |
 | 3 · Arka uç çekirdeği | bitti | `task/3-backend-core` · #5 | `TEZ_*` ayarları (pydantic-settings), JSON log + istek kimliği, `TezError`/`ErrorCode` hata modeli, Bearer token ara katmanı, `/health`; `serve --token-stdin` sidecar sözleşmesi (ADR 0001) gerçek süreçle test edildi |
 | 4 · Veritabanı | bitti | `task/4-database` · #6 | `Database`: WAL, foreign_keys, busy_timeout, synchronous=NORMAL; yazma `BEGIN IMMEDIATE`; Alembic paket içinde, tek transaction, merdiven + model–migration tutarlılık testleri. Ayrıntı: ADR 0003 |
-| 5 · Kütüphane klasörü | bekliyor | | |
+| 5 · Kütüphane klasörü | incelemede | `task/5-library-folder` | `.tez/lock` işletim sistemi kilidi (çökmede kendiliğinden kalkar), `.tez/instance.json` (yalnız kullanıcıya açık; API adresi + token), `find_instance` (CLI için), `serve --library`, `GET /library`, şema güncellemesinden önce `backups/` yedeği; ikinci açılış `library.locked` + sahibin pid'i |
 | 6 · Aşama 1 tabloları | bekliyor | | |
 | 6b · İş kuyruğu ve işçi süreci | bekliyor | | |
 | 7 · API istemci üretimi | bekliyor | | |
@@ -44,6 +44,10 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (3) Her istek INFO düzeyinde loglanıyor; PDF Range ve SSE gelince gürültü olursa bu uçlar DEBUG'a indirilmeli.
 - (4) Görev 6: UUIDv7 üreticisi (`shared/ids.py`; Python 3.12'de `uuid.uuid7` yok) ve UTC ISO 8601 metin olarak saklanan zaman tipi; `id/created_at/updated_at` ortak sütunları. Yeni model modülleri `tez/models.py`'ye eklenmeli.
 - (4) Görev 5: kütüphane açılışında `migrate(db)` çağrılmalı; migration öncesi `backups/`'a kopya alınması değerlendirilmeli.
+- (5) Arayüzden kütüphane oluştur/aç uçları ve karşılama ekranı (tasarım 4.1) — açık soru 1 ile birlikte karara bağlanmalı.
+- (5) Görev 8: Tauri, sidecar'ın `TEZ_ERROR {...}` satırını ve 3 çıkış kodunu yakalayıp `library.locked` vb. hatayı i18n ile göstermeli.
+- (5) Kütüphane OneDrive/Dropbox/ağ sürücüsündeyse uyarı (SQLite WAL ve dosya kilidi bu klasörlerde güvenilmez).
+- (5) Arka uç testleri ~35 sn (gerçek süreç başlatan entegrasyon testleri, her biri ~3 sn); uzarsa `pytest-xdist` ile paralel çalıştırma.
 - (2) Branch koruması (CI geçmeden `main`'e birleştirme yok): özel repoda GitHub Pro gerekiyor; repo açık olunca veya Pro ile açılmalı.
 - (2) Windows'ta da CI (geliştirme Windows'ta; yol/satır sonu hatalarını yakalar). Paketleme işiyle birlikte (Aşama 6) veya daha önce.
 - (2) Dependabot ile GitHub Actions ve kilit dosyası güncellemeleri.
