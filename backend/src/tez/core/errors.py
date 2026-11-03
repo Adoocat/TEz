@@ -31,6 +31,8 @@ class ErrorCode(StrEnum):
     LIBRARY_LOCKED = "library.locked"
     LIBRARY_TOO_NEW = "library.too_new"
     LIBRARY_NOT_OPEN = "library.not_open"
+    COLLECTION_CYCLE = "collection.cycle"
+    SCREENING_INVALID_CORRECTION = "screening.invalid_correction"
 
 
 class TezError(Exception):

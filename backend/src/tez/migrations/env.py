@@ -7,14 +7,23 @@ From code (`tez.core.migrations.migrate`) a ready connection arrives in
 
 from logging.config import fileConfig
 from pathlib import Path
+from typing import Any, Literal
 
 from alembic import context
+from alembic.autogenerate.api import AutogenContext
 from sqlalchemy import Connection, make_url
 
-from tez.core.db import Database
+from tez.core.db import Database, UtcDateTime
 from tez.models import Base
 
 config = context.config
+
+
+def render_item(type_: str, obj: Any, autogen_context: AutogenContext) -> str | Literal[False]:
+    """Write app column types as their plain SQL type, so migrations never import app code."""
+    if type_ == "type" and isinstance(obj, UtcDateTime):
+        return "sa.String(length=32)"
+    return False
 
 
 def run(connection: Connection) -> None:
@@ -27,6 +36,7 @@ def run(connection: Connection) -> None:
         # whole upgrade: a migration that fails half-way leaves the schema untouched.
         transactional_ddl=True,
         compare_type=True,
+        render_item=render_item,
     )
     with context.begin_transaction():
         context.run_migrations()
