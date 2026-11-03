@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "S1 spike: the UI only needs IPC and events. The sidecar is spawned from Rust, so no shell permissions are granted to JavaScript.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

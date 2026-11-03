@@ -1,0 +1,124 @@
+{
+  "installer_mb": 15.2,
+  "install_seconds": 2.1,
+  "installed_mb": 42.2,
+  "install_layout": [
+    "TEz.exe",
+    "_internal",
+    "bin",
+    "tez-backend.exe",
+    "uninstall.exe"
+  ],
+  "startup": {
+    "process_to_rust_main_ms": 601,
+    "window_ready_ms": 503,
+    "sidecar_spawn_ms": 328,
+    "sidecar_ready_ms": 1043,
+    "first_health_ms": 1078,
+    "sidecar_ready_after_spawn_ms": 715
+  },
+  "memory_after_pdf_bench": {
+    "app_ws_mb": 29,
+    "webview2_ws_mb": 600,
+    "webview2_private_mb": 411,
+    "webview2_processes": 6,
+    "backend_ws_mb": 95,
+    "backend_processes": 2
+  },
+  "pdf_open": {
+    "docOpenMs": 65,
+    "firstPageMs": 225,
+    "heapAfterOpenMb": 4,
+    "numPages": 300
+  },
+  "pdf_bench": {
+    "avgFps": 161.6,
+    "avgPageRenderMs": 29,
+    "heapAfterBenchMb": 5,
+    "jumpToPage150Ms": 103,
+    "jumpToPage1Ms": 41,
+    "jumpToPage300Ms": 49,
+    "longFrames50ms": 2,
+    "maxPagesInDom": 5,
+    "p95FrameMs": 6.3,
+    "p95PageRenderMs": 93,
+    "renderedPagesTotal": 92,
+    "scrollSeconds": 28.4,
+    "scrolledPages": 80
+  },
+  "tez_help_ms_median": 16,
+  "tez_hello_via_backend_ms_median": 339,
+  "memory_idle_no_pdf": {
+    "webview2_ws_mb": 333,
+    "webview2_private_mb": 170
+  },
+  "orphan_cleanup_after_force_kill_ms": 688,
+  "uninstall_left_files": false,
+  "checks": [
+    {
+      "name": "1 sidecar /health with token",
+      "pass": true,
+      "detail": "port=59099"
+    },
+    {
+      "name": "1 /health without token is 401",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1 job object assignment",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "5 pdf.js 300-page self-test",
+      "pass": true,
+      "detail": "avgFps=161.6 heap=5MB"
+    },
+    {
+      "name": "2 second instance forwarded",
+      "pass": true,
+      "detail": "[\"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\tez-s1\\\\sample-300.pdf\"]"
+    },
+    {
+      "name": "2 no extra TEz.exe process",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "name": "3 `tez --help` prints",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "3 `tez hello` via backend prints",
+      "pass": true,
+      "detail": "Merhaba, Demirkan! (tez-backend cli, pid 32628)"
+    },
+    {
+      "name": "3 `tez <relative pdf>` forwarded as absolute",
+      "pass": true,
+      "detail": "TEz'e gönderildi: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\tez-s1\\sample-300.pdf"
+    },
+    {
+      "name": "4 tez:// deep link forwarded (all params)",
+      "pass": true,
+      "detail": "[\"tez://open/?citekey=demo2024&page=4\"]"
+    },
+    {
+      "name": "6 graceful close: backend gone",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "6 graceful close: worker gone",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "7 forced kill: backend + worker gone",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}
