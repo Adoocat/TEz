@@ -7,7 +7,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | S1 · Tauri + Python sidecar (risk denemesi) | bitti | `task/S1-tauri-sidecar` · #1 | 13/13 kontrol geçti. Kurulum paketi 15,2 MB, onedir 30,3 MB, ilk `/health` ~1,1 sn, `tez --help` 16 ms. Ayrıntı: ADR 0001 |
 | 1 · Monorepo ve araçlar | bitti | `task/1-monorepo-tooling` · #2 | `pnpm check`: ruff, pyright, pytest, ESLint, tsc, Vitest, Prettier, cargo fmt/clippy. Tauri iskeleti burada kuruldu. Ayrıntı: ADR 0002 |
 | 2 · CI | bitti | `task/2-ci` · #3 | GitHub Actions: python (3.12, 3.13), web, rust işleri; her biri `pnpm check <grup>` çalıştırır |
-| 3 · Arka uç çekirdeği | bekliyor | | |
+| 3 · Arka uç çekirdeği | bitti | `task/3-backend-core` · #5 | `TEZ_*` ayarları (pydantic-settings), JSON log + istek kimliği, `TezError`/`ErrorCode` hata modeli, Bearer token ara katmanı, `/health`; `serve --token-stdin` sidecar sözleşmesi (ADR 0001) gerçek süreçle test edildi |
 | 4 · Veritabanı | bekliyor | | |
 | 5 · Kütüphane klasörü | bekliyor | | |
 | 6 · Aşama 1 tabloları | bekliyor | | |
@@ -39,6 +39,9 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (S1) Açılışta "süreç → Rust main" ~600 ms; imzalı paketle yeniden ölçülmeli (Aşama 6, kod imzalama).
 - (S1) Görev 20'de pdf.js belleği gerçek makalelerle tekrar ölçülmeli (spike: boşta 170 MB → 300 sayfa kaydırma sonrası ~410 MB private).
 - (S1) Görev 23 belgeleri: PowerShell 5.1 boru hatlarında UTF-8 için `[Console]::OutputEncoding` notu.
+- (3) Görev 6b: tarayıcının `EventSource`'u başlık gönderemez; SSE ilerlemesi token'ı taşımak için fetch tabanlı okunmalı (sorgu parametresinde token yok — loglara sızar).
+- (3) Görev 8: Rust tarafı `tez-backend serve --token-stdin` sidecar'ını başlatır (token stdin'e, port `TEZ_READY`'den). `pnpm dev`'de web arayüzünün token'ı nasıl alacağı da orada kararlaştırılacak.
+- (3) Her istek INFO düzeyinde loglanıyor; PDF Range ve SSE gelince gürültü olursa bu uçlar DEBUG'a indirilmeli.
 - (2) Branch koruması (CI geçmeden `main`'e birleştirme yok): özel repoda GitHub Pro gerekiyor; repo açık olunca veya Pro ile açılmalı.
 - (2) Windows'ta da CI (geliştirme Windows'ta; yol/satır sonu hatalarını yakalar). Paketleme işiyle birlikte (Aşama 6) veya daha önce.
 - (2) Dependabot ile GitHub Actions ve kilit dosyası güncellemeleri.
