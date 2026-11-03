@@ -13,7 +13,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 6 · Aşama 1 tabloları | bitti | `task/6-phase1-tables` · #8 | 20 tablo (migration 0002), 6 modülde model + repository; yalnız-ekleme tetikleyicileri, `supersedes_id`, aktif işlerde benzersiz `dedupe_key`; UUIDv7, UTC metin zaman, Türkçe güvenli `title_norm`. Ayrıntı: ADR 0004 |
 | 6b · İş kuyruğu ve işçi süreci | bitti | `task/6b-job-queue` · #9 | Kira tabanlı kuyruk (`attempts` = ayrıcalık jetonu, geri çekilmeli yeniden deneme), `tez-backend worker`, API'de süpervizör (yeniden başlatma), `GET /jobs/events` SSE (`Last-Event-ID` ile devam). Kabul gerçek süreçlerle: öldürülen işçinin işi kira dolunca 2. denemede biter. Ayrıntı: ADR 0005 |
 | 7 · API istemci üretimi | bitti | `task/7-api-client` · #11 | `pnpm gen:api`: `python -m tez.openapi` → `openapi.json` → openapi-typescript → `schema.d.ts`; `lib/api/client.ts` (openapi-fetch + token); `pnpm check api` CI'daki python işinde |
-| 8 · Ön yüz kabuğu | bekliyor | | |
+| 8 · Ön yüz kabuğu | bitti | `task/8-frontend-shell` · #12 | Kabuk (gezinme şeridi, kenar çubuğu, denetçi, durum çubuğu), hash yönlendirme, TanStack Query, tr/en, açık/koyu (token'lardan CSS değişkenleri), platform adaptörü, Ayarlar (dil, tema, e-posta, API anahtarları → keyring). Rust tarafı sidecar'ı başlatıyor. Ayrıntı: ADR 0006 |
 | 9 · HTTP katmanı | bekliyor | | |
 | 10 · Ortak kayıt şeması | bekliyor | | |
 | 11 · Sağlayıcılar | bekliyor | | OpenAlex, Semantic Scholar, arXiv, Crossref — her biri ayrı PR |
@@ -39,21 +39,23 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (S1) Açılışta "süreç → Rust main" ~600 ms; imzalı paketle yeniden ölçülmeli (Aşama 6, kod imzalama).
 - (S1) Görev 20'de pdf.js belleği gerçek makalelerle tekrar ölçülmeli (spike: boşta 170 MB → 300 sayfa kaydırma sonrası ~410 MB private).
 - (S1) Görev 23 belgeleri: PowerShell 5.1 boru hatlarında UTF-8 için `[Console]::OutputEncoding` notu.
-- (3) Görev 8: tarayıcının `EventSource`'u başlık gönderemez; `/jobs/events` fetch ile okunmalı (token sorgu parametresinde olmaz — loglara sızar).
-- (3) Görev 8: Rust tarafı `tez-backend serve --token-stdin` sidecar'ını başlatır (token stdin'e, port `TEZ_READY`'den). `pnpm dev`'de web arayüzünün token'ı nasıl alacağı da orada kararlaştırılacak.
 - (3) Her istek INFO düzeyinde loglanıyor; PDF Range ve SSE gelince gürültü olursa bu uçlar DEBUG'a indirilmeli.
 - (4) Görev 5: kütüphane açılışında `migrate(db)` çağrılmalı; migration öncesi `backups/`'a kopya alınması değerlendirilmeli.
 - (5) Arayüzden kütüphane oluştur/aç uçları ve karşılama ekranı (tasarım 4.1) — açık soru 1 ile birlikte karara bağlanmalı.
-- (5) Görev 8: Tauri, sidecar'ın `TEZ_ERROR {...}` satırını ve 3 çıkış kodunu yakalayıp `library.locked` vb. hatayı i18n ile göstermeli.
 - (5) Kütüphane OneDrive/Dropbox/ağ sürücüsündeyse uyarı (SQLite WAL ve dosya kilidi bu klasörlerde güvenilmez).
 - (5) Arka uç testleri ~35 sn (gerçek süreç başlatan entegrasyon testleri, her biri ~3 sn); uzarsa `pytest-xdist` ile paralel çalıştırma.
 - (6) Görev 12: DOI/arXiv tanımlayıcı normalleştirmesi `paper_identifier.value`'ya yazılmadan önce yapılmalı (şu an olduğu gibi saklanıyor).
 - (6) `citekey` üretimi (içe aktarma / Görev 15 veya 19) ve "Gelen kutusu" sistem koleksiyonunun oluşturulması (Görev 16).
 - (6) Çöp kutusunu boşaltma: ek dosyalar (diskteki PDF'lerle) makaleden önce açıkça silinmeli (`attachment` RESTRICT).
 - (6) Alembic otomatik üretimi tetikleyicileri ve kısmi indeks koşullarını görmez; bunlara dokunan migration'lar elle yazılmalı (ADR 0004).
-- (6b) Görev 8: durum çubuğundaki iş göstergesi `/jobs/events`'e bağlanmalı (6b kabulünün arayüz kısmı).
 - (6b) Arka uç testleri ~80 sn'ye çıktı (gerçek süreçli kuyruk testleri); `pytest-xdist` ile paralel çalıştırma artık değerlendirilmeli.
 - (6b) İş ilerlemesi veritabanı yoklamasıyla (0,25 sn); gerekirse işçiden API'ye bildirim kanalı (API değişmeden).
+- (8) Kod bölme: üretim paketi ~500 kB (Vite uyarısı); okuyucu (pdf.js, Görev 20) gelince rota bazlı `import()`.
+- (8) Sürüm modu kütüphanesi şimdilik `Belgeler/TEz Library`; karşılama ekranı (açık soru 1) gelince kullanıcı seçecek, son açılan kütüphane hatırlanacak.
+- (8) Ayarlar 5.11'in kalan kategorileri (yoğunluk, yedekleme, YZ, PDF/GROBID, kısayollar, sistem entegrasyonu) ilgili görevlerle.
+- (8) Komut paleti (Ctrl+K), özel pencere başlığı ve panel genişliği ayarlama henüz yok.
+- (8) Playwright E2E (`pnpm e2e`) hâlâ yer tutucu; ilk akış (ayarlar kalıcılığı) bununla da yazılabilir.
+- (S1/8) Sidecar'ı `setup()` yerine `run()` başında başlatmak ~300 ms kazandırabilir (ölçülmedi).
 - (2) Branch koruması (CI geçmeden `main`'e birleştirme yok): özel repoda GitHub Pro gerekiyor; repo açık olunca veya Pro ile açılmalı.
 - (2) Windows'ta da CI (geliştirme Windows'ta; yol/satır sonu hatalarını yakalar). Paketleme işiyle birlikte (Aşama 6) veya daha önce.
 - (2) Dependabot ile GitHub Actions ve kilit dosyası güncellemeleri.
@@ -68,7 +70,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 Karar ilgili göreve gelindiğinde verilir.
 
 1. **Review oluşturma ve ilk kurulum sihirbazı** (tasarım 4.1) hiçbir göreve atanmamış; Görev 13–14 bir review gerektiriyor. Yeni görev mi, Görev 14'ün parçası mı?
-2. **Ayarlar ve keyring API'si** için arka uç görevi yok; Görev 8'deki Ayarlar ekranı API anahtarı kaydediyor.
+2. ~~**Ayarlar ve keyring API'si**~~ — Karar: Görev 8'de `/settings` ve `/secrets` (keyring) eklendi (ADR 0006).
 3. **DBLP sağlayıcısı** Görev 11'de yok; varsayılan kararlarda öncelikli kaynak ve tasarımda çip olarak var.
 4. ~~**Tauri iskeleti**~~ — Karar: Görev 1'de küçük iskelet (ADR 0002).
 5. ~~**6b kabulü**~~ — Karar: Aşama 1'de API + SSE testiyle; arayüz kısmı Görev 8'deki durum çubuğunda (ADR 0005).

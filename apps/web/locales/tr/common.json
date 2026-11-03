@@ -1,0 +1,125 @@
+{
+  "app": {
+    "name": "TEz",
+    "localFirst": "Verileriniz bu bilgisayardaki kütüphane klasöründe kalır."
+  },
+  "nav": {
+    "label": "Ana gezinme",
+    "search": "Arama",
+    "library": "Kütüphane",
+    "screening": "Eleme",
+    "reader": "Okuyucu",
+    "notes": "Notlar",
+    "matrix": "Matris",
+    "jobs": "İşler",
+    "settings": "Ayarlar"
+  },
+  "shell": {
+    "toggleSidebar": "Kenar çubuğunu aç/kapat",
+    "toggleInspector": "Denetçiyi aç/kapat",
+    "toggleTheme": "Temayı değiştir",
+    "sidebarPlaceholder": "Bu bölümün kenar çubuğu burada olacak.",
+    "inspectorTitle": "Denetçi",
+    "inspectorEmpty": "Ayrıntılarını görmek için bir öğe seçin.",
+    "comingSoon": "Bu bölüm yapım aşamasında.",
+    "comingSoonDetail": "Kabuk, gezinme ve ayarlar hazır; içerik sonraki görevlerde gelecek."
+  },
+  "status": {
+    "jobsRunning_one": "{{count}} iş çalışıyor",
+    "jobsRunning_other": "{{count}} iş çalışıyor",
+    "jobsFailed_one": "{{count}} hatalı",
+    "jobsFailed_other": "{{count}} hatalı",
+    "jobsIdle": "Bekleyen iş yok",
+    "library": "Kütüphane: {{name}}",
+    "version": "Sürüm {{version}}"
+  },
+  "backend": {
+    "starting": "Arka uç başlatılıyor…",
+    "failedTitle": "TEz başlatılamadı",
+    "reload": "Yeniden dene"
+  },
+  "jobs": {
+    "title": "İşler",
+    "empty": "Henüz iş yok.",
+    "type": "Tür",
+    "state": "Durum",
+    "progress": "İlerleme",
+    "attempts": "Deneme",
+    "types": {
+      "diagnostics.sleep": "Tanılama"
+    },
+    "statuses": {
+      "queued": "Sırada",
+      "running": "Çalışıyor",
+      "done": "Bitti",
+      "failed": "Hatalı",
+      "cancelled": "İptal edildi"
+    }
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "sections": {
+      "general": "Genel",
+      "sources": "Arama kaynakları",
+      "library": "Kütüphane",
+      "about": "Hakkında"
+    },
+    "language": "Dil",
+    "languageHelp": "Arayüz dili. \"Sistem\" işletim sisteminin dilini izler.",
+    "languages": {
+      "system": "Sistem",
+      "tr": "Türkçe",
+      "en": "English"
+    },
+    "theme": "Tema",
+    "themes": {
+      "system": "Sistem",
+      "light": "Açık",
+      "dark": "Koyu"
+    },
+    "email": "E-posta adresi",
+    "emailHelp": "OpenAlex, Crossref ve Unpaywall'a \"nazik havuz\" için gönderilir. İsteğe bağlı.",
+    "emailInvalid": "Geçerli bir e-posta adresi girin.",
+    "apiKeys": "API anahtarları",
+    "apiKeysHelp": "Anahtarlar işletim sisteminin anahtar zincirinde saklanır; TEz onları bir daha göstermez.",
+    "secretNames": {
+      "semantic_scholar_api_key": "Semantic Scholar",
+      "openalex_api_key": "OpenAlex"
+    },
+    "configured": "Kayıtlı",
+    "notConfigured": "Kayıtlı değil",
+    "keyPlaceholder": "Anahtarı yapıştırın",
+    "save": "Kaydet",
+    "remove": "Kaldır",
+    "saved": "Kaydedildi",
+    "libraryPath": "Konum",
+    "librarySchema": "Şema sürümü",
+    "version": "Sürüm",
+    "license": "MIT lisanslı açık kaynak yazılım."
+  },
+  "errors": {
+    "unknown": "Beklenmeyen bir hata oluştu.",
+    "network.unreachable": "Arka uca ulaşılamıyor.",
+    "auth.invalid_token": "Oturum anahtarı geçersiz. Uygulamayı yeniden başlatın.",
+    "request.invalid": "İstek geçersiz.",
+    "http.not_found": "Bulunamadı.",
+    "http.method_not_allowed": "Bu işlem desteklenmiyor.",
+    "http.error": "Sunucu hatası ({{status}}).",
+    "internal.unexpected": "Beklenmeyen bir hata oluştu (kayıt: {{request_id}}).",
+    "library.not_found": "Kütüphane bulunamadı: {{path}}",
+    "library.not_empty": "Klasör boş değil: {{path}}",
+    "library.locked": "Bu kütüphane başka bir TEz penceresinde açık (süreç {{pid}}, {{host}}). O pencereyi kapatıp yeniden deneyin.",
+    "library.too_new": "Bu kütüphane TEz'in daha yeni bir sürümüyle oluşturulmuş. TEz'i güncelleyin.",
+    "library.not_open": "Açık bir kütüphane yok.",
+    "collection.cycle": "Bir koleksiyon kendi altına taşınamaz.",
+    "screening.invalid_correction": "Düzeltme aynı makale ve aşamadaki bir kararı göstermeli.",
+    "job.not_found": "İş bulunamadı.",
+    "job.handler_failed": "İş başarısız oldu ({{exception}}).",
+    "job.unknown_type": "Bilinmeyen iş türü: {{type}}",
+    "job.lease_expired": "İş {{attempts}} denemede tamamlanamadı.",
+    "secrets.unavailable": "İşletim sisteminin anahtar zincirine erişilemiyor.",
+    "backend.exited": "Arka uç beklenmedik biçimde kapandı.",
+    "backend.start_failed": "Arka uç başlatılamadı: {{reason}}",
+    "backend.no_token": "Bu adres bir erişim anahtarı içermiyor. TEz'i `tez serve` çıktısındaki bağlantıyla açın."
+  }
+}

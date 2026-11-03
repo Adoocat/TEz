@@ -18,6 +18,8 @@ from tez.modules.jobs.router import router as jobs_router
 from tez.modules.jobs.supervisor import WorkerSupervisor
 from tez.modules.library.router import router as library_router
 from tez.modules.library.service import Library, open_library
+from tez.modules.settings.router import secrets_router, settings_router
+from tez.modules.settings.secrets import KeyringSecretStore, SecretStore
 from tez.modules.system.router import router as system_router
 
 # `serve --reload` hands these to the reloaded child process, which builds the app.
@@ -36,6 +38,7 @@ def create_app(
     open_docs: bool = False,
     library: Library | None = None,
     start_worker: bool = False,
+    secret_store: SecretStore | None = None,
 ) -> FastAPI:
     """Build the API. Every route needs `token`; `open_docs` exempts the API docs (dev).
 
@@ -61,6 +64,7 @@ def create_app(
     app = FastAPI(title="TEz", version=__version__, redoc_url=None, lifespan=lifespan)
     app.state.library = library
     app.state.worker = None
+    app.state.secret_store = secret_store or KeyringSecretStore()
     install_error_handlers(app)
     secured = [Depends(bearer_scheme)]
     app.include_router(system_router, dependencies=secured, responses=ERROR_RESPONSES)
@@ -70,6 +74,15 @@ def create_app(
     }
     app.include_router(library_router, dependencies=secured, responses=needs_library)
     app.include_router(jobs_router, dependencies=secured, responses=needs_library)
+    app.include_router(settings_router, dependencies=secured, responses=needs_library)
+    app.include_router(
+        secrets_router,
+        dependencies=secured,
+        responses={
+            **ERROR_RESPONSES,
+            503: {"model": ErrorResponse, "description": "No usable OS keyring"},
+        },
+    )
 
     # Starlette wraps in reverse order: the last middleware added is the outermost.
     app.add_middleware(

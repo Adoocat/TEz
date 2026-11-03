@@ -13,7 +13,8 @@
     "check": "node scripts/check.mjs",
     "format": "prettier --write . && uv run --project backend ruff format backend && uv run --project backend ruff check --fix backend",
     "gen:api": "node scripts/gen-api.mjs",
-    "e2e": "node scripts/not-yet.mjs e2e"
+    "e2e": "node scripts/not-yet.mjs e2e",
+    "gen:tokens": "node scripts/gen-tokens.mjs"
   },
   "devDependencies": {
     "concurrently": "^10.0.6",

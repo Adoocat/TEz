@@ -34,6 +34,7 @@ class ErrorCode(StrEnum):
     COLLECTION_CYCLE = "collection.cycle"
     SCREENING_INVALID_CORRECTION = "screening.invalid_correction"
     JOB_NOT_FOUND = "job.not_found"
+    SECRETS_UNAVAILABLE = "secrets.unavailable"
 
 
 class TezError(Exception):

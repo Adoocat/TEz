@@ -1,0 +1,105 @@
+/* Tailwind on top of the design tokens. Colors, type, radii and shadows come only from
+   tokens.css (generated from docs/design/tokens.json); the aliases below give them short
+   utility names, e.g. bg-canvas, text-fg-muted, rounded-md, text-ui. */
+@import "tailwindcss";
+@import "./tokens.css";
+
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --color-canvas: var(--color-bg-canvas);
+  --color-surface: var(--color-bg-surface);
+  --color-raised: var(--color-bg-raised);
+  --color-hovered: var(--color-bg-hover);
+  --color-line: var(--color-border-subtle);
+  --color-line-strong: var(--color-border-strong);
+  --color-fg: var(--color-text-primary);
+  --color-fg-muted: var(--color-text-muted);
+  --color-fg-on-accent: var(--color-text-on-accent);
+  --color-primary: var(--color-accent-default);
+  --color-primary-strong: var(--color-accent-hover);
+  --color-primary-soft: var(--color-accent-subtle);
+  --color-ring: var(--color-focus);
+  --color-success: var(--color-status-included);
+  --color-warning: var(--color-status-maybe);
+  --color-danger: var(--color-status-error);
+  --color-kbd: var(--color-kbd-bg);
+  --color-kbd-line: var(--color-kbd-border);
+
+  --font-sans: var(--font-ui);
+  --font-serif: var(--font-reading);
+
+  --text-h1: var(--type-headline-lg-size);
+  --text-h1--line-height: var(--type-headline-lg-line-height);
+  --text-h1--font-weight: var(--type-headline-lg-weight);
+  --text-h2: var(--type-headline-md-size);
+  --text-h2--line-height: var(--type-headline-md-line-height);
+  --text-h2--font-weight: var(--type-headline-md-weight);
+  --text-h3: var(--type-headline-sm-size);
+  --text-h3--line-height: var(--type-headline-sm-line-height);
+  --text-h3--font-weight: var(--type-headline-sm-weight);
+  --text-ui: var(--type-body-ui-size);
+  --text-ui--line-height: var(--type-body-ui-line-height);
+  --text-meta: var(--type-label-meta-size);
+  --text-meta--line-height: var(--type-label-meta-line-height);
+  --text-code: var(--type-code-size);
+  --text-code--line-height: var(--type-code-line-height);
+
+  --radius-xs: var(--radius-chip);
+  --radius-md: var(--radius-control);
+  --radius-lg: var(--radius-dialog);
+
+  --shadow-popover: var(--shadow-overlay);
+
+  --spacing-rail: var(--size-nav-rail);
+  --spacing-sidebar: var(--size-sidebar);
+  --spacing-inspector: var(--size-inspector-min);
+  --spacing-row: var(--size-row-compact);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  /* Both foreground and background on every surface: WebView2 follows the Windows theme
+     for native controls, so unstyled text can turn invisible (ADR 0001). */
+  body {
+    background-color: var(--color-bg-canvas);
+    color: var(--color-text-primary);
+    font-family: var(--font-ui);
+    font-size: var(--type-body-ui-size);
+    line-height: var(--type-body-ui-line-height);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    color: inherit;
+    font: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0ms !important;
+      animation-duration: 0ms !important;
+    }
+  }
+}

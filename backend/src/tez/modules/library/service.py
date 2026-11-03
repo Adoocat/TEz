@@ -33,16 +33,18 @@ _FOLDERS = ("files", "derived", "snapshots", "backups", ".tez")
 class Library:
     """An open library. Holds the lock until `close()` (or until the process ends)."""
 
-    def __init__(self, path: Path, db: Database, lock: FileLock, instance: Instance) -> None:
+    def __init__(
+        self, path: Path, db: Database, lock: FileLock, instance: Instance, revision: str
+    ) -> None:
         self.path = path
         self.db = db
         self._lock = lock
         self._instance = instance
+        # Read once at open: nothing else may migrate the schema while we hold the lock.
+        self._revision = revision
 
     def info(self) -> LibraryInfo:
-        revision = migrations.current_revision(self.db)
-        assert revision is not None
-        return LibraryInfo(path=str(self.path), name=self.path.name, schema_revision=revision)
+        return LibraryInfo(path=str(self.path), name=self.path.name, schema_revision=self._revision)
 
     def publish_api(self, *, url: str, token: str) -> None:
         """Let CLI commands find this process's API instead of opening the database."""
@@ -95,6 +97,8 @@ def open_library(path: Path, *, kind: InstanceKind = "app", create: bool = False
     db = Database(path / DATABASE_FILE)
     try:
         _upgrade_schema(path, db)
+        revision = migrations.current_revision(db)
+        assert revision is not None
         instance = Instance(
             pid=os.getpid(),
             kind=kind,
@@ -107,8 +111,8 @@ def open_library(path: Path, *, kind: InstanceKind = "app", create: bool = False
         db.close()
         lock.release()
         raise
-    logger.info("library opened", extra={"library": str(path)})
-    return Library(path, db, lock, instance)
+    logger.info("library opened", extra={"library": str(path), "schema_revision": revision})
+    return Library(path, db, lock, instance, revision)
 
 
 def find_instance(path: Path) -> Instance | None:

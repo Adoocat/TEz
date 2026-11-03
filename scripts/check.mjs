@@ -18,11 +18,14 @@ const steps = [
   ["py", "pytest", "uv", ["run", "pytest"], backend],
   // The generated TypeScript client must match the backend's OpenAPI schema.
   ["api", "client up to date", "node", ["scripts/gen-api.mjs", "--check"]],
+  // The CSS variables must match docs/design/tokens.json.
+  ["web", "tokens up to date", "node", ["scripts/gen-tokens.mjs", "--check"]],
   ["web", "eslint", "pnpm", ["--filter", "@tez/web", "lint"]],
   ["web", "tsc", "pnpm", ["--filter", "@tez/web", "typecheck"]],
   ["web", "vitest", "pnpm", ["--filter", "@tez/web", "test"]],
   ["format", "prettier", "pnpm", ["exec", "prettier", "--check", "."]],
   ["rust", "cargo fmt", "cargo", ["fmt", "--check", "--manifest-path", cargoToml]],
+  ["rust", "cargo test", "cargo", ["test", "--quiet", "--manifest-path", cargoToml]],
   [
     "rust",
     "cargo clippy",

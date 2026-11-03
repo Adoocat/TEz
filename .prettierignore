@@ -12,3 +12,4 @@ spikes/
 *.md
 docs/design/screens/
 docs/design/tokens.json
+apps/web/src/styles/tokens.css

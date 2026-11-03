@@ -29,6 +29,7 @@ pnpm dev:desktop   the web UI inside the Tauri desktop shell
 pnpm check         lint, type check and tests for Python, TypeScript and Rust (same as CI)
 pnpm check py web  only some groups: py, api, web, rust, format
 pnpm gen:api       regenerate the typed API client after changing the backend's API
+pnpm gen:tokens    regenerate the CSS variables after changing docs/design/tokens.json
 pnpm format        apply Prettier and ruff formatting
 ```
 
