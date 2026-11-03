@@ -177,7 +177,10 @@ def test_lock_is_released_when_the_holder_process_dies(path: Path) -> None:
         assert exc.value.params["pid"] == holder_pid
         # A hard kill: no clean-up runs, so only the OS can release the lock.
         os.kill(holder_pid, getattr(signal, "SIGKILL", signal.SIGTERM))
-        _wait_until_gone(holder_pid)
+        if holder_pid == holder.pid:
+            holder.wait(timeout=10)  # our direct child: reap it, or it lingers as a zombie
+        else:
+            _wait_until_gone(holder_pid)  # the launcher's child (Windows venv)
     finally:
         holder.kill()
         holder.wait()
@@ -197,6 +200,7 @@ def test_lock_is_released_when_the_holder_process_dies(path: Path) -> None:
 
 
 def _wait_until_gone(pid: int, timeout_s: float = 10) -> None:
+    """Windows only: wait for a process that is not our direct child to exit."""
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
         if not _alive(pid):
@@ -206,16 +210,10 @@ def _wait_until_gone(pid: int, timeout_s: float = 10) -> None:
 
 
 def _alive(pid: int) -> bool:
-    if sys.platform == "win32":
-        out = subprocess.run(
-            ["tasklist", "/FI", f"PID eq {pid}", "/NH"], capture_output=True, text=True
-        ).stdout
-        return str(pid) in out
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    return True
+    out = subprocess.run(
+        ["tasklist", "/FI", f"PID eq {pid}", "/NH"], capture_output=True, text=True, check=False
+    ).stdout
+    return str(pid) in out
 
 
 # --- discovery file -------------------------------------------------------------------
