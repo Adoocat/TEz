@@ -7,7 +7,9 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from tez import __main__ as entry
-from tez.main import DEV_TOKEN_ENV, create_dev_app
+from tez.main import DEV_LIBRARY_ENV, DEV_TOKEN_ENV, DEV_URL_ENV, create_dev_app
+from tez.modules.library.schemas import Instance
+from tez.modules.library.service import find_instance, open_library
 
 Call = tuple[tuple[Any, ...], dict[str, Any]]
 
@@ -18,7 +20,7 @@ def uvicorn_calls(monkeypatch: pytest.MonkeyPatch) -> list[Call]:
     monkeypatch.setattr(entry.uvicorn, "run", lambda *a, **kw: calls.append((a, kw)))
     # main() configures logging and may export variables; keep both local to the test.
     monkeypatch.setattr(entry, "configure_logging", lambda *a, **kw: None)
-    for name in (DEV_TOKEN_ENV, "TEZ_LOG_FORMAT"):
+    for name in (DEV_TOKEN_ENV, DEV_LIBRARY_ENV, DEV_URL_ENV, "TEZ_LOG_FORMAT"):
         monkeypatch.setenv(name, "")
         monkeypatch.delenv(name)
     return calls
@@ -67,6 +69,76 @@ def test_reload_uses_the_dev_factory_and_watches_only_the_package(
     # The reloaded child process finds the token and console logging in its environment.
     assert len(os.environ[DEV_TOKEN_ENV]) >= 32
     assert os.environ["TEZ_LOG_FORMAT"] == "console"
+    assert os.environ[DEV_URL_ENV] == "http://127.0.0.1:8787"
+
+
+def test_reload_defaults_to_the_dev_library(uvicorn_calls: list[Call]) -> None:
+    entry.main(["serve", "--reload"])
+
+    backend = Path(entry.__file__).parents[2]
+    assert os.environ[DEV_LIBRARY_ENV] == str(backend / ".dev" / "TEz Library")
+
+
+def test_reload_with_an_explicit_library(uvicorn_calls: list[Call], tmp_path: Path) -> None:
+    entry.main(["serve", "--reload", "--library", str(tmp_path / "Mine")])
+
+    assert os.environ[DEV_LIBRARY_ENV] == str(tmp_path / "Mine")
+
+
+def test_dev_factory_opens_and_publishes_the_dev_library(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    library = tmp_path / "Dev Library"
+    monkeypatch.setenv(DEV_TOKEN_ENV, "dev-token-abc")
+    monkeypatch.setenv(DEV_LIBRARY_ENV, str(library))
+    monkeypatch.setenv(DEV_URL_ENV, "http://127.0.0.1:8787")
+    monkeypatch.setattr("tez.main.configure_logging", lambda *a, **kw: None)
+
+    with TestClient(create_dev_app()) as client:
+        response = client.get("/library", headers={"Authorization": "Bearer dev-token-abc"})
+        instance = find_instance(library)
+
+    assert response.status_code == 200
+    assert instance is not None
+    assert instance.api is not None
+    assert instance.api.url == "http://127.0.0.1:8787"
+    assert find_instance(library) is None  # closed on shutdown
+
+
+def test_serve_with_a_library_publishes_and_then_closes_it(
+    uvicorn_calls: list[Call], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    library = tmp_path / "TEz Library"
+    seen: list[Instance | None] = []
+    # While "serving", the discovery file points at the API.
+    monkeypatch.setattr(entry.uvicorn, "run", lambda *a, **kw: seen.append(find_instance(library)))
+
+    entry.main(["serve", "--port", "9999", "--library", str(library), "--create"])
+
+    (instance,) = seen
+    assert instance is not None
+    assert instance.api is not None
+    assert instance.api.url == "http://127.0.0.1:9999"
+    assert find_instance(library) is None
+
+
+def test_serve_on_a_locked_library_exits_with_a_clear_message(
+    uvicorn_calls: list[Call], tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    library = tmp_path / "TEz Library"
+    holder = open_library(library, create=True)
+    try:
+        with pytest.raises(SystemExit) as exc:
+            entry.main(["serve", "--library", str(library)])
+    finally:
+        holder.close()
+
+    assert exc.value.code == 3
+    assert uvicorn_calls == []
+    err = capsys.readouterr().err
+    assert "library.locked" in err
+    assert f"pid {os.getpid()}" in err
+    assert str(library) in err
 
 
 def test_dev_factory_opens_docs_and_uses_the_exported_token(

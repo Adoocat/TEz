@@ -44,6 +44,8 @@ select = [
     "PTH",          # prefer pathlib
     "DTZ",          # timezone-aware datetimes
 ]
+# Turkish text is first-class (dotless ı, dotted İ); not confusable look-alikes here.
+allowed-confusables = ["ı", "İ"]
 
 [tool.pyright]
 include = ["src", "tests"]
