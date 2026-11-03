@@ -1,0 +1,125 @@
+{
+  "app": {
+    "name": "TEz",
+    "localFirst": "Your data stays in the library folder on this computer."
+  },
+  "nav": {
+    "label": "Main navigation",
+    "search": "Search",
+    "library": "Library",
+    "screening": "Screening",
+    "reader": "Reader",
+    "notes": "Notes",
+    "matrix": "Matrix",
+    "jobs": "Jobs",
+    "settings": "Settings"
+  },
+  "shell": {
+    "toggleSidebar": "Toggle sidebar",
+    "toggleInspector": "Toggle inspector",
+    "toggleTheme": "Switch theme",
+    "sidebarPlaceholder": "This section's sidebar will be here.",
+    "inspectorTitle": "Inspector",
+    "inspectorEmpty": "Select an item to see its details.",
+    "comingSoon": "This section is under construction.",
+    "comingSoonDetail": "The shell, navigation and settings are ready; content arrives in later tasks."
+  },
+  "status": {
+    "jobsRunning_one": "{{count}} job running",
+    "jobsRunning_other": "{{count}} jobs running",
+    "jobsFailed_one": "{{count}} failed",
+    "jobsFailed_other": "{{count}} failed",
+    "jobsIdle": "No pending jobs",
+    "library": "Library: {{name}}",
+    "version": "Version {{version}}"
+  },
+  "backend": {
+    "starting": "Starting the backend…",
+    "failedTitle": "TEz could not start",
+    "reload": "Try again"
+  },
+  "jobs": {
+    "title": "Jobs",
+    "empty": "No jobs yet.",
+    "type": "Type",
+    "state": "Status",
+    "progress": "Progress",
+    "attempts": "Attempts",
+    "types": {
+      "diagnostics.sleep": "Diagnostics"
+    },
+    "statuses": {
+      "queued": "Queued",
+      "running": "Running",
+      "done": "Done",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "sections": {
+      "general": "General",
+      "sources": "Search sources",
+      "library": "Library",
+      "about": "About"
+    },
+    "language": "Language",
+    "languageHelp": "Interface language. \"System\" follows the operating system.",
+    "languages": {
+      "system": "System",
+      "tr": "Türkçe",
+      "en": "English"
+    },
+    "theme": "Theme",
+    "themes": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "email": "Email address",
+    "emailHelp": "Sent to OpenAlex, Crossref and Unpaywall for their \"polite pool\". Optional.",
+    "emailInvalid": "Enter a valid email address.",
+    "apiKeys": "API keys",
+    "apiKeysHelp": "Keys are stored in the operating system's keyring; TEz never shows them again.",
+    "secretNames": {
+      "semantic_scholar_api_key": "Semantic Scholar",
+      "openalex_api_key": "OpenAlex"
+    },
+    "configured": "Saved",
+    "notConfigured": "Not set",
+    "keyPlaceholder": "Paste the key",
+    "save": "Save",
+    "remove": "Remove",
+    "saved": "Saved",
+    "libraryPath": "Location",
+    "librarySchema": "Schema version",
+    "version": "Version",
+    "license": "Open-source software under the MIT license."
+  },
+  "errors": {
+    "unknown": "Something unexpected went wrong.",
+    "network.unreachable": "The backend cannot be reached.",
+    "auth.invalid_token": "The session key is invalid. Restart the app.",
+    "request.invalid": "The request is invalid.",
+    "http.not_found": "Not found.",
+    "http.method_not_allowed": "This action is not supported.",
+    "http.error": "Server error ({{status}}).",
+    "internal.unexpected": "Something unexpected went wrong (log id: {{request_id}}).",
+    "library.not_found": "Library not found: {{path}}",
+    "library.not_empty": "The folder is not empty: {{path}}",
+    "library.locked": "This library is open in another TEz window (process {{pid}}, {{host}}). Close that window and try again.",
+    "library.too_new": "This library was created by a newer version of TEz. Update TEz.",
+    "library.not_open": "No library is open.",
+    "collection.cycle": "A collection cannot be moved inside itself.",
+    "screening.invalid_correction": "A correction must point at a decision for the same paper and stage.",
+    "job.not_found": "Job not found.",
+    "job.handler_failed": "The job failed ({{exception}}).",
+    "job.unknown_type": "Unknown job type: {{type}}",
+    "job.lease_expired": "The job did not finish in {{attempts}} attempts.",
+    "secrets.unavailable": "The operating system's keyring is not available.",
+    "backend.exited": "The backend stopped unexpectedly.",
+    "backend.start_failed": "The backend could not start: {{reason}}",
+    "backend.no_token": "This address has no access key. Open TEz with the link that `tez serve` prints."
+  }
+}
