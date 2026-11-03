@@ -33,6 +33,8 @@ pnpm format        apply Prettier and ruff formatting
 
 Every API request needs `Authorization: Bearer <token>`. `pnpm dev` prints a fresh token at start-up; in dev mode the API docs at `http://127.0.0.1:8787/docs` open without it (use "Authorize" to call endpoints). Settings come from `TEZ_*` environment variables (`TEZ_LOG_LEVEL`, `TEZ_LOG_FORMAT=json|console`, `TEZ_CORS_ORIGINS`).
 
+Database migrations (Alembic, run from `backend/`): `uv run alembic upgrade head` applies them to a development database in `backend/.dev/`; `uv run alembic revision --autogenerate --rev-id 0002 -m "..."` creates the next one. The app migrates each library itself on start-up. See [ADR 0003](docs/adr/0003-database-layer.md).
+
 Layout: `backend/` (Python, uv), `apps/web/` (React + Vite), `apps/desktop/` (Tauri). Progress is tracked in [`docs/progress.md`](docs/progress.md).
 
 ## License

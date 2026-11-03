@@ -5,8 +5,10 @@ description = "TEz backend: API server, job worker and CLI"
 license = "MIT"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1",
     "fastapi>=0.162",
     "pydantic-settings>=2",
+    "sqlalchemy>=2",
     "uvicorn>=0.54",
 ]
 

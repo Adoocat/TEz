@@ -55,3 +55,6 @@ logs/
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Development database for `alembic` (backend/alembic.ini)
+backend/.dev/

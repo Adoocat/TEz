@@ -8,7 +8,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 1 · Monorepo ve araçlar | bitti | `task/1-monorepo-tooling` · #2 | `pnpm check`: ruff, pyright, pytest, ESLint, tsc, Vitest, Prettier, cargo fmt/clippy. Tauri iskeleti burada kuruldu. Ayrıntı: ADR 0002 |
 | 2 · CI | bitti | `task/2-ci` · #3 | GitHub Actions: python (3.12, 3.13), web, rust işleri; her biri `pnpm check <grup>` çalıştırır |
 | 3 · Arka uç çekirdeği | bitti | `task/3-backend-core` · #5 | `TEZ_*` ayarları (pydantic-settings), JSON log + istek kimliği, `TezError`/`ErrorCode` hata modeli, Bearer token ara katmanı, `/health`; `serve --token-stdin` sidecar sözleşmesi (ADR 0001) gerçek süreçle test edildi |
-| 4 · Veritabanı | bekliyor | | |
+| 4 · Veritabanı | bitti | `task/4-database` · #6 | `Database`: WAL, foreign_keys, busy_timeout, synchronous=NORMAL; yazma `BEGIN IMMEDIATE`; Alembic paket içinde, tek transaction, merdiven + model–migration tutarlılık testleri. Ayrıntı: ADR 0003 |
 | 5 · Kütüphane klasörü | bekliyor | | |
 | 6 · Aşama 1 tabloları | bekliyor | | |
 | 6b · İş kuyruğu ve işçi süreci | bekliyor | | |
@@ -42,6 +42,8 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (3) Görev 6b: tarayıcının `EventSource`'u başlık gönderemez; SSE ilerlemesi token'ı taşımak için fetch tabanlı okunmalı (sorgu parametresinde token yok — loglara sızar).
 - (3) Görev 8: Rust tarafı `tez-backend serve --token-stdin` sidecar'ını başlatır (token stdin'e, port `TEZ_READY`'den). `pnpm dev`'de web arayüzünün token'ı nasıl alacağı da orada kararlaştırılacak.
 - (3) Her istek INFO düzeyinde loglanıyor; PDF Range ve SSE gelince gürültü olursa bu uçlar DEBUG'a indirilmeli.
+- (4) Görev 6: UUIDv7 üreticisi (`shared/ids.py`; Python 3.12'de `uuid.uuid7` yok) ve UTC ISO 8601 metin olarak saklanan zaman tipi; `id/created_at/updated_at` ortak sütunları. Yeni model modülleri `tez/models.py`'ye eklenmeli.
+- (4) Görev 5: kütüphane açılışında `migrate(db)` çağrılmalı; migration öncesi `backups/`'a kopya alınması değerlendirilmeli.
 - (2) Branch koruması (CI geçmeden `main`'e birleştirme yok): özel repoda GitHub Pro gerekiyor; repo açık olunca veya Pro ile açılmalı.
 - (2) Windows'ta da CI (geliştirme Windows'ta; yol/satır sonu hatalarını yakalar). Paketleme işiyle birlikte (Aşama 6) veya daha önce.
 - (2) Dependabot ile GitHub Actions ve kilit dosyası güncellemeleri.
