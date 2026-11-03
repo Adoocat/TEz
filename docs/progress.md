@@ -6,7 +6,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | --- | --- | --- | --- |
 | S1 · Tauri + Python sidecar (risk denemesi) | bitti | `task/S1-tauri-sidecar` · #1 | 13/13 kontrol geçti. Kurulum paketi 15,2 MB, onedir 30,3 MB, ilk `/health` ~1,1 sn, `tez --help` 16 ms. Ayrıntı: ADR 0001 |
 | 1 · Monorepo ve araçlar | bitti | `task/1-monorepo-tooling` · #2 | `pnpm check`: ruff, pyright, pytest, ESLint, tsc, Vitest, Prettier, cargo fmt/clippy. Tauri iskeleti burada kuruldu. Ayrıntı: ADR 0002 |
-| 2 · CI | bekliyor | | |
+| 2 · CI | incelemede | `task/2-ci` | GitHub Actions: python (3.12, 3.13), web, rust işleri; her biri `pnpm check <grup>` çalıştırır |
 | 3 · Arka uç çekirdeği | bekliyor | | |
 | 4 · Veritabanı | bekliyor | | |
 | 5 · Kütüphane klasörü | bekliyor | | |
@@ -39,7 +39,10 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (S1) Açılışta "süreç → Rust main" ~600 ms; imzalı paketle yeniden ölçülmeli (Aşama 6, kod imzalama).
 - (S1) Görev 20'de pdf.js belleği gerçek makalelerle tekrar ölçülmeli (spike: boşta 170 MB → 300 sayfa kaydırma sonrası ~410 MB private).
 - (S1) Görev 23 belgeleri: PowerShell 5.1 boru hatlarında UTF-8 için `[Console]::OutputEncoding` notu.
-- (1) Görev 2 CI: Ubuntu'da Rust araç zinciri + WebKitGTK paketleri gerekiyor (`cargo clippy` Tauri'yi derliyor); uv/pnpm/cargo önbellekleri.
+- (2) Branch koruması (CI geçmeden `main`'e birleştirme yok): özel repoda GitHub Pro gerekiyor; repo açık olunca veya Pro ile açılmalı.
+- (2) Windows'ta da CI (geliştirme Windows'ta; yol/satır sonu hatalarını yakalar). Paketleme işiyle birlikte (Aşama 6) veya daha önce.
+- (2) Dependabot ile GitHub Actions ve kilit dosyası güncellemeleri.
+- (2) pre-commit'in boşluk / büyük dosya / YAML kontrolleri CI'da da çalışsın (şimdilik yalnız yerelde).
 - (1) Görev 9: Starlette `httpx` yerine `httpx2`'ye geçti; dış HTTP istemcisi seçimi yeniden değerlendirilmeli (ADR 0002).
 - (1) TypeScript 7'ye geçiş: typescript-eslint desteği gelince.
 - (1) Playwright (`pnpm e2e`) hangi görevde kurulacak belli değil; şimdilik yer tutucu.

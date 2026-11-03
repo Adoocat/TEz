@@ -1,5 +1,7 @@
 # TEz
 
+[![CI](https://github.com/Adoocat/TEz/actions/workflows/ci.yml/badge.svg)](https://github.com/Adoocat/TEz/actions/workflows/ci.yml)
+
 A local-first desktop workbench for systematic literature reviews, built for graduate students: search → screen → read → notes and literature matrix → thesis writing.
 
 > **Status:** early development (Phase 1). Not usable yet.
