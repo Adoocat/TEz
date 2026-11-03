@@ -1,9 +1,23 @@
 """Registry of ORM models.
 
 Import every module's `models` here so `Base.metadata` is complete for Alembic
-autogenerate and the models-match-migrations test. Tables arrive in Task 6.
+autogenerate and the models-match-migrations test.
 """
 
 from tez.core.db import Base
+from tez.modules.files import models as files_models
+from tez.modules.jobs import models as jobs_models
+from tez.modules.library import models as library_models
+from tez.modules.reviews import models as reviews_models
+from tez.modules.search import models as search_models
+from tez.modules.settings import models as settings_models
 
-__all__ = ["Base"]
+__all__ = [
+    "Base",
+    "files_models",
+    "jobs_models",
+    "library_models",
+    "reviews_models",
+    "search_models",
+    "settings_models",
+]
