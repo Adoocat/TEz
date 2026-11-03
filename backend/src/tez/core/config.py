@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     log_format: LogFormat = "json"
     # Browser origins allowed to call the API: the Tauri webview (Windows) and the Vite dev server.
     cors_origins: list[str] = ["http://tauri.localhost", "http://localhost:1420"]
+    # How long a worker may hold a job without a heartbeat before another may take it over.
+    job_lease_seconds: float = 30.0
+    # How often an idle worker looks for new jobs.
+    worker_poll_seconds: float = 0.5
 
     @field_validator("log_level", mode="before")
     @classmethod

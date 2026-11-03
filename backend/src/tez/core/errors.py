@@ -33,6 +33,7 @@ class ErrorCode(StrEnum):
     LIBRARY_NOT_OPEN = "library.not_open"
     COLLECTION_CYCLE = "collection.cycle"
     SCREENING_INVALID_CORRECTION = "screening.invalid_correction"
+    JOB_NOT_FOUND = "job.not_found"
 
 
 class TezError(Exception):

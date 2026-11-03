@@ -13,7 +13,8 @@
 fails, the sidecar prints `TEZ_ERROR {"code": ..., "params": ...}` instead of `TEZ_READY`
 and every mode exits with status 3.
 
-`worker` arrives in Task 6b, `cli` in Task 23.
+`worker --library <folder>` runs queued jobs; `serve` starts it as a child process when a
+library is open (`tez.worker`). `cli` arrives in Task 23.
 """
 
 import argparse
@@ -24,6 +25,7 @@ import secrets
 import socket
 import sys
 import threading
+from datetime import timedelta
 from pathlib import Path
 
 import uvicorn
@@ -33,6 +35,7 @@ from tez.core.errors import TezError
 from tez.core.logging import configure_logging
 from tez.main import DEV_LIBRARY_ENV, DEV_TOKEN_ENV, DEV_URL_ENV, create_app
 from tez.modules.library.service import Library, open_library
+from tez.worker import run_worker_process
 
 logger = logging.getLogger("tez.serve")
 
@@ -54,8 +57,20 @@ def main(argv: list[str] | None = None) -> None:
     started_by.add_argument("--reload", action="store_true", help="restart on code changes (dev)")
     serve.add_argument("--library", type=Path, help="library folder to open")
     serve.add_argument("--create", action="store_true", help="create the library if missing")
+    worker = modes.add_parser("worker", help="run queued jobs (started by serve)")
+    worker.add_argument("--library", type=Path, required=True, help="library folder")
     args = parser.parse_args(argv)
 
+    if args.mode == "worker":
+        settings = Settings()
+        configure_logging(settings)
+        sys.exit(
+            run_worker_process(
+                args.library,
+                lease=timedelta(seconds=settings.job_lease_seconds),
+                poll_interval=settings.worker_poll_seconds,
+            )
+        )
     if args.mode == "serve":
         if args.token_stdin:
             sys.exit(_serve_sidecar(args.host, args.port or 0, args.library, create=args.create))
@@ -103,7 +118,7 @@ def _serve_web(
     try:
         if library is not None:
             library.publish_api(url=url, token=token)
-        app = create_app(token=token, settings=settings, library=library)
+        app = create_app(token=token, settings=settings, library=library, start_worker=True)
         uvicorn.run(app, host=host, port=port, log_config=None, access_log=False)
     finally:
         if library is not None:
@@ -139,7 +154,7 @@ def _open(library_path: Path | None, *, create: bool) -> Library | None:
 def _run_sidecar(
     host: str, port: int, token: str, settings: Settings, library: Library | None
 ) -> int:
-    app = create_app(token=token, settings=settings, library=library)
+    app = create_app(token=token, settings=settings, library=library, start_worker=True)
     server = uvicorn.Server(uvicorn.Config(app, log_config=None, access_log=False))
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

@@ -50,8 +50,11 @@ class SidecarProcess:
     def stderr_text(self) -> str:
         return "".join(self.stderr.queue)
 
+    def url(self, path: str) -> str:
+        return f"http://127.0.0.1:{self.port}{path}"
+
     def get(self, path: str, token: str | None = None) -> tuple[int, str]:
-        request = urllib.request.Request(f"http://127.0.0.1:{self.port}{path}")
+        request = urllib.request.Request(self.url(path))
         if token is not None:
             request.add_header("Authorization", f"Bearer {token}")
         try:
@@ -62,8 +65,10 @@ class SidecarProcess:
 
 
 @contextmanager
-def run_sidecar(token: str, *args: str) -> Iterator[SidecarProcess]:
-    env = {**os.environ, "TEZ_LOG_FORMAT": "json", "PYTHONUNBUFFERED": "1"}
+def run_sidecar(
+    token: str, *args: str, env: dict[str, str] | None = None
+) -> Iterator[SidecarProcess]:
+    env = {**os.environ, "TEZ_LOG_FORMAT": "json", "PYTHONUNBUFFERED": "1", **(env or {})}
     proc = subprocess.Popen(
         [sys.executable, "-m", "tez", "serve", "--token-stdin", *args],
         stdin=subprocess.PIPE,

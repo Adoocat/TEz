@@ -11,7 +11,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 4 · Veritabanı | bitti | `task/4-database` · #6 | `Database`: WAL, foreign_keys, busy_timeout, synchronous=NORMAL; yazma `BEGIN IMMEDIATE`; Alembic paket içinde, tek transaction, merdiven + model–migration tutarlılık testleri. Ayrıntı: ADR 0003 |
 | 5 · Kütüphane klasörü | bitti | `task/5-library-folder` · #7 | `.tez/lock` işletim sistemi kilidi (çökmede kendiliğinden kalkar), `.tez/instance.json` (yalnız kullanıcıya açık; API adresi + token), `find_instance` (CLI için), `serve --library`, `GET /library`, şema güncellemesinden önce `backups/` yedeği; ikinci açılış `library.locked` + sahibin pid'i |
 | 6 · Aşama 1 tabloları | bitti | `task/6-phase1-tables` · #8 | 20 tablo (migration 0002), 6 modülde model + repository; yalnız-ekleme tetikleyicileri, `supersedes_id`, aktif işlerde benzersiz `dedupe_key`; UUIDv7, UTC metin zaman, Türkçe güvenli `title_norm`. Ayrıntı: ADR 0004 |
-| 6b · İş kuyruğu ve işçi süreci | bekliyor | | |
+| 6b · İş kuyruğu ve işçi süreci | bitti | `task/6b-job-queue` · #9 | Kira tabanlı kuyruk (`attempts` = ayrıcalık jetonu, geri çekilmeli yeniden deneme), `tez-backend worker`, API'de süpervizör (yeniden başlatma), `GET /jobs/events` SSE (`Last-Event-ID` ile devam). Kabul gerçek süreçlerle: öldürülen işçinin işi kira dolunca 2. denemede biter. Ayrıntı: ADR 0005 |
 | 7 · API istemci üretimi | bekliyor | | |
 | 8 · Ön yüz kabuğu | bekliyor | | |
 | 9 · HTTP katmanı | bekliyor | | |
@@ -39,7 +39,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (S1) Açılışta "süreç → Rust main" ~600 ms; imzalı paketle yeniden ölçülmeli (Aşama 6, kod imzalama).
 - (S1) Görev 20'de pdf.js belleği gerçek makalelerle tekrar ölçülmeli (spike: boşta 170 MB → 300 sayfa kaydırma sonrası ~410 MB private).
 - (S1) Görev 23 belgeleri: PowerShell 5.1 boru hatlarında UTF-8 için `[Console]::OutputEncoding` notu.
-- (3) Görev 6b: tarayıcının `EventSource`'u başlık gönderemez; SSE ilerlemesi token'ı taşımak için fetch tabanlı okunmalı (sorgu parametresinde token yok — loglara sızar).
+- (3) Görev 8: tarayıcının `EventSource`'u başlık gönderemez; `/jobs/events` fetch ile okunmalı (token sorgu parametresinde olmaz — loglara sızar).
 - (3) Görev 8: Rust tarafı `tez-backend serve --token-stdin` sidecar'ını başlatır (token stdin'e, port `TEZ_READY`'den). `pnpm dev`'de web arayüzünün token'ı nasıl alacağı da orada kararlaştırılacak.
 - (3) Her istek INFO düzeyinde loglanıyor; PDF Range ve SSE gelince gürültü olursa bu uçlar DEBUG'a indirilmeli.
 - (4) Görev 5: kütüphane açılışında `migrate(db)` çağrılmalı; migration öncesi `backups/`'a kopya alınması değerlendirilmeli.
@@ -51,6 +51,9 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (6) `citekey` üretimi (içe aktarma / Görev 15 veya 19) ve "Gelen kutusu" sistem koleksiyonunun oluşturulması (Görev 16).
 - (6) Çöp kutusunu boşaltma: ek dosyalar (diskteki PDF'lerle) makaleden önce açıkça silinmeli (`attachment` RESTRICT).
 - (6) Alembic otomatik üretimi tetikleyicileri ve kısmi indeks koşullarını görmez; bunlara dokunan migration'lar elle yazılmalı (ADR 0004).
+- (6b) Görev 8: durum çubuğundaki iş göstergesi `/jobs/events`'e bağlanmalı (6b kabulünün arayüz kısmı).
+- (6b) Arka uç testleri ~80 sn'ye çıktı (gerçek süreçli kuyruk testleri); `pytest-xdist` ile paralel çalıştırma artık değerlendirilmeli.
+- (6b) İş ilerlemesi veritabanı yoklamasıyla (0,25 sn); gerekirse işçiden API'ye bildirim kanalı (API değişmeden).
 - (2) Branch koruması (CI geçmeden `main`'e birleştirme yok): özel repoda GitHub Pro gerekiyor; repo açık olunca veya Pro ile açılmalı.
 - (2) Windows'ta da CI (geliştirme Windows'ta; yol/satır sonu hatalarını yakalar). Paketleme işiyle birlikte (Aşama 6) veya daha önce.
 - (2) Dependabot ile GitHub Actions ve kilit dosyası güncellemeleri.
@@ -68,7 +71,7 @@ Karar ilgili göreve gelindiğinde verilir.
 2. **Ayarlar ve keyring API'si** için arka uç görevi yok; Görev 8'deki Ayarlar ekranı API anahtarı kaydediyor.
 3. **DBLP sağlayıcısı** Görev 11'de yok; varsayılan kararlarda öncelikli kaynak ve tasarımda çip olarak var.
 4. ~~**Tauri iskeleti**~~ — Karar: Görev 1'de küçük iskelet (ADR 0002).
-5. **6b kabulü** "ilerleme arayüzde görünür" UI'dan önce doğrulanamaz; Aşama 1'de API + SSE testiyle sınırlansın mı?
+5. ~~**6b kabulü**~~ — Karar: Aşama 1'de API + SSE testiyle; arayüz kısmı Görev 8'deki durum çubuğunda (ADR 0005).
 6. **`paper_fts`** Görev 6'da yok; Görev 19 kendi migration'ıyla ekleyecek (öneri).
 7. **Görev 16 UI'ı** (sürükle-bırak) kütüphane listesinden (19) önce geliyor; UI kısmı 19'a kaysın mı?
 8. **Görev 22** `tez <klasör>` içe aktarma önizlemesi ve `.bib` sihirbazı tanımsız; Aşama 1'de "öne getir + basit yanıt" ile sınırlı tutulsun mu?
