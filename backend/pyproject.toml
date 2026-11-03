@@ -1,0 +1,55 @@
+[project]
+name = "tez"
+version = "0.1.0"
+description = "TEz backend: API server, job worker and CLI"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.162",
+    "uvicorn>=0.54",
+]
+
+[project.scripts]
+tez-backend = "tez.__main__:main"
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.16",
+    "pre-commit>=4.7",
+    "pytest>=9.2",
+    "ruff>=0.17",
+]
+
+[build-system]
+requires = ["uv_build>=0.13,<0.14"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E", "W", "F",  # pycodestyle, pyflakes
+    "I",            # isort
+    "B",            # bugbear
+    "UP",           # pyupgrade
+    "SIM",          # simplify
+    "RUF",          # ruff-specific
+    "BLE",          # blind `except Exception`
+    "S110",         # try-except-pass
+    "PTH",          # prefer pathlib
+    "DTZ",          # timezone-aware datetimes
+]
+
+[tool.pyright]
+include = ["src", "tests"]
+strict = ["src/tez"]
+pythonVersion = "3.12"
+venvPath = "."
+venv = ".venv"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
+filterwarnings = ["error"]

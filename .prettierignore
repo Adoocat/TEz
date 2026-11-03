@@ -1,0 +1,14 @@
+# Prettier formats the web app, scripts and config files. Python is ruff's, Rust is rustfmt's.
+pnpm-lock.yaml
+**/dist/
+**/target/
+**/src-tauri/gen/
+apps/web/src/api/
+backend/
+spikes/
+.claude/
+
+# Prose and design exports are written by hand; reflowing them would only add noise.
+*.md
+docs/design/screens/
+docs/design/tokens.json

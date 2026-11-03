@@ -18,7 +18,18 @@ See [`docs/plan.md`](docs/plan.md) for the architecture and Phase 1 plan, and [`
 
 ## Development
 
-Development setup and commands are added in Phase 1, task 1. Progress is tracked in [`docs/progress.md`](docs/progress.md).
+Requirements: [uv](https://docs.astral.sh/uv/), Node 24 with pnpm, Rust (stable, MSVC on Windows) and, on Windows, Visual Studio Build Tools and WebView2. No `make` or bash is needed; helper scripts are Node or Python.
+
+```text
+pnpm bootstrap     install Python and Node dependencies and the git hooks
+pnpm dev           backend (http://127.0.0.1:8787) + web UI (http://localhost:1420)
+pnpm dev:desktop   the web UI inside the Tauri desktop shell
+pnpm check         lint, type check and tests for Python, TypeScript and Rust (same as CI)
+pnpm check py web  only some groups: py, web, rust, format
+pnpm format        apply Prettier and ruff formatting
+```
+
+Layout: `backend/` (Python, uv), `apps/web/` (React + Vite), `apps/desktop/` (Tauri). Progress is tracked in [`docs/progress.md`](docs/progress.md).
 
 ## License
 

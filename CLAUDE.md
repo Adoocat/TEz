@@ -70,7 +70,7 @@ Arka uç tek bir ikilidir (`tez-backend`), üç modu vardır: `serve`, `worker`,
 
 ## Komutlar (kök `package.json` betikleri — Görev 1 bunları kurar, hep çalışır tut)
 
-- `pnpm setup` — bağımlılıkları kurar (uv sync + pnpm install)
+- `pnpm bootstrap` — bağımlılıkları ve git hook'larını kurar (uv sync + pnpm install + pre-commit install). Adı `setup` değil: `pnpm setup` pnpm'in yerleşik komutu (ADR 0002)
 - `pnpm dev` — arka uç + web arayüzü (tarayıcı modu)
 - `pnpm dev:desktop` — Tauri ile masaüstü
 - `pnpm check` — iki tarafta lint + tip kontrolü + test (CI ile aynı)

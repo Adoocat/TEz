@@ -202,7 +202,7 @@ Floating popovers (such as the `⌘K` Quick Open palette or Citation Picker) use
 
 ## Shapes
 
-The shape vocabulary communicates precision, software engineering rigor, and structural stability. 
+The shape vocabulary communicates precision, software engineering rigor, and structural stability.
 
 - **4px Radius (`space-xs`):** Assigned to metadata chips, source verified pills (`[Yazar 2024 · s.4]`), mini status dots, and keyboard command badges (`kbd`).
 - **6px Radius (Base Controls):** Assigned to buttons, form inputs, table active row selections, and search containers.

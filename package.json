@@ -1,0 +1,23 @@
+{
+  "name": "tez",
+  "private": true,
+  "license": "MIT",
+  "packageManager": "pnpm@12.9.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "bootstrap": "node scripts/bootstrap.mjs",
+    "dev": "concurrently --kill-others --names api,web --prefix-colors blue,green \"uv run --project backend tez-backend serve --reload\" \"pnpm --filter @tez/web dev\"",
+    "dev:desktop": "pnpm --filter @tez/desktop tauri dev",
+    "check": "node scripts/check.mjs",
+    "format": "prettier --write . && uv run --project backend ruff format backend && uv run --project backend ruff check --fix backend",
+    "gen:api": "node scripts/not-yet.mjs gen:api 7",
+    "e2e": "node scripts/not-yet.mjs e2e"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6",
+    "prettier": "^3.9.10",
+    "pyright": "^1.1.414"
+  }
+}
