@@ -1,0 +1,13 @@
+[package]
+name = "tez"
+version = "0.0.1"
+description = "S1 spike: `tez` console launcher (throwaway)"
+edition = "2021"
+publish = false
+
+[dependencies]
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true

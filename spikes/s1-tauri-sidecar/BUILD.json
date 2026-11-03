@@ -1,0 +1,11 @@
+{
+  "pyinstaller_s": 27.1,
+  "onedir_mb": 30.3,
+  "onedir_exe_mb": 6.3,
+  "cli_build_s": 0.3,
+  "tez_cli_exe_kb": 221,
+  "tauri_build_s": 84.5,
+  "tez_app_exe_mb": 11.6,
+  "installer": "desktop\\src-tauri\\target\\release\\bundle\\nsis\\TEz_0.0.1_x64-setup.exe",
+  "installer_mb": 15.2
+}

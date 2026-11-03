@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TEz S1</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header>
+      <strong>TEz · S1 spike</strong>
+      <span id="backend">backend: başlatılıyor…</span>
+      <button id="pdf-btn" type="button">300 sayfalık PDF'i aç</button>
+      <button id="bench-btn" type="button" disabled>Kaydırma testi</button>
+    </header>
+    <main>
+      <section id="side">
+        <h2>Zamanlamalar</h2>
+        <pre id="timings"></pre>
+        <h2>İletilen argümanlar</h2>
+        <ol id="forwarded"></ol>
+        <h2>PDF ölçümleri</h2>
+        <pre id="pdf-stats"></pre>
+      </section>
+      <section id="viewer"></section>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+:root {
+  --bg: #fcfbf9;
+  --surface: #f5f4f0;
+  --border: #e5e3dc;
+  --text: #1c1917;
+  --muted: #78716c;
+  --accent: #1e3a5f;
+  color-scheme: light;
+  font: 13px/18px Inter, system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+body { margin: 0; height: 100vh; display: flex; flex-direction: column; }
+header { display: flex; gap: 12px; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--border); background: var(--surface); }
+header #backend { color: var(--muted); font-family: ui-monospace, monospace; }
+button { font: inherit; color: var(--text); padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; background: #fff; }
+button:not(:disabled) { cursor: pointer; }
+main { flex: 1; display: flex; min-height: 0; }
+#side { width: 340px; overflow: auto; padding: 8px 12px; border-right: 1px solid var(--border); background: var(--surface); }
+#side h2 { font-size: 12px; text-transform: none; color: var(--muted); margin: 12px 0 4px; }
+#side pre { white-space: pre-wrap; font-size: 11px; margin: 0; }
+#forwarded { font: 11px ui-monospace, monospace; padding-left: 18px; }
+#viewer { flex: 1; overflow: auto; background: #e7e5e4; position: relative; }
+.page { position: relative; margin: 12px auto; background: #fff; box-shadow: 0 0 0 1px var(--border); }
+.page canvas { position: absolute; inset: 0; }
+.page .label { position: absolute; top: 4px; right: 6px; color: var(--muted); font-size: 11px; }

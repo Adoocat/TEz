@@ -4,7 +4,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 | Görev | Durum | Branch/PR | Not |
 | --- | --- | --- | --- |
-| S1 · Tauri + Python sidecar (risk denemesi) | bekliyor | | Port sidecar'da (127.0.0.1:0) ve Windows Job Object onaylandı; `tez` küçük Rust konsol programı |
+| S1 · Tauri + Python sidecar (risk denemesi) | bitti | `task/S1-tauri-sidecar` · #1 | 13/13 kontrol geçti. Kurulum paketi 15,2 MB, onedir 30,3 MB, ilk `/health` ~1,1 sn, `tez --help` 16 ms. Ayrıntı: ADR 0001 |
 | 1 · Monorepo ve araçlar | bekliyor | | |
 | 2 · CI | bekliyor | | |
 | 3 · Arka uç çekirdeği | bekliyor | | |
@@ -34,7 +34,12 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 - Tasarımda olup Aşama 1'de gizlenecekler: YZ öğeleri, vurgu/not, kart/zaman/atıf grafiği görünümleri, tam metin arama, Zotero, "Yeni makale uyarısı", sistem entegrasyonu adımı (Aşama 6).
 - Eksik tasarımlar: 4.1 karşılama ve yeni review formu, 4.6'nın tamamı, bileşen sayfası, daraltılmış kabuk, boş/yükleniyor/çevrimdışı durumları, İngilizce sürümler, koyu tema (yalnız matris var).
-- Lisans kaydı: PyInstaller GPL + bootloader istisnası (dağıtıma engel değil) — S1 ADR'sinde ve Görev 21'de belgelenecek.
+- Lisans kaydı: PyInstaller GPL + bootloader istisnası (dağıtıma engel değil) — ADR 0001'de yazıldı, Görev 21'deki lisans notlarına da eklenecek.
+- (S1) Sidecar'ı Tauri eklentileri yüklenmeden, `run()` başında `std::process` ile başlatmak ~300 ms kazandırır (Görev 3/8).
+- (S1) Açılışta "süreç → Rust main" ~600 ms; imzalı paketle yeniden ölçülmeli (Aşama 6, kod imzalama).
+- (S1) Görev 20'de pdf.js belleği gerçek makalelerle tekrar ölçülmeli (spike: boşta 170 MB → 300 sayfa kaydırma sonrası ~410 MB private).
+- (S1) Görev 23 belgeleri: PowerShell 5.1 boru hatlarında UTF-8 için `[Console]::OutputEncoding` notu.
+- (S1) macOS/Linux'ta Job Object yerine stdin-EOF bekçisi + Linux'ta `PR_SET_PDEATHSIG` (Aşama 6).
 
 ## Açık sorular
 
