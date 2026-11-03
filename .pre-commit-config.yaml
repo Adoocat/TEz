@@ -1,0 +1,52 @@
+# Installed by `pnpm bootstrap`. Local hooks reuse the project's own tool versions
+# (uv / pnpm), so hook results match `pnpm check`.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+        exclude: ^docs/design/screens/
+      - id: end-of-file-fixer
+        exclude: ^docs/design/screens/
+      - id: check-yaml
+        exclude: ^pnpm-lock.yaml$ # pnpm writes a multi-document lock file
+      - id: check-json
+        exclude: tsconfig.*\.json$ # JSONC (comments allowed)
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-added-large-files
+        args: [--maxkb=500] # no large binaries; test PDFs are small and generated
+
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: uv run --project backend ruff check --fix
+        language: system
+        types: [python]
+        files: ^backend/
+      - id: ruff-format
+        name: ruff format
+        entry: uv run --project backend ruff format
+        language: system
+        types: [python]
+        files: ^backend/
+      - id: prettier
+        name: prettier
+        entry: pnpm exec prettier --write --ignore-unknown
+        language: system
+        types: [text]
+      - id: eslint
+        name: eslint (web)
+        entry: pnpm --filter @tez/web lint
+        language: system
+        files: ^apps/web/.*\.(ts|tsx|js)$
+        pass_filenames: false
+      - id: cargo-fmt
+        name: cargo fmt
+        entry: cargo fmt --manifest-path apps/desktop/src-tauri/Cargo.toml
+        language: system
+        types: [rust]
+        pass_filenames: false
