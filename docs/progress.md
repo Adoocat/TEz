@@ -12,7 +12,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 5 · Kütüphane klasörü | bitti | `task/5-library-folder` · #7 | `.tez/lock` işletim sistemi kilidi (çökmede kendiliğinden kalkar), `.tez/instance.json` (yalnız kullanıcıya açık; API adresi + token), `find_instance` (CLI için), `serve --library`, `GET /library`, şema güncellemesinden önce `backups/` yedeği; ikinci açılış `library.locked` + sahibin pid'i |
 | 6 · Aşama 1 tabloları | bitti | `task/6-phase1-tables` · #8 | 20 tablo (migration 0002), 6 modülde model + repository; yalnız-ekleme tetikleyicileri, `supersedes_id`, aktif işlerde benzersiz `dedupe_key`; UUIDv7, UTC metin zaman, Türkçe güvenli `title_norm`. Ayrıntı: ADR 0004 |
 | 6b · İş kuyruğu ve işçi süreci | bitti | `task/6b-job-queue` · #9 | Kira tabanlı kuyruk (`attempts` = ayrıcalık jetonu, geri çekilmeli yeniden deneme), `tez-backend worker`, API'de süpervizör (yeniden başlatma), `GET /jobs/events` SSE (`Last-Event-ID` ile devam). Kabul gerçek süreçlerle: öldürülen işçinin işi kira dolunca 2. denemede biter. Ayrıntı: ADR 0005 |
-| 7 · API istemci üretimi | bekliyor | | |
+| 7 · API istemci üretimi | bitti | `task/7-api-client` · #11 | `pnpm gen:api`: `python -m tez.openapi` → `openapi.json` → openapi-typescript → `schema.d.ts`; `lib/api/client.ts` (openapi-fetch + token); `pnpm check api` CI'daki python işinde |
 | 8 · Ön yüz kabuğu | bekliyor | | |
 | 9 · HTTP katmanı | bekliyor | | |
 | 10 · Ortak kayıt şeması | bekliyor | | |
