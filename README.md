@@ -27,7 +27,8 @@ pnpm bootstrap     install Python and Node dependencies and the git hooks
 pnpm dev           backend (http://127.0.0.1:8787) + web UI (http://localhost:1420)
 pnpm dev:desktop   the web UI inside the Tauri desktop shell
 pnpm check         lint, type check and tests for Python, TypeScript and Rust (same as CI)
-pnpm check py web  only some groups: py, web, rust, format
+pnpm check py web  only some groups: py, api, web, rust, format
+pnpm gen:api       regenerate the typed API client after changing the backend's API
 pnpm format        apply Prettier and ruff formatting
 ```
 

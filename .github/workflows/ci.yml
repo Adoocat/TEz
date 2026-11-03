@@ -35,8 +35,8 @@ jobs:
           python-version: ${{ matrix.python }} # sets UV_PYTHON, overriding backend/.python-version
           enable-cache: true
       - run: uv sync --locked --project backend
-      - run: pnpm install --frozen-lockfile # pyright comes from npm
-      - run: pnpm check py
+      - run: pnpm install --frozen-lockfile # pyright and openapi-typescript come from npm
+      - run: pnpm check py api # api: the generated TS client matches the backend (Task 7)
 
   web:
     runs-on: ubuntu-latest

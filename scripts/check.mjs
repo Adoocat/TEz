@@ -2,7 +2,7 @@
 // Runs all steps even after a failure so one run shows every problem, then exits 1 if any failed.
 //
 //   pnpm check            all steps
-//   pnpm check py web     only the named groups (py, web, rust, format)
+//   pnpm check py web     only the named groups (py, api, web, rust, format)
 import path from "node:path";
 
 import { root, run } from "./lib/run.mjs";
@@ -16,6 +16,8 @@ const steps = [
   ["py", "ruff format", ...uv("ruff", "format", "--check", "backend")],
   ["py", "pyright", "pnpm", ["exec", "pyright", "-p", "backend"]],
   ["py", "pytest", "uv", ["run", "pytest"], backend],
+  // The generated TypeScript client must match the backend's OpenAPI schema.
+  ["api", "client up to date", "node", ["scripts/gen-api.mjs", "--check"]],
   ["web", "eslint", "pnpm", ["--filter", "@tez/web", "lint"]],
   ["web", "tsc", "pnpm", ["--filter", "@tez/web", "typecheck"]],
   ["web", "vitest", "pnpm", ["--filter", "@tez/web", "test"]],
@@ -32,7 +34,7 @@ const steps = [
 const groups = process.argv.slice(2);
 const unknown = groups.filter((g) => !steps.some(([group]) => group === g));
 if (unknown.length > 0) {
-  console.error(`unknown group(s): ${unknown.join(", ")}; use py, web, rust, format`);
+  console.error(`unknown group(s): ${unknown.join(", ")}; use py, api, web, rust, format`);
   process.exit(2);
 }
 
