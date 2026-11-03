@@ -1,0 +1,57 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+*.spec.bak
+
+# Node
+node_modules/
+.pnpm-store/
+*.tsbuildinfo
+coverage/
+playwright-report/
+test-results/
+.vite/
+
+# Rust / Tauri
+target/
+**/src-tauri/gen/
+**/src-tauri/binaries/*
+!**/src-tauri/binaries/.gitkeep
+
+# Local TEz libraries and runtime files (never commit user data)
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+.tez/
+TEz Library/
+
+# Logs
+*.log
+logs/
+
+# Claude Code local settings
+.claude/settings.local.json

@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TEz · LLM Destekli Kod İnceleme SLR - Arka Plan İşleri</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-bright": "#fbf9f8",
+            "surface-container": "#efeded",
+            "on-background": "#1b1c1c",
+            "on-secondary-container": "#fffbff",
+            "text-primary": "#1c1917",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#eae8e7",
+            "surface-tint": "#455f87",
+            "inverse-primary": "#adc8f5",
+            "border-subtle": "#e5e3dc",
+            "bg-surface": "#f5f4f0",
+            "background": "#fbf9f8",
+            "surface-dim": "#dbd9d9",
+            "on-tertiary": "#ffffff",
+            "inverse-surface": "#303030",
+            "on-error": "#ffffff",
+            "on-surface": "#1b1c1c",
+            "on-tertiary-container": "#55b66c",
+            "status-reading-blue": "#2563eb",
+            "primary": "#022448",
+            "secondary-fixed-dim": "#d2bbff",
+            "status-revisit-purple": "#9333ea",
+            "on-primary-fixed-variant": "#2d486d",
+            "tertiary-fixed-dim": "#79db8d",
+            "on-tertiary-fixed": "#00210a",
+            "primary-container": "#1e3a5f",
+            "status-unverified": "#ea580c",
+            "status-maybe": "#b45309",
+            "secondary": "#712ae2",
+            "on-secondary-fixed-variant": "#5a00c6",
+            "tertiary-fixed": "#95f8a7",
+            "tertiary": "#002b0f",
+            "surface": "#fbf9f8",
+            "text-muted": "#78716c",
+            "secondary-fixed": "#eaddff",
+            "primary-fixed": "#d5e3ff",
+            "outline-variant": "#c4c6cf",
+            "outline": "#74777f",
+            "on-tertiary-fixed-variant": "#005323",
+            "on-surface-variant": "#43474e",
+            "surface-container-lowest": "#ffffff",
+            "surface-variant": "#e4e2e2",
+            "secondary-container": "#8a4cfc",
+            "error": "#ba1a1a",
+            "status-included": "#15803d",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#00431b",
+            "on-error-container": "#93000a",
+            "status-excluded": "#b91c1c",
+            "on-primary-fixed": "#001c3b",
+            "primary-fixed-dim": "#adc8f5",
+            "on-primary-container": "#8aa4cf",
+            "status-ai": "#7c3aed",
+            "on-secondary-fixed": "#25005a",
+            "bg-canvas": "#fcfbf9",
+            "error-container": "#ffdad6",
+            "status-retracted": "#991b1b",
+            "surface-container-low": "#f5f3f3",
+            "inverse-on-surface": "#f2f0f0",
+            "surface-container-highest": "#e4e2e2"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "margin": "1rem",
+            "space-lg": "1rem",
+            "margin-panel": "0.75rem",
+            "space-sm": "0.5rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "gutter-compact": "0.5rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "code-kbd": ["JetBrains Mono"],
+            "body-reading": ["\"Source Serif 4\""],
+            "body-ui": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-meta-medium": ["Inter"],
+            "code-tech": ["JetBrains Mono"],
+            "headline-md": ["Inter"],
+            "label-meta": ["Inter"],
+            "body-ui-medium": ["Inter"],
+            "headline-sm": ["Inter"]
+          },
+          "fontSize": {
+            "code-kbd": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+            "body-reading": ["15px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-ui": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-meta-medium": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "code-tech": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "label-meta": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "body-ui-medium": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+            "headline-sm": ["15px", { "lineHeight": "20px", "fontWeight": "600" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 18px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e5e3dc;
+      border-radius: 2px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #c4c6cf;
+    }
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-background text-text-primary h-screen w-screen overflow-hidden flex flex-col select-none antialiased font-body-ui text-body-ui">
+<!-- ========================================== -->
+<!-- TopNavBar (Shared Component JSON Blueprint) -->
+<!-- ========================================== -->
+<header class="flex justify-between items-center w-full px-space-md h-9 border-b border-border-subtle bg-bg-surface select-none z-50 shrink-0">
+<!-- Sol Pencere Kontrolü & Proje Kimliği -->
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-1.5 pr-2 border-r border-border-subtle">
+<span class="w-2.5 h-2.5 rounded-full bg-border-subtle hover:bg-status-excluded transition-colors cursor-pointer inline-block"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-border-subtle hover:bg-status-maybe transition-colors cursor-pointer inline-block"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-border-subtle hover:bg-status-included transition-colors cursor-pointer inline-block"></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-headline-sm font-headline-sm font-semibold text-primary tracking-tight">TEz · LLM Destekli Kod İnceleme SLR</span>
+<span class="text-border-subtle font-light">/</span>
+<span class="text-label-meta font-label-meta text-primary font-medium">Review: LLM Destekli Kod İnceleme SLR</span>
+</div>
+</div>
+<!-- Orta & Sağ Aksiyonlar -->
+<div class="flex items-center gap-space-md">
+<!-- Arama / Hızlı Komut Alanı -->
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded border border-border-subtle bg-surface-container-lowest text-text-muted hover:border-outline transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-text-muted" style="font-size: 15px;">search</span>
+<span class="text-label-meta font-label-meta pr-4">⌘K Ara veya komut...</span>
+<span class="font-code-kbd text-code-kbd px-1 py-0.5 bg-surface-container rounded border border-border-subtle text-text-muted">⌘K</span>
+</div>
+<!-- Araç Simgeleri -->
+<div class="flex items-center gap-1">
+<button class="p-1 rounded text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150 flex items-center justify-center" title="Karanlık Mod Değiştir">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="p-1 rounded text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150 flex items-center justify-center" title="Ayarlar">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- ANA ÇALIŞMA ALANI DÜZENİ                   -->
+<!-- ========================================== -->
+<div class="flex flex-1 w-full overflow-hidden relative">
+<!-- ========================================== -->
+<!-- SideNavBar (Navigation Rail - 56px)       -->
+<!-- ========================================== -->
+<aside class="w-14 shrink-0 flex flex-col justify-between items-center py-space-sm z-40 border-r border-border-subtle bg-bg-surface select-none">
+<!-- Üst Navigasyon Segmenti -->
+<div class="flex flex-col items-center gap-1 w-full px-1">
+<!-- Logo Başlık -->
+<div class="flex flex-col items-center justify-center w-10 h-9 mb-2 border-b border-border-subtle">
+<span class="text-headline-sm font-headline-sm font-bold text-primary tracking-tight">TEz</span>
+</div>
+<!-- 7 Standart Sekme -->
+<button class="flex flex-col items-center justify-center text-text-muted p-1.5 w-10 h-10 rounded hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150" title="Arama">
+<span class="material-symbols-outlined">search</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Arama</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-muted p-1.5 w-10 h-10 rounded hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150" title="Kütüphane">
+<span class="material-symbols-outlined">local_library</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Kütüphane</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-muted p-1.5 w-10 h-10 rounded hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150" title="Eleme">
+<span class="material-symbols-outlined">rule</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Eleme</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-muted p-1.5 w-10 h-10 rounded hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150" title="Okuyucu">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Okuyucu</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-muted p-1.5 w-10 h-10 rounded hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150" title="Notlar">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Notlar</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-muted p-1.5 w-10 h-10 rounded hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150" title="Matris">
+<span class="material-symbols-outlined">table_chart</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Matris</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-muted p-1.5 w-10 h-10 rounded hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150" title="YZ Asistanı">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">YZ</span>
+</button>
+</div>
+<!-- Alt Araçlar (Footer) - Arka plan İşler AKTİF durumda -->
+<div class="flex flex-col items-center gap-1.5 w-full px-1 border-t border-border-subtle pt-2">
+<button class="relative flex flex-col items-center justify-center text-primary bg-primary-fixed rounded p-1.5 w-10 h-10 transition-colors duration-150" title="Arka plan İşler (3 Aktif / 1 Hatalı)">
+<span class="material-symbols-outlined animate-spin" style="animation-duration: 4s;">sync</span>
+<span class="text-[8px] font-label-meta-medium tracking-tight mt-0.5">İşler</span>
+<!-- Bildirim Noktası (1 Hatalı Göstergesi) -->
+<span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-status-excluded border border-white"></span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-muted p-1.5 w-10 h-10 rounded hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150" title="Ayarlar">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</aside>
+<!-- ========================================== -->
+<!-- Bağlam Kenar Çubuğu (240px Context Sidebar)-->
+<!-- ========================================== -->
+<nav aria-label="Bağlam Kenar Çubuğu" class="w-60 shrink-0 border-r border-border-subtle bg-bg-surface flex flex-col justify-between overflow-y-auto custom-scrollbar select-none">
+<div class="p-space-sm space-y-space-md">
+<!-- Panel Başlığı -->
+<div class="flex items-center justify-between px-1 py-1">
+<span class="text-label-meta-medium font-label-meta-medium uppercase tracking-wider text-text-muted">İş Kategorileri</span>
+<span class="font-code-kbd text-code-kbd text-text-muted bg-surface-container-high px-1.5 py-0.5 rounded">28 Toplam</span>
+</div>
+<!-- Genel Filtreler -->
+<div class="space-y-0.5">
+<button class="w-full flex items-center justify-between px-2 py-1.5 rounded text-body-ui font-body-ui-medium bg-surface-container-high text-primary font-medium border-l-2 border-primary">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px;">receipt_long</span>
+<span>Tüm İşler</span>
+</div>
+<span class="font-code-kbd text-code-kbd bg-surface-container-lowest px-1.5 py-0.2 rounded border border-border-subtle text-primary">28</span>
+</button>
+<button class="w-full flex items-center justify-between px-2 py-1.5 rounded text-body-ui text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-status-reading-blue animate-pulse-subtle"></span>
+<span>Devam Eden / Kuyrukta</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-status-reading-blue font-semibold px-1 rounded bg-blue-50 border border-blue-100">3 aktif</span>
+</button>
+<button class="w-full flex items-center justify-between px-2 py-1.5 rounded text-body-ui text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-included" style="font-size: 16px;">check_circle</span>
+<span>Tamamlananlar</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted">24</span>
+</button>
+<button class="w-full flex items-center justify-between px-2 py-1.5 rounded text-body-ui text-status-excluded hover:bg-error-container/40 transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-status-excluded" style="font-size: 16px;">error</span>
+<span>Hatalı / Dikkat Gerekli</span>
+</div>
+<span class="font-code-kbd text-code-kbd bg-status-excluded text-white px-1.5 py-0.2 rounded font-bold">1</span>
+</button>
+</div>
+<div class="h-px bg-border-subtle"></div>
+<!-- Başlatan Filtresi (Originator) -->
+<div class="space-y-1">
+<div class="px-1 text-[11px] font-label-meta-medium uppercase tracking-wider text-text-muted">Başlatan Filtresi</div>
+<button class="w-full flex items-center justify-between px-2 py-1.5 rounded text-body-ui text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-text-muted" style="font-size: 16px;">widgets</span>
+<span>Arayüz (GUI) İşleri</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted">18</span>
+</button>
+<button class="w-full flex items-center justify-between px-2 py-1.5 rounded text-body-ui text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<div class="flex items-center gap-2">
+<span class="font-code-kbd text-code-kbd px-1 py-0.2 bg-surface-container border border-border-subtle rounded text-primary">$</span>
+<span>Terminal (CLI <code class="font-code-kbd text-[11px]">tez</code>)</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted">10</span>
+</button>
+</div>
+<div class="h-px bg-border-subtle"></div>
+<!-- İş Türü (Job Type) -->
+<div class="space-y-1">
+<div class="px-1 text-[11px] font-label-meta-medium uppercase tracking-wider text-text-muted">İş Türü</div>
+<button class="w-full flex items-center justify-between px-2 py-1 rounded text-body-ui text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-text-muted" style="font-size: 15px;">download</span>
+<span class="truncate">PDF İndirme &amp; Açık Erişim</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted ml-1">8</span>
+</button>
+<button class="w-full flex items-center justify-between px-2 py-1 rounded text-body-ui text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-text-muted" style="font-size: 15px;">data_object</span>
+<span class="truncate">GROBID Metin Çıkarma</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted ml-1">12</span>
+</button>
+<button class="w-full flex items-center justify-between px-2 py-1 rounded text-body-ui text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-text-muted" style="font-size: 15px;">document_scanner</span>
+<span class="truncate">OCR (Tesseract v5)</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted ml-1">3</span>
+</button>
+<button class="w-full flex items-center justify-between px-2 py-1 rounded text-body-ui text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-secondary" style="font-size: 15px;">hub</span>
+<span class="truncate">Vektör Gömme (Ollama)</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted ml-1">4</span>
+</button>
+<button class="w-full flex items-center justify-between px-2 py-1 rounded text-body-ui text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-text-muted" style="font-size: 15px;">table_rows</span>
+<span class="truncate">Tablo Ayrıştırma</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted ml-1">1</span>
+</button>
+</div>
+</div>
+<!-- Alt Bilgi Kutusu -->
+<div class="p-space-sm border-t border-border-subtle bg-surface-container-low text-text-muted">
+<div class="flex items-center justify-between text-[11px] font-label-meta">
+<span>Worker Durumu:</span>
+<span class="text-status-included font-medium flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-included"></span> 4 Hazır
+          </span>
+</div>
+</div>
+</nav>
+<!-- ========================================== -->
+<!-- ANA ÇALIŞMA ALANI: KUYRUK & YÖNETİM        -->
+<!-- ========================================== -->
+<main class="flex-1 flex flex-col bg-bg-canvas overflow-hidden min-w-0">
+<!-- Üst Araç Çubuğu (Action Bar) -->
+<div class="h-10 px-space-md border-b border-border-subtle bg-surface-container-lowest flex items-center justify-between shrink-0">
+<!-- Sol Başlık ve Havuz Özeti -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 text-headline-sm font-headline-sm text-primary">
+<span class="material-symbols-outlined text-primary" style="font-size: 18px;">lan</span>
+<span class="tracking-tight">Arka Plan İşleri ve Dağıtık İş Parçacıkları</span>
+</div>
+<span class="text-border-subtle">|</span>
+<span class="font-code-kbd text-code-kbd px-2 py-0.5 rounded bg-surface-container-high text-primary-container border border-border-subtle flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-reading-blue"></span>
+            Eşzamanlı İş Parçacığı: 4 Worker (Yerel CPU / M-Serisi)
+          </span>
+</div>
+<!-- Sağ Komut Butonları -->
+<div class="flex items-center gap-1.5">
+<button class="h-7 px-2.5 rounded border border-border-subtle bg-surface-bright hover:bg-surface-container text-body-ui text-text-primary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-text-muted" style="font-size: 15px;">pause</span>
+<span>Tümünü Duraklat</span>
+<kbd class="font-code-kbd text-[10px] text-text-muted bg-surface-container px-1 py-0.2 rounded border border-border-subtle ml-0.5">Space</kbd>
+</button>
+<button class="h-7 px-2.5 rounded border border-border-subtle bg-surface-bright hover:bg-surface-container text-body-ui text-text-primary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-text-muted" style="font-size: 15px;">cleaning_services</span>
+<span>Tamamlananları Temizle</span>
+</button>
+<button class="h-7 px-2.5 rounded bg-primary hover:bg-primary-container text-on-primary text-body-ui font-body-ui-medium flex items-center gap-1 shadow-none transition-colors">
+<span class="material-symbols-outlined text-white" style="font-size: 15px;">replay</span>
+<span>Kuyruğu Yeniden Başlat</span>
+<kbd class="font-code-kbd text-[10px] text-white/80 bg-black/20 px-1 py-0.2 rounded ml-0.5">↵</kbd>
+</button>
+</div>
+</div>
+<!-- Kaydırılabilir İçerik Alanı: Aktif İşler & Geçmiş Listesi -->
+<div class="flex-1 overflow-y-auto p-space-md space-y-space-md custom-scrollbar">
+<!-- BÖLÜM 1: AKTİF ÇALIŞAN İŞLER (CANLI KUYRUK KARTLARI) -->
+<div class="space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-label-meta-medium font-label-meta-medium text-text-muted uppercase tracking-wider">Aktif Kuyruk (3 İşlem Çalışıyor)</span>
+<span class="w-2 h-2 rounded-full bg-status-reading-blue animate-ping"></span>
+</div>
+<span class="text-label-meta font-label-meta text-text-muted">Otomatik yenileniyor (Her 500ms)</span>
+</div>
+<!-- KART 1: GROBID (Seçili Olan İş - Sağ inspector buna bağlı) -->
+<div class="border-2 border-primary bg-surface-container-lowest rounded p-space-md shadow-none relative">
+<div class="flex items-start justify-between gap-4">
+<div class="space-y-1 min-w-0 flex-1">
+<div class="flex items-center gap-2">
+<span class="font-code-kbd text-code-kbd px-1.5 py-0.5 rounded bg-blue-50 text-status-reading-blue border border-blue-200 font-semibold">Worker #2</span>
+<span class="font-headline-sm text-headline-sm text-text-primary truncate">GROBID Metin &amp; XML Çıkarma — <span class="font-code-tech text-code-tech text-primary font-semibold">Zhang2024_MSR.pdf</span></span>
+<span class="text-[11px] font-label-meta px-1.5 py-0.2 rounded bg-surface-container text-text-muted">Sayfa 8 / 12</span>
+</div>
+<div class="flex items-center gap-3 text-label-meta font-label-meta text-text-muted">
+<span class="flex items-center gap-1">
+<span class="font-code-kbd text-[11px] text-primary bg-primary-fixed px-1 py-0.2 rounded border border-primary/20">CLI: tez add --grobid</span>
+</span>
+<span>•</span>
+<span>Geçen Süre: <strong class="text-text-primary font-code-kbd">4.2 sn</strong></span>
+<span>•</span>
+<span>Tahmini Kalan: <strong class="text-text-primary font-code-kbd">~2 sn</strong></span>
+<span>•</span>
+<span class="text-status-reading-blue font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-status-reading-blue" style="font-size: 14px;">hourglass_top</span>
+                    İşleniyor
+                  </span>
+</div>
+</div>
+<!-- Duraklat / İptal Aksiyonu -->
+<div class="flex items-center gap-1">
+<button class="p-1 text-text-muted hover:text-text-primary hover:bg-surface-container rounded transition-colors" title="İşi Durdur">
+<span class="material-symbols-outlined" style="font-size: 16px;">pause</span>
+</button>
+<button class="p-1 text-text-muted hover:text-status-excluded hover:bg-error-container rounded transition-colors" title="Görevi İptal Et">
+<span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+</button>
+</div>
+</div>
+<!-- İlerleme Çubuğu (%68) -->
+<div class="mt-3 space-y-1">
+<div class="flex justify-between items-center text-[11px] font-code-kbd">
+<span class="text-text-muted">TEI Body Parsed · Figürler &amp; Tablolar Çıkarılıyor</span>
+<span class="font-bold text-primary">%68 (Sayfa 8 / 12)</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-status-reading-blue transition-all duration-300" style="width: 68%;"></div>
+</div>
+</div>
+</div>
+<!-- KART 2: Vektör Gömme (Ollama) -->
+<div class="border border-border-subtle hover:border-outline-variant bg-surface-container-lowest rounded p-space-md transition-colors">
+<div class="flex items-start justify-between gap-4">
+<div class="space-y-1 min-w-0 flex-1">
+<div class="flex items-center gap-2">
+<span class="font-code-kbd text-code-kbd px-1.5 py-0.5 rounded bg-purple-50 text-status-ai border border-purple-200 font-semibold">Worker #1</span>
+<span class="font-headline-sm text-headline-sm text-text-primary truncate">Vektör Gömme (nomic-embed-text via Ollama) — <span class="text-body-ui-medium font-body-ui-medium">ICSE 2024 Dahil Edilenler (42 Makale)</span></span>
+</div>
+<div class="flex items-center gap-3 text-label-meta font-label-meta text-text-muted">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 14px;">touch_app</span>
+<span>Başlatan: Arayüz (Review Senkronizasyonu)</span>
+</span>
+<span>•</span>
+<span>Süre: <span class="font-code-kbd text-text-primary">14 sn</span></span>
+<span>•</span>
+<span>RAM: <span class="font-code-kbd text-text-primary">1.2 GB</span></span>
+<span>•</span>
+<span class="text-status-ai font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-status-ai" style="font-size: 14px;">bolt</span>
+                    GPU Metal Hızlandırma: Aktif
+                  </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1 text-text-muted hover:text-text-primary hover:bg-surface-container rounded transition-colors" title="İşi Durdur">
+<span class="material-symbols-outlined" style="font-size: 16px;">pause</span>
+</button>
+<button class="p-1 text-text-muted hover:text-status-excluded hover:bg-error-container rounded transition-colors" title="İptal">
+<span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+</button>
+</div>
+</div>
+<!-- İlerleme Çubuğu (%45) -->
+<div class="mt-3 space-y-1">
+<div class="flex justify-between items-center text-[11px] font-code-kbd">
+<span class="text-text-muted">Ollama Local Instance (512d Context)</span>
+<span class="font-bold text-status-ai">%45 (19 / 42 Makale gömüldü)</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-status-ai transition-all duration-300" style="width: 45%;"></div>
+</div>
+</div>
+</div>
+<!-- KART 3: PDF Tam Metin İndirme -->
+<div class="border border-border-subtle hover:border-outline-variant bg-surface-container-lowest rounded p-space-md transition-colors">
+<div class="flex items-start justify-between gap-4">
+<div class="space-y-1 min-w-0 flex-1">
+<div class="flex items-center gap-2">
+<span class="font-code-kbd text-code-kbd px-1.5 py-0.5 rounded bg-stone-100 text-text-primary border border-border-subtle font-semibold">Worker #4</span>
+<span class="font-headline-sm text-headline-sm text-text-primary truncate">PDF Tam Metin İndirme — <span class="text-body-ui-medium font-body-ui-medium">Crossref &amp; Unpaywall OA Havuzu</span></span>
+</div>
+<div class="flex items-center gap-3 text-label-meta font-label-meta text-text-muted">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 14px;">mouse</span>
+<span>Başlatan: Arayüz Toplu Alma</span>
+</span>
+<span>•</span>
+<span>Bağlantı: <span class="font-code-kbd text-text-primary">HTTP/2 Async Pool</span></span>
+<span>•</span>
+<span class="text-status-included font-medium">9 / 10 Tamamlandı</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1 text-text-muted hover:text-status-excluded hover:bg-error-container rounded transition-colors" title="İptal">
+<span class="material-symbols-outlined" style="font-size: 16px;">close</span>
+</button>
+</div>
+</div>
+<!-- İlerleme Çubuğu (%90) -->
+<div class="mt-3 space-y-1">
+<div class="flex justify-between items-center text-[11px] font-code-kbd">
+<span class="text-text-muted">Son dosya: 10.1145/3377811.3380387.pdf</span>
+<span class="font-bold text-status-included">%90 (9/10 PDF indirildi)</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-status-included transition-all duration-300" style="width: 90%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- BÖLÜM 2: DİKKAT GEREKTİREN HATALI İŞ (UÇ DURUM / ERROR CARD) -->
+<div class="border border-error/40 bg-error-container/20 rounded p-space-md space-y-space-sm">
+<div class="flex items-start justify-between">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-status-excluded mt-0.5" style="font-size: 20px;">report_problem</span>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-status-excluded">OCR &amp; Ayrıştırma Hatası — Koc2019_Legacy_Scan.pdf</span>
+<span class="font-code-kbd text-[11px] bg-status-excluded text-white px-2 py-0.5 rounded font-medium">Hata: Bozuk PDF / Şifreli Akış</span>
+</div>
+<p class="text-body-ui text-text-primary mt-1">
+                  PDF akışı hasarlı veya DRM korumalı. Tesseract OCR başlatılamadı. Uygulama kararlı kalmaya devam ediyor.
+                </p>
+<div class="flex items-center gap-2 text-label-meta font-label-meta text-text-muted mt-1">
+<span>Hata Kodu: <code class="font-code-kbd text-status-excluded">ERR_POPPLER_CORRUPT_XREF_TABLE</code></span>
+<span>•</span>
+<span>İş Parçacığı: Worker #3 (Zarif Çökme / İzolasyon Sağlandı)</span>
+</div>
+</div>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted">14:38:12</span>
+</div>
+<!-- Eylemler Çubuğu -->
+<div class="flex items-center gap-2 pt-2 border-t border-error/20">
+<button class="h-7 px-2.5 rounded bg-primary text-white hover:bg-primary-container text-body-ui font-body-ui-medium flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 14px;">autorenew</span>
+<span>Manuel OCR Dene</span>
+</button>
+<button class="h-7 px-2.5 rounded border border-border-subtle bg-surface-bright hover:bg-surface-container text-body-ui text-text-primary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-text-muted" style="font-size: 14px;">skip_next</span>
+<span>Atla &amp; Yalnızca Meta Veriyi Koru</span>
+</button>
+<button class="h-7 px-2.5 rounded border border-border-subtle bg-surface-bright hover:bg-surface-container text-body-ui text-text-primary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-text-muted" style="font-size: 14px;">terminal</span>
+<span>Günlük Kaydını İncele (Log)</span>
+</button>
+</div>
+</div>
+<!-- BÖLÜM 3: TAMAMLANMIŞ İŞLER LİSTESİ (GEÇMİŞ DENSE TABLO) -->
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between px-1">
+<span class="text-label-meta-medium font-label-meta-medium text-text-muted uppercase tracking-wider">Son Tamamlanan İşlemler (24 Geçmiş Kaydı)</span>
+<button class="text-label-meta font-label-meta text-primary hover:underline">Tüm Günlüğü Dışa Aktar (.jsonl)</button>
+</div>
+<div class="border border-border-subtle rounded bg-surface-container-lowest overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="h-7 bg-surface-container-low border-b border-border-subtle text-[11px] font-label-meta-medium text-text-muted">
+<th class="w-8 px-2 text-center">Durum</th>
+<th class="px-3">İş Tanımı &amp; Hedef</th>
+<th class="w-32 px-3">Başlatan</th>
+<th class="w-24 px-3">İşlem Süresi</th>
+<th class="w-24 px-3 text-right">Zaman</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-subtle font-body-ui text-body-ui">
+<!-- Satır 1 -->
+<tr class="h-7 hover:bg-surface-container transition-colors">
+<td class="text-center px-2">
+<span class="material-symbols-outlined text-status-included" style="font-size: 15px;">check_circle</span>
+</td>
+<td class="px-3 font-body-ui-medium text-text-primary">
+                    1.912 Kayıt Tekilleştirme Hash Hesaplama (SHA-256 + DOI)
+                  </td>
+<td class="px-3 text-text-muted font-code-kbd text-code-kbd">CLI (tez dedup)</td>
+<td class="px-3 font-code-kbd text-code-kbd text-text-muted">1.8 sn</td>
+<td class="px-3 text-right font-code-kbd text-code-kbd text-text-muted">14:40:55</td>
+</tr>
+<!-- Satır 2 -->
+<tr class="h-7 hover:bg-surface-container transition-colors">
+<td class="text-center px-2">
+<span class="material-symbols-outlined text-status-included" style="font-size: 15px;">check_circle</span>
+</td>
+<td class="px-3 font-body-ui-medium text-text-primary">
+                    PRISMA 2020 Sayımları Önbellekleme &amp; Matris Senkronizasyonu
+                  </td>
+<td class="px-3 text-text-muted font-code-kbd text-code-kbd">GUI Motoru</td>
+<td class="px-3 font-code-kbd text-code-kbd text-text-muted">0.2 sn</td>
+<td class="px-3 text-right font-code-kbd text-code-kbd text-text-muted">14:39:10</td>
+</tr>
+<!-- Satır 3 -->
+<tr class="h-7 hover:bg-surface-container transition-colors">
+<td class="text-center px-2">
+<span class="material-symbols-outlined text-status-included" style="font-size: 15px;">check_circle</span>
+</td>
+<td class="px-3 font-body-ui-medium text-text-primary">
+                    Semantic Scholar API Batch Sorgulama (Atıf Ağı Çıkarımı)
+                  </td>
+<td class="px-3 text-text-muted font-code-kbd text-code-kbd">GUI Arka Plan</td>
+<td class="px-3 font-code-kbd text-code-kbd text-text-muted">12.4 sn</td>
+<td class="px-3 text-right font-code-kbd text-code-kbd text-text-muted">14:35:48</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- ========================================== -->
+<!-- SAĞ DENETÇİ PANELİ (360px Inspector Panel) -->
+<!-- ========================================== -->
+<aside class="w-[360px] shrink-0 border-l border-border-subtle bg-bg-surface flex flex-col justify-between overflow-hidden select-none">
+<!-- Panel Başlığı -->
+<div class="h-10 px-space-md border-b border-border-subtle bg-surface-container-lowest flex items-center justify-between shrink-0">
+<div class="flex items-center gap-1.5 text-label-meta-medium font-label-meta-medium text-primary">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px;">terminal</span>
+<span>Seçili İş Konsol Çıktısı (Worker #2)</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded text-text-muted hover:bg-surface-container" title="Terminali Temizle">
+<span class="material-symbols-outlined" style="font-size: 15px;">backspace</span>
+</button>
+<button class="px-1.5 py-0.5 rounded bg-surface-container text-text-muted font-code-kbd text-[10px] flex items-center gap-1" title="Otomatik Kaydır Aktif">
+<span class="w-1.5 h-1.5 rounded-full bg-status-included"></span> AUTO-SCROLL
+          </button>
+</div>
+</div>
+<!-- Monospace Koyu Terminal Alanı -->
+<div class="flex-1 p-space-md bg-[#161618] text-[#e4e2e2] font-code-kbd text-code-kbd overflow-y-auto custom-scrollbar space-y-1.5 leading-relaxed selection:bg-primary-container selection:text-white">
+<div class="text-[#78716c] pb-1 border-b border-[#27272a] flex justify-between">
+<span>GROBID 0.8.0 TEI Service</span>
+<span>PID: 88201</span>
+</div>
+<p class="text-[#a1a1aa]"><span class="text-[#78716c]">[14:41:00]</span> [WORKER] Spawning thread pool worker for process ID #2...</p>
+<p class="text-[#a1a1aa]"><span class="text-[#78716c]">[14:41:01]</span> [GROBID] Connecting to unix socket /tmp/grobid_engine.sock</p>
+<p class="text-[#60a5fa]"><span class="text-[#78716c]">[14:41:02]</span> [GROBID] Parsing TEI header for Zhang2024_MSR.pdf...</p>
+<p class="text-[#4ade80]"><span class="text-[#78716c]">[14:41:04]</span> [GROBID] Extracted 48 citations, 3 tables, 4 figures.</p>
+<p class="text-[#4ade80]"><span class="text-[#78716c]">[14:41:05]</span> [GROBID] Section segmentation completed with confidence 0.96.</p>
+<p class="text-[#c084fc]"><span class="text-[#78716c]">[14:41:06]</span> [EMBED] Chunking text into 512-token windows...</p>
+<p class="text-[#fbbf24]"><span class="text-[#78716c]">[14:41:06]</span> [EMBED] 14 chunks generated. Dispatching nomic-embed-text...</p>
+<!-- Canlı Titreyen İmleç -->
+<div class="flex items-center gap-1 text-[#38bdf8] pt-1">
+<span class="animate-pulse">❯</span>
+<span class="text-[#a1a1aa]">Processing page 9 of 12 (Methodology Section)...</span>
+<span class="inline-block w-2 h-3.5 bg-[#38bdf8] animate-pulse"></span>
+</div>
+</div>
+<!-- Sistem Kaynak Tüketimi (Telemetri Widget'ı) -->
+<div class="p-space-md border-t border-border-subtle bg-surface-container-lowest space-y-space-sm shrink-0">
+<div class="flex items-center justify-between text-label-meta-medium font-label-meta-medium text-text-muted">
+<span>Sistem Kaynak Tüketimi</span>
+<span class="font-code-kbd text-status-included font-medium">Optimal</span>
+</div>
+<!-- 4 Kolonlu Mini Metrik Matrisi -->
+<div class="grid grid-cols-2 gap-2 text-[11px] font-code-kbd">
+<div class="p-2 rounded bg-surface-container border border-border-subtle">
+<div class="text-text-muted">CPU Kullanımı</div>
+<div class="text-body-ui-medium font-body-ui-medium text-primary mt-0.5 flex items-center justify-between">
+<span>%18</span>
+<span class="text-text-muted text-[10px]">4 / 8 Çekirdek</span>
+</div>
+<div class="w-full h-1 bg-surface-container-high rounded-full mt-1.5 overflow-hidden">
+<div class="h-full bg-primary" style="width: 18%;"></div>
+</div>
+</div>
+<div class="p-2 rounded bg-surface-container border border-border-subtle">
+<div class="text-text-muted">RAM Tüketimi</div>
+<div class="text-body-ui-medium font-body-ui-medium text-primary mt-0.5 flex items-center justify-between">
+<span>3.4 GB</span>
+<span class="text-text-muted text-[10px]">/ 16 GB</span>
+</div>
+<div class="w-full h-1 bg-surface-container-high rounded-full mt-1.5 overflow-hidden">
+<div class="h-full bg-status-reading-blue" style="width: 21%;"></div>
+</div>
+</div>
+<div class="p-2 rounded bg-surface-container border border-border-subtle">
+<div class="text-text-muted">Disk I/O</div>
+<div class="text-body-ui-medium font-body-ui-medium text-primary mt-0.5">
+              12 MB/s <span class="text-text-muted text-[10px] font-normal">Yazma</span>
+</div>
+</div>
+<div class="p-2 rounded bg-surface-container border border-border-subtle">
+<div class="text-text-muted">Veritabanı</div>
+<div class="text-body-ui-medium font-body-ui-medium text-status-included mt-0.5 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-status-included"></span>
+              SQLite WAL Aktif
+            </div>
+</div>
+</div>
+<div class="text-[11px] font-label-meta text-text-muted flex items-center justify-between pt-1">
+<span>Worker Bellek Limiti: 2.0 GB / worker</span>
+<button class="text-primary hover:underline font-code-kbd">hız_ayarla</button>
+</div>
+</div>
+</aside>
+</div>
+<!-- ========================================== -->
+<!-- ALT DURUM ÇUBUĞU (FOOTER STATUS BAR)       -->
+<!-- ========================================== -->
+<footer class="h-7 px-space-md border-t border-border-subtle bg-bg-surface flex items-center justify-between shrink-0 text-label-meta font-label-meta text-text-muted select-none z-50">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-status-reading-blue animate-pulse"></span>
+<span class="text-text-primary font-medium">3 İş Çalışıyor</span>
+</div>
+<span>·</span>
+<div class="flex items-center gap-1 text-status-excluded font-medium">
+<span class="material-symbols-outlined text-status-excluded" style="font-size: 14px;">error</span>
+<span>1 Hatalı</span>
+</div>
+<span>·</span>
+<div class="flex items-center gap-1 text-status-included">
+<span class="material-symbols-outlined text-status-included" style="font-size: 14px;">check</span>
+<span>24 Tamamlandı</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-code-kbd text-code-kbd text-text-muted">Motor: Tokio Rust Async Core v0.9.4</span>
+<span>·</span>
+<span class="text-text-primary font-medium flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-status-included"></span>
+        Sistem: Yüksüz (Sakin Çalışma Modu)
+      </span>
+<span>·</span>
+<span class="font-code-kbd text-code-kbd bg-surface-container px-1.5 py-0.5 rounded border border-border-subtle text-text-muted">UTF-8</span>
+</div>
+</footer>
+</body></html>

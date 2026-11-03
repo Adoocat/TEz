@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TEz · LLM Destekli Kod İnceleme SLR - Atıf Grafiği</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts: Inter, Source Serif 4, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-bright": "#fbf9f8",
+            "surface-container": "#efeded",
+            "on-background": "#1b1c1c",
+            "on-secondary-container": "#fffbff",
+            "text-primary": "#1c1917",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#eae8e7",
+            "surface-tint": "#455f87",
+            "inverse-primary": "#adc8f5",
+            "border-subtle": "#e5e3dc",
+            "bg-surface": "#f5f4f0",
+            "background": "#fbf9f8",
+            "surface-dim": "#dbd9d9",
+            "on-tertiary": "#ffffff",
+            "inverse-surface": "#303030",
+            "on-error": "#ffffff",
+            "on-surface": "#1b1c1c",
+            "on-tertiary-container": "#55b66c",
+            "status-reading-blue": "#2563eb",
+            "primary": "#022448",
+            "secondary-fixed-dim": "#d2bbff",
+            "status-revisit-purple": "#9333ea",
+            "on-primary-fixed-variant": "#2d486d",
+            "tertiary-fixed-dim": "#79db8d",
+            "on-tertiary-fixed": "#00210a",
+            "primary-container": "#1e3a5f",
+            "status-unverified": "#ea580c",
+            "status-maybe": "#b45309",
+            "secondary": "#712ae2",
+            "on-secondary-fixed-variant": "#5a00c6",
+            "tertiary-fixed": "#95f8a7",
+            "tertiary": "#002b0f",
+            "surface": "#fbf9f8",
+            "text-muted": "#78716c",
+            "secondary-fixed": "#eaddff",
+            "primary-fixed": "#d5e3ff",
+            "outline-variant": "#c4c6cf",
+            "outline": "#74777f",
+            "on-tertiary-fixed-variant": "#005323",
+            "on-surface-variant": "#43474e",
+            "surface-container-lowest": "#ffffff",
+            "surface-variant": "#e4e2e2",
+            "secondary-container": "#8a4cfc",
+            "error": "#ba1a1a",
+            "status-included": "#15803d",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#00431b",
+            "on-error-container": "#93000a",
+            "status-excluded": "#b91c1c",
+            "on-primary-fixed": "#001c3b",
+            "primary-fixed-dim": "#adc8f5",
+            "on-primary-container": "#8aa4cf",
+            "status-ai": "#7c3aed",
+            "on-secondary-fixed": "#25005a",
+            "bg-canvas": "#fcfbf9",
+            "error-container": "#ffdad6",
+            "status-retracted": "#991b1b",
+            "surface-container-low": "#f5f3f3",
+            "inverse-on-surface": "#f2f0f0",
+            "surface-container-highest": "#e4e2e2"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "margin": "1rem",
+            "space-lg": "1rem",
+            "margin-panel": "0.75rem",
+            "space-sm": "0.5rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "gutter-compact": "0.5rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "code-kbd": ["JetBrains Mono"],
+            "body-reading": ["\"Source Serif 4\""],
+            "body-ui": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-meta-medium": ["Inter"],
+            "code-tech": ["JetBrains Mono"],
+            "headline-md": ["Inter"],
+            "label-meta": ["Inter"],
+            "body-ui-medium": ["Inter"],
+            "headline-sm": ["Inter"]
+          },
+          "fontSize": {
+            "code-kbd": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+            "body-reading": ["15px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-ui": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-meta-medium": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "code-tech": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "label-meta": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "body-ui-medium": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+            "headline-sm": ["15px", { "lineHeight": "20px", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 16px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .node-pulse {
+      animation: pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+  </style>
+</head>
+<body class="h-full bg-bg-canvas text-text-primary antialiased font-body-ui text-body-ui select-none overflow-hidden flex flex-col">
+<!-- ================= TOPNAVBAR (Shared Component) ================= -->
+<header class="flex justify-between items-center w-full px-space-md h-9 border-b border-border-subtle dark:border-outline-variant bg-bg-surface dark:bg-inverse-surface select-none z-50">
+<div class="flex items-center space-x-space-md">
+<!-- Window Controls (macOS style flat micro-dots) -->
+<div class="flex items-center space-x-1.5 mr-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-[#ff5f56] border border-[#e0443e] inline-block"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e] border border-[#dea123] inline-block"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-[#27c93f] border border-[#1aab29] inline-block"></span>
+</div>
+<!-- App Title & Breadcrumb -->
+<div class="flex items-center space-x-space-xs">
+<span class="text-headline-sm font-headline-sm font-semibold text-primary dark:text-inverse-primary tracking-tight">TEz</span>
+<span class="text-text-muted text-label-meta">·</span>
+<span class="text-primary dark:text-inverse-primary font-medium text-label-meta-medium font-label-meta-medium">Review: LLM Destekli Kod İnceleme SLR</span>
+<span class="text-text-muted text-label-meta">/</span>
+<span class="text-text-muted text-label-meta font-label-meta">Atıf Grafiği</span>
+</div>
+</div>
+<!-- Search Command Bar -->
+<div class="flex items-center space-x-space-md">
+<div class="flex items-center bg-surface-container px-space-sm py-0.5 rounded border border-border-subtle cursor-pointer hover:bg-surface-container-high transition-colors duration-150 text-text-muted hover:text-on-surface w-64 justify-between">
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="text-label-meta font-label-meta">Ara veya komut...</span>
+</div>
+<kbd class="font-code-kbd text-code-kbd px-1 py-0.5 rounded bg-surface-container-lowest border border-border-subtle text-text-primary">⌘K</kbd>
+</div>
+<div class="flex items-center space-x-1">
+<button class="p-1 rounded text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150 flex items-center justify-center" title="Tema Değiştir">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+<button class="p-1 rounded text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-colors duration-150 flex items-center justify-center" title="Ayarlar">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ================= WORKSPACE BODY ================= -->
+<div class="flex-1 flex overflow-hidden relative">
+<!-- ================= SIDENAVBAR (Shared Component Rail) ================= -->
+<aside class="w-14 flex-shrink-0 flex flex-col justify-between items-center py-space-sm z-40 border-r border-border-subtle bg-bg-surface dark:bg-inverse-surface select-none">
+<!-- Main Destination Tabs -->
+<nav class="flex flex-col space-y-1.5 items-center w-full">
+<!-- Tab 0: Arama -->
+<button class="flex flex-col items-center justify-center text-text-muted hover:bg-surface-container-high hover:text-on-surface p-1.5 w-10 h-10 rounded transition-colors duration-150" title="Arama">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Arama</span>
+</button>
+<!-- Tab 1: Kütüphane -->
+<button class="flex flex-col items-center justify-center text-text-muted hover:bg-surface-container-high hover:text-on-surface p-1.5 w-10 h-10 rounded transition-colors duration-150" title="Kütüphane">
+<span class="material-symbols-outlined" data-icon="local_library">local_library</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Kitaplık</span>
+</button>
+<!-- Tab 2: Eleme -->
+<button class="flex flex-col items-center justify-center text-text-muted hover:bg-surface-container-high hover:text-on-surface p-1.5 w-10 h-10 rounded transition-colors duration-150" title="Eleme">
+<span class="material-symbols-outlined" data-icon="rule">rule</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Eleme</span>
+</button>
+<!-- Tab 3: Okuyucu -->
+<button class="flex flex-col items-center justify-center text-text-muted hover:bg-surface-container-high hover:text-on-surface p-1.5 w-10 h-10 rounded transition-colors duration-150" title="Okuyucu">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Okuyucu</span>
+</button>
+<!-- Tab 4: Notlar -->
+<button class="flex flex-col items-center justify-center text-text-muted hover:bg-surface-container-high hover:text-on-surface p-1.5 w-10 h-10 rounded transition-colors duration-150" title="Notlar">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Notlar</span>
+</button>
+<!-- Tab 5: Matris / Ağ (ACTIVE) -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-inverse-primary bg-primary-fixed dark:bg-primary-container rounded p-1.5 w-10 h-10 font-medium" title="Matris &amp; Ağ">
+<span class="material-symbols-outlined" data-icon="table_chart">table_chart</span>
+<span class="text-[9px] font-label-meta-medium tracking-tight mt-0.5">Matris</span>
+</button>
+<!-- Tab 6: YZ Asistanı -->
+<button class="flex flex-col items-center justify-center text-text-muted hover:bg-surface-container-high hover:text-on-surface p-1.5 w-10 h-10 rounded transition-colors duration-150" title="YZ Asistanı">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Asistan</span>
+</button>
+</nav>
+<!-- Footer Utilities -->
+<div class="flex flex-col space-y-1.5 items-center w-full">
+<!-- CTA: Ekle -->
+<button class="flex items-center justify-center w-8 h-8 rounded bg-primary text-on-primary hover:bg-primary-container transition-colors mb-2" title="Yeni Kaynak Ekle">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+<button class="relative flex flex-col items-center justify-center text-text-muted hover:bg-surface-container-high hover:text-on-surface p-1.5 w-10 h-10 rounded transition-colors duration-150" title="Arka plan İşler (1 Etkin)">
+<span class="material-symbols-outlined animate-spin text-[15px]" data-icon="sync">sync</span>
+<span class="text-[8px] font-code-kbd tracking-tight mt-0.5">İşler</span>
+<span class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-status-reading-blue"></span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-muted hover:bg-surface-container-high hover:text-on-surface p-1.5 w-10 h-10 rounded transition-colors duration-150" title="Ayarlar">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[8px] font-label-meta tracking-tight mt-0.5">Ayar</span>
+</button>
+</div>
+</aside>
+<!-- ================= CONTEXT SIDEBAR (240px) ================= -->
+<div class="w-60 flex-shrink-0 bg-bg-surface border-r border-border-subtle flex flex-col h-full overflow-y-auto select-none">
+<!-- Header -->
+<div class="h-9 px-space-md border-b border-border-subtle flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-text-primary tracking-tight">Grafik Filtreleri</span>
+<span class="material-symbols-outlined text-text-muted cursor-pointer hover:text-on-surface" data-icon="filter_list">filter_list</span>
+</div>
+<div class="p-space-md space-y-space-md flex-1">
+<!-- Section: Ağ Modu -->
+<div>
+<label class="block font-label-meta-medium text-label-meta-medium text-text-muted uppercase tracking-wider mb-1.5">Ağ Modu</label>
+<div class="space-y-1">
+<button class="w-full text-left px-2.5 py-1.5 rounded border border-primary bg-surface-container-lowest text-primary font-body-ui-medium text-body-ui-medium flex items-center justify-between">
+<span>Doğrudan Atıf Ağı</span>
+<span class="material-symbols-outlined text-sm text-primary" data-icon="check">check</span>
+</button>
+<button class="w-full text-left px-2.5 py-1.5 rounded border border-transparent hover:border-border-subtle hover:bg-surface-container text-text-muted hover:text-text-primary text-body-ui font-body-ui transition-colors">
+              Ortak Atıf (Co-citation)
+            </button>
+<button class="w-full text-left px-2.5 py-1.5 rounded border border-transparent hover:border-border-subtle hover:bg-surface-container text-text-muted hover:text-text-primary text-body-ui font-body-ui transition-colors">
+              Bibliyometrik Eşleşme
+            </button>
+</div>
+</div>
+<div class="h-px bg-border-subtle"></div>
+<!-- Section: Yıl Aralığı -->
+<div>
+<div class="flex justify-between items-center mb-1.5">
+<label class="font-label-meta-medium text-label-meta-medium text-text-muted uppercase tracking-wider">Yıl Aralığı</label>
+<span class="font-code-kbd text-code-kbd text-text-primary bg-surface-container px-1 rounded">2018 — 2024</span>
+</div>
+<div class="relative pt-1 px-1">
+<div class="h-1 bg-surface-variant rounded relative">
+<div class="absolute left-1/4 right-0 h-1 bg-primary rounded"></div>
+<div class="absolute left-1/4 top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-surface-container-lowest border-2 border-primary rounded-full cursor-pointer shadow-sm"></div>
+<div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-3 h-3 bg-surface-container-lowest border-2 border-primary rounded-full cursor-pointer shadow-sm"></div>
+</div>
+<div class="flex justify-between text-[10px] font-code-kbd text-text-muted mt-1.5">
+<span>2018</span>
+<span>2020</span>
+<span>2022</span>
+<span>2024</span>
+</div>
+</div>
+</div>
+<div class="h-px bg-border-subtle"></div>
+<!-- Section: Kapsam -->
+<div>
+<label class="block font-label-meta-medium text-label-meta-medium text-text-muted uppercase tracking-wider mb-1.5">Kapsam</label>
+<div class="space-y-1.5">
+<label class="flex items-center space-x-2 text-body-ui font-body-ui-medium text-text-primary cursor-pointer">
+<input checked="" class="rounded border-border-subtle text-primary focus:ring-0 w-3.5 h-3.5" type="checkbox"/>
+<span class="flex-1">Yalnızca Dahil Edilenler</span>
+<span class="font-code-kbd text-code-kbd px-1 py-0.2 rounded bg-primary-fixed text-primary font-medium">42</span>
+</label>
+<label class="flex items-center space-x-2 text-body-ui font-body-ui text-text-muted hover:text-text-primary cursor-pointer">
+<input class="rounded border-border-subtle text-primary focus:ring-0 w-3.5 h-3.5" type="checkbox"/>
+<span class="flex-1">Tüm Kütüphane</span>
+<span class="font-code-kbd text-code-kbd px-1 py-0.2 rounded bg-surface-container text-text-muted">1.425</span>
+</label>
+<label class="flex items-center space-x-2 text-body-ui font-body-ui text-text-muted hover:text-text-primary cursor-pointer">
+<input class="rounded border-border-subtle text-primary focus:ring-0 w-3.5 h-3.5" type="checkbox"/>
+<span class="flex-1">Kartopu Adayları</span>
+<span class="font-code-kbd text-code-kbd px-1 py-0.2 rounded bg-surface-container-high text-status-ai font-medium">+18</span>
+</label>
+</div>
+</div>
+<div class="h-px bg-border-subtle"></div>
+<!-- Section: Kümeleme / Konu Renkleri -->
+<div>
+<div class="flex justify-between items-center mb-1.5">
+<label class="font-label-meta-medium text-label-meta-medium text-text-muted uppercase tracking-wider">Kümeleme (Modülerlik)</label>
+<span class="font-code-kbd text-[10px] text-text-muted">k=3</span>
+</div>
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-label-meta font-label-meta">
+<div class="flex items-center space-x-1.5 truncate">
+<span class="w-2.5 h-2.5 rounded-full bg-status-ai flex-shrink-0"></span>
+<span class="truncate text-text-primary" title="LLM Destekli Kod İnceleme">LLM Destekli İnceleme</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted flex-shrink-0">22 makale</span>
+</div>
+<div class="flex items-center justify-between text-label-meta font-label-meta">
+<div class="flex items-center space-x-1.5 truncate">
+<span class="w-2.5 h-2.5 rounded-full bg-status-reading-blue flex-shrink-0"></span>
+<span class="truncate text-text-primary" title="Statik Analiz &amp; AST/CFG Hibritleri">AST/CFG Hibritleri</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted flex-shrink-0">12 makale</span>
+</div>
+<div class="flex items-center justify-between text-label-meta font-label-meta">
+<div class="flex items-center space-x-1.5 truncate">
+<span class="w-2.5 h-2.5 rounded-full bg-status-included flex-shrink-0"></span>
+<span class="truncate text-text-primary" title="Ampirik Değerlendirme &amp; Benchmark">Ampirik &amp; Benchmark</span>
+</div>
+<span class="font-code-kbd text-code-kbd text-text-muted flex-shrink-0">8 makale</span>
+</div>
+</div>
+</div>
+<div class="h-px bg-border-subtle"></div>
+<!-- Section: Atıf Eşiği & Boyutlandırma -->
+<div class="space-y-3">
+<div>
+<label class="block font-label-meta-medium text-label-meta-medium text-text-muted uppercase tracking-wider mb-1">Min. Atıf Eşiği</label>
+<div class="flex items-center space-x-2">
+<input class="w-full accent-primary h-1 bg-surface-variant rounded" max="25" min="1" type="range" value="5"/>
+<span class="font-code-kbd text-code-kbd px-1.5 py-0.5 rounded bg-surface-container border border-border-subtle">5+</span>
+</div>
+</div>
+<div>
+<label class="block font-label-meta-medium text-label-meta-medium text-text-muted uppercase tracking-wider mb-1">Düğüm Boyutlandırma</label>
+<div class="grid grid-cols-2 gap-1 text-[11px] font-label-meta">
+<button class="px-1.5 py-1 text-center rounded border border-primary bg-primary-fixed text-primary font-medium">Kütüphane İçi</button>
+<button class="px-1.5 py-1 text-center rounded border border-border-subtle text-text-muted hover:bg-surface-container">Genel (S2)</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Legend Footer -->
+<div class="p-space-sm bg-surface-container border-t border-border-subtle text-[11px] text-text-muted flex items-center justify-between">
+<span>Yönlü kenarlar atıfı temsil eder</span>
+<span class="font-code-kbd text-code-kbd">A → B</span>
+</div>
+</div>
+<!-- ================= MAIN WORKSPACE CANVAS ================= -->
+<main class="flex-1 flex flex-col bg-bg-canvas relative overflow-hidden">
+<!-- Canvas Floating Toolbar -->
+<div class="h-10 px-space-md border-b border-border-subtle bg-bg-surface flex items-center justify-between z-20">
+<div class="flex items-center space-x-1">
+<!-- Zoom Controls -->
+<div class="flex items-center bg-surface-container-lowest border border-border-subtle rounded p-0.5">
+<button class="w-6 h-6 flex items-center justify-center hover:bg-surface-container text-text-muted hover:text-text-primary rounded" title="Yakınlaştır">
+<span class="material-symbols-outlined text-[15px]" data-icon="add">add</span>
+</button>
+<span class="font-code-kbd text-code-kbd px-1.5 text-text-muted">100%</span>
+<button class="w-6 h-6 flex items-center justify-center hover:bg-surface-container text-text-muted hover:text-text-primary rounded" title="Uzaklaştır">
+<span class="material-symbols-outlined text-[15px]" data-icon="remove">remove</span>
+</button>
+<div class="w-px h-3.5 bg-border-subtle mx-0.5"></div>
+<button class="w-6 h-6 flex items-center justify-center hover:bg-surface-container text-text-muted hover:text-text-primary rounded" title="Merkeze Odakla">
+<span class="material-symbols-outlined text-[15px]" data-icon="center_focus_strong">center_focus_strong</span>
+</button>
+</div>
+<div class="h-4 w-px bg-border-subtle mx-1"></div>
+<!-- Layout Modes -->
+<div class="flex items-center bg-surface-container border border-border-subtle rounded p-0.5 space-x-0.5">
+<button class="px-2 py-0.5 rounded text-label-meta-medium font-label-meta-medium bg-surface-container-lowest text-primary shadow-xs flex items-center space-x-1">
+<span class="material-symbols-outlined text-sm" data-icon="bubble_chart">bubble_chart</span>
+<span>Force-Directed</span>
+</button>
+<button class="px-2 py-0.5 rounded text-label-meta font-label-meta text-text-muted hover:text-text-primary flex items-center space-x-1">
+<span class="material-symbols-outlined text-sm" data-icon="view_timeline">view_timeline</span>
+<span>Zaman Çizelgesi</span>
+</button>
+</div>
+<div class="h-4 w-px bg-border-subtle mx-1"></div>
+<button class="px-2 py-1 text-label-meta font-label-meta text-text-muted hover:text-text-primary rounded border border-border-subtle bg-surface-container-lowest flex items-center space-x-1">
+<span class="w-2 h-2 rounded-full bg-status-retracted"></span>
+<span>Geri Çekilmiş (0)</span>
+</button>
+</div>
+<div class="flex items-center space-x-2">
+<!-- Export Dropdown -->
+<div class="relative">
+<button class="px-2.5 py-1 text-label-meta-medium font-label-meta-medium text-text-primary bg-surface-container-lowest border border-border-subtle rounded hover:bg-surface-container flex items-center space-x-1">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+<span>Dışa Aktar</span>
+<span class="material-symbols-outlined text-xs" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Graph Surface Container -->
+<div class="flex-1 relative overflow-hidden bg-[#faf9f5]">
+<!-- Subtle Grid Pattern -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="32" id="grid" patternunits="userSpaceOnUse" width="32">
+<circle cx="1" cy="1" fill="#e2dfd7" r="0.75"></circle>
+</pattern>
+<!-- Marker Definitions for Directed Graph Arrows -->
+<marker id="arrow-gray" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="24" refy="5" viewbox="0 0 10 10">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#c4c0b6"></path>
+</marker>
+<marker id="arrow-active" markerheight="7" markerwidth="7" orient="auto-start-reverse" refx="28" refy="5" viewbox="0 0 10 10">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#022448"></path>
+</marker>
+<marker id="arrow-violet" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="26" refy="5" viewbox="0 0 10 10">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#7c3aed"></path>
+</marker>
+</defs>
+<rect fill="url(#grid)" height="100%" width="100%"></rect>
+</svg>
+<!-- SVG Interactive Graph Elements -->
+<svg class="absolute inset-0 w-full h-full z-10" preserveaspectratio="xMidYMid meet" viewbox="0 0 800 600">
+<!-- Background Citation Edge Links -->
+<g stroke-linecap="round" stroke-opacity="0.6">
+<!-- Inter-cluster links -->
+<line marker-end="url(#arrow-gray)" stroke="#c4c0b6" stroke-width="1.2" x1="220" x2="380" y1="210" y2="280"></line>
+<line marker-end="url(#arrow-active)" stroke="#022448" stroke-width="2" x1="280" x2="380" y1="390" y2="280"></line>
+<line marker-end="url(#arrow-active)" stroke="#022448" stroke-width="2.2" x1="380" x2="520" y1="280" y2="190"></line>
+<line marker-end="url(#arrow-active)" stroke="#022448" stroke-width="2" x1="380" x2="560" y1="280" y2="340"></line>
+<line marker-end="url(#arrow-gray)" stroke="#c4c0b6" stroke-width="1.2" x1="380" x2="340" y1="280" y2="450"></line>
+<line marker-end="url(#arrow-violet)" stroke="#7c3aed" stroke-width="1.5" x1="520" x2="630" y1="190" y2="140"></line>
+<line marker-end="url(#arrow-gray)" stroke="#c4c0b6" stroke-width="1.2" x1="560" x2="680" y1="340" y2="390"></line>
+<line marker-end="url(#arrow-gray)" stroke="#c4c0b6" stroke-width="1" x1="220" x2="160" y1="210" y2="130"></line>
+<line marker-end="url(#arrow-gray)" stroke="#c4c0b6" stroke-width="1" x1="280" x2="190" y1="390" y2="460"></line>
+<line marker-end="url(#arrow-gray)" stroke="#c4c0b6" stroke-width="1.2" x1="520" x2="430" y1="190" y2="110"></line>
+<!-- Additional dense graph cross edges -->
+<line marker-end="url(#arrow-active)" stroke="#022448" stroke-dasharray="3,3" stroke-width="1.8" x1="430" x2="380" y1="110" y2="280"></line>
+<line marker-end="url(#arrow-gray)" stroke="#c4c0b6" stroke-width="1.2" x1="560" x2="520" y1="340" y2="190"></line>
+<line marker-end="url(#arrow-gray)" stroke="#c4c0b6" stroke-width="1" x1="340" x2="280" y1="450" y2="390"></line>
+<line marker-end="url(#arrow-gray)" stroke="#c4c0b6" stroke-width="1" x1="630" x2="680" y1="140" y2="240"></line>
+<line marker-end="url(#arrow-gray)" stroke="#c4c0b6" stroke-width="1" x1="680" x2="560" y1="240" y2="340"></line>
+</g>
+<!-- Graph Nodes -->
+<!-- Peripheral Nodes: Blue Cluster (AST / CFG) -->
+<g class="cursor-pointer">
+<circle cx="160" cy="130" fill="#f5f4f0" r="10" stroke="#2563eb" stroke-width="2"></circle>
+<text fill="#43474e" font-family="Inter" font-size="10" font-weight="500" text-anchor="middle" x="160" y="152">Kim 2021</text>
+</g>
+<g class="cursor-pointer">
+<circle cx="220" cy="210" fill="#f5f4f0" r="14" stroke="#2563eb" stroke-width="2.5"></circle>
+<circle cx="220" cy="210" fill="#2563eb" r="5"></circle>
+<text fill="#1c1917" font-family="Inter" font-size="11" font-weight="600" text-anchor="middle" x="220" y="236">Hellendoorn (2021)</text>
+<text fill="#78716c" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="220" y="247">c: 6</text>
+</g>
+<!-- Peripheral Nodes: Green Cluster (Empirical & Benchmark) -->
+<g class="cursor-pointer">
+<circle cx="190" cy="460" fill="#f5f4f0" r="9" stroke="#15803d" stroke-width="2"></circle>
+<text fill="#43474e" font-family="Inter" font-size="10" font-weight="500" text-anchor="middle" x="190" y="480">Guo 2022</text>
+</g>
+<g class="cursor-pointer">
+<circle cx="340" cy="450" fill="#f5f4f0" r="12" stroke="#15803d" stroke-width="2"></circle>
+<circle cx="340" cy="450" fill="#15803d" r="4"></circle>
+<text fill="#1c1917" font-family="Inter" font-size="11" font-weight="500" text-anchor="middle" x="340" y="474">Demir vd. (2024)</text>
+</g>
+<g class="cursor-pointer">
+<circle cx="280" cy="390" fill="#f5f4f0" r="17" stroke="#15803d" stroke-width="3"></circle>
+<circle cx="280" cy="390" fill="#15803d" r="6"></circle>
+<text fill="#1c1917" font-family="Inter" font-size="11" font-weight="600" text-anchor="middle" x="280" y="418">Arvidsson vd. (2024)</text>
+<text fill="#78716c" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="280" y="430">c: 9</text>
+</g>
+<!-- Intermediate Nodes: Purple Cluster (LLM Assisted) -->
+<g class="cursor-pointer">
+<circle cx="430" cy="110" fill="#f5f4f0" r="12" stroke="#7c3aed" stroke-width="2"></circle>
+<circle cx="430" cy="110" fill="#7c3aed" r="4"></circle>
+<text fill="#1c1917" font-family="Inter" font-size="10" font-weight="500" text-anchor="middle" x="430" y="98">Wei vd. 2023</text>
+</g>
+<g class="cursor-pointer">
+<circle cx="520" cy="190" fill="#f5f4f0" r="19" stroke="#7c3aed" stroke-width="3"></circle>
+<circle cx="520" cy="190" fill="#7c3aed" r="7"></circle>
+<text fill="#1c1917" font-family="Inter" font-size="12" font-weight="600" text-anchor="middle" x="520" y="168">Tufano vd. (2023)</text>
+<text fill="#78716c" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="520" y="222">c: 11</text>
+</g>
+<g class="cursor-pointer">
+<circle cx="560" cy="340" fill="#f5f4f0" r="18" stroke="#7c3aed" stroke-width="3"></circle>
+<circle cx="560" cy="340" fill="#7c3aed" r="6"></circle>
+<text fill="#1c1917" font-family="Inter" font-size="11" font-weight="600" text-anchor="middle" x="560" y="372">Zhang &amp; Ray (2024)</text>
+<text fill="#78716c" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="560" y="384">c: 10</text>
+</g>
+<g class="cursor-pointer">
+<circle cx="630" cy="140" fill="#f5f4f0" r="14" stroke="#7c3aed" stroke-width="2"></circle>
+<circle cx="630" cy="140" fill="#7c3aed" r="5"></circle>
+<text fill="#1c1917" font-family="Inter" font-size="10" font-weight="500" text-anchor="middle" x="630" y="164">Xia vd. (2023)</text>
+</g>
+<g class="cursor-pointer">
+<circle cx="680" cy="240" fill="#f5f4f0" r="9" stroke="#7c3aed" stroke-width="1.5"></circle>
+<text fill="#43474e" font-family="Inter" font-size="9" font-weight="400" text-anchor="middle" x="680" y="258">Li 2024</text>
+</g>
+<g class="cursor-pointer">
+<circle cx="680" cy="390" fill="#f5f4f0" r="11" stroke="#7c3aed" stroke-width="1.5"></circle>
+<text fill="#43474e" font-family="Inter" font-size="10" font-weight="400" text-anchor="middle" x="680" y="412">Sun 2023</text>
+</g>
+<!-- ================= PRIMARY KEYSTONE NODE (SELECTED & ACTIVE) ================= -->
+<!-- Şahin & Güneş (2024) -->
+<g class="cursor-pointer group">
+<!-- Selection halo & ripple ring -->
+<circle class="node-pulse" cx="380" cy="280" fill="none" r="38" stroke="#adc8f5" stroke-dasharray="4,4" stroke-width="1.5"></circle>
+<circle cx="380" cy="280" fill="#d5e3ff" fill-opacity="0.3" r="32" stroke="#022448" stroke-width="1"></circle>
+<!-- Core Node Circle -->
+<circle cx="380" cy="280" fill="#022448" r="24" stroke="#ffffff" stroke-width="3"></circle>
+<!-- Inner Cluster Indicator Badge (Purple LLM cluster) -->
+<circle cx="396" cy="264" fill="#7c3aed" r="6" stroke="#ffffff" stroke-width="1.5"></circle>
+<!-- Citation Count Inside Node -->
+<text fill="#ffffff" font-family="JetBrains Mono" font-size="12" font-weight="600" text-anchor="middle" x="380" y="284">14</text>
+<!-- Floating Banner Label -->
+<rect fill="#ffffff" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.06))" height="24" rx="4" stroke="#022448" stroke-width="1.5" width="180" x="290" y="312"></rect>
+<text fill="#022448" font-family="Inter" font-size="11" font-weight="700" text-anchor="middle" x="380" y="328">★ Şahin &amp; Güneş (2024)</text>
+</g>
+</svg>
+<!-- Floating Quick HUD at bottom left inside canvas -->
+<div class="absolute bottom-3 left-3 bg-surface-container-lowest/90 backdrop-blur-none border border-border-subtle rounded p-2 text-label-meta font-label-meta shadow-xs flex items-center space-x-3 z-20">
+<div class="flex items-center space-x-1.5">
+<span class="w-2 h-2 rounded-full bg-status-ai"></span>
+<span class="text-text-primary">LLM</span>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="w-2 h-2 rounded-full bg-status-reading-blue"></span>
+<span class="text-text-primary">AST/CFG</span>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="w-2 h-2 rounded-full bg-status-included"></span>
+<span class="text-text-primary">Empirical</span>
+</div>
+<div class="h-3 w-px bg-border-subtle"></div>
+<span class="text-text-muted font-code-kbd text-[11px]">Düğüm tıklandığında denetçi güncellenir</span>
+</div>
+</div>
+</main>
+<!-- ================= RIGHT INSPECTOR PANEL (340px) ================= -->
+<aside class="w-[340px] flex-shrink-0 bg-bg-surface border-l border-border-subtle flex flex-col h-full overflow-y-auto select-none">
+<!-- Panel Header -->
+<div class="h-10 px-space-md border-b border-border-subtle flex items-center justify-between bg-bg-surface">
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="account_tree">account_tree</span>
+<span class="font-headline-sm text-headline-sm text-text-primary font-semibold">Düğüm Denetçisi</span>
+</div>
+<div class="flex items-center space-x-1">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-code-kbd bg-primary-fixed text-primary font-semibold">ID: P-042</span>
+<button class="p-1 rounded text-text-muted hover:text-text-primary hover:bg-surface-container">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+</div>
+<div class="p-space-md space-y-space-md flex-1">
+<!-- Paper Metadata Card -->
+<div class="bg-surface-container-lowest border border-border-subtle rounded p-3 space-y-2">
+<div class="flex items-start justify-between gap-2">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-label-meta-medium bg-status-ai/10 text-status-ai border border-status-ai/30">
+<span class="mr-1">✦</span> LLM Destekli İnceleme
+            </span>
+<span class="font-code-kbd text-code-kbd text-status-included bg-status-included/10 px-1 py-0.5 rounded">Dahil [I]</span>
+</div>
+<h2 class="font-headline-md text-headline-sm text-text-primary leading-tight font-semibold">
+            AST-Driven Code Context Expansion for Generative Code Reviewing
+          </h2>
+<div class="text-body-ui text-text-muted font-body-ui leading-relaxed">
+            Şahin, E., Güneş, M.
+          </div>
+<div class="flex items-center space-x-2 text-label-meta font-label-meta text-text-muted">
+<span class="font-medium text-text-primary">IEEE TSE 2024</span>
+<span>·</span>
+<span class="font-code-tech text-[11px] truncate" title="10.1109/TSE.2024.3312">DOI: 10.1109/TSE.2024.3312</span>
+</div>
+</div>
+<!-- Metrics Bento Strip -->
+<div class="grid grid-cols-3 gap-1.5">
+<div class="bg-surface-container-lowest border border-border-subtle p-2 rounded text-center">
+<div class="text-text-muted text-[10px] font-label-meta-medium uppercase">Kütüphane İçi</div>
+<div class="font-headline-md text-headline-md text-primary font-bold mt-0.5">14</div>
+<div class="text-[9px] text-text-muted font-code-kbd">atıf aldı</div>
+</div>
+<div class="bg-surface-container-lowest border border-border-subtle p-2 rounded text-center">
+<div class="text-text-muted text-[10px] font-label-meta-medium uppercase">Toplam Atıf</div>
+<div class="font-headline-md text-headline-md text-text-primary font-bold mt-0.5">86</div>
+<div class="text-[9px] text-text-muted font-code-kbd">Semantic Scholar</div>
+</div>
+<div class="bg-surface-container-lowest border border-border-subtle p-2 rounded text-center">
+<div class="text-text-muted text-[10px] font-label-meta-medium uppercase">PageRank</div>
+<div class="font-headline-md text-headline-md text-status-ai font-bold mt-0.5">#1</div>
+<div class="text-[9px] text-text-muted font-code-kbd">en merkezi</div>
+</div>
+</div>
+<!-- Citation Links Breakdown -->
+<div class="space-y-3">
+<!-- Incoming Citations (Kütüphanede 8 / 42) -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-meta-medium text-label-meta-medium text-text-primary flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px] text-text-muted" data-icon="north_east">north_east</span>
+<span>Bu Makalenin Kaynakçası</span>
+</span>
+<span class="font-code-kbd text-code-kbd text-text-muted">Kütüphanede 8 / 42</span>
+</div>
+<div class="space-y-1 bg-surface-container-lowest border border-border-subtle rounded p-1.5">
+<div class="flex items-center justify-between p-1 rounded hover:bg-surface-container cursor-pointer text-body-ui">
+<div class="flex items-center space-x-1.5 truncate">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ai"></span>
+<span class="truncate font-body-ui-medium text-text-primary">Tufano vd. (2023)</span>
+</div>
+<span class="font-code-kbd text-[10px] text-text-muted">TSE '23</span>
+</div>
+<div class="flex items-center justify-between p-1 rounded hover:bg-surface-container cursor-pointer text-body-ui">
+<div class="flex items-center space-x-1.5 truncate">
+<span class="w-1.5 h-1.5 rounded-full bg-status-ai"></span>
+<span class="truncate font-body-ui-medium text-text-primary">Zhang &amp; Ray (2024)</span>
+</div>
+<span class="font-code-kbd text-[10px] text-text-muted">ICSE '24</span>
+</div>
+<div class="flex items-center justify-between p-1 rounded hover:bg-surface-container cursor-pointer text-body-ui">
+<div class="flex items-center space-x-1.5 truncate">
+<span class="w-1.5 h-1.5 rounded-full bg-status-reading-blue"></span>
+<span class="truncate font-body-ui-medium text-text-primary">Hellendoorn vd. (2021)</span>
+</div>
+<span class="font-code-kbd text-[10px] text-text-muted">FSE '21</span>
+</div>
+<div class="pt-1 border-t border-border-subtle/50 text-center">
+<button class="text-[11px] font-label-meta-medium text-primary hover:underline">+ 5 diğer kaynakça maddesi</button>
+</div>
+</div>
+</div>
+<!-- Outgoing Citations (Atıf Yapanlar 6) -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="font-label-meta-medium text-label-meta-medium text-text-primary flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px] text-text-muted" data-icon="south_west">south_west</span>
+<span>Bu Makaleye Atıf Yapanlar</span>
+</span>
+<span class="font-code-kbd text-code-kbd text-text-muted">Kütüphanede 6</span>
+</div>
+<div class="space-y-1 bg-surface-container-lowest border border-border-subtle rounded p-1.5">
+<div class="flex items-center justify-between p-1 rounded hover:bg-surface-container cursor-pointer text-body-ui">
+<div class="flex items-center space-x-1.5 truncate">
+<span class="w-1.5 h-1.5 rounded-full bg-status-included"></span>
+<span class="truncate font-body-ui-medium text-text-primary">Arvidsson vd. (2024)</span>
+</div>
+<span class="font-code-kbd text-[10px] text-text-muted">Empirical '24</span>
+</div>
+<div class="flex items-center justify-between p-1 rounded hover:bg-surface-container cursor-pointer text-body-ui">
+<div class="flex items-center space-x-1.5 truncate">
+<span class="w-1.5 h-1.5 rounded-full bg-status-included"></span>
+<span class="truncate font-body-ui-medium text-text-primary">Demir vd. (2024)</span>
+</div>
+<span class="font-code-kbd text-[10px] text-text-muted">Preprint</span>
+</div>
+<div class="pt-1 border-t border-border-subtle/50 text-center">
+<button class="text-[11px] font-label-meta-medium text-primary hover:underline">+ 4 diğer atıf yapan makale</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Actions Cluster -->
+<div class="space-y-1.5 pt-2">
+<label class="block font-label-meta-medium text-label-meta-medium text-text-muted uppercase tracking-wider mb-1">Hızlı Eylemler</label>
+<button class="w-full h-8 px-2.5 bg-primary text-on-primary font-body-ui-medium text-body-ui rounded hover:bg-primary-container transition-colors duration-150 flex items-center justify-between shadow-xs">
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span>PDF Okuyucuda Aç</span>
+</div>
+<kbd class="font-code-kbd text-[10px] px-1 py-0.2 rounded bg-primary-container text-surface-container-lowest">⌘O</kbd>
+</button>
+<button class="w-full h-8 px-2.5 bg-surface-container-lowest border border-border-subtle text-text-primary font-body-ui-medium text-body-ui rounded hover:bg-surface-container transition-colors duration-150 flex items-center justify-between">
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-[16px] text-text-muted" data-icon="table_rows">table_rows</span>
+<span>Matris Satırını Göster</span>
+</div>
+<span class="material-symbols-outlined text-sm text-text-muted" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="w-full h-8 px-2.5 bg-secondary-fixed/50 border border-secondary-fixed-dim text-secondary font-body-ui-medium text-body-ui rounded hover:bg-secondary-fixed transition-colors duration-150 flex items-center justify-between">
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="scatter_plot">scatter_plot</span>
+<span>Kartopu Taraması Başlat</span>
+</div>
+<span class="font-code-kbd text-code-kbd font-bold px-1 rounded bg-surface-container-lowest">+6 Aday</span>
+</button>
+</div>
+</div>
+<!-- Inspector Footer Note -->
+<div class="p-space-sm bg-surface-container border-t border-border-subtle flex items-center justify-between text-[11px] text-text-muted">
+<span>Son Senkronizasyon: Bugün 14:22</span>
+<span class="font-code-kbd text-code-kbd">BibTeX: ✓</span>
+</div>
+</aside>
+</div>
+<!-- ================= BOTTOM STATUS BAR ================= -->
+<footer class="h-6 flex-shrink-0 bg-surface-container border-t border-border-subtle px-space-md flex items-center justify-between text-[11px] font-label-meta text-text-muted select-none z-50">
+<div class="flex items-center space-x-3">
+<div class="flex items-center space-x-1">
+<span class="w-2 h-2 rounded-full bg-status-included"></span>
+<span class="font-medium text-text-primary">42 Düğüm</span>
+</div>
+<span>·</span>
+<span>118 Kenar</span>
+<span>·</span>
+<span>Ortalama Derece: <span class="font-code-kbd text-text-primary">5.62</span></span>
+<span>·</span>
+<span>Modülerlik: <span class="font-code-kbd text-text-primary">0.68</span></span>
+</div>
+<div class="flex items-center space-x-3">
+<div class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[13px] text-status-included" data-icon="database">database</span>
+<span class="font-code-kbd">SQLite Graph Engine Aktif</span>
+</div>
+<span>·</span>
+<span class="font-code-kbd">Bellek: 18.4 MB</span>
+<span>·</span>
+<span class="font-code-kbd text-primary font-medium">SLR-2024-V2</span>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+<html class="dark h-full" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TEz · LLM Destekli Kod İnceleme SLR — Literatür Matrisi</title>
+<!-- Google Fonts: Inter & JetBrains Mono & Source Serif 4 -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Source+Serif+4:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS via CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary-fixed-variant": "#2d486d",
+            "secondary": "#712ae2",
+            "inverse-on-surface": "#f2f0f0",
+            "primary-fixed": "#d5e3ff",
+            "on-tertiary-fixed": "#00210a",
+            "on-tertiary-container": "#55b66c",
+            "bg-canvas": "#fcfbf9",
+            "on-secondary": "#ffffff",
+            "inverse-surface": "#18191d",
+            "surface-tint": "#455f87",
+            "tertiary-container": "#00431b",
+            "on-primary-fixed": "#001c3b",
+            "on-tertiary": "#ffffff",
+            "surface-bright": "#fbf9f8",
+            "on-secondary-fixed": "#25005a",
+            "bg-surface": "#f5f4f0",
+            "status-retracted": "#991b1b",
+            "on-surface": "#1b1c1c",
+            "status-ai": "#7c3aed",
+            "inverse-primary": "#adc8f5",
+            "on-background": "#1b1c1c",
+            "tertiary": "#002b0f",
+            "on-primary-container": "#8aa4cf",
+            "border-subtle": "#e5e3dc",
+            "error-container": "#ffdad6",
+            "surface": "#fbf9f8",
+            "on-surface-variant": "#43474e",
+            "outline": "#74777f",
+            "on-secondary-fixed-variant": "#5a00c6",
+            "background": "#fbf9f8",
+            "surface-container-low": "#f5f3f3",
+            "surface-container-highest": "#e4e2e2",
+            "status-excluded": "#b91c1c",
+            "surface-variant": "#e4e2e2",
+            "status-included": "#15803d",
+            "surface-container-lowest": "#ffffff",
+            "outline-variant": "#27272a",
+            "primary-fixed-dim": "#adc8f5",
+            "text-primary": "#1c1917",
+            "primary-container": "#1e3a5f",
+            "on-secondary-container": "#fffbff",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed-variant": "#005323",
+            "tertiary-fixed": "#95f8a7",
+            "on-error-container": "#93000a",
+            "surface-container-high": "#eae8e7",
+            "status-unverified": "#ea580c",
+            "error": "#ba1a1a",
+            "on-primary": "#ffffff",
+            "secondary-fixed": "#eaddff",
+            "secondary-container": "#8a4cfc",
+            "surface-container": "#efeded",
+            "status-revisit-purple": "#9333ea",
+            "primary": "#022448",
+            "status-reading-blue": "#2563eb",
+            "status-maybe": "#b45309",
+            "secondary-fixed-dim": "#d2bbff",
+            "text-muted": "#78716c",
+            "tertiary-fixed-dim": "#79db8d",
+            "surface-dim": "#dbd9d9"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "margin": "1rem",
+            "gutter": "1rem",
+            "space-lg": "1rem",
+            "margin-panel": "0.75rem",
+            "space-xs": "0.25rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "gutter-compact": "0.5rem",
+            "space-sm": "0.5rem"
+          },
+          "fontFamily": {
+            "headline-md": ["Inter"],
+            "label-meta": ["Inter"],
+            "code-tech": ["JetBrains Mono"],
+            "body-ui": ["Inter"],
+            "body-reading": ["\"Source Serif 4\""],
+            "headline-lg": ["Inter"],
+            "label-meta-medium": ["Inter"],
+            "code-kbd": ["JetBrains Mono"],
+            "headline-sm": ["Inter"],
+            "body-ui-medium": ["Inter"]
+          },
+          "fontSize": {
+            "headline-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "label-meta": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "code-tech": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "body-ui": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "body-reading": ["15px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-meta-medium": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "code-kbd": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+            "headline-sm": ["15px", { "lineHeight": "20px", "fontWeight": "600" }],
+            "body-ui-medium": ["13px", { "lineHeight": "18px", "fontWeight": "500" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Custom scrollbars for clean functional terminal feel */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #18191d;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 2px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3f3f46;
+    }
+    .grid-cell-active {
+      outline: 2px solid #38bdf8;
+      outline-offset: -2px;
+    }
+  </style>
+</head>
+<body class="bg-[#121316] text-[#e2e4e9] font-body-ui text-body-ui h-full w-full overflow-hidden select-none flex flex-col">
+<!-- TOPNAVBAR (Shared Component exact execution) -->
+<header class="flex justify-between items-center w-full px-space-md h-9 border-b border-[#27272a] bg-[#18191d] select-none shrink-0 z-50">
+<div class="flex items-center gap-space-md">
+<!-- Window Controls (macOS style dots for desktop app feel) -->
+<div class="flex items-center space-x-1.5 mr-2">
+<span class="w-3 h-3 rounded-full bg-[#ef4444]/80 inline-block"></span>
+<span class="w-3 h-3 rounded-full bg-[#eab308]/80 inline-block"></span>
+<span class="w-3 h-3 rounded-full bg-[#22c55e]/80 inline-block"></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-headline-sm font-headline-sm font-semibold text-inverse-primary tracking-tight">TEz</span>
+<span class="text-[#52525b] font-code-kbd text-code-kbd">/</span>
+<span class="text-label-meta font-label-meta text-[#c5c8d1] font-medium">Review: LLM Destekli Kod İnceleme SLR</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-code-kbd bg-[#27272a] text-[#a1a1aa] border border-[#3f3f46]/50">PRISMA-2020</span>
+</div>
+</div>
+<!-- Center/Right Actions -->
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center gap-2 bg-[#121316] border border-[#27272a] rounded px-2.5 py-1 text-label-meta font-label-meta text-[#8b909e]">
+<span class="material-symbols-outlined text-[15px] text-[#8b909e]">search</span>
+<span class="font-code-kbd text-code-kbd">⌘K Ara veya komut...</span>
+</div>
+<!-- Quick sync indicators -->
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#1e2025] text-[#10b981] font-code-kbd text-[11px] border border-[#27272a]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse"></span>
+<span>SQLite WAL</span>
+</div>
+<div class="flex items-center gap-1 pl-2 border-l border-[#27272a]">
+<button class="p-1 rounded text-[#e2e4e9] hover:bg-[#252830] transition-colors duration-150" title="Koyu Tema Aktif">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">dark_mode</span>
+</button>
+<button class="p-1 rounded text-[#8b909e] hover:bg-[#252830] hover:text-[#e2e4e9] transition-colors duration-150" title="Ayarlar">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN BODY LAYOUT: SideNav + Workbench -->
+<div class="flex flex-1 w-full h-[calc(100vh-36px-24px)] overflow-hidden">
+<!-- SIDENAVBAR (Shared Component: 56px Navigation Rail) -->
+<aside class="w-14 bg-[#18191d] border-r border-[#27272a] flex flex-col justify-between items-center py-space-sm shrink-0 z-40">
+<!-- Upper Group -->
+<div class="flex flex-col items-center gap-2 w-full">
+<!-- Workbench logo / cta -->
+<button class="w-9 h-9 rounded bg-[#252830] hover:bg-[#2f333d] text-[#e2e4e9] flex items-center justify-center border border-[#3f3f46]/40 transition-colors" title="Yeni Kayıt Ekle">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+<div class="w-8 h-[1px] bg-[#27272a] my-1"></div>
+<!-- 7 Primary Tabs: "Arama", "Kütüphane", "Eleme", "Okuyucu", "Notlar", "Matris" [ACTIVE], "YZ Asistanı" -->
+<nav class="flex flex-col items-center gap-1.5 w-full">
+<!-- Arama -->
+<button class="flex flex-col items-center justify-center text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#252830] p-1.5 w-10 h-10 rounded transition-colors" title="Arama">
+<span class="material-symbols-outlined text-[20px]">search</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Arama</span>
+</button>
+<!-- Kütüphane -->
+<button class="flex flex-col items-center justify-center text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#252830] p-1.5 w-10 h-10 rounded transition-colors" title="Kütüphane">
+<span class="material-symbols-outlined text-[20px]">local_library</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Kitaplık</span>
+</button>
+<!-- Eleme -->
+<button class="flex flex-col items-center justify-center text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#252830] p-1.5 w-10 h-10 rounded transition-colors" title="Eleme">
+<span class="material-symbols-outlined text-[20px]">rule</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Eleme</span>
+</button>
+<!-- Okuyucu -->
+<button class="flex flex-col items-center justify-center text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#252830] p-1.5 w-10 h-10 rounded transition-colors" title="Okuyucu">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Okuyucu</span>
+</button>
+<!-- Notlar -->
+<button class="flex flex-col items-center justify-center text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#252830] p-1.5 w-10 h-10 rounded transition-colors" title="Notlar">
+<span class="material-symbols-outlined text-[20px]">edit_note</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Notlar</span>
+</button>
+<!-- Matris (ACTIVE INTENT TAB) -->
+<button class="flex flex-col items-center justify-center text-inverse-primary bg-[#1e293b] border border-[#38bdf8]/30 rounded p-1.5 w-10 h-10 shadow-sm relative" title="Matris">
+<span class="material-symbols-outlined text-[20px] text-[#38bdf8]" style="font-variation-settings: 'FILL' 1;">table_chart</span>
+<span class="text-[9px] font-label-meta-medium text-[#e2e4e9] tracking-tight mt-0.5">Matris</span>
+<span class="absolute left-0 top-1.5 bottom-1.5 w-0.5 bg-[#38bdf8] rounded-r"></span>
+</button>
+<!-- YZ Asistanı -->
+<button class="flex flex-col items-center justify-center text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#252830] p-1.5 w-10 h-10 rounded transition-colors" title="YZ Asistanı">
+<span class="material-symbols-outlined text-[20px] text-purple-400">auto_awesome</span>
+<span class="text-[9px] font-label-meta tracking-tight mt-0.5">Asistan</span>
+</button>
+</nav>
+</div>
+<!-- Footer Rail Tabs: Arka plan İşler & Ayarlar -->
+<div class="flex flex-col items-center gap-1.5 w-full">
+<button class="flex flex-col items-center justify-center text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#252830] p-1.5 w-10 h-10 rounded transition-colors" title="Arka plan İşler">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#252830] p-1.5 w-10 h-10 rounded transition-colors" title="Ayarlar">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+</button>
+</div>
+</aside>
+<!-- WORKSPACE CANVAS: Matrix Table & Inspector -->
+<main class="flex-1 flex flex-col h-full min-w-0 bg-[#121316]">
+<!-- SUB-TOOLBAR: Matrix Controls, Filters, Extraction density -->
+<section class="h-10 bg-[#18191d] border-b border-[#27272a] px-space-md flex items-center justify-between shrink-0 gap-3">
+<!-- Left: Filters & Search in table -->
+<div class="flex items-center gap-2">
+<div class="flex items-center bg-[#121316] border border-[#27272a] rounded px-2 py-1 text-label-meta font-label-meta text-[#8b909e] w-56">
+<span class="material-symbols-outlined text-[16px] mr-1.5 text-[#71717a]">filter_alt</span>
+<input class="bg-transparent border-0 p-0 text-[12px] text-[#e2e4e9] placeholder-[#52525b] focus:ring-0 w-full outline-none font-body-ui" placeholder="Matriste filtrele..." type="text"/>
+<span class="font-code-kbd text-[10px] text-[#52525b]">/</span>
+</div>
+<div class="h-4 w-[1px] bg-[#27272a]"></div>
+<!-- Status Filters -->
+<div class="flex items-center gap-1">
+<button class="px-2 py-0.5 rounded text-label-meta font-label-meta bg-[#252830] text-[#e2e4e9] border border-[#3f3f46]/50 hover:bg-[#2d313c]">
+              Tümü <span class="font-code-kbd text-[11px] text-[#8b909e] ml-1">42</span>
+</button>
+<button class="px-2 py-0.5 rounded text-label-meta font-label-meta text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#1e2025]">
+<span class="inline-block w-2 h-2 rounded-full bg-[#15803d] mr-1"></span>Okundu <span class="font-code-kbd text-[11px] text-[#71717a]">28</span>
+</button>
+<button class="px-2 py-0.5 rounded text-label-meta font-label-meta text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#1e2025]">
+<span class="inline-block w-2 h-2 rounded-full bg-[#2563eb] mr-1"></span>Okunuyor <span class="font-code-kbd text-[11px] text-[#71717a]">9</span>
+</button>
+<button class="px-2 py-0.5 rounded text-label-meta font-label-meta text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#1e2025]">
+<span class="inline-block w-2 h-2 rounded-full bg-[#9333ea] mr-1"></span>Tekrar Bak <span class="font-code-kbd text-[11px] text-[#71717a]">5</span>
+</button>
+</div>
+</div>
+<!-- Right: AI Fill, Add Column, Export, Density Toggle -->
+<div class="flex items-center gap-2">
+<!-- AI Fill Button -->
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#2e1065] text-[#d8b4fe] border border-[#7c3aed]/50 hover:bg-[#3b0764] hover:border-[#9333ea] transition-all text-label-meta font-label-meta-medium shadow-sm">
+<span class="material-symbols-outlined text-[15px] text-[#c084fc]">auto_awesome</span>
+<span>YZ ile Boşlukları Doldur</span>
+<span class="font-code-kbd text-[10px] text-[#a855f7] bg-[#1e0836] px-1 rounded ml-0.5">⌥B</span>
+</button>
+<!-- Sütun Ekle -->
+<button class="flex items-center gap-1 px-2 py-1 rounded bg-[#1e2025] hover:bg-[#252830] text-[#c5c8d1] border border-[#27272a] text-label-meta font-label-meta">
+<span class="material-symbols-outlined text-[15px]">add</span>
+<span>Sütun Ekle</span>
+</button>
+<div class="h-4 w-[1px] bg-[#27272a]"></div>
+<!-- Density Controls -->
+<div class="flex items-center bg-[#121316] border border-[#27272a] rounded p-0.5">
+<button class="px-2 py-0.5 text-[11px] font-label-meta-medium rounded bg-[#252830] text-[#e2e4e9]" title="Kompakt (28px)">Kompakt</button>
+<button class="px-2 py-0.5 text-[11px] font-label-meta text-[#8b909e] hover:text-[#e2e4e9]" title="Rahat (36px)">Rahat</button>
+</div>
+<!-- Export -->
+<div class="flex items-center gap-1">
+<button class="p-1 rounded text-[#8b909e] hover:text-[#e2e4e9] hover:bg-[#252830]" title="CSV / BibTeX / LaTeX Dışa Aktar">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+</button>
+</div>
+</div>
+</section>
+<!-- SPLIT VIEW WORKBENCH: MATRIX SPREADSHEET (Fluid) + INSPECTOR (360px Fixed) -->
+<div class="flex-1 flex overflow-hidden">
+<!-- SPREADSHEET CONTAINER -->
+<div class="flex-1 flex flex-col min-w-0 overflow-auto bg-[#121316]">
+<table class="w-full border-collapse text-left border-spacing-0 table-fixed">
+<!-- Table Header -->
+<thead class="sticky top-0 bg-[#18191d] z-20 shadow-[0_1px_0_#27272a]">
+<tr class="h-8 border-b border-[#27272a] text-[11px] font-label-meta-medium text-[#8b909e] select-none">
+<!-- Col 0: Index & Check -->
+<th class="w-10 px-2 text-center border-r border-[#27272a] bg-[#18191d]">#</th>
+<!-- Col 1: Fixed Article Title & Status -->
+<th class="w-64 px-3 border-r border-[#27272a] bg-[#18191d]">
+<div class="flex items-center justify-between">
+<span>Makale Künyesi</span>
+<span class="material-symbols-outlined text-[14px] text-[#52525b]">sort</span>
+</div>
+</th>
+<!-- Col 2: Approach -->
+<th class="w-56 px-3 border-r border-[#27272a] bg-[#18191d]">Yaklaşım</th>
+<!-- Col 3: LLM Model -->
+<th class="w-44 px-3 border-r border-[#27272a] bg-[#18191d]">Temel LLM Modeli</th>
+<!-- Col 4: Dataset / PR Size -->
+<th class="w-48 px-3 border-r border-[#27272a] bg-[#18191d]">Veri Seti (PR Boyutu)</th>
+<!-- Col 5: Programming Language -->
+<th class="w-36 px-3 border-r border-[#27272a] bg-[#18191d]">Programlama Dili</th>
+<!-- Col 6: Metric -->
+<th class="w-40 px-3 border-r border-[#27272a] bg-[#18191d]">Değerlendirme Metriği</th>
+<!-- Col 7: Human Eval -->
+<th class="w-32 px-3 border-r border-[#27272a] bg-[#18191d] text-center">İnsan Değ.</th>
+<!-- Col 8: Core Finding -->
+<th class="w-80 px-3 border-r border-[#27272a] bg-[#18191d]">Temel Bulgu</th>
+<!-- Col 9: Limitations -->
+<th class="w-64 px-3 bg-[#18191d]">Yöntemsel Kısıtlar</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#27272a] font-body-ui text-[12px]">
+<!-- ROW 1: ŞAHİN & GÜNEŞ (2024) [SELECTED ROW / ACTIVE CELL] -->
+<tr class="h-9 hover:bg-[#1a1c22] transition-colors bg-[#181a20]">
+<!-- Row # -->
+<td class="text-center font-code-kbd text-[#52525b] border-r border-[#27272a]">01</td>
+<!-- Fixed Author & Status -->
+<td class="px-3 border-r border-[#27272a] overflow-hidden whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#2563eb] shrink-0" title="Okunuyor"></span>
+<span class="font-body-ui-medium text-[#f4f4f5] truncate">Şahin &amp; Güneş (2024)</span>
+<span class="text-[10px] font-code-kbd px-1 py-0.2 rounded bg-[#1e2025] text-[#8b909e] border border-[#27272a]">ASE'24</span>
+</div>
+</td>
+<!-- ACTIVE CELL: AST-Güdümlü Bağlam Genişletme (With Evidence Chip) -->
+<td class="px-2.5 border-r border-[#27272a] relative grid-cell-active bg-[#1a2233]">
+<div class="flex items-center justify-between gap-1.5 overflow-hidden">
+<span class="text-[#e0f2fe] font-body-ui-medium truncate">AST-Güdümlü Bağlam Genişletme</span>
+<!-- Verified Evidence Chip: Page 4 -->
+<span class="shrink-0 flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#0369a1]/25 text-[#38bdf8] border border-[#0284c7]/40 text-[10px] font-code-kbd" title="Kanıt Sayfası: s.4, §3">
+<span class="material-symbols-outlined text-[11px]">link</span>
+<span>s.4</span>
+</span>
+</div>
+</td>
+<!-- LLM Model -->
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1] font-code-kbd text-[11px] truncate">
+                  CodeLlama-34B + GPT-4o
+                </td>
+<!-- Dataset / PR Size -->
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1] truncate font-code-kbd text-[11px]">
+                  12,450 GitHub PR (Orta/Büyük)
+                </td>
+<!-- Language -->
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1]">
+<div class="flex gap-1 items-center">
+<span class="px-1.5 py-0.2 bg-[#27272a] rounded text-[11px] font-code-kbd text-[#a1a1aa]">Java</span>
+<span class="px-1.5 py-0.2 bg-[#27272a] rounded text-[11px] font-code-kbd text-[#a1a1aa]">Kotlin</span>
+</div>
+</td>
+<!-- Metric -->
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1] font-code-kbd text-[11px] truncate">
+                  BLEU-4, Exact Match, ROC-AUC
+                </td>
+<!-- Human Eval -->
+<td class="px-3 border-r border-[#27272a] text-center">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-code-kbd bg-[#14532d]/40 text-[#4ade80] border border-[#16a34a]/30">Evet (n=12)</span>
+</td>
+<!-- Core Finding -->
+<td class="px-3 border-r border-[#27272a] text-[#a1a1aa] truncate">
+                  Sözdizimsel AST bağlamı, yanlış pozitif hata uyarılarını %31.4 oranında azalttı.
+                </td>
+<!-- Limitations -->
+<td class="px-3 text-[#71717a] truncate">
+                  Derleme zamanı bağımlılıkları eksik PR'larda çözümleme başarısızlığı.
+                </td>
+</tr>
+<!-- ROW 2: ARVIDSSON VD. (2024) [Contains Pending AI Suggestion Cell] -->
+<tr class="h-9 hover:bg-[#18191d] transition-colors">
+<td class="text-center font-code-kbd text-[#52525b] border-r border-[#27272a]">02</td>
+<td class="px-3 border-r border-[#27272a] truncate">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#15803d] shrink-0" title="Okundu"></span>
+<span class="font-body-ui-medium text-[#e2e4e9] truncate">Arvidsson vd. (2024)</span>
+<span class="text-[10px] font-code-kbd px-1 py-0.2 rounded bg-[#1e2025] text-[#8b909e] border border-[#27272a]">ICSE'24</span>
+</div>
+</td>
+<!-- Approach: User Input with Verified Evidence -->
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1] truncate">
+<div class="flex items-center justify-between">
+<span class="truncate">Çift-Aşamalı RAG + Diff Dilimi</span>
+<span class="text-[10px] font-code-kbd text-[#38bdf8] bg-[#0284c7]/10 px-1 rounded border border-[#0284c7]/20">s.8</span>
+</div>
+</td>
+<!-- LLM Model -->
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  Llama-3-70B-Instruct
+                </td>
+<!-- Dataset: PENDING AI SUGGESTION CELL (Violet tint + dashed border + ✦ badge) -->
+<td class="px-2 border-r border-[#27272a] bg-[#2d1b3e]/60 border-y border-dashed border-[#a855f7]/60">
+<div class="flex items-center justify-between gap-1">
+<span class="text-[11px] font-code-kbd text-[#e9d5ff] truncate flex items-center gap-1">
+<span class="text-[#c084fc] font-bold">✦</span> 4,820 PR (Apache Vakfı)
+                    </span>
+<div class="flex items-center gap-0.5">
+<button class="w-4 h-4 rounded bg-[#9333ea] hover:bg-[#a855f7] text-white flex items-center justify-center text-[10px]" title="Onayla">✓</button>
+</div>
+</div>
+</td>
+<!-- Language -->
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1]">
+<span class="px-1.5 py-0.2 bg-[#27272a] rounded text-[11px] font-code-kbd text-[#a1a1aa]">Python / Go</span>
+</td>
+<!-- Metric -->
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  F1-Score (Güvenlik Açığı)
+                </td>
+<!-- Human Eval -->
+<td class="px-3 border-r border-[#27272a] text-center">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-code-kbd bg-[#7f1d1d]/30 text-[#f87171] border border-[#ef4444]/30">Hayır</span>
+</td>
+<!-- Core Finding (Approved AI extraction cell) -->
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1] truncate">
+<span class="text-[#c084fc] mr-1 text-[11px]" title="Onaylanmış YZ Çıkarımı">✦</span>
+                  RAG mimarisi bağlam penceresini %60 küçülterek yanıt hızını 3x artırdı.
+                </td>
+<!-- Limitations -->
+<td class="px-3 text-[#71717a] truncate">
+                  Sentetik diff enjeksiyonu ile test edildi, canlı ortam eksik.
+                </td>
+</tr>
+<!-- ROW 3: TUFANO VD. (2023) [Marked for Revisit / Empty Cells] -->
+<tr class="h-9 hover:bg-[#18191d] transition-colors">
+<td class="text-center font-code-kbd text-[#52525b] border-r border-[#27272a]">03</td>
+<td class="px-3 border-r border-[#27272a] truncate">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#9333ea] shrink-0" title="Tekrar Bak"></span>
+<span class="font-body-ui-medium text-[#e2e4e9] truncate">Tufano vd. (2023)</span>
+<span class="text-[10px] font-code-kbd px-1 py-0.2 rounded bg-[#1e2025] text-[#8b909e] border border-[#27272a]">FSE'23</span>
+</div>
+</td>
+<!-- Approach: User Input Standard -->
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1] truncate">
+                  İnce Ayarlı Seq2Seq Kod İnceleme Modeli
+                </td>
+<!-- LLM Model -->
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  CodeT5-base (220M)
+                </td>
+<!-- Dataset -->
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  182,314 PR Çifti (Ciltli Veri)
+                </td>
+<!-- Language -->
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1]">
+<span class="px-1.5 py-0.2 bg-[#27272a] rounded text-[11px] font-code-kbd text-[#a1a1aa]">Java / C#</span>
+</td>
+<!-- Metric: EMPTY CELL -->
+<td class="px-3 border-r border-[#27272a] text-[#52525b] italic font-code-kbd text-[11px]">
+<span class="hover:text-[#a1a1aa] cursor-pointer">+ değer gir...</span>
+</td>
+<!-- Human Eval -->
+<td class="px-3 border-r border-[#27272a] text-center">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-code-kbd bg-[#14532d]/40 text-[#4ade80] border border-[#16a34a]/30">Evet (n=8)</span>
+</td>
+<!-- Core Finding -->
+<td class="px-3 border-r border-[#27272a] text-[#a1a1aa] truncate">
+                  Küçük parametreli özelleşmiş modeller, sıfır-atışlı GPT-3.5'e kıyasla daha tutarlı kod düzeltmeleri önerdi.
+                </td>
+<!-- Limitations: EMPTY CELL -->
+<td class="px-3 text-[#52525b] italic font-code-kbd text-[11px]">
+<span class="hover:text-[#a1a1aa] cursor-pointer">+ çıkarım bekleniyor</span>
+</td>
+</tr>
+<!-- ROW 4: ZHANG & RAY (2024) -->
+<tr class="h-9 hover:bg-[#18191d] transition-colors">
+<td class="text-center font-code-kbd text-[#52525b] border-r border-[#27272a]">04</td>
+<td class="px-3 border-r border-[#27272a] truncate">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#15803d] shrink-0" title="Okundu"></span>
+<span class="font-body-ui-medium text-[#e2e4e9] truncate">Zhang &amp; Ray (2024)</span>
+<span class="text-[10px] font-code-kbd px-1 py-0.2 rounded bg-[#1e2025] text-[#8b909e] border border-[#27272a]">TSE'24</span>
+</div>
+</td>
+<!-- Approach (AI suggested pending) -->
+<td class="px-2 border-r border-[#27272a] bg-[#2d1b3e]/60 border-y border-dashed border-[#a855f7]/60">
+<div class="flex items-center justify-between gap-1">
+<span class="text-[11px] font-body-ui text-[#e9d5ff] truncate flex items-center gap-1">
+<span class="text-[#c084fc]">✦</span> Çoklu-Ajan Tartışma Protokolü
+                    </span>
+<span class="text-[10px] font-code-kbd text-[#c084fc] bg-[#3b0764] px-1 rounded">Onay Bekliyor</span>
+</div>
+</td>
+<!-- LLM Model -->
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  Claude 3.5 Sonnet + GPT-4o
+                </td>
+<!-- Dataset -->
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  850 Kurumsal Mikroservis PR
+                </td>
+<!-- Language -->
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1]">
+<span class="px-1.5 py-0.2 bg-[#27272a] rounded text-[11px] font-code-kbd text-[#a1a1aa]">TypeScript</span>
+</td>
+<!-- Metric -->
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  Precision@K, Geliştirici Kabul Oranı
+                </td>
+<!-- Human Eval -->
+<td class="px-3 border-r border-[#27272a] text-center">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-code-kbd bg-[#14532d]/40 text-[#4ade80] border border-[#16a34a]/30">Evet (n=34)</span>
+</td>
+<!-- Core Finding -->
+<td class="px-3 border-r border-[#27272a] text-[#a1a1aa] truncate">
+                  İki modelin birbirini çapraz denetlediği müzakere mekanizması halüsinasyonları %44 azalttı.
+                </td>
+<!-- Limitations -->
+<td class="px-3 text-[#71717a] truncate">
+                  Aşırı API token maliyeti ve 45 saniyeyi aşan gecikme süresi.
+                </td>
+</tr>
+<!-- ROW 5: WANG VD. (2024) -->
+<tr class="h-9 hover:bg-[#18191d] transition-colors">
+<td class="text-center font-code-kbd text-[#52525b] border-r border-[#27272a]">05</td>
+<td class="px-3 border-r border-[#27272a] truncate">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#2563eb] shrink-0" title="Okunuyor"></span>
+<span class="font-body-ui-medium text-[#e2e4e9] truncate">Wang vd. (2024)</span>
+<span class="text-[10px] font-code-kbd px-1 py-0.2 rounded bg-[#1e2025] text-[#8b909e] border border-[#27272a]">EMSE'24</span>
+</div>
+</td>
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1] truncate">
+                  Statik Analiz Çıktıları ile LLM İstemi Güçlendirme
+                </td>
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  DeepSeek-Coder-33B
+                </td>
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  6,200 SonarQube Raporlu PR
+                </td>
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1]">
+<span class="px-1.5 py-0.2 bg-[#27272a] rounded text-[11px] font-code-kbd text-[#a1a1aa]">C / C++</span>
+</td>
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  Defect Detection Rate, Pass@1
+                </td>
+<td class="px-3 border-r border-[#27272a] text-center">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-code-kbd bg-[#7f1d1d]/30 text-[#f87171] border border-[#ef4444]/30">Hayır</span>
+</td>
+<td class="px-3 border-r border-[#27272a] text-[#a1a1aa] truncate">
+                  Uyarı logları ile beslenen model bellek sızıntılarını %78 oranında yakaladı.
+                </td>
+<td class="px-3 text-[#71717a] truncate">
+                  Büyük monorepo mimarilerinde statik tarama darboğazı.
+                </td>
+</tr>
+<!-- ROW 6: POURGHOLAMALI VD. (2023) -->
+<tr class="h-9 hover:bg-[#18191d] transition-colors">
+<td class="text-center font-code-kbd text-[#52525b] border-r border-[#27272a]">06</td>
+<td class="px-3 border-r border-[#27272a] truncate">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#15803d] shrink-0" title="Okundu"></span>
+<span class="font-body-ui-medium text-[#e2e4e9] truncate">Pourgholamali vd. (2023)</span>
+<span class="text-[10px] font-code-kbd px-1 py-0.2 rounded bg-[#1e2025] text-[#8b909e] border border-[#27272a]">MSR'23</span>
+</div>
+</td>
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1] truncate">
+                  Commit Mesajı &amp; PR Başlığı Semantik Uyumu
+                </td>
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  RoBERTa-large + PaLM 2
+                </td>
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  45,000 GitHub PR
+                </td>
+<td class="px-3 border-r border-[#27272a] text-[#c5c8d1]">
+<span class="px-1.5 py-0.2 bg-[#27272a] rounded text-[11px] font-code-kbd text-[#a1a1aa]">Çoklu (Polyglot)</span>
+</td>
+<td class="px-3 border-r border-[#27272a] font-code-kbd text-[11px] text-[#c5c8d1]">
+                  Cosine Similarity, ROUGE-L
+                </td>
+<td class="px-3 border-r border-[#27272a] text-center">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-code-kbd bg-[#7f1d1d]/30 text-[#f87171] border border-[#ef4444]/30">Hayır</span>
+</td>
+<td class="px-3 border-r border-[#27272a] text-[#a1a1aa] truncate">
+                  Geliştirici niyetini özetleyen bağlamlar inceleme döngüsünü 2.4 gün hızlandırdı.
+                </td>
+<td class="px-3 text-[#71717a] truncate">
+                  Gayriresmi ve kısa yazılmış commit kayıtlarında düşük doğruluk.
+                </td>
+</tr>
+</tbody>
+</table>
+<!-- Empty area fill for realistic desktop grid feeling -->
+<div class="flex-1 min-h-[160px] bg-[#121316] border-t border-[#27272a]/50 p-4 flex items-center justify-center">
+<span class="text-label-meta text-[#52525b] font-code-kbd flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">keyboard_double_arrow_down</span>
+              Toplam 42 satır yüklendi. Yön tuşları veya Vim tuşları (h, j, k, l) ile hücrelerde gezinebilirsiniz.
+            </span>
+</div>
+</div>
+<!-- RESIZABLE SPLITTER (1px hairline) -->
+<div class="w-[1px] bg-[#27272a] hover:bg-[#38bdf8] cursor-col-resize shrink-0 transition-colors"></div>
+<!-- RIGHT INSPECTOR PANEL: Cell Evidence & AI Auditor (380px fixed desktop width) -->
+<aside class="w-[380px] bg-[#18191d] flex flex-col shrink-0 border-l border-[#27272a] overflow-hidden">
+<!-- Inspector Header -->
+<div class="h-10 px-3.5 border-b border-[#27272a] flex items-center justify-between bg-[#1e2025]/60 shrink-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[17px] text-[#38bdf8]">travel_explore</span>
+<span class="text-label-meta-medium font-label-meta-medium text-[#e2e4e9]">Hücre Kanıt Denetçisi</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-code-kbd text-[11px] text-[#8b909e] px-1.5 py-0.5 rounded bg-[#121316] border border-[#27272a]">Hücre: [1, 2]</span>
+<button class="p-1 text-[#8b909e] hover:text-[#e2e4e9] rounded" title="Paneli Daralt">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+<!-- Inspector Content Scroll Area -->
+<div class="flex-1 overflow-y-auto p-3.5 space-y-4 font-body-ui">
+<!-- Context Summary Card -->
+<div class="p-2.5 rounded bg-[#121316] border border-[#27272a] space-y-1.5">
+<div class="flex items-center justify-between text-[11px] text-[#8b909e]">
+<span class="font-code-kbd uppercase text-[#71717a]">Seçili Kayıt</span>
+<span class="text-[#38bdf8] font-code-kbd">Şahin &amp; Güneş (2024)</span>
+</div>
+<div class="text-[12px] font-body-ui-medium text-[#e2e4e9]">
+                Sütun: <span class="text-[#a1a1aa] font-normal">Yaklaşım</span>
+</div>
+<div class="pt-1 text-[13px] font-semibold text-[#38bdf8] bg-[#0369a1]/10 px-2 py-1 rounded border border-[#0284c7]/20">
+                AST-Güdümlü Bağlam Genişletme (AST-Driven Context Expansion)
+              </div>
+</div>
+<!-- PDF Citation Evidence Box -->
+<div class="rounded border border-[#27272a] bg-[#141518] p-3 space-y-2.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-[#10b981]">verified</span>
+<span class="text-label-meta-medium font-label-meta-medium text-[#c5c8d1]">Doğrulanmış PDF Kanıtı</span>
+</div>
+<!-- Source Coordinate Chip -->
+<button class="flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#1e2025] hover:bg-[#252830] text-[#38bdf8] font-code-kbd text-[10px] border border-[#0284c7]/30 transition-colors" title="PDF Koordinatına Git">
+<span class="material-symbols-outlined text-[12px]">open_in_new</span>
+<span>s.4, §3 (Satır 142)</span>
+</button>
+</div>
+<!-- Excerpt Quote Block -->
+<blockquote class="border-l-2 border-[#38bdf8] pl-2.5 py-1 text-[13px] font-body-reading text-[#d4d4d8] italic leading-relaxed bg-[#181a20] rounded-r">
+                "To mitigate the lexical myopia of raw diffs, we construct an Abstract Syntax Tree (AST) overlay that extracts caller hierarchies up to 2-hops, systematically expanding the prompt context with syntactically grounded code artifacts."
+              </blockquote>
+<div class="flex items-center justify-between pt-1">
+<span class="text-[11px] font-code-kbd text-[#71717a]">Vurgu Eşleşmesi: %99.2 (Tam Alıntı)</span>
+<button class="px-2 py-1 rounded bg-[#1e293b] hover:bg-[#283548] text-[#38bdf8] text-[11px] font-code-kbd flex items-center gap-1 transition-colors">
+<span>PDF'te Aç</span>
+<kbd class="font-code-kbd text-[10px] bg-[#0f172a] px-1 rounded border border-[#334155]">⌘O</kbd>
+</button>
+</div>
+</div>
+<!-- AI Extraction Model Provenance & Decision Card -->
+<div class="rounded border border-[#7c3aed]/40 bg-[#1e1329]/40 p-3 space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-[#c084fc]">psychology</span>
+<span class="text-label-meta-medium font-label-meta-medium text-[#e9d5ff]">YZ Çıkarım Ajanı</span>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-[#3b0764] text-[#d8b4fe] font-code-kbd text-[10px] border border-[#a855f7]/30">
+                  llama-3.1:8b (Yerel Ollama)
+                </span>
+</div>
+<div class="text-[12px] text-[#c5c8d1] leading-relaxed">
+                Bu veri maddesi, makalenin <em>Methodology</em> bölümünden yerel model tarafından 0.12ms'de tespit edilmiş ve insan araştırmacı (Siz) tarafından onaylanmıştır.
+              </div>
+<!-- Quick Decision Action Buttons (Keyboard ergonomics) -->
+<div class="space-y-1.5 pt-1">
+<div class="text-[11px] font-label-meta text-[#8b909e]">Hızlı Düzeltme &amp; Denetim Aksiyonları:</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="flex items-center justify-center gap-1 py-1.5 px-2 rounded bg-[#15803d]/25 hover:bg-[#15803d]/40 text-[#4ade80] border border-[#16a34a]/40 text-label-meta-medium font-label-meta-medium transition-colors">
+<span>✓ Onayla</span>
+<kbd class="font-code-kbd text-[10px] bg-[#052e16] px-1 rounded border border-[#166534]">A</kbd>
+</button>
+<button class="flex items-center justify-center gap-1 py-1.5 px-2 rounded bg-[#7f1d1d]/25 hover:bg-[#7f1d1d]/40 text-[#f87171] border border-[#ef4444]/40 text-label-meta-medium font-label-meta-medium transition-colors">
+<span>✕ Reddet</span>
+<kbd class="font-code-kbd text-[10px] bg-[#450a0a] px-1 rounded border border-[#991b1b]">R</kbd>
+</button>
+</div>
+<button class="w-full flex items-center justify-center gap-1 py-1 px-2 rounded bg-[#252830] hover:bg-[#2d313c] text-[#c5c8d1] border border-[#3f3f46]/40 text-[11px] font-label-meta transition-colors">
+<span class="material-symbols-outlined text-[13px]">edit</span>
+<span>Düzenle ve Yeniden Doğrula</span>
+<kbd class="font-code-kbd text-[10px] text-[#8b909e] ml-1">E</kbd>
+</button>
+</div>
+</div>
+<!-- Provenance Metadata Log -->
+<div class="rounded border border-[#27272a] bg-[#121316] p-2.5 space-y-1.5 text-[11px] font-code-kbd text-[#71717a]">
+<div class="flex justify-between">
+<span>Son Güncelleme:</span>
+<span class="text-[#a1a1aa]">Bugün, 14:38:12</span>
+</div>
+<div class="flex justify-between">
+<span>Doğrulama Durumu:</span>
+<span class="text-[#10b981]">Kanıt Destekli (Grounded)</span>
+</div>
+<div class="flex justify-between">
+<span>Zotero Senkron:</span>
+<span class="text-[#a1a1aa]">Zotero: itemKey/8X9J2</span>
+</div>
+</div>
+</div>
+<!-- Inspector Footer Quick Helper -->
+<div class="h-9 px-3.5 border-t border-[#27272a] bg-[#18191d] flex items-center justify-between shrink-0 text-[11px] text-[#8b909e]">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">info</span>
+              Kanıt tıklandığında sol tarafta PDF açılır
+            </span>
+<span class="font-code-kbd text-[10px] text-[#52525b]">Tab / ⇧Tab</span>
+</div>
+</aside>
+</div>
+</main>
+</div>
+<!-- BOTTOM STATUS BAR (Exact Dark Mode Specifications) -->
+<footer class="h-6 bg-[#18191d] border-t border-[#27272a] px-space-md flex items-center justify-between text-[11px] font-code-kbd text-[#8b909e] select-none shrink-0 z-50">
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 text-[#38bdf8]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#38bdf8]"></span>
+<span>Koyu Tema Aktif</span>
+</div>
+<span class="text-[#3f3f46]">|</span>
+<span>42 Satır × 8 Sütun</span>
+<span class="text-[#3f3f46]">|</span>
+<span class="text-[#10b981] flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">database</span>
+        SQLite WAL Senkron
+      </span>
+<span class="text-[#3f3f46]">|</span>
+<span class="text-[#a1a1aa] flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-[#10b981]">lock</span>
+        %100 Yerel Veri (Zero Telemetry)
+      </span>
+</div>
+<!-- Right Shortcut Bar -->
+<div class="flex items-center gap-3 text-[10px] text-[#71717a]">
+<span>Navigasyon: <kbd class="px-1 rounded bg-[#252830] text-[#a1a1aa] border border-[#3f3f46]/50">↑↓←→</kbd></span>
+<span>Onayla: <kbd class="px-1 rounded bg-[#252830] text-[#a1a1aa] border border-[#3f3f46]/50">A</kbd></span>
+<span>PDF Görünümü: <kbd class="px-1 rounded bg-[#252830] text-[#a1a1aa] border border-[#3f3f46]/50">⌘O</kbd></span>
+<span>Komut Paleti: <kbd class="px-1 rounded bg-[#252830] text-[#a1a1aa] border border-[#3f3f46]/50">⌘K</kbd></span>
+</div>
+</footer>
+</body></html>

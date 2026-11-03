@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TEz · LLM Destekli Kod İnceleme SLR - Çıkarılan İçerik</title>
+<!-- Google Fonts: Inter, Source Serif 4, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "status-included": "#15803d",
+            "inverse-primary": "#adc8f5",
+            "surface-container": "#efeded",
+            "surface-dim": "#dbd9d9",
+            "on-primary-container": "#8aa4cf",
+            "on-tertiary": "#ffffff",
+            "status-ai": "#7c3aed",
+            "background": "#fbf9f8",
+            "outline-variant": "#c4c6cf",
+            "surface-container-lowest": "#ffffff",
+            "primary-fixed-dim": "#adc8f5",
+            "text-muted": "#78716c",
+            "inverse-surface": "#303030",
+            "on-surface-variant": "#43474e",
+            "on-surface": "#1b1c1c",
+            "tertiary-container": "#00431b",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "status-reading-blue": "#2563eb",
+            "on-secondary-container": "#fffbff",
+            "outline": "#74777f",
+            "surface-variant": "#e4e2e2",
+            "error-container": "#ffdad6",
+            "tertiary": "#002b0f",
+            "on-primary-fixed-variant": "#2d486d",
+            "primary-fixed": "#d5e3ff",
+            "bg-canvas": "#fcfbf9",
+            "surface": "#fbf9f8",
+            "surface-tint": "#455f87",
+            "on-secondary": "#ffffff",
+            "inverse-on-surface": "#f2f0f0",
+            "status-revisit-purple": "#9333ea",
+            "secondary-container": "#8a4cfc",
+            "on-error-container": "#93000a",
+            "primary": "#022448",
+            "on-tertiary-fixed": "#00210a",
+            "on-primary-fixed": "#001c3b",
+            "border-subtle": "#e5e3dc",
+            "on-secondary-fixed-variant": "#5a00c6",
+            "status-unverified": "#ea580c",
+            "surface-container-highest": "#e4e2e2",
+            "status-excluded": "#b91c1c",
+            "tertiary-fixed-dim": "#79db8d",
+            "secondary-fixed": "#eaddff",
+            "status-retracted": "#991b1b",
+            "on-secondary-fixed": "#25005a",
+            "on-background": "#1b1c1c",
+            "surface-container-low": "#f5f3f3",
+            "on-tertiary-fixed-variant": "#005323",
+            "primary-container": "#1e3a5f",
+            "on-tertiary-container": "#55b66c",
+            "text-primary": "#1c1917",
+            "status-maybe": "#b45309",
+            "surface-container-high": "#eae8e7",
+            "on-error": "#ffffff",
+            "tertiary-fixed": "#95f8a7",
+            "surface-bright": "#fbf9f8",
+            "secondary": "#712ae2",
+            "secondary-fixed-dim": "#d2bbff",
+            "bg-surface": "#f5f4f0"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "margin-panel": "0.75rem",
+            "gutter-compact": "0.5rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem",
+            "space-lg": "1rem",
+            "margin": "1rem"
+          },
+          "fontFamily": {
+            "headline-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "headline-md": ["Inter"],
+            "label-meta-medium": ["Inter"],
+            "code-tech": ["JetBrains Mono"],
+            "label-meta": ["Inter"],
+            "body-reading": ["\"Source Serif 4\""],
+            "body-ui": ["Inter"],
+            "code-kbd": ["JetBrains Mono"],
+            "body-ui-medium": ["Inter"]
+          },
+          "fontSize": {
+            "headline-sm": ["15px", { "lineHeight": "20px", "fontWeight": "600" }],
+            "headline-lg": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "headline-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "label-meta-medium": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "code-tech": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "label-meta": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "body-reading": ["15px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-ui": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "code-kbd": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+            "body-ui-medium": ["13px", { "lineHeight": "18px", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 18px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #e5e3dc;
+      border-radius: 2px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #c4c6cf;
+    }
+  </style>
+</head>
+<body class="bg-background text-text-primary antialiased font-body-ui text-body-ui h-screen flex flex-col overflow-hidden select-none">
+<!-- TOP WINDOW BAR (Shared Component: TopNavBar) -->
+<header class="bg-bg-surface dark:bg-inverse-surface border-b border-border-subtle dark:border-outline-variant h-9 flex justify-between items-center w-full px-space-md select-none z-50 shrink-0">
+<div class="flex items-center space-x-3">
+<!-- Window Control Dots -->
+<div class="flex items-center space-x-1.5 mr-2">
+<span class="w-2.5 h-2.5 rounded-full bg-border-subtle hover:bg-error transition-colors"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-border-subtle hover:bg-status-maybe transition-colors"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-border-subtle hover:bg-status-included transition-colors"></span>
+</div>
+<!-- Product Branding & Breadcrumb -->
+<div class="flex items-center space-x-2">
+<span class="text-headline-sm font-headline-sm font-semibold text-primary dark:text-inverse-primary tracking-tight">TEz</span>
+<span class="text-text-muted text-xs">/</span>
+<span class="text-primary dark:text-inverse-primary font-medium text-label-meta-medium font-label-meta-medium">Review: LLM Destekli Kod İnceleme SLR</span>
+<span class="bg-surface-container text-text-muted text-code-kbd font-code-kbd px-1 py-0.5 rounded border border-border-subtle">SLR-2024-v2</span>
+</div>
+</div>
+<!-- Search Input Command Cue -->
+<div class="flex items-center max-w-sm w-80">
+<div class="flex items-center w-full bg-surface-container-lowest border border-border-subtle rounded px-2 py-0.5 text-text-muted text-label-meta font-label-meta hover:border-outline transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-outline text-sm mr-1.5" data-icon="search">search</span>
+<span class="flex-1 truncate">⌘K Ara veya komut...</span>
+<kbd class="text-code-kbd font-code-kbd bg-surface-container border border-border-subtle rounded px-1 text-outline">⌘K</kbd>
+</div>
+</div>
+<!-- Right Window Trailing Actions -->
+<div class="flex items-center space-x-1">
+<span class="text-code-kbd font-code-kbd text-text-muted mr-2 flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-status-included inline-block mr-1"></span> Yerel Motor Hazır
+      </span>
+<button class="p-1 text-text-muted hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" title="Tema Değiştir">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+<button class="p-1 text-text-muted hover:text-on-surface hover:bg-surface-container-high rounded transition-colors" title="Ayarlar">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- WORKBENCH BODY WRAPPER -->
+<div class="flex flex-1 overflow-hidden relative">
+<!-- NAVIGATION RAIL (Shared Component: SideNavBar) -->
+<nav class="w-14 bg-bg-surface dark:bg-inverse-surface border-r border-border-subtle dark:border-outline-variant flex flex-col justify-between items-center py-space-sm z-40 shrink-0 select-none">
+<!-- Main Activity Bar Navigation Icons -->
+<div class="flex flex-col items-center space-y-1.5 w-full">
+<!-- Brand Avatar Glyph -->
+<div class="w-8 h-8 rounded bg-primary text-on-primary flex items-center justify-center font-code-kbd font-bold text-xs mb-2">
+          TEz
+        </div>
+<!-- Inactive: Arama -->
+<button class="flex flex-col items-center justify-center text-text-muted dark:text-outline-variant p-1.5 w-10 h-10 rounded hover:bg-surface-container-high transition-colors" title="Arama (F1)">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="text-[9px] mt-0.5 tracking-tighter">Arama</span>
+</button>
+<!-- Inactive: Kütüphane -->
+<button class="flex flex-col items-center justify-center text-text-muted dark:text-outline-variant p-1.5 w-10 h-10 rounded hover:bg-surface-container-high transition-colors" title="Kütüphane (F2)">
+<span class="material-symbols-outlined" data-icon="local_library">local_library</span>
+<span class="text-[9px] mt-0.5 tracking-tighter">Kütüphane</span>
+</button>
+<!-- Inactive: Eleme -->
+<button class="flex flex-col items-center justify-center text-text-muted dark:text-outline-variant p-1.5 w-10 h-10 rounded hover:bg-surface-container-high transition-colors" title="Eleme (F3)">
+<span class="material-symbols-outlined" data-icon="rule">rule</span>
+<span class="text-[9px] mt-0.5 tracking-tighter">Eleme</span>
+</button>
+<!-- Inactive: Okuyucu -->
+<button class="flex flex-col items-center justify-center text-text-muted dark:text-outline-variant p-1.5 w-10 h-10 rounded hover:bg-surface-container-high transition-colors" title="Okuyucu (F4)">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="text-[9px] mt-0.5 tracking-tighter">Okuyucu</span>
+</button>
+<!-- Inactive: Notlar -->
+<button class="flex flex-col items-center justify-center text-text-muted dark:text-outline-variant p-1.5 w-10 h-10 rounded hover:bg-surface-container-high transition-colors" title="Notlar (F5)">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+<span class="text-[9px] mt-0.5 tracking-tighter">Notlar</span>
+</button>
+<!-- ACTIVE: Matris (Extracted Content / Section 5.5 Active Scope) -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-inverse-primary bg-primary-fixed dark:bg-primary-container rounded p-1.5 w-10 h-10" title="Matris &amp; Çıkarılanlar (F6)">
+<span class="material-symbols-outlined font-semibold" data-icon="table_chart">table_chart</span>
+<span class="text-[9px] mt-0.5 font-medium tracking-tighter">Matris</span>
+</button>
+<!-- Inactive: YZ Asistanı -->
+<button class="flex flex-col items-center justify-center text-text-muted dark:text-outline-variant p-1.5 w-10 h-10 rounded hover:bg-surface-container-high transition-colors" title="YZ Asistanı (F7)">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="text-[9px] mt-0.5 tracking-tighter">YZ Asistan</span>
+</button>
+</div>
+<!-- Bottom Nav Rail Actions -->
+<div class="flex flex-col items-center space-y-1.5 w-full">
+<button class="flex flex-col items-center justify-center text-text-muted dark:text-outline-variant p-1.5 w-10 h-10 rounded hover:bg-surface-container-high transition-colors" title="Arka plan İşler">
+<span class="material-symbols-outlined" data-icon="sync">sync</span>
+</button>
+<button class="flex flex-col items-center justify-center text-text-muted dark:text-outline-variant p-1.5 w-10 h-10 rounded hover:bg-surface-container-high transition-colors" title="Ayarlar">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</nav>
+<!-- LEFT CONTEXT SUB-SIDEBAR (220px fixed) -->
+<aside class="w-[220px] bg-bg-surface border-r border-border-subtle flex flex-col justify-between text-xs select-none shrink-0 custom-scroll overflow-y-auto">
+<div class="p-space-sm space-y-4">
+<!-- Section Header -->
+<div class="flex items-center justify-between pb-1 border-b border-border-subtle">
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="dataset">dataset</span>
+<span class="font-headline-sm text-headline-sm font-semibold text-text-primary">Çıkarılan İçerik</span>
+</div>
+<span class="text-code-kbd font-code-kbd bg-surface-container-highest px-1.5 py-0.2 rounded text-[10px] text-text-muted">84 Öğe</span>
+</div>
+<!-- View Switcher -->
+<div>
+<div class="text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1 px-1">Görünüm Modu</div>
+<div class="space-y-0.5">
+<a class="flex items-center justify-between px-2 py-1 rounded text-text-muted hover:bg-surface-container hover:text-on-surface" href="#">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm" data-icon="folder_copy">folder_copy</span>Tüm Çıkarılanlar</span>
+<span class="text-code-kbd font-code-kbd text-[11px] text-text-muted">84</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1 rounded bg-surface-container-high text-primary font-medium border-l-2 border-primary" href="#">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-primary" data-icon="table_rows">table_rows</span>Tablolar</span>
+<span class="text-code-kbd font-code-kbd text-[11px] font-bold text-primary">48</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1 rounded text-text-muted hover:bg-surface-container hover:text-on-surface" href="#">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm" data-icon="image">image</span>Şekiller &amp; Grafikler</span>
+<span class="text-code-kbd font-code-kbd text-[11px] text-text-muted">36</span>
+</a>
+<a class="flex items-center justify-between px-2 py-1 rounded text-text-muted hover:bg-surface-container hover:text-on-surface" href="#">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm" data-icon="compare_arrows">compare_arrows</span>Karşılaştırma</span>
+<span class="text-code-kbd font-code-kbd text-[10px] bg-primary-fixed text-primary px-1 rounded">2 Seçili</span>
+</a>
+</div>
+</div>
+<!-- Collections / Paper Filter -->
+<div>
+<div class="text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1 px-1">Makale Filtresi</div>
+<div class="space-y-0.5">
+<div class="flex items-center justify-between px-2 py-1 rounded text-text-muted hover:bg-surface-container cursor-pointer">
+<span class="truncate">Dahil Edilen Makaleler</span>
+<span class="text-code-kbd font-code-kbd text-[10px] text-text-muted">42</span>
+</div>
+<div class="flex items-center justify-between px-2 py-1 rounded text-on-surface font-medium bg-surface-container-low cursor-pointer">
+<span class="truncate">ICSE '24 Makaleleri</span>
+<span class="text-code-kbd font-code-kbd text-[10px] text-text-muted">14</span>
+</div>
+<div class="flex items-center justify-between px-2 py-1 rounded text-text-muted hover:bg-surface-container cursor-pointer">
+<span class="truncate">IEEE TSE</span>
+<span class="text-code-kbd font-code-kbd text-[10px] text-text-muted">12</span>
+</div>
+<div class="flex items-center justify-between px-2 py-1 rounded text-text-muted hover:bg-surface-container cursor-pointer">
+<span class="truncate">MSR '24</span>
+<span class="text-code-kbd font-code-kbd text-[10px] text-text-muted">8</span>
+</div>
+</div>
+</div>
+<!-- Extraction Verification Status -->
+<div>
+<div class="text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1 px-1">Çıkarma Durumu</div>
+<div class="space-y-1">
+<div class="flex items-center justify-between px-2 py-1 rounded text-status-included hover:bg-surface-container cursor-pointer">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-status-included"></span>Doğrulandı</span>
+<span class="text-code-kbd font-code-kbd text-[10px] font-medium">62</span>
+</div>
+<div class="flex items-center justify-between px-2 py-1 rounded text-status-unverified bg-surface-container-low cursor-pointer border border-status-unverified/20">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-status-unverified"></span>Düzeltme Gerekli</span>
+<span class="text-code-kbd font-code-kbd text-[10px] font-medium">14</span>
+</div>
+<div class="flex items-center justify-between px-2 py-1 rounded text-status-ai hover:bg-surface-container cursor-pointer">
+<span class="flex items-center gap-1.5"><span class="text-[10px]">✦</span>YZ ile Ayrıştırıldı</span>
+<span class="text-code-kbd font-code-kbd text-[10px] font-medium">8</span>
+</div>
+</div>
+</div>
+<!-- Research Topic Tags -->
+<div>
+<div class="text-[10px] font-semibold text-text-muted uppercase tracking-wider mb-1.5 px-1">Etiketler</div>
+<div class="flex flex-wrap gap-1">
+<span class="text-[10px] font-code-kbd px-1.5 py-0.5 rounded bg-surface-container border border-border-subtle text-text-muted hover:border-outline cursor-pointer">#benchmark</span>
+<span class="text-[10px] font-code-kbd px-1.5 py-0.5 rounded bg-primary-fixed/30 border border-primary/20 text-primary hover:border-primary cursor-pointer">#model-kıyas</span>
+<span class="text-[10px] font-code-kbd px-1.5 py-0.5 rounded bg-surface-container border border-border-subtle text-text-muted hover:border-outline cursor-pointer">#hata-oranı</span>
+<span class="text-[10px] font-code-kbd px-1.5 py-0.5 rounded bg-surface-container border border-border-subtle text-text-muted hover:border-outline cursor-pointer">#ast-mimari</span>
+</div>
+</div>
+</div>
+<!-- Sub-Sidebar Footer Info -->
+<div class="p-2 border-t border-border-subtle bg-surface-container-low text-[11px] text-text-muted">
+<div class="flex items-center justify-between">
+<span>Depo: Yerel SQLite + Parquet</span>
+<span class="w-1.5 h-1.5 rounded-full bg-status-included"></span>
+</div>
+</div>
+</aside>
+<!-- MAIN WORKSPACE CANVAS -->
+<main class="flex-1 flex flex-col bg-bg-canvas min-w-0 overflow-hidden">
+<!-- TOOLBAR: Mode Switcher & Global Filter Bar -->
+<div class="h-10 bg-bg-surface border-b border-border-subtle px-space-md flex items-center justify-between shrink-0 text-body-ui">
+<div class="flex items-center space-x-2">
+<!-- Segmented Tab Controller -->
+<div class="inline-flex rounded border border-border-subtle bg-surface-container-lowest p-0.5 text-xs">
+<button class="px-2.5 py-0.5 rounded bg-primary text-on-primary font-medium flex items-center gap-1 shadow-none">
+<span class="material-symbols-outlined text-[14px]" data-icon="table_view">table_view</span>
+<span>Tablo Doğrulayıcı &amp; Denetçi</span>
+</button>
+<button class="px-2.5 py-0.5 rounded text-text-muted hover:text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="grid_view">grid_view</span>
+<span>Şekil Galerisi (Grid)</span>
+</button>
+<button class="px-2.5 py-0.5 rounded text-text-muted hover:text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="splitscreen">splitscreen</span>
+<span>Yan Yana Karşılaştırma</span>
+</button>
+</div>
+<!-- Divider -->
+<span class="h-4 w-px bg-border-subtle"></span>
+<!-- Fast In-Table Search Input -->
+<div class="relative w-72">
+<span class="material-symbols-outlined text-outline absolute left-2 top-1.5 text-[15px]" data-icon="filter_alt">filter_alt</span>
+<input class="w-full bg-surface-container-lowest border border-border-subtle rounded pl-7 pr-2 py-0.5 text-xs font-body-ui text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-0" placeholder="Tablo veya şekil açıklamalarında ara (caption, metrik)..." type="text"/>
+</div>
+</div>
+<!-- Export & Display Actions -->
+<div class="flex items-center space-x-1.5">
+<!-- PDF Split View Toggle -->
+<button class="px-2 py-1 rounded border border-border-subtle bg-surface-container-lowest text-text-primary text-xs font-label-meta-medium flex items-center gap-1.5 hover:bg-surface-container">
+<span class="w-2 h-2 rounded-full bg-status-included"></span>
+<span>PDF Kesitiyle Eşle: <strong class="text-primary font-semibold">Açık</strong></span>
+</button>
+<!-- Export Dropdowns / Buttons -->
+<div class="inline-flex rounded border border-border-subtle bg-surface-container-lowest text-xs">
+<button class="px-2 py-1 text-text-primary hover:bg-surface-container flex items-center gap-1 border-r border-border-subtle font-code-kbd" title="CSV Dışa Aktar">
+<span>CSV</span>
+</button>
+<button class="px-2 py-1 text-text-primary hover:bg-surface-container flex items-center gap-1 border-r border-border-subtle font-code-kbd" title="Excel Formatı">
+<span>.xlsx</span>
+</button>
+<button class="px-2 py-1 text-primary hover:bg-surface-container flex items-center gap-1 border-r border-border-subtle font-code-kbd font-medium" title="LaTeX Tablosu Olarak Kopyala">
+<span class="text-status-ai font-bold">\LaTeX</span>
+</button>
+<button class="px-2 py-1 text-text-muted hover:text-on-surface hover:bg-surface-container" title="Toplu İndir (ZIP)">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+</button>
+</div>
+</div>
+</div>
+<!-- SPLIT CONTAINER: Primary Table Verifier View -->
+<div class="flex-1 flex min-h-0 overflow-hidden">
+<!-- LEFT SPLIT PANEL: Structured Table & Editor -->
+<section class="flex-1 flex flex-col border-r border-border-subtle bg-bg-surface overflow-hidden">
+<!-- Paper Metadata & Caption Header -->
+<div class="p-space-md border-b border-border-subtle bg-surface-container-lowest">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center space-x-2 mb-1">
+<!-- Provenance Source Chip -->
+<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-code-kbd bg-primary-container/10 text-primary border border-primary/20">
+<span class="material-symbols-outlined text-xs" data-icon="verified">verified</span>
+                    [Şahin &amp; Güneş (2024) · ICSE · s. 6, Tablo II]
+                  </span>
+<a class="text-status-reading-blue hover:underline text-xs flex items-center gap-0.5" href="#">
+<span>PDF'te Aç</span>
+<span class="material-symbols-outlined text-xs" data-icon="open_in_new">open_in_new</span>
+</a>
+<span class="text-text-muted text-xs">·</span>
+<button class="text-xs text-text-muted hover:text-primary flex items-center gap-0.5">
+<span class="material-symbols-outlined text-xs" data-icon="link">link</span>
+<span>Sentez Matrisine Bağla</span>
+</button>
+</div>
+<h2 class="font-body-reading italic text-sm text-text-primary leading-snug">
+                  Tablo 2: Endüstriyel Repolarda LLM Kod İnceleme Başarımı ve Yanlış-Pozitif Oranları
+                </h2>
+</div>
+<!-- Quick Verification Badge -->
+<div class="flex flex-col items-end">
+<span class="px-2 py-0.5 rounded text-[11px] font-label-meta-medium bg-status-included/10 text-status-included border border-status-included/30 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="check_circle">check_circle</span>
+<span>GROBID Doğrulandı</span>
+</span>
+<span class="text-[10px] text-text-muted mt-0.5 font-code-kbd">TEI Coordinate: p6#t2</span>
+</div>
+</div>
+</div>
+<!-- Structured High-Density Academic Data Table -->
+<div class="flex-1 overflow-auto custom-scroll p-space-md">
+<div class="border border-border-subtle rounded overflow-hidden bg-surface-container-lowest">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-text-primary text-[11px] font-label-meta-medium border-b border-border-subtle uppercase tracking-wider">
+<th class="py-2 px-3 border-r border-border-subtle w-8 text-center text-text-muted font-code-kbd">#</th>
+<th class="py-2 px-3 border-r border-border-subtle font-semibold text-text-primary">Model / Yaklaşım</th>
+<th class="py-2 px-3 border-r border-border-subtle font-code-kbd text-right">Veri Seti (PR)</th>
+<th class="py-2 px-3 border-r border-border-subtle font-code-kbd text-right">Kesinlik (%)</th>
+<th class="py-2 px-3 border-r border-border-subtle font-code-kbd text-right">Duyarlılık (%)</th>
+<th class="py-2 px-3 border-r border-border-subtle font-code-kbd text-right">F1-Skor</th>
+<th class="py-2 px-3 border-r border-border-subtle font-code-kbd text-right">Halüsinasyon (%)</th>
+<th class="py-2 px-3 text-center">Doğrulama</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-subtle text-xs font-body-ui">
+<!-- Row 1: GPT-4 -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-1.5 px-3 border-r border-border-subtle text-center text-text-muted font-code-kbd text-[11px]">1</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-medium text-text-primary flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-included"></span>
+<span>GPT-4 + AST RAG</span>
+</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right">1.420</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right font-medium">84.6%</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right">79.2%</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right font-semibold text-primary">0.818</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right text-status-included font-medium">4.2%</td>
+<td class="py-1.5 px-3 text-center">
+<span class="inline-flex items-center gap-0.5 text-[11px] font-code-kbd text-status-included">
+<span class="material-symbols-outlined text-[13px]" data-icon="check">check</span> Eşleşti
+                      </span>
+</td>
+</tr>
+<!-- Row 2: Claude 3.5 Sonnet -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-1.5 px-3 border-r border-border-subtle text-center text-text-muted font-code-kbd text-[11px]">2</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-medium text-text-primary flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-included"></span>
+<span>Claude 3.5 Sonnet (Zero-Shot)</span>
+</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right">1.420</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right font-medium">78.4%</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right font-semibold text-primary">81.0%</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right">0.797</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right text-text-muted font-medium">8.9%</td>
+<td class="py-1.5 px-3 text-center">
+<span class="inline-flex items-center gap-0.5 text-[11px] font-code-kbd text-status-included">
+<span class="material-symbols-outlined text-[13px]" data-icon="check">check</span> Eşleşti
+                      </span>
+</td>
+</tr>
+<!-- Row 3: DeepSeek-Coder-V2 -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-1.5 px-3 border-r border-border-subtle text-center text-text-muted font-code-kbd text-[11px]">3</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-medium text-text-primary flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-included"></span>
+<span>DeepSeek-Coder-V2 + CFG</span>
+</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right">1.420</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right font-medium">82.1%</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right">77.5%</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right">0.797</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right text-status-included font-medium">6.1%</td>
+<td class="py-1.5 px-3 text-center">
+<span class="inline-flex items-center gap-0.5 text-[11px] font-code-kbd text-status-included">
+<span class="material-symbols-outlined text-[13px]" data-icon="check">check</span> Eşleşti
+                      </span>
+</td>
+</tr>
+<!-- Row 4: CodeLlama-34B (With Discrepancy Flag) -->
+<tr class="bg-surface-container-low/70 hover:bg-surface-container-high transition-colors border-l-2 border-l-status-unverified">
+<td class="py-1.5 px-3 border-r border-border-subtle text-center text-text-muted font-code-kbd text-[11px]">4</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-medium text-text-primary flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-status-unverified"></span>
+<span>CodeLlama-34B (Fine-tuned)</span>
+</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right">1.420</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right font-medium">71.3%</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right">68.4%</td>
+<!-- Focused / Cell Flag -->
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right font-semibold text-status-unverified bg-surface-container-highest/60 relative">
+<span class="underline decoration-wavy decoration-status-unverified">0.698</span>
+<span class="text-[9px] text-status-unverified ml-1">✦</span>
+</td>
+<td class="py-1.5 px-3 border-r border-border-subtle font-code-kbd text-right text-error font-medium">15.4%</td>
+<td class="py-1.5 px-3 text-center">
+<button class="px-1.5 py-0.5 rounded text-[10px] font-code-kbd bg-status-unverified/15 text-status-unverified hover:bg-status-unverified hover:text-white transition-colors">
+                        ⚠ %0.3 Sapma (Düzelt)
+                      </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Contextual Extraction Insight Callout -->
+<div class="mt-3 p-2.5 rounded bg-surface-container border border-border-subtle text-xs flex items-start gap-2.5">
+<span class="material-symbols-outlined text-primary text-base mt-0.5" data-icon="info">info</span>
+<div class="flex-1 text-text-muted leading-relaxed">
+<span class="font-medium text-text-primary">GROBID Tablo Notu:</span>
+                Satır 4'teki F1-Skor değeri PDF'te <em>"0.695"</em> olarak basılmıştır, OCR ayrıştırıcısı <em>"0.698"</em> okumuştur. Sağdaki kesit üzerinden doğru hücreyi onaylayınız.
+              </div>
+</div>
+</div>
+<!-- Table Editor Action Footer -->
+<div class="h-9 px-space-md border-t border-border-subtle bg-bg-surface flex items-center justify-between shrink-0 text-xs">
+<div class="flex items-center space-x-1.5">
+<button class="px-2 py-1 rounded border border-border-subtle bg-surface-container-lowest hover:bg-surface-container text-text-primary flex items-center gap-1 font-label-meta">
+<span class="material-symbols-outlined text-xs" data-icon="add">add</span>
+<span>Satır Ekle</span>
+</button>
+<button class="px-2 py-1 rounded border border-border-subtle bg-surface-container-lowest hover:bg-surface-container text-text-primary flex items-center gap-1 font-label-meta">
+<span class="material-symbols-outlined text-xs" data-icon="view_column">view_column</span>
+<span>Sütun Ekle</span>
+</button>
+<button class="px-2 py-1 rounded border border-border-subtle bg-surface-container-lowest hover:bg-surface-container text-text-primary flex items-center gap-1 font-label-meta">
+<span class="material-symbols-outlined text-xs" data-icon="sync_alt">sync_alt</span>
+<span>Orijinalle Eşitle</span>
+</button>
+</div>
+<div>
+<button class="px-2.5 py-1 rounded bg-primary-container text-on-primary hover:bg-primary text-xs font-label-meta-medium flex items-center gap-1.5 transition-colors">
+<span>Booktabs Formatı Al</span>
+<kbd class="text-code-kbd font-code-kbd text-[10px] bg-white/20 px-1 rounded">↵</kbd>
+</button>
+</div>
+</div>
+</section>
+<!-- RIGHT SPLIT PANEL: Original Scanned PDF Crop & Cell Coordinate Verifier -->
+<section class="w-[440px] flex flex-col bg-surface-container-low border-l border-border-subtle overflow-hidden shrink-0">
+<!-- Card Header & Inspection Controls -->
+<div class="p-space-sm border-b border-border-subtle bg-bg-surface flex items-center justify-between shrink-0">
+<div>
+<div class="font-headline-sm text-xs font-semibold text-text-primary">Orijinal PDF Kesiti</div>
+<div class="text-[10px] font-code-kbd text-text-muted truncate">s.6 [x:120, y:340, w:480, h:210]</div>
+</div>
+<!-- Zoom & Inspect Controls -->
+<div class="flex items-center space-x-1">
+<span class="text-code-kbd font-code-kbd text-[11px] px-1.5 py-0.5 rounded bg-surface-container border border-border-subtle">100%</span>
+<button class="p-1 rounded text-text-muted hover:text-on-surface hover:bg-surface-container" title="Büyüteç / Koordinat Çizgileri">
+<span class="material-symbols-outlined text-sm" data-icon="grid_4x4">grid_4x4</span>
+</button>
+<button class="p-1 rounded text-text-muted hover:text-on-surface hover:bg-surface-container" title="Yeniden Kırp">
+<span class="material-symbols-outlined text-sm" data-icon="crop">crop</span>
+</button>
+</div>
+</div>
+<!-- PDF Canvas / Vector Preview with Bounding Boxes -->
+<div class="flex-1 p-space-md overflow-auto custom-scroll flex items-center justify-center bg-surface-container-high/40">
+<div class="w-full bg-white shadow-sm border border-border-subtle rounded p-3 relative font-serif text-[11px] select-text">
+<!-- Academic Watermark / Page Indicator -->
+<div class="flex justify-between items-center text-[9px] font-mono text-gray-400 mb-2 border-b pb-1">
+<span>ICSE '24 CONFERENCE PROCEEDINGS · SESSION 4B</span>
+<span>PAGE 6 / 12</span>
+</div>
+<!-- Vector / Rendered PDF Snippet of Table II -->
+<div class="text-center font-bold font-body-reading text-[11px] text-gray-900 mb-2">
+                TABLE II<br/>
+<span class="font-normal uppercase tracking-wider text-[9px]">PERFORMANCE AND FALSE-POSITIVE COMPARISON ON INDUSTRIAL PRs</span>
+</div>
+<!-- High-Fidelity Mock of Academic Booktabs Table with Bounding Box Overlays -->
+<div class="border-t-2 border-b-2 border-gray-900 text-[10px] relative">
+<!-- Highlight Box Overlay for Active Discrepancy Cell (Bounding Box) -->
+<div class="absolute right-[88px] top-[74px] w-12 h-4 border border-dashed border-status-unverified bg-status-unverified/15 rounded-sm pointer-events-none flex items-center justify-center">
+<span class="text-[8px] font-mono text-status-unverified font-bold">OCR: 0.698</span>
+</div>
+<!-- Highlight Box Overlay for Verified Column -->
+<div class="absolute left-0 top-0 w-full h-full border border-status-reading-blue/20 bg-status-reading-blue/5 pointer-events-none rounded"></div>
+<div class="grid grid-cols-6 border-b border-gray-900 py-1 font-semibold text-gray-800 text-[9px]">
+<span class="col-span-2">Model Architecture</span>
+<span class="text-right">Prec. (%)</span>
+<span class="text-right">Rec. (%)</span>
+<span class="text-right">F1-Score</span>
+<span class="text-right">Halluc.</span>
+</div>
+<div class="py-1 border-b border-gray-200 grid grid-cols-6 text-gray-700">
+<span class="col-span-2 font-mono text-[9px]">GPT-4 + AST RAG</span>
+<span class="text-right font-mono">84.6</span>
+<span class="text-right font-mono">79.2</span>
+<span class="text-right font-mono font-bold">0.818</span>
+<span class="text-right font-mono">4.2%</span>
+</div>
+<div class="py-1 border-b border-gray-200 grid grid-cols-6 text-gray-700">
+<span class="col-span-2 font-mono text-[9px]">Claude 3.5 Sonnet</span>
+<span class="text-right font-mono">78.4</span>
+<span class="text-right font-mono">81.0</span>
+<span class="text-right font-mono">0.797</span>
+<span class="text-right font-mono">8.9%</span>
+</div>
+<div class="py-1 border-b border-gray-200 grid grid-cols-6 text-gray-700">
+<span class="col-span-2 font-mono text-[9px]">DeepSeek-Coder-V2</span>
+<span class="text-right font-mono">82.1</span>
+<span class="text-right font-mono">77.5</span>
+<span class="text-right font-mono">0.797</span>
+<span class="text-right font-mono">6.1%</span>
+</div>
+<div class="py-1 grid grid-cols-6 text-gray-700 bg-amber-50/50">
+<span class="col-span-2 font-mono text-[9px]">CodeLlama-34B</span>
+<span class="text-right font-mono">71.3</span>
+<span class="text-right font-mono">68.4</span>
+<span class="text-right font-mono font-bold text-amber-900">0.695</span>
+<span class="text-right font-mono">15.4%</span>
+</div>
+</div>
+<!-- Footer Caption in PDF -->
+<div class="text-[9px] text-gray-500 italic mt-2 leading-tight">
+                *Note: Measurements taken across 1,420 industrial pull requests. Ground truth annotated by two senior staff engineers.
+              </div>
+</div>
+</div>
+<!-- Bottom Verification Metric & Action Bar -->
+<div class="p-space-md border-t border-border-subtle bg-bg-surface space-y-2 shrink-0">
+<div class="flex items-center justify-between text-xs">
+<span class="text-text-muted flex items-center gap-1 font-label-meta">
+<span class="material-symbols-outlined text-sm text-status-included" data-icon="task_alt">task_alt</span>
+<span>Doğruluk: <strong class="text-text-primary">%99.2</strong> (GROBID TEI-XML v0.8)</span>
+</span>
+<span class="text-code-kbd font-code-kbd text-[11px] text-status-included font-medium">28/28 Hücre</span>
+</div>
+<!-- Primary Decision Buttons -->
+<div class="flex items-center space-x-2">
+<button class="flex-1 py-1.5 px-3 rounded bg-primary hover:bg-primary-container text-on-primary text-xs font-label-meta-medium flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="done_all">done_all</span>
+<span>Tüm Hücreleri Onayla</span>
+<kbd class="text-code-kbd font-code-kbd text-[10px] bg-white/20 px-1 rounded">⌘↵</kbd>
+</button>
+<button class="py-1.5 px-2.5 rounded border border-border-subtle bg-surface-container-lowest hover:bg-surface-container text-text-primary text-xs font-label-meta-medium transition-colors" title="Tabloyu Düzelt &amp; Yeniden Ayrıştır">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- LOWER STRIP: Extracted Figures Gallery Strip (Şekil Galerisi) -->
+<section class="h-44 border-t border-border-subtle bg-bg-surface flex flex-col shrink-0">
+<!-- Strip Header -->
+<div class="h-7 px-space-md border-b border-border-subtle flex items-center justify-between bg-surface-container-low text-xs">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="collections_bookmark">collections_bookmark</span>
+<span class="font-headline-sm text-xs font-semibold text-text-primary">Çıkarılan Şekiller ve Grafikler Galerisi</span>
+<span class="text-code-kbd font-code-kbd text-[10px] bg-surface-container-highest px-1.5 rounded text-text-muted">36 Şekil</span>
+</div>
+<div class="flex items-center space-x-2 text-[11px]">
+<a class="text-primary hover:underline font-label-meta-medium" href="#">Galeriyi Genişlet ↗</a>
+</div>
+</div>
+<!-- Horizontal Figure Cards Scroll Container -->
+<div class="flex-1 p-space-sm overflow-x-auto custom-scroll flex space-x-3 items-stretch">
+<!-- Figure Card 1: Vector Architecture Diagram -->
+<div class="w-80 border border-border-subtle rounded bg-surface-container-lowest flex flex-col p-2 hover:border-outline transition-colors group shrink-0">
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-[10px] font-code-kbd px-1 py-0.2 rounded bg-primary-fixed/40 text-primary border border-primary/20">Şekil 3 · s.4</span>
+<span class="text-[10px] text-text-muted truncate max-w-[140px]">Arvidsson vd. (2024)</span>
+</div>
+<!-- Diagram Thumbnail Graphic -->
+<div class="h-16 bg-surface-container rounded border border-border-subtle flex items-center justify-center p-1.5 relative overflow-hidden mb-1.5">
+<!-- Schematics Visual Placeholder -->
+<div class="w-full h-full flex items-center justify-around">
+<div class="w-12 h-9 bg-white border border-primary/40 rounded flex flex-col items-center justify-center text-[7px] font-mono text-primary">
+<span>AST Parse</span>
+</div>
+<span class="text-gray-400 font-mono text-[9px]">──▶</span>
+<div class="w-12 h-9 bg-primary/10 border border-primary rounded flex flex-col items-center justify-center text-[7px] font-mono text-primary font-bold">
+<span>RAG Sentez</span>
+</div>
+<span class="text-gray-400 font-mono text-[9px]">──▶</span>
+<div class="w-12 h-9 bg-white border border-status-included/40 rounded flex flex-col items-center justify-center text-[7px] font-mono text-status-included">
+<span>İnceleme</span>
+</div>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<p class="font-body-reading text-[11px] text-text-primary line-clamp-1 italic">
+                Şekil 3: AST ve CFG Tabanlı Hibrit RAG Mimarisi Akış Şeması
+              </p>
+<div class="flex items-center justify-between pt-1 mt-1 border-t border-border-subtle text-[10px]">
+<span class="text-text-muted font-code-kbd">Vektörel (SVG)</span>
+<div class="flex items-center space-x-1">
+<button class="px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-text-primary font-label-meta">SVG İndir</button>
+<button class="px-1.5 py-0.5 rounded bg-primary-container text-on-primary font-label-meta">Teze Ekle</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Figure Card 2: Performance Scatter / Bar Chart -->
+<div class="w-80 border border-border-subtle rounded bg-surface-container-lowest flex flex-col p-2 hover:border-outline transition-colors group shrink-0">
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-[10px] font-code-kbd px-1 py-0.2 rounded bg-surface-container text-text-muted border border-border-subtle">Şekil 5 · s.8</span>
+<span class="text-[10px] text-text-muted truncate max-w-[140px]">Zhang &amp; Ray (2024)</span>
+</div>
+<!-- Chart Thumbnail Graphic -->
+<div class="h-16 bg-surface-container rounded border border-border-subtle flex items-end justify-between px-6 py-2 relative overflow-hidden mb-1.5">
+<!-- Bar Chart Mock -->
+<div class="w-4 bg-primary/30 h-4 rounded-t"></div>
+<div class="w-4 bg-primary/50 h-8 rounded-t"></div>
+<div class="w-4 bg-primary/70 h-11 rounded-t"></div>
+<div class="w-4 bg-primary h-14 rounded-t"></div>
+<div class="w-4 bg-status-ai h-12 rounded-t"></div>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<p class="font-body-reading text-[11px] text-text-primary line-clamp-1 italic">
+                Şekil 5: Model Parametre Boyutuna Göre Kod Açıklama Gecikmesi (Latency vs Params)
+              </p>
+<div class="flex items-center justify-between pt-1 mt-1 border-t border-border-subtle text-[10px]">
+<span class="text-text-muted font-code-kbd">PNG 300DPI</span>
+<div class="flex items-center space-x-1">
+<button class="px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-text-primary font-label-meta">İncele</button>
+<button class="px-1.5 py-0.5 rounded bg-primary-container text-on-primary font-label-meta">Teze Ekle</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Figure Card 3: PRISMA Flowchart -->
+<div class="w-80 border border-border-subtle rounded bg-surface-container-lowest flex flex-col p-2 hover:border-outline transition-colors group shrink-0">
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-[10px] font-code-kbd px-1 py-0.2 rounded bg-surface-container text-text-muted border border-border-subtle">Şekil 1 · s.2</span>
+<span class="text-[10px] text-text-muted truncate max-w-[140px]">Kim vd. (2023)</span>
+</div>
+<!-- Flowchart Thumbnail -->
+<div class="h-16 bg-surface-container rounded border border-border-subtle flex flex-col items-center justify-center p-1.5 relative overflow-hidden mb-1.5 space-y-1">
+<div class="w-32 h-3 bg-white border border-gray-300 rounded text-[7px] text-center font-mono text-gray-600">Literatür Taraması (n=842)</div>
+<div class="w-24 h-3 bg-white border border-gray-300 rounded text-[7px] text-center font-mono text-gray-600">Uygunluk Elemesi (n=120)</div>
+<div class="w-16 h-3 bg-status-included/20 border border-status-included rounded text-[7px] text-center font-mono text-status-included font-bold">Dahil (n=42)</div>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<p class="font-body-reading text-[11px] text-text-primary line-clamp-1 italic">
+                Şekil 1: PRISMA Metodolojisi ve Veri Madenciliği Filtreleme Boru Hattı
+              </p>
+<div class="flex items-center justify-between pt-1 mt-1 border-t border-border-subtle text-[10px]">
+<span class="text-text-muted font-code-kbd">Vektörel (PDF)</span>
+<div class="flex items-center space-x-1">
+<button class="px-1.5 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-text-primary font-label-meta">İncele</button>
+<button class="px-1.5 py-0.5 rounded bg-primary-container text-on-primary font-label-meta">Teze Ekle</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- BOTTOM STATUS BAR (IDE / Workbench Precision Anchor) -->
+<footer class="h-7 bg-bg-surface border-t border-border-subtle px-space-md flex items-center justify-between text-[11px] text-text-muted shrink-0 select-none z-50">
+<div class="flex items-center space-x-3">
+<span class="flex items-center gap-1 font-label-meta">
+<span class="w-2 h-2 rounded-full bg-status-included"></span>
+<span class="text-text-primary font-medium">GROBID OCR &amp; Tablo Çıkarıcı:</span> Aktif
+      </span>
+<span class="text-border-subtle">|</span>
+<span class="font-code-kbd text-text-muted">48 Tablo, 36 Şekil İndeksli</span>
+<span class="text-border-subtle">|</span>
+<span class="font-code-kbd text-text-muted">Son Ayrıştırma: 14:40 (Yerel İş parçacığı)</span>
+</div>
+<div class="flex items-center space-x-3 font-code-kbd text-[10px]">
+<span class="hover:text-text-primary cursor-pointer">UTF-8 / LaTeX BibTeX</span>
+<span class="text-border-subtle">|</span>
+<span class="hover:text-text-primary cursor-pointer">Grobid-v0.8.1-daemon</span>
+<span class="text-border-subtle">|</span>
+<span class="flex items-center gap-1">
+<kbd class="bg-surface-container border border-border-subtle px-1 rounded">Esc</kbd> İptal
+        <kbd class="bg-surface-container border border-border-subtle px-1 rounded ml-1">⌘Enter</kbd> Onayla
+      </span>
+</div>
+</footer>
+</body></html>
