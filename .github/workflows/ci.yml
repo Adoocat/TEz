@@ -30,7 +30,7 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.3.3 # this action publishes no moving major tag
         with:
           python-version: ${{ matrix.python }} # sets UV_PYTHON, overriding backend/.python-version
           enable-cache: true
