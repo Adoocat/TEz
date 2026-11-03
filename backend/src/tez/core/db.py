@@ -10,12 +10,28 @@ import logging
 import sqlite3
 from collections.abc import Generator
 from contextlib import contextmanager
+from datetime import UTC, datetime
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import URL, Connection, Engine, MetaData, create_engine, event
-from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from sqlalchemy import (
+    URL,
+    Connection,
+    Dialect,
+    Engine,
+    Enum,
+    MetaData,
+    String,
+    create_engine,
+    event,
+)
+from sqlalchemy.engine.default import DefaultExecutionContext
+from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 from sqlalchemy.pool import ConnectionPoolEntry
+from sqlalchemy.types import TypeDecorator
+
+from tez.shared.ids import new_id
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +50,72 @@ NAMING_CONVENTION = {
 
 class Base(DeclarativeBase):
     metadata = MetaData(naming_convention=NAMING_CONVENTION)
+
+
+def utcnow() -> datetime:
+    return datetime.now(UTC)
+
+
+class UtcDateTime(TypeDecorator[datetime]):
+    """Timezone-aware datetime stored as fixed-width ISO 8601 text in UTC.
+
+    `2026-11-03T19:49:03.000120+00:00`: readable in any SQLite tool, and text order equals
+    time order. Naive datetimes are rejected rather than guessed.
+    """
+
+    impl = String(32)
+    cache_ok = True
+
+    def process_bind_param(self, value: datetime | None, dialect: Dialect) -> str | None:
+        if value is None:
+            return None
+        if value.utcoffset() is None:
+            raise ValueError(f"naive datetime {value!r}: a timezone is required")
+        return value.astimezone(UTC).isoformat(timespec="microseconds")
+
+    def process_result_value(self, value: str | None, dialect: Dialect) -> datetime | None:
+        return None if value is None else datetime.fromisoformat(value)
+
+
+def enum_type[E: StrEnum](enum: type[E], name: str) -> Enum:
+    """A TEXT column limited to the enum's values by a named CHECK constraint."""
+    values = [member.value for member in enum]
+    return Enum(
+        enum,
+        name=name,
+        native_enum=False,
+        create_constraint=True,
+        validate_strings=True,
+        length=max(len(v) for v in values),
+        values_callable=_enum_values,
+    )
+
+
+def _enum_values(enum: type[StrEnum]) -> list[str]:
+    """Store `.value` ("unread"), not the member name ("UNREAD")."""
+    return [member.value for member in enum]
+
+
+def _same_as_created(context: DefaultExecutionContext) -> Any:
+    return context.get_current_parameters()["created_at"]
+
+
+class IdMixin:
+    """UUIDv7 text primary key: time-ordered and unique across libraries."""
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id, sort_order=-1)
+
+
+class CreatedMixin(IdMixin):
+    """For append-only tables: rows are never updated, so there is no `updated_at`."""
+
+    created_at: Mapped[datetime] = mapped_column(UtcDateTime, default=utcnow, sort_order=1)
+
+
+class TimestampMixin(CreatedMixin):
+    updated_at: Mapped[datetime] = mapped_column(
+        UtcDateTime, default=_same_as_created, onupdate=utcnow, sort_order=2
+    )
 
 
 def _on_connect(dbapi_connection: Any, _: ConnectionPoolEntry) -> None:
