@@ -35,6 +35,11 @@ class ErrorCode(StrEnum):
     SCREENING_INVALID_CORRECTION = "screening.invalid_correction"
     JOB_NOT_FOUND = "job.not_found"
     SECRETS_UNAVAILABLE = "secrets.unavailable"
+    SOURCE_RATE_LIMITED = "source.rate_limited"
+    SOURCE_TIMEOUT = "source.timeout"
+    SOURCE_NETWORK = "source.network"
+    SOURCE_UNAVAILABLE = "source.unavailable"
+    SOURCE_REJECTED = "source.rejected"
 
 
 class TezError(Exception):
