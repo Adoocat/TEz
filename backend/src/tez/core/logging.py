@@ -87,3 +87,6 @@ def configure_logging(settings: Settings, stream: TextIO | None = None) -> None:
     access = logging.getLogger("uvicorn.access")
     access.handlers.clear()
     access.propagate = False
+    # The HTTP client logs each URL at INFO, and source URLs can carry the user's e-mail
+    # (polite-pool parameter). `tez.shared.http` logs what matters without the URL.
+    logging.getLogger("httpx2").setLevel(logging.WARNING)
