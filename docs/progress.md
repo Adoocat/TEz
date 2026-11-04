@@ -19,7 +19,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 11 · Sağlayıcılar | bitti | `task/11-*` · #15, #16, #17, #18 | OpenAlex, Semantic Scholar, arXiv, Crossref; kaydedilmiş gerçek yanıtlarla test edildi, ağsız çalışır. Sorgu her kaynağın diline çevrilir. Kaynak hatası istisna değil sonuçtur (`ok`/`partial`/`error`). DBLP bot kontrolü yüzünden sonraya kaldı. Ayrıntı: ADR 0008 |
 | 12 · Tekilleştirme | bitti | `task/12-dedup` · #19 | `shared/identifiers.py` (DOI, arXiv, ISBN normalleştirme), `modules/search/dedup.py` (`PaperIndex`): önce tanımlayıcı, sonra bulanık başlık + yıl ±1 + ilk yazar. Ön baskı ve yayın ayrı kalır, `version_of` ile bağlanır. Yanlış birleştirme kaçan tekrardan kötü sayıldı. Zor vakalar tablosu `test_dedup.py`'de |
 | 13 · Federe arama servisi | bitti | `task/13-federated-search` · #20 | `modules/search/service.py`: kaynaklar paralel, her cevap geldiği anda kendi işleminde yazılır. Çöken kaynak hata kaydıyla `search_run` olur, diğerleri gelir. Ham yanıt `snapshots/*.json.gz`. API: `POST /searches`, `GET /searches/{id}`, `/results`, `/events` (SSE). Migration 0003: `search_run.search_id`. Ayrıntı: ADR 0009 |
-| 14 · Arama arayüzü | bekliyor | | |
+| 14 · Arama arayüzü | bitti | `task/14-search-ui` · #21 | Sorgu formu, kaynak çipleri (bekliyor, aranıyor, hız sınırı geri sayımı, sonuç, kısmi, hata), özet şeridi, sanallaştırılmış liste, denetçide birleştirme ayrıntısı, review'a/kütüphaneye ekleme, geçmiş. Küçük review formu ve üst çubukta seçici. Migration 0004: `paper.library_added_at`. Üretim derlemesinde 1.368 satırda kaydırma adımı p95 3,8 ms (tekerlek), 10,6 ms (hızlı). Gerçek dört kaynakla denendi: 1.662 kayıt, 294 tekrar, 1.368 benzersiz |
 | 15 · BibTeX/RIS içe aktarma | bekliyor | | |
 | 16 · PDF ekleme | bekliyor | | |
 | 17 · Açık erişim PDF | bekliyor | | |
@@ -32,6 +32,12 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 ## Sonraya
 
+- (14) Tauri'de dış bağlantılar (DOI, PDF): `target=_blank` webview'da açılmaz; `lib/platform` üzerinden opener eklentisi gerekir. Masaüstünde denenmedi.
+- (14) Kaydırma, gizli tarayıcı panelinde ana iş parçacığı maliyetiyle ölçüldü; gerçek fps görünür pencerede (tercihen WebView2) doğrulanmalı.
+- (14) Tasarım 4.2'den kalanlar: boolean sözdizimi renklendirmesi, kaynak başına sorguyu düzenleme, sorgu kaydetme ve uyarılar, terminal komutunu kopyalama (Görev 23), "PDF'leri bul" (Görev 17), yöntem bölümü dışa aktarımı, kenar çubuğunda kayıtlı sorgular, j/k kısayolları.
+- (14) Geçmişten açılan arama sorgu formunu doldurmuyor; yeniden çalıştırmak için sorgu elle girilir.
+- (14) Ücretsiz OpenAlex ve Semantic Scholar anahtarları gerçek kullanımda gerekli (ADR 0008); Ayarlar'dan eklenir.
+- (14) Görev 19: kütüphane listesi `paper.library_added_at` üzerinden süzmeli; `list_papers` şu an tüm adayları döndürür.
 - (13) Sidecar paketi `hishel`/`anysqlite` ile yeniden doğrulanmalı; arama yolu artık uygulamanın içinde.
 - (13) Bir kaynağın yalnızca yeniden denenmesi (tasarım 4.2 "tekrar dene"): şimdilik tüm arama yeniden başlatılır.
 - (11) DBLP sağlayıcısı: dblp API istemcilerine izin verirse veya koruma kalkarsa eklenir; o zamana dek çip gizli (ADR 0008).

@@ -21,6 +21,8 @@ import { NavLink, Outlet, useLocation } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import { useJobEvents } from "@/features/jobs/useJobEvents";
+import { ReviewPicker } from "@/features/reviews/ReviewPicker";
+import { SearchInspector } from "@/features/search/SearchInspector";
 import { useSettings, useUpdateSettings } from "@/features/settings/api";
 import { SettingsNav } from "@/features/settings/SettingsNav";
 import { PreferencesSync } from "@/features/settings/PreferencesSync";
@@ -52,7 +54,8 @@ const bottomNav: NavItem[] = [
 export function AppShell() {
   useJobEvents();
   const { sidebarOpen, inspectorOpen } = useLayoutStore();
-  const settingsRoute = useLocation().pathname.startsWith("/settings");
+  const { pathname } = useLocation();
+  const settingsRoute = pathname.startsWith("/settings");
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -69,7 +72,7 @@ export function AppShell() {
           <main className="min-w-0 flex-1 overflow-y-auto">
             <Outlet />
           </main>
-          {inspectorOpen && !settingsRoute && <Inspector />}
+          {inspectorOpen && !settingsRoute && <Inspector route={pathname} />}
         </div>
         <StatusBar />
       </div>
@@ -95,6 +98,7 @@ function TopBar() {
         <PanelLeft />
       </Button>
       <span className="text-h3 text-fg">{t("app.name")}</span>
+      <ReviewPicker />
       <div className="flex-1" />
       <Button
         variant="ghost"
@@ -155,15 +159,21 @@ function SidebarPlaceholder() {
   return <p className="p-4 text-meta text-fg-muted">{t("shell.sidebarPlaceholder")}</p>;
 }
 
-function Inspector() {
+function Inspector({ route }: { route: string }) {
   const { t } = useTranslation();
   return (
     <aside
       aria-label={t("shell.inspectorTitle")}
       className="w-inspector shrink-0 overflow-y-auto border-l border-line bg-raised p-4"
     >
-      <h2 className="mb-2 text-h3">{t("shell.inspectorTitle")}</h2>
-      <p className="text-meta text-fg-muted">{t("shell.inspectorEmpty")}</p>
+      {route.startsWith("/search") ? (
+        <SearchInspector />
+      ) : (
+        <>
+          <h2 className="mb-2 text-h3">{t("shell.inspectorTitle")}</h2>
+          <p className="text-meta text-fg-muted">{t("shell.inspectorEmpty")}</p>
+        </>
+      )}
     </aside>
   );
 }

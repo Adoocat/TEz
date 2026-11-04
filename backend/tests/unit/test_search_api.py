@@ -169,6 +169,40 @@ def test_results_are_deduplicated_with_their_sources(client: TestClient, review_
     assert merged["abstract"] == "Abstract text."
 
 
+def test_history_lists_the_searches_of_a_review_newest_first(
+    client: TestClient, review_id: str
+) -> None:
+    first = start(client, review_id, query="first query", year_from=2020)
+    events(client, first)
+    second = start(client, review_id, query="second query")
+    events(client, second)
+
+    history = client.get("/searches", params={"review_id": review_id}).json()
+
+    assert [item["search_id"] for item in history] == [second, first]
+    assert history[1]["query"] == "first query"
+    assert history[1]["filters"] == {"year_from": 2020, "year_to": None}
+    assert history[1]["initiated_via"] == "gui"
+    assert history[1]["started_at"]
+    assert client.get("/searches", params={"review_id": "other"}).json() == []
+
+
+def test_rows_and_counts_know_what_was_kept(client: TestClient, review_id: str) -> None:
+    search_id = start(client, review_id)
+    events(client, search_id)
+    rows = client.get(f"/searches/{search_id}/results").json()
+    assert not any(row["in_library"] or row["in_review"] for row in rows)
+    kept = rows[0]["paper_id"]
+
+    client.post("/library/papers", json={"paper_ids": [kept]})
+    client.post(f"/reviews/{review_id}/records", json={"paper_ids": [kept], "search_id": search_id})
+
+    after = {row["paper_id"]: row for row in client.get(f"/searches/{search_id}/results").json()}
+    assert after[kept]["in_library"] is True
+    assert after[kept]["in_review"] is True
+    assert client.get(f"/searches/{search_id}").json()["in_library"] == 1
+
+
 def test_events_replay_the_current_state_to_a_late_subscriber(
     client: TestClient, review_id: str
 ) -> None:

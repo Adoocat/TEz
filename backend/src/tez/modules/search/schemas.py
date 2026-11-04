@@ -24,7 +24,7 @@ from pydantic import (
 
 from tez.core.errors import ErrorDetail
 from tez.modules.library.models import IdentifierScheme, VenueType
-from tez.modules.search.models import MatchMethod, RunStatus
+from tez.modules.search.models import InitiatedVia, MatchMethod, RunStatus
 from tez.shared.text import normalize_title
 
 _MIN_YEAR = 1000
@@ -210,10 +210,14 @@ class SearchOverview(BaseModel):
     search_id: str
     review_id: str
     query: str
+    filters: dict[str, Any] | None
+    initiated_via: InitiatedVia
+    started_at: datetime
     runs: list[RunView]
     retrieved: int
     unique: int
     duplicates: int
+    in_library: int
 
 
 class ResultSource(BaseModel):
@@ -239,4 +243,6 @@ class SearchResultRow(BaseModel):
     oa_url: str | None
     language: str | None
     is_retracted: bool
+    in_library: bool
+    in_review: bool
     sources: list[ResultSource]

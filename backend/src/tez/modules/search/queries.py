@@ -2,11 +2,13 @@
 
 import json
 
+from sqlalchemy.orm import Session
+
 from tez.core.db import Database
 from tez.core.errors import ErrorDetail
 from tez.modules.library.models import IdentifierScheme
 from tez.modules.library.paper_service import PaperCard, PaperService
-from tez.modules.reviews.repository import ReviewsRepository
+from tez.modules.reviews.service import paper_ids_in_review
 from tez.modules.search.models import SearchRun
 from tez.modules.search.repository import SearchRepository
 from tez.modules.search.schemas import (
@@ -15,11 +17,6 @@ from tez.modules.search.schemas import (
     SearchOverview,
     SearchResultRow,
 )
-
-
-def review_exists(db: Database, review_id: str) -> bool:
-    with db.session() as session:
-        return ReviewsRepository(session).get_review(review_id) is not None
 
 
 def _error(run: SearchRun) -> ErrorDetail | None:
@@ -38,28 +35,47 @@ def _run_view(run: SearchRun) -> RunView:
     )
 
 
-def overview(db: Database, search_id: str) -> SearchOverview | None:
-    with db.session() as session:
-        repository = SearchRepository(session)
-        runs = repository.runs_of_search(search_id)
-        if not runs:
-            return None
-        query = repository.query_of(runs[0])
-        paper_ids = repository.paper_ids_of_search(search_id)
+def _overview(session: Session, search_id: str) -> SearchOverview | None:
+    repository = SearchRepository(session)
+    runs = repository.runs_of_search(search_id)
+    if not runs:
+        return None
+    first = runs[0]
+    query = repository.query_of(first)
+    paper_ids = set(repository.paper_ids_of_search(search_id))
     retrieved = sum(run.retrieved_count for run in runs)
-    unique = len(set(paper_ids))
     return SearchOverview(
         search_id=search_id,
-        review_id=runs[0].review_id,
+        review_id=first.review_id,
         query=query.query_text if query else "",
+        filters=query.filters_json if query else None,
+        initiated_via=first.initiated_via,
+        started_at=first.executed_at,
         runs=[_run_view(run) for run in runs],
         retrieved=retrieved,
-        unique=unique,
-        duplicates=retrieved - unique,
+        unique=len(paper_ids),
+        duplicates=retrieved - len(paper_ids),
+        in_library=sum(
+            card.paper.library_added_at is not None
+            for card in PaperService(session).cards(paper_ids).values()
+        ),
     )
 
 
-def _result_row(card: PaperCard, sources: list[ResultSource]) -> SearchResultRow:
+def overview(db: Database, search_id: str) -> SearchOverview | None:
+    with db.session() as session:
+        return _overview(session, search_id)
+
+
+def history(db: Database, review_id: str) -> list[SearchOverview]:
+    with db.session() as session:
+        found = (_overview(session, i) for i in SearchRepository(session).search_ids(review_id))
+        return [item for item in found if item is not None]
+
+
+def _result_row(
+    card: PaperCard, sources: list[ResultSource], *, in_review: bool
+) -> SearchResultRow:
     paper = card.paper
     return SearchResultRow(
         paper_id=paper.id,
@@ -77,6 +93,8 @@ def _result_row(card: PaperCard, sources: list[ResultSource]) -> SearchResultRow
         oa_url=paper.oa_url,
         language=paper.language,
         is_retracted=paper.retraction_status.value != "none",
+        in_library=paper.library_added_at is not None,
+        in_review=in_review,
         sources=sources,
     )
 
@@ -86,7 +104,8 @@ def result_rows(db: Database, search_id: str) -> list[SearchResultRow]:
     with db.session() as session:
         repository = SearchRepository(session)
         by_paper: dict[str, list[ResultSource]] = {}
-        for run in repository.runs_of_search(search_id):
+        runs = repository.runs_of_search(search_id)
+        for run in runs:
             for result in repository.results(run.id):
                 by_paper.setdefault(result.paper_id, []).append(
                     ResultSource(
@@ -97,6 +116,10 @@ def result_rows(db: Database, search_id: str) -> list[SearchResultRow]:
                     )
                 )
         cards = PaperService(session).cards(by_paper)
-        rows = [_result_row(cards[pid], sources) for pid, sources in by_paper.items()]
+        in_review = paper_ids_in_review(db, runs[0].review_id) if runs else set[str]()
+        rows = [
+            _result_row(cards[pid], sources, in_review=pid in in_review)
+            for pid, sources in by_paper.items()
+        ]
     rows.sort(key=lambda row: min(s.rank for s in row.sources))
     return rows

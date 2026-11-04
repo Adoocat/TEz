@@ -120,6 +120,135 @@
     "secrets.unavailable": "İşletim sisteminin anahtar zincirine erişilemiyor.",
     "backend.exited": "Arka uç beklenmedik biçimde kapandı.",
     "backend.start_failed": "Arka uç başlatılamadı: {{reason}}",
-    "backend.no_token": "Bu adres bir erişim anahtarı içermiyor. TEz'i `tez serve` çıktısındaki bağlantıyla açın."
+    "backend.no_token": "Bu adres bir erişim anahtarı içermiyor. TEz'i `tez serve` çıktısındaki bağlantıyla açın.",
+    "review.not_found": "Bu review artık yok.",
+    "paper.not_found": "Bu makaleler artık yok.",
+    "search.not_found": "Bu arama bulunamadı.",
+    "source.unknown": "Bilinmeyen kaynak.",
+    "source.rate_limited": "Kaynak istekleri sınırlıyor; daha sonra yeniden dene.",
+    "source.timeout": "Kaynak zamanında yanıt vermedi.",
+    "source.network": "Kaynağa ulaşılamadı. Bağlantını kontrol et.",
+    "source.unavailable": "Kaynakta sorun var ({{status}}).",
+    "source.rejected": "Kaynak isteği reddetti ({{status}}).",
+    "source.bad_response": "Kaynak okunamayan bir yanıt gönderdi.",
+    "source.query_unsupported": "Bu sorgu bu kaynak için ifade edilemiyor.",
+    "source.key_required": "API anahtarı olmadan bu kaynak yalnızca ilk sonuç sayfasını veriyor."
+  },
+  "reviews": {
+    "active": "Etkin review",
+    "new": "Yeni review",
+    "titleLabel": "Başlık",
+    "titlePlaceholder": "ör. LLM destekli kod inceleme SLR",
+    "methodLabel": "Yöntem",
+    "methods": {
+      "prisma2020": "PRISMA 2020",
+      "kitchenham_slr": "Kitchenham SLR"
+    },
+    "create": "Review oluştur",
+    "createFailed": "Review oluşturulamadı."
+  },
+  "search": {
+    "title": "Sistematik arama",
+    "view": "Görünüm",
+    "results": "Sonuçlar",
+    "historyTab": "Geçmiş",
+    "needReview": "Aramalar bir review'a bağlıdır; böylece her biri yöntem bölümün için kayıtta kalır. Bir başlık ve yöntemle başla.",
+    "queryLabel": "Arama sorgusu",
+    "queryPlaceholder": "\"code review\" AND (LLM OR \"large language model\") NOT survey",
+    "yearFrom": "Başlangıç",
+    "yearTo": "Bitiş",
+    "start": "Ara",
+    "running": "Aranıyor…",
+    "sourcesLabel": "Kaynaklar",
+    "sources": {
+      "openalex": "OpenAlex",
+      "semantic_scholar": "Semantic Scholar",
+      "arxiv": "arXiv",
+      "crossref": "Crossref"
+    },
+    "sourceShort": {
+      "openalex": "OA",
+      "semantic_scholar": "S2",
+      "arxiv": "arXiv",
+      "crossref": "CR"
+    },
+    "state": {
+      "waiting": "bekliyor",
+      "searching": "aranıyor…",
+      "rateLimited": "hız sınırında, {{seconds}} sn bekliyor",
+      "done_one": "{{formatted}} sonuç",
+      "done_other": "{{formatted}} sonuç",
+      "partial_one": "{{formatted}} sonuç, kısmi",
+      "partial_other": "{{formatted}} sonuç, kısmi",
+      "failed": "hata"
+    },
+    "addKey": "Anahtar ekle",
+    "translated": "Her kaynağa gönderilen sorgu",
+    "firstSearch": "İlk aramanı yap: tüm kaynaklara aynı anda sorulur ve her arama kayıtta kalır.",
+    "selectAll": "Tümünü seç",
+    "selectPaper": "Seç: {{title}}",
+    "summary": "{{sources}} kaynak: {{retrieved}} kayıt · {{duplicates}} tekrar · {{unique}} benzersiz · {{inLibrary}} tanesi zaten kütüphanede",
+    "andOthers": "{{name}} vd.",
+    "openAccess": "Açık erişim",
+    "openPdf": "PDF'i aç",
+    "inLibrary": "Kütüphanede",
+    "inReview": "Review'da",
+    "retracted": "Geri çekildi",
+    "retractedNotice": "Bu makale geri çekilmiş.",
+    "merged_one": "{{count}} kayıt birleştirildi",
+    "merged_other": "{{count}} kayıt birleştirildi",
+    "citations_one": "{{formatted}} atıf",
+    "citations_other": "{{formatted}} atıf",
+    "filterType": "Yayın türü",
+    "allTypes": "Tüm türler",
+    "venueTypes": {
+      "journal": "Dergi",
+      "conference": "Konferans",
+      "preprint": "Ön baskı",
+      "book": "Kitap",
+      "chapter": "Bölüm",
+      "thesis": "Tez",
+      "report": "Rapor",
+      "other": "Diğer"
+    },
+    "filterLanguage": "Dil",
+    "allLanguages": "Tüm diller",
+    "onlyOpenAccess": "Yalnızca açık erişim",
+    "addToReview": "Review'a ekle ({{count}})",
+    "addToLibrary": "Kütüphaneye ekle ({{count}})",
+    "added": "{{added}} eklendi, {{present}} zaten vardı",
+    "addFailed": "Eklenemedi.",
+    "waitingForSources": "Kaynaklar bekleniyor…",
+    "noResults": "Sonuç yok.",
+    "inspectorEmpty": "Ayrıntıları görmek için bir sonuç seç.",
+    "mergedFrom": "Bulan kaynaklar",
+    "rank": "{{rank}}. sıra",
+    "matchMethods": {
+      "new": "ilk burada görüldü",
+      "doi": "DOI ile eşleşti",
+      "id": "tanımlayıcıyla eşleşti",
+      "title_fuzzy": "başlık benzerliği"
+    },
+    "abstract": "Özet",
+    "historyEmpty": "Bu review'da henüz arama yok.",
+    "history": {
+      "date": "Tarih",
+      "query": "Sorgu",
+      "sources": "Kaynaklar",
+      "filters": "Yıllar",
+      "reported": "Bildirilen",
+      "retrieved": "Alınan",
+      "unique": "Benzersiz",
+      "allYears": "Tüm yıllar",
+      "via": {
+        "gui": "Uygulama",
+        "cli": "Terminal"
+      },
+      "status": {
+        "ok": "tamamlandı",
+        "partial": "kısmi",
+        "error": "hata"
+      }
+    }
   }
 }

@@ -123,6 +123,16 @@ class SearchRepository:
             )
         )
 
+    def search_ids(self, review_id: str) -> list[str]:
+        """The review's searches, newest first. Ids are time-ordered (UUIDv7)."""
+        found = self.session.scalars(
+            select(SearchRun.search_id)
+            .where(SearchRun.review_id == review_id, SearchRun.search_id.is_not(None))
+            .group_by(SearchRun.search_id)
+            .order_by(SearchRun.search_id.desc())
+        )
+        return [search_id for search_id in found if search_id is not None]
+
     def query_of(self, run: SearchRun) -> SearchQuery | None:
         return self.session.get(SearchQuery, run.query_id) if run.query_id else None
 

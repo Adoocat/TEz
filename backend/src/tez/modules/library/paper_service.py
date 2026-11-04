@@ -7,6 +7,8 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
+from tez.core.db import utcnow
+from tez.core.errors import ErrorCode, TezError
 from tez.modules.library.models import (
     IdentifierScheme,
     Paper,
@@ -110,6 +112,22 @@ class PaperService:
             if scheme not in known:
                 paper.identifiers.append(PaperIdentifier(scheme=scheme, value=value))
         self._session.flush()
+
+    def existing_ids(self, paper_ids: Iterable[str]) -> set[str]:
+        return set(self._session.scalars(select(Paper.id).where(Paper.id.in_(set(paper_ids)))))
+
+    def keep(self, paper_ids: Iterable[str]) -> tuple[int, int]:
+        """Put papers in the library; returns (added, already there). The first date stays."""
+        wanted = set(paper_ids)
+        papers = list(self._session.scalars(select(Paper).where(Paper.id.in_(wanted))))
+        if missing := wanted - {paper.id for paper in papers}:
+            raise TezError(ErrorCode.PAPER_NOT_FOUND, {"paper_ids": sorted(missing)}, status=404)
+        new = [paper for paper in papers if paper.library_added_at is None]
+        now = utcnow()
+        for paper in new:
+            paper.library_added_at = now
+        self._session.flush()
+        return len(new), len(papers) - len(new)
 
     def link_versions(self, preprint_id: str, published_id: str) -> None:
         self._repository.add_relation(preprint_id, published_id, RelationKind.VERSION_OF)
