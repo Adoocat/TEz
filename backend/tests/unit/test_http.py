@@ -431,3 +431,22 @@ def test_outgoing_urls_stay_out_of_the_logs() -> None:
     finally:
         root.handlers[:], root.level = saved
     assert "someone@example.org" not in stream.getvalue()
+
+
+def test_back_off_starts_at_the_source_policy() -> None:
+    sleeps = Sleeps()
+    policy = SourcePolicy(
+        name="fake",
+        requests_per_second=UNLIMITED,
+        max_attempts=3,
+        backoff_seconds=2,
+        jitter_seconds=0,
+    )
+
+    async def scenario(fake: FakeServer) -> None:
+        async with HttpClient(sleep=sleeps) as http:
+            with pytest.raises(TezError):
+                await http.get(policy, fake.url)
+
+    serve([Reply(503)], scenario)
+    assert sleeps.waits == [2, 4]
