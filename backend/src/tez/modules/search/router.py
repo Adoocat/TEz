@@ -8,6 +8,7 @@ from starlette.concurrency import run_in_threadpool
 from tez.core.errors import ErrorCode, TezError
 from tez.modules.library.router import get_library
 from tez.modules.library.service import Library
+from tez.modules.reviews import service as reviews_service
 from tez.modules.search import queries
 from tez.modules.search.live import LiveSearch, SearchRegistry
 from tez.modules.search.providers.base import SearchRequest
@@ -48,7 +49,7 @@ async def start_search(
     unknown = [s for s in body.sources if s not in SOURCE_NAMES]
     if unknown:
         raise TezError(ErrorCode.SOURCE_UNKNOWN, {"sources": unknown}, status=422)
-    if not await run_in_threadpool(queries.review_exists, library.db, body.review_id):
+    if not await run_in_threadpool(reviews_service.review_exists, library.db, body.review_id):
         raise TezError(ErrorCode.REVIEW_NOT_FOUND, {"review_id": body.review_id}, status=404)
 
     settings = await run_in_threadpool(settings_service.read_settings, library.db)
@@ -97,7 +98,18 @@ def get_live_search(search_id: str, registry: RegistryDep) -> LiveSearch:
     return live
 
 
-@router.get("/{search_id}/events", response_class=EventSourceResponse)
+@router.get("")
+def list_searches(review_id: str, library: LibraryDep) -> list[SearchOverview]:
+    """The review's search history, newest first."""
+    return queries.history(library.db, review_id)
+
+
+# `responses` puts SourceProgress in the OpenAPI schema, so the client knows the event's shape.
+@router.get(
+    "/{search_id}/events",
+    response_class=EventSourceResponse,
+    responses={200: {"model": SourceProgress}},
+)
 async def search_events(
     search_id: str, live: Annotated[LiveSearch, Depends(get_live_search)]
 ) -> AsyncIterator[ServerSentEvent]:

@@ -61,6 +61,83 @@
         ]
       }
     },
+    "/library/papers": {
+      "post": {
+        "tags": [
+          "library"
+        ],
+        "summary": "Keep Papers",
+        "description": "Put papers a search found into the library. Keeping one twice changes nothing.",
+        "operationId": "keep_papers_library_papers_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaperSelection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectionResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/library": {
       "get": {
         "tags": [
@@ -441,31 +518,98 @@
         }
       }
     },
-    "/searches": {
+    "/reviews": {
+      "get": {
+        "tags": [
+          "reviews"
+        ],
+        "summary": "List Reviews",
+        "operationId": "list_reviews_reviews_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ReviewView"
+                  },
+                  "type": "array",
+                  "title": "Response List Reviews Reviews Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
       "post": {
         "tags": [
-          "search"
+          "reviews"
         ],
-        "summary": "Start Search",
-        "description": "Start asking the sources; follow it at `/searches/{id}/events`.",
-        "operationId": "start_search_searches_post",
+        "summary": "Create Review",
+        "operationId": "create_review_reviews_post",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SearchStart"
+                "$ref": "#/components/schemas/ReviewCreate"
               }
             }
           },
           "required": true
         },
         "responses": {
-          "202": {
+          "201": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchStarted"
+                  "$ref": "#/components/schemas/ReviewView"
                 }
               }
             }
@@ -518,6 +662,251 @@
         ]
       }
     },
+    "/reviews/{review_id}/records": {
+      "post": {
+        "tags": [
+          "reviews"
+        ],
+        "summary": "Add Records",
+        "description": "Take papers into the review. Adding one twice changes nothing.",
+        "operationId": "add_records_reviews__review_id__records_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaperSelection"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectionResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/searches": {
+      "post": {
+        "tags": [
+          "search"
+        ],
+        "summary": "Start Search",
+        "description": "Start asking the sources; follow it at `/searches/{id}/events`.",
+        "operationId": "start_search_searches_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchStart"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchStarted"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "search"
+        ],
+        "summary": "List Searches",
+        "description": "The review's search history, newest first.",
+        "operationId": "list_searches_searches_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SearchOverview"
+                  },
+                  "title": "Response List Searches Searches Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/searches/{search_id}/events": {
       "get": {
         "tags": [
@@ -564,6 +953,9 @@
                       "minimum": 0
                     }
                   }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/SourceProgress"
                 }
               }
             }
@@ -1227,6 +1619,14 @@
         ],
         "title": "Health"
       },
+      "InitiatedVia": {
+        "type": "string",
+        "enum": [
+          "gui",
+          "cli"
+        ],
+        "title": "InitiatedVia"
+      },
       "JobStatus": {
         "type": "string",
         "enum": [
@@ -1338,6 +1738,36 @@
         ],
         "title": "MatchMethod"
       },
+      "PaperSelection": {
+        "properties": {
+          "paper_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20000,
+            "minItems": 1,
+            "title": "Paper Ids"
+          },
+          "search_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Search Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "paper_ids"
+        ],
+        "title": "PaperSelection"
+      },
       "ResultSource": {
         "properties": {
           "source": {
@@ -1371,6 +1801,74 @@
           "match_score"
         ],
         "title": "ResultSource"
+      },
+      "ReviewCreate": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "method": {
+            "$ref": "#/components/schemas/ReviewMethod"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "method"
+        ],
+        "title": "ReviewCreate"
+      },
+      "ReviewMethod": {
+        "type": "string",
+        "enum": [
+          "prisma2020",
+          "kitchenham_slr"
+        ],
+        "title": "ReviewMethod"
+      },
+      "ReviewStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "archived"
+        ],
+        "title": "ReviewStatus"
+      },
+      "ReviewView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "method": {
+            "$ref": "#/components/schemas/ReviewMethod"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReviewStatus"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "method",
+          "status",
+          "created_at"
+        ],
+        "title": "ReviewView"
       },
       "RunStatus": {
         "type": "string",
@@ -1458,6 +1956,26 @@
             "type": "string",
             "title": "Query"
           },
+          "filters": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filters"
+          },
+          "initiated_via": {
+            "$ref": "#/components/schemas/InitiatedVia"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Started At"
+          },
           "runs": {
             "items": {
               "$ref": "#/components/schemas/RunView"
@@ -1476,6 +1994,10 @@
           "duplicates": {
             "type": "integer",
             "title": "Duplicates"
+          },
+          "in_library": {
+            "type": "integer",
+            "title": "In Library"
           }
         },
         "type": "object",
@@ -1483,10 +2005,14 @@
           "search_id",
           "review_id",
           "query",
+          "filters",
+          "initiated_via",
+          "started_at",
           "runs",
           "retrieved",
           "unique",
-          "duplicates"
+          "duplicates",
+          "in_library"
         ],
         "title": "SearchOverview"
       },
@@ -1628,6 +2154,14 @@
             "type": "boolean",
             "title": "Is Retracted"
           },
+          "in_library": {
+            "type": "boolean",
+            "title": "In Library"
+          },
+          "in_review": {
+            "type": "boolean",
+            "title": "In Review"
+          },
           "sources": {
             "items": {
               "$ref": "#/components/schemas/ResultSource"
@@ -1653,6 +2187,8 @@
           "oa_url",
           "language",
           "is_retracted",
+          "in_library",
+          "in_review",
           "sources"
         ],
         "title": "SearchResultRow"
@@ -1777,6 +2313,24 @@
         ],
         "title": "SecretValue"
       },
+      "SelectionResult": {
+        "properties": {
+          "added": {
+            "type": "integer",
+            "title": "Added"
+          },
+          "already_present": {
+            "type": "integer",
+            "title": "Already Present"
+          }
+        },
+        "type": "object",
+        "required": [
+          "added",
+          "already_present"
+        ],
+        "title": "SelectionResult"
+      },
       "SettingsPatch": {
         "properties": {
           "language": {
@@ -1828,6 +2382,79 @@
         "type": "object",
         "title": "SettingsPatch",
         "description": "Only the fields present are changed; null resets a field to its default."
+      },
+      "SourceProgress": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "state": {
+            "$ref": "#/components/schemas/SourceState"
+          },
+          "retrieved": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retrieved"
+          },
+          "total_reported": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Reported"
+          },
+          "wait_seconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wait Seconds"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "state"
+        ],
+        "title": "SourceProgress"
+      },
+      "SourceState": {
+        "type": "string",
+        "enum": [
+          "waiting",
+          "searching",
+          "rate_limited",
+          "done",
+          "partial",
+          "failed"
+        ],
+        "title": "SourceState"
       },
       "VenueType": {
         "type": "string",

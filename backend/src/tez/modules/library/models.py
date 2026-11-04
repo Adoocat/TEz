@@ -84,6 +84,9 @@ class Paper(TimestampMixin, Base):
     )
     # Soft delete (trash); hard delete only when the trash is emptied.
     deleted_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
+    # Set when the user keeps the paper. Every search result has a row, so a row alone says
+    # nothing; empty means only that a search found it (ADR 0009).
+    library_added_at: Mapped[datetime | None] = mapped_column(UtcDateTime, index=True)
 
     identifiers: Mapped[list["PaperIdentifier"]] = relationship(
         back_populates="paper", cascade="all, delete-orphan"

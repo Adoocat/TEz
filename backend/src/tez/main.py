@@ -18,6 +18,7 @@ from tez.modules.jobs.router import router as jobs_router
 from tez.modules.jobs.supervisor import WorkerSupervisor
 from tez.modules.library.router import router as library_router
 from tez.modules.library.service import Library, open_library
+from tez.modules.reviews.router import router as reviews_router
 from tez.modules.search.live import SearchRegistry
 from tez.modules.search.providers.registry import ProviderFactory, open_providers
 from tez.modules.search.router import router as search_router
@@ -81,6 +82,7 @@ def create_app(
     }
     app.include_router(library_router, dependencies=secured, responses=needs_library)
     app.include_router(jobs_router, dependencies=secured, responses=needs_library)
+    app.include_router(reviews_router, dependencies=secured, responses=needs_library)
     app.include_router(search_router, dependencies=secured, responses=needs_library)
     app.include_router(settings_router, dependencies=secured, responses=needs_library)
     app.include_router(

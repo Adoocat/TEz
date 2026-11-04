@@ -120,6 +120,135 @@
     "secrets.unavailable": "The operating system's keyring is not available.",
     "backend.exited": "The backend stopped unexpectedly.",
     "backend.start_failed": "The backend could not start: {{reason}}",
-    "backend.no_token": "This address has no access key. Open TEz with the link that `tez serve` prints."
+    "backend.no_token": "This address has no access key. Open TEz with the link that `tez serve` prints.",
+    "review.not_found": "This review no longer exists.",
+    "paper.not_found": "These papers no longer exist.",
+    "search.not_found": "This search was not found.",
+    "source.unknown": "Unknown source.",
+    "source.rate_limited": "The source is rate limiting requests; try again later.",
+    "source.timeout": "The source did not answer in time.",
+    "source.network": "The source could not be reached. Check your connection.",
+    "source.unavailable": "The source is having problems ({{status}}).",
+    "source.rejected": "The source refused the request ({{status}}).",
+    "source.bad_response": "The source sent an unreadable answer.",
+    "source.query_unsupported": "This query cannot be expressed for this source.",
+    "source.key_required": "Without an API key this source gives only its first page of results."
+  },
+  "reviews": {
+    "active": "Active review",
+    "new": "New review",
+    "titleLabel": "Title",
+    "titlePlaceholder": "e.g. LLM-assisted code review SLR",
+    "methodLabel": "Method",
+    "methods": {
+      "prisma2020": "PRISMA 2020",
+      "kitchenham_slr": "Kitchenham SLR"
+    },
+    "create": "Create review",
+    "createFailed": "The review could not be created."
+  },
+  "search": {
+    "title": "Systematic search",
+    "view": "View",
+    "results": "Results",
+    "historyTab": "History",
+    "needReview": "Searches belong to a review, so each one stays on record for your method section. Start with a title and a method.",
+    "queryLabel": "Search query",
+    "queryPlaceholder": "\"code review\" AND (LLM OR \"large language model\") NOT survey",
+    "yearFrom": "From",
+    "yearTo": "To",
+    "start": "Search",
+    "running": "Searching…",
+    "sourcesLabel": "Sources",
+    "sources": {
+      "openalex": "OpenAlex",
+      "semantic_scholar": "Semantic Scholar",
+      "arxiv": "arXiv",
+      "crossref": "Crossref"
+    },
+    "sourceShort": {
+      "openalex": "OA",
+      "semantic_scholar": "S2",
+      "arxiv": "arXiv",
+      "crossref": "CR"
+    },
+    "state": {
+      "waiting": "waiting",
+      "searching": "searching…",
+      "rateLimited": "rate limited, wait {{seconds}} s",
+      "done_one": "{{formatted}} result",
+      "done_other": "{{formatted}} results",
+      "partial_one": "{{formatted}} result, partial",
+      "partial_other": "{{formatted}} results, partial",
+      "failed": "failed"
+    },
+    "addKey": "Add a key",
+    "translated": "Queries sent to each source",
+    "firstSearch": "Run your first search: every source is asked at once and each search stays on record.",
+    "selectAll": "Select all",
+    "selectPaper": "Select: {{title}}",
+    "summary": "{{sources}} sources: {{retrieved}} records · {{duplicates}} duplicates · {{unique}} unique · {{inLibrary}} already in the library",
+    "andOthers": "{{name}} et al.",
+    "openAccess": "Open access",
+    "openPdf": "Open PDF",
+    "inLibrary": "In library",
+    "inReview": "In review",
+    "retracted": "Retracted",
+    "retractedNotice": "This paper has been retracted.",
+    "merged_one": "{{count}} record merged",
+    "merged_other": "{{count}} records merged",
+    "citations_one": "{{formatted}} citation",
+    "citations_other": "{{formatted}} citations",
+    "filterType": "Publication type",
+    "allTypes": "All types",
+    "venueTypes": {
+      "journal": "Journal",
+      "conference": "Conference",
+      "preprint": "Preprint",
+      "book": "Book",
+      "chapter": "Chapter",
+      "thesis": "Thesis",
+      "report": "Report",
+      "other": "Other"
+    },
+    "filterLanguage": "Language",
+    "allLanguages": "All languages",
+    "onlyOpenAccess": "Open access only",
+    "addToReview": "Add to review ({{count}})",
+    "addToLibrary": "Add to library ({{count}})",
+    "added": "{{added}} added, {{present}} already there",
+    "addFailed": "Could not add them.",
+    "waitingForSources": "Waiting for the sources…",
+    "noResults": "No results.",
+    "inspectorEmpty": "Select a result to see its details.",
+    "mergedFrom": "Found by",
+    "rank": "rank {{rank}}",
+    "matchMethods": {
+      "new": "first seen here",
+      "doi": "matched by DOI",
+      "id": "matched by identifier",
+      "title_fuzzy": "title similarity"
+    },
+    "abstract": "Abstract",
+    "historyEmpty": "No searches in this review yet.",
+    "history": {
+      "date": "Date",
+      "query": "Query",
+      "sources": "Sources",
+      "filters": "Years",
+      "reported": "Reported",
+      "retrieved": "Retrieved",
+      "unique": "Unique",
+      "allYears": "All years",
+      "via": {
+        "gui": "App",
+        "cli": "Terminal"
+      },
+      "status": {
+        "ok": "complete",
+        "partial": "partial",
+        "error": "failed"
+      }
+    }
   }
 }

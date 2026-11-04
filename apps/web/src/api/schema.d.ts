@@ -18,6 +18,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/library/papers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Keep Papers
+         * @description Put papers a search found into the library. Keeping one twice changes nothing.
+         */
+        post: operations["keep_papers_library_papers_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/library": {
         parameters: {
             query?: never;
@@ -112,7 +132,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/searches": {
+    "/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Reviews */
+        get: operations["list_reviews_reviews_get"];
+        put?: never;
+        /** Create Review */
+        post: operations["create_review_reviews_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/records": {
         parameters: {
             query?: never;
             header?: never;
@@ -120,6 +158,30 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
+        put?: never;
+        /**
+         * Add Records
+         * @description Take papers into the review. Adding one twice changes nothing.
+         */
+        post: operations["add_records_reviews__review_id__records_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/searches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Searches
+         * @description The review's search history, newest first.
+         */
+        get: operations["list_searches_searches_get"];
         put?: never;
         /**
          * Start Search
@@ -294,6 +356,11 @@ export interface components {
             version: string;
         };
         /**
+         * InitiatedVia
+         * @enum {string}
+         */
+        InitiatedVia: "gui" | "cli";
+        /**
          * JobStatus
          * @enum {string}
          */
@@ -337,6 +404,13 @@ export interface components {
          * @enum {string}
          */
         MatchMethod: "doi" | "id" | "title_fuzzy" | "new";
+        /** PaperSelection */
+        PaperSelection: {
+            /** Paper Ids */
+            paper_ids: string[];
+            /** Search Id */
+            search_id?: string | null;
+        };
         /** ResultSource */
         ResultSource: {
             /** Source */
@@ -346,6 +420,36 @@ export interface components {
             match_method: components["schemas"]["MatchMethod"];
             /** Match Score */
             match_score: number | null;
+        };
+        /** ReviewCreate */
+        ReviewCreate: {
+            /** Title */
+            title: string;
+            method: components["schemas"]["ReviewMethod"];
+        };
+        /**
+         * ReviewMethod
+         * @enum {string}
+         */
+        ReviewMethod: "prisma2020" | "kitchenham_slr";
+        /**
+         * ReviewStatus
+         * @enum {string}
+         */
+        ReviewStatus: "active" | "archived";
+        /** ReviewView */
+        ReviewView: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            method: components["schemas"]["ReviewMethod"];
+            status: components["schemas"]["ReviewStatus"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /**
          * RunStatus
@@ -378,6 +482,16 @@ export interface components {
             review_id: string;
             /** Query */
             query: string;
+            /** Filters */
+            filters: {
+                [key: string]: unknown;
+            } | null;
+            initiated_via: components["schemas"]["InitiatedVia"];
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
             /** Runs */
             runs: components["schemas"]["RunView"][];
             /** Retrieved */
@@ -386,6 +500,8 @@ export interface components {
             unique: number;
             /** Duplicates */
             duplicates: number;
+            /** In Library */
+            in_library: number;
         };
         /** SearchResultRow */
         SearchResultRow: {
@@ -418,6 +534,10 @@ export interface components {
             language: string | null;
             /** Is Retracted */
             is_retracted: boolean;
+            /** In Library */
+            in_library: boolean;
+            /** In Review */
+            in_review: boolean;
             /** Sources */
             sources: components["schemas"]["ResultSource"][];
         };
@@ -462,6 +582,13 @@ export interface components {
             /** Value */
             value: string;
         };
+        /** SelectionResult */
+        SelectionResult: {
+            /** Added */
+            added: number;
+            /** Already Present */
+            already_present: number;
+        };
         /**
          * SettingsPatch
          * @description Only the fields present are changed; null resets a field to its default.
@@ -474,6 +601,25 @@ export interface components {
             /** Sources Email */
             sources_email?: string | null;
         };
+        /** SourceProgress */
+        SourceProgress: {
+            /** Source */
+            source: string;
+            state: components["schemas"]["SourceState"];
+            /** Retrieved */
+            retrieved?: number | null;
+            /** Total Reported */
+            total_reported?: number | null;
+            /** Wait Seconds */
+            wait_seconds?: number | null;
+            /** Error Code */
+            error_code?: string | null;
+        };
+        /**
+         * SourceState
+         * @enum {string}
+         */
+        SourceState: "waiting" | "searching" | "rate_limited" | "done" | "partial" | "failed";
         /**
          * VenueType
          * @enum {string}
@@ -517,6 +663,66 @@ export interface operations {
             };
             /** @description Missing or invalid token */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    keep_papers_library_papers_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaperSelection"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SelectionResult"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -828,6 +1034,242 @@ export interface operations {
             };
         };
     };
+    list_reviews_reviews_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_review_reviews_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_records_reviews__review_id__records_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaperSelection"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SelectionResult"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_searches_searches_get: {
+        parameters: {
+            query: {
+                review_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchOverview"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     start_search_searches_post: {
         parameters: {
             query?: never;
@@ -905,7 +1347,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/event-stream": unknown;
+                    "text/event-stream": components["schemas"]["SourceProgress"];
                 };
             };
             /** @description Missing or invalid token */
