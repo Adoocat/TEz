@@ -1,0 +1,142 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - export.arxiv.org
+    method: GET
+    uri: https://export.arxiv.org/api/query?max_results=3&search_query=all%3A%22code+review%22+AND+all%3ALLM&sortBy=relevance&sortOrder=descending&start=0
+  response:
+    body:
+      string: "<?xml version='1.0' encoding='UTF-8'?>\n<feed xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\"\
+        \ xmlns:arxiv=\"http://arxiv.org/schemas/atom\" xmlns=\"http://www.w3.org/2005/Atom\"\
+        >\n  <id>https://arxiv.org/api/kXz0yXaZ3dmyG0oZ9rn/xiYlq98</id>\n  <title>arXiv\
+        \ Query: search_query=all:\"code review\" AND all:LLM&amp;id_list=&amp;start=0&amp;max_results=3</title>\n\
+        \  <updated>2026-11-04T12:25:00Z</updated>\n  <link href=\"https://arxiv.org/api/query?search_query=all:%22code+review%22+AND+all:LLM&amp;start=0&amp;max_results=3&amp;id_list=\"\
+        \ type=\"application/atom+xml\"/>\n  <opensearch:itemsPerPage>3</opensearch:itemsPerPage>\n\
+        \  <opensearch:totalResults>205</opensearch:totalResults>\n  <opensearch:startIndex>0</opensearch:startIndex>\n\
+        \  <entry>\n    <id>http://arxiv.org/abs/2602.13377v1</id>\n    <title>A Survey\
+        \ of Code Review Benchmarks and Evaluation Practices in Pre-LLM and LLM Era</title>\n\
+        \    <updated>2026-02-13T18:19:38Z</updated>\n    <link href=\"https://arxiv.org/abs/2602.13377v1\"\
+        \ rel=\"alternate\" type=\"text/html\"/>\n    <link href=\"https://arxiv.org/pdf/2602.13377v1\"\
+        \ rel=\"related\" type=\"application/pdf\" title=\"pdf\"/>\n    <summary>Code\
+        \ review is a critical practice in modern software engineering, helping developers\
+        \ detect defects early, improve code quality, and facilitate knowledge sharing.\
+        \ With the rapid advancement of large language models (LLMs), a growing body\
+        \ of work has explored automated support for code review. However, progress\
+        \ in this area is hindered by the lack of a systematic understanding of existing\
+        \ benchmarks and evaluation practices. Current code review datasets are scattered,\
+        \ vary widely in design, and provide limited insight into what review capabilities\
+        \ are actually being assessed. In this paper, we present a comprehensive survey\
+        \ of code review benchmarks spanning both the Pre-LLM and LLM eras (2015--2025).\
+        \ We analyze 99 research papers (58 Pre-LLM era and 41 LLM era) and extract\
+        \ key metadata, including datasets, evaluation metrics, data sources, and\
+        \ target tasks. Based on this analysis, we propose a multi-level taxonomy\
+        \ that organizes code review research into five domains and 18 fine-grained\
+        \ tasks. Our study reveals a clear shift toward end-to-end generative peer\
+        \ review, increasing multilingual coverage, and a decline in standalone change\
+        \ understanding tasks. We further identify limitations of current benchmarks\
+        \ and outline future directions, including broader task coverage, dynamic\
+        \ runtime evaluation, and taxonomy-guided fine-grained assessment. This survey\
+        \ provides a structured foundation for developing more realistic and comprehensive\
+        \ benchmarks for LLM-based code review.</summary>\n    <category term=\"cs.SE\"\
+        \ scheme=\"http://arxiv.org/schemas/atom\"/>\n    <published>2026-02-13T18:19:38Z</published>\n\
+        \    <arxiv:primary_category term=\"cs.SE\"/>\n    <author>\n      <name>Taufiqul\
+        \ Islam Khan</name>\n    </author>\n    <author>\n      <name>Shaowei Wang</name>\n\
+        \    </author>\n    <author>\n      <name>Haoxiang Zhang</name>\n    </author>\n\
+        \    <author>\n      <name>Tse-Hsun Chen</name>\n    </author>\n  </entry>\n\
+        \  <entry>\n    <id>http://arxiv.org/abs/2512.17540v2</id>\n    <title>SGCR:\
+        \ A Specification-Grounded Framework for Trustworthy LLM Code Review</title>\n\
+        \    <updated>2026-01-27T12:43:31Z</updated>\n    <link href=\"https://arxiv.org/abs/2512.17540v2\"\
+        \ rel=\"alternate\" type=\"text/html\"/>\n    <link href=\"https://arxiv.org/pdf/2512.17540v2\"\
+        \ rel=\"related\" type=\"application/pdf\" title=\"pdf\"/>\n    <summary>Automating\
+        \ code review with Large Language Models (LLMs) shows immense promise, yet\
+        \ practical adoption is hampered by their lack of reliability, context-awareness,\
+        \ and control. To address this, we propose Specification-Grounded Code Review\
+        \ (SGCR), a framework that grounds LLMs in human-authored specifications to\
+        \ produce trustworthy and relevant feedback. SGCR features a novel dual-pathway\
+        \ architecture: an explicit path ensures deterministic compliance with predefined\
+        \ rules derived from these specifications, while an implicit path heuristically\
+        \ discovers and verifies issues beyond those rules. Deployed in a live industrial\
+        \ environment at HiThink Research, SGCR's suggestions achieved a 42% developer\
+        \ adoption rate-a 90.9% relative improvement over a baseline LLM (22%). Our\
+        \ work demonstrates that specification-grounding is a powerful paradigm for\
+        \ bridging the gap between the generative power of LLMs and the rigorous reliability\
+        \ demands of software engineering.</summary>\n    <category term=\"cs.SE\"\
+        \ scheme=\"http://arxiv.org/schemas/atom\"/>\n    <published>2025-12-19T13:02:22Z</published>\n\
+        \    <arxiv:comment>Accepted at ASE 2025</arxiv:comment>\n    <arxiv:primary_category\
+        \ term=\"cs.SE\"/>\n    <author>\n      <name>Kai Wang</name>\n    </author>\n\
+        \    <author>\n      <name>Bingcheng Mao</name>\n    </author>\n    <author>\n\
+        \      <name>Shuai Jia</name>\n    </author>\n    <author>\n      <name>Yujie\
+        \ Ding</name>\n    </author>\n    <author>\n      <name>Dongming Han</name>\n\
+        \    </author>\n    <author>\n      <name>Tianyi Ma</name>\n    </author>\n\
+        \    <author>\n      <name>Bin Cao</name>\n    </author>\n  </entry>\n  <entry>\n\
+        \    <id>http://arxiv.org/abs/2505.16339v1</id>\n    <title>Rethinking Code\
+        \ Review Workflows with LLM Assistance: An Empirical Study</title>\n    <updated>2025-05-22T07:54:07Z</updated>\n\
+        \    <link href=\"https://arxiv.org/abs/2505.16339v1\" rel=\"alternate\" type=\"\
+        text/html\"/>\n    <link href=\"https://arxiv.org/pdf/2505.16339v1\" rel=\"\
+        related\" type=\"application/pdf\" title=\"pdf\"/>\n    <summary>Code reviews\
+        \ are a critical yet time-consuming aspect of modern software development,\
+        \ increasingly challenged by growing system complexity and the demand for\
+        \ faster delivery. This paper presents a study conducted at WirelessCar Sweden\
+        \ AB, combining an exploratory field study of current code review practices\
+        \ with a field experiment involving two variations of an LLM-assisted code\
+        \ review tool. The field study identifies key challenges in traditional code\
+        \ reviews, including frequent context switching, insufficient contextual information,\
+        \ and highlights both opportunities (e.g., automatic summarization of complex\
+        \ pull requests) and concerns (e.g., false positives and trust issues) in\
+        \ using LLMs. In the field experiment, we developed two prototype variations:\
+        \ one offering LLM-generated reviews upfront and the other enabling on-demand\
+        \ interaction. Both utilize a semantic search pipeline based on retrieval-augmented\
+        \ generation to assemble relevant contextual information for the review, thereby\
+        \ tackling the uncovered challenges. Developers evaluated both variations\
+        \ in real-world settings: AI-led reviews are overall more preferred, while\
+        \ still being conditional on the reviewers' familiarity with the code base,\
+        \ as well as on the severity of the pull request.</summary>\n    <category\
+        \ term=\"cs.SE\" scheme=\"http://arxiv.org/schemas/atom\"/>\n    <published>2025-05-22T07:54:07Z</published>\n\
+        \    <arxiv:primary_category term=\"cs.SE\"/>\n    <author>\n      <name>Fannar\
+        \ Steinn Aðalsteinsson</name>\n    </author>\n    <author>\n      <name>Björn\
+        \ Borgar Magnússon</name>\n    </author>\n    <author>\n      <name>Mislav\
+        \ Milicevic</name>\n    </author>\n    <author>\n      <name>Adam Nirving\
+        \ Davidsson</name>\n    </author>\n    <author>\n      <name>Chih-Hong Cheng</name>\n\
+        \    </author>\n  </entry>\n</feed>\n"
+    headers:
+      accept-ranges:
+      - bytes
+      age:
+      - '0'
+      connection:
+      - keep-alive
+      content-length:
+      - '7248'
+      content-type:
+      - application/atom+xml; charset=utf-8
+      date:
+      - Wed, 04 Nov 2026 12:25:00 GMT
+      server:
+      - Google Frontend
+      strict-transport-security:
+      - max-age=300
+      via:
+      - 1.1 google, 1.1 varnish, 1.1 varnish, 1.1 varnish
+      x-cache:
+      - MISS, MISS, MISS
+      x-cache-hits:
+      - 0, 0, 0
+      x-cloud-trace-context:
+      - d2cf6996f8ce8924b4c7cd7f0ee34f7c
+      x-served-by:
+      - cache-lga-kjfk8660037-LGA, cache-lga-kjfk8660037-LGA, cache-lga-kjfk8660041-LGA,
+        cache-sof1510030-SOF
+      x-timer:
+      - S1793795100.482633,VS0,VE319
+    status:
+      code: 200
+      message: OK
+version: 1
