@@ -16,7 +16,7 @@ class AppSettings(BaseModel):
     # None: follow the operating system's language.
     language: Language | None = None
     theme: Theme = "system"
-    # Sent to OpenAlex, Crossref and Unpaywall for their "polite pool" (plan, API terms).
+    # Sent to Crossref and Unpaywall for their "polite pool" (plan, API terms).
     sources_email: Email | None = None
 
 

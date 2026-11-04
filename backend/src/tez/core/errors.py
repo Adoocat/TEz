@@ -40,6 +40,9 @@ class ErrorCode(StrEnum):
     SOURCE_NETWORK = "source.network"
     SOURCE_UNAVAILABLE = "source.unavailable"
     SOURCE_REJECTED = "source.rejected"
+    SOURCE_BAD_RESPONSE = "source.bad_response"
+    SOURCE_QUERY_UNSUPPORTED = "source.query_unsupported"
+    SOURCE_KEY_REQUIRED = "source.key_required"
 
 
 class TezError(Exception):

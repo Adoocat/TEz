@@ -23,7 +23,9 @@ tez-backend = "tez.__main__:main"
 dev = [
     "pre-commit>=4.7",
     "pytest>=9.2",
+    "pytest-recording>=0.14",
     "ruff>=0.17",
+    "vcrpy>=9.4",
 ]
 
 [build-system]

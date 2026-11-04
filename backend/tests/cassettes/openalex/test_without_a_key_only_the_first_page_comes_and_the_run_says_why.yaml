@@ -1,0 +1,360 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.openalex.org
+    method: GET
+    uri: https://api.openalex.org/works?cursor=%2A&per_page=3&search=%22code+review%22+AND+LLM&select=id%2Cdoi%2Ctitle%2Cpublication_year%2Ctype%2Clanguage%2Ccited_by_count%2Cis_retracted%2Cauthorships%2Cprimary_location%2Cbest_oa_location%2Cbiblio%2Cabstract_inverted_index
+  response:
+    body:
+      string: '{"meta": {"notice": "No API key, so this request shares one free daily
+        budget ($0.10) with everyone on your network''s IP address. Get a free key
+        with its own $1/day at https://openalex.org/settings/api and add api_key=YOUR_KEY
+        to your requests. An AI agent can get one for its user in one call: POST https://api.openalex.org/api-keys
+        with {\"email\": \"<your user''s email>\"}; we email them a link, and the
+        key works once they click it. Docs for agents: https://help.openalex.org/llms.txt",
+        "count": 5583, "db_response_time_ms": 208, "page": null, "per_page": 3, "next_cursor":
+        "Ils2MC4yMjY2LCAxNzcwOTQwODAwMDAwLCAnaHR0cHM6Ly9vcGVuYWxleC5vcmcvVzcxMjk3MDE0OTYnXSI=",
+        "groups_count": null, "x_query": {"oql": "get works with (LLM AND stemmed
+        \"code review\") in the title, abstract, or full text", "x_new_oql": "get
+        works with (LLM AND stemmed \"code review\") in the title, abstract, or full
+        text", "oqo": {"get_rows": "works", "filter_rows": [{"column_id": "fulltext.search",
+        "value": "LLM", "operator": "has"}, {"column_id": "fulltext.search", "value":
+        "\"code review\"", "operator": "has"}]}, "url": "/works?filter=fulltext.search:LLM,fulltext.search:%22code
+        review%22&per_page=3&cursor=%2A", "order": "best matches first", "order_default":
+        true}, "cost_usd": 0.001}, "results": [{"id": "https://openalex.org/W4408028155",
+        "doi": "https://doi.org/10.1145/3721127", "title": "Accountability in Code
+        Review: The Role of Intrinsic Drivers and the Impact of LLMs", "publication_year":
+        2025, "type": "article", "language": "en", "cited_by_count": 11, "is_retracted":
+        false, "authorships": [{"author_position": "first", "author": {"id": "https://openalex.org/A5016367018",
+        "display_name": "Adam Alami", "orcid": "https://orcid.org/0000-0003-4483-0105",
+        "observed_orcids": ["https://orcid.org/0000-0003-4483-0105"]}, "institutions":
+        [{"id": "https://openalex.org/I177969490", "display_name": "University of
+        Southern Denmark", "ror": "https://ror.org/03yrrjy16", "country_code": "DK",
+        "type": "education", "lineage": ["https://openalex.org/I177969490"]}], "countries":
+        ["DK"], "is_corresponding": false, "raw_author_name": "Adam Alami", "raw_affiliation_strings":
+        ["The University of Southern Denmark, S\u00f8nderborg, Denmark"], "raw_orcid":
+        "https://orcid.org/0000-0003-4483-0105", "affiliations": [{"raw_affiliation_string":
+        "The University of Southern Denmark, S\u00f8nderborg, Denmark", "institution_ids":
+        ["https://openalex.org/I177969490"]}]}, {"author_position": "middle", "author":
+        {"id": "https://openalex.org/A5011178887", "display_name": "Victor Vadmand
+        Jensen", "orcid": "https://orcid.org/0000-0003-4270-7891", "observed_orcids":
+        ["https://orcid.org/0000-0003-4270-7891"]}, "institutions": [{"id": "https://openalex.org/I204337017",
+        "display_name": "Aarhus University", "ror": "https://ror.org/01aj84f44", "country_code":
+        "DK", "type": "education", "lineage": ["https://openalex.org/I204337017"]}],
+        "countries": ["DK"], "is_corresponding": false, "raw_author_name": "Victor
+        Jensen", "raw_affiliation_strings": ["Aarhus University, Aarhus, Denmark"],
+        "raw_orcid": "https://orcid.org/0000-0003-4270-7891", "affiliations": [{"raw_affiliation_string":
+        "Aarhus University, Aarhus, Denmark", "institution_ids": ["https://openalex.org/I204337017"]}]},
+        {"author_position": "last", "author": {"id": "https://openalex.org/A5033114444",
+        "display_name": "Neil Ernst", "orcid": "https://orcid.org/0000-0001-5992-2366",
+        "observed_orcids": ["https://orcid.org/0000-0001-5992-2366"]}, "institutions":
+        [{"id": "https://openalex.org/I212119943", "display_name": "University of
+        Victoria", "ror": "https://ror.org/04s5mat29", "country_code": "CA", "type":
+        "education", "lineage": ["https://openalex.org/I212119943"]}], "countries":
+        ["CA"], "is_corresponding": false, "raw_author_name": "Neil Ernst", "raw_affiliation_strings":
+        ["Department of Computer Science, University of Victoria, Victoria, BC, Canada"],
+        "raw_orcid": "https://orcid.org/0000-0001-5992-2366", "affiliations": [{"raw_affiliation_string":
+        "Department of Computer Science, University of Victoria, Victoria, BC, Canada",
+        "institution_ids": ["https://openalex.org/I212119943"]}]}], "primary_location":
+        {"id": "doi:10.1145/3721127", "doi": "https://doi.org/10.1145/3721127", "is_oa":
+        false, "landing_page_url": "https://doi.org/10.1145/3721127", "pdf_url": null,
+        "source": {"id": "https://openalex.org/S142627899", "display_name": "ACM Transactions
+        on Software Engineering and Methodology", "issn_l": "1049-331X", "issn": ["1049-331X",
+        "1557-7392"], "is_oa": false, "is_in_doaj": false, "is_core": true, "listed_in":
+        ["ccf-a", "cwts-core", "dongbi-a", "jufo-3", "norway-2", "poland-100", "russia-white-list-1"],
+        "host_organization": "https://openalex.org/P4310319798", "host_organization_name":
+        "Association for Computing Machinery", "host_organization_lineage": ["https://openalex.org/P4310319798"],
+        "host_organization_lineage_names": ["Association for Computing Machinery"],
+        "type": "journal"}, "license": null, "license_id": null, "version": "publishedVersion",
+        "is_accepted": true, "is_published": true, "raw_source_name": "ACM Transactions
+        on Software Engineering and Methodology", "raw_type": "journal-article"},
+        "best_oa_location": {"id": "pmh:oai:arXiv.org:2502.15963", "doi": null, "is_oa":
+        true, "landing_page_url": "http://arxiv.org/abs/2502.15963", "pdf_url": "https://arxiv.org/pdf/2502.15963",
+        "source": {"id": "https://openalex.org/S4306400194", "display_name": "arXiv
+        (Cornell University)", "issn_l": "2331-8422", "issn": ["2331-8422"], "is_oa":
+        true, "is_in_doaj": false, "is_core": false, "listed_in": [], "host_organization":
+        "https://openalex.org/I205783295", "host_organization_name": "Cornell University",
+        "host_organization_lineage": ["https://openalex.org/I205783295"], "host_organization_lineage_names":
+        [], "type": "repository"}, "license": null, "license_id": null, "version":
+        "submittedVersion", "is_accepted": false, "is_published": false, "raw_source_name":
+        null, "raw_type": "text"}, "biblio": {"volume": "34", "issue": "8", "first_page":
+        "1", "last_page": "44"}, "abstract_inverted_index": {"Accountability": [0],
+        "is": [1, 78], "an": [2, 240], "innate": [3], "part": [4], "of": [5, 39, 62,
+        69, 122, 128, 171, 217, 227, 248], "social": [6, 22, 60, 254], "systems.":
+        [7], "It": [8], "maintains": [9], "stability": [10], "and": [11, 31, 41, 157,
+        187, 256], "ensures": [12], "positive": [13], "pressure": [14], "on": [15,
+        91, 134], "individuals\u2019": [16], "decision-making.": [17], "As": [18],
+        "actors": [19], "in": [20, 46, 144, 183, 231], "a": [21, 101, 145, 193, 199],
+        "system,": [23], "software": [24, 47, 66, 123], "developers": [25], "are":
+        [26, 49, 166, 209], "accountable": [27, 238], "to": [28, 117, 203, 239], "their":
+        [29, 34, 126], "team": [30], "organization": [32], "for": [33, 71, 130, 173],
+        "decisions.": [35], "However,": [36], "the": [37, 59, 89, 119, 215, 225, 246],
+        "drivers": [38, 121, 170], "accountability": [40, 70, 92, 129, 172, 205, 222,
+        228, 258], "how": [42, 58], "it": [43], "changes": [44], "behavior": [45],
+        "development": [48], "less": [50], "understood.": [51], "In": [52, 110, 137,
+        192], "this": [53, 221], "study,": [54], "we": [55, 86, 115, 140, 197], "look":
+        [56], "at": [57], "aspects": [61], "code": [63, 72, 96, 131, 174, 184, 207],
+        "review": [64, 160], "affect": [65], "engineers\u2019": [67], "sense": [68,
+        127], "quality.": [73], "Since": [74], "Software": [75], "Engineering": [76],
+        "(SE)": [77], "increasingly": [79], "involving": [80], "Large": [81], "Language":
+        [82], "Models": [83], "(LLM)": [84], "assistance,": [85], "also": [87, 212],
+        "evaluate": [88], "impact": [90], "when": [93, 206], "introducing": [94],
+        "LLM-assisted": [95, 159, 218], "reviews.": [97], "We": [98, 162, 211], "carried":
+        [99], "out": [100], "two-phased": [102], "sequential": [103], "qualitative":
+        [104], "study": [105], "(": [106], "\\(\\textbf{interviews}\\rightarrow\\textbf{focus":
+        [107], "groups}\\)": [108], ").": [109], "Phase": [111, 138], "I": [112],
+        "(16": [113], "interviews),": [114], "sought": [116], "investigate": [118],
+        "intrinsic": [120, 169], "engineers": [124], "influencing": [125], "quality,":
+        [132], "relying": [133], "self-reported": [135], "claims.": [136], "II,":
+        [139], "tested": [141], "these": [142], "traits": [143], "more": [146], "natural":
+        [147], "setting": [148], "by": [149], "simulating": [150], "traditional":
+        [151, 194], "peer-led": [152, 195, 232], "reviews": [153, 208, 219], "with":
+        [154], "focus": [155], "groups": [156], "then": [158], "sessions.": [161],
+        "found": [163, 213], "that": [164, 214, 245], "there": [165], "four": [167],
+        "key": [168], "quality:": [175], "personal": [176], "standards": [177], ",":
+        [178, 181, 186], "professional": [179], "integrity": [180, 255], "pride":
+        [182], "quality": [185], "maintaining": [188], "one\u2019s": [189], "reputation":
+        [190], ".": [191], "review,": [196], "observed": [198], "transition": [200],
+        "from": [201], "individual": [202], "collective": [204, 257], "initiated.":
+        [210], "introduction": [216, 247], "disrupts": [220], "process,": [223], "challenging":
+        [224], "reciprocity": [226], "taking": [229], "place": [230], "evaluations,":
+        [233], "i.e.,": [234], "one": [235], "cannot": [236], "be": [237], "LLM.":
+        [241], "Our": [242], "findings": [243], "imply": [244], "AI": [249], "into":
+        [250], "SE": [251], "must": [252], "preserve": [253], "mechanisms.": [259]}},
+        {"id": "https://openalex.org/W7123346758", "doi": "https://doi.org/10.1109/esem64174.2025.00013",
+        "title": "Rethinking Code Review Workflows with LLM Assistance: An Empirical
+        Study", "publication_year": 2025, "type": "conference-paper", "language":
+        "en", "cited_by_count": 9, "is_retracted": false, "authorships": [{"author_position":
+        "first", "author": {"id": "https://openalex.org/A5120417029", "display_name":
+        "Fannar Steinn A\u00f0alsteinsson", "orcid": null, "observed_orcids": []},
+        "institutions": [], "countries": [], "is_corresponding": false, "raw_author_name":
+        "Fannar Steinn A\u00f0alsteinsson", "raw_affiliation_strings": ["WirelessCar
+        Sweden AB,Gothenburg,Sweden"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "WirelessCar Sweden AB,Gothenburg,Sweden", "institution_ids": []}]}, {"author_position":
+        "middle", "author": {"id": "https://openalex.org/A5156715266", "display_name":
+        "Bj\u00f6rn Borgar Magn\u00fasson", "orcid": null, "observed_orcids": []},
+        "institutions": [], "countries": [], "is_corresponding": false, "raw_author_name":
+        "Bj\u00f6rn Borgar Magn\u00fasson", "raw_affiliation_strings": ["WirelessCar
+        Sweden AB,Gothenburg,Sweden"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "WirelessCar Sweden AB,Gothenburg,Sweden", "institution_ids": []}]}, {"author_position":
+        "middle", "author": {"id": "https://openalex.org/A5120417030", "display_name":
+        "Mislav Milicevic", "orcid": null, "observed_orcids": []}, "institutions":
+        [], "countries": [], "is_corresponding": false, "raw_author_name": "Mislav
+        Milicevic", "raw_affiliation_strings": ["WirelessCar Sweden AB,Gothenburg,Sweden"],
+        "raw_orcid": null, "affiliations": [{"raw_affiliation_string": "WirelessCar
+        Sweden AB,Gothenburg,Sweden", "institution_ids": []}]}, {"author_position":
+        "middle", "author": {"id": "https://openalex.org/A5120659099", "display_name":
+        "Adam Nirving Davidsson", "orcid": null, "observed_orcids": []}, "institutions":
+        [], "countries": [], "is_corresponding": false, "raw_author_name": "Adam Nirving
+        Davidsson", "raw_affiliation_strings": ["WirelessCar Sweden AB,Gothenburg,Sweden"],
+        "raw_orcid": null, "affiliations": [{"raw_affiliation_string": "WirelessCar
+        Sweden AB,Gothenburg,Sweden", "institution_ids": []}]}, {"author_position":
+        "last", "author": {"id": "https://openalex.org/A5066292729", "display_name":
+        "Chih\u2010Hong Cheng", "orcid": "https://orcid.org/0000-0002-7265-8413",
+        "observed_orcids": ["https://orcid.org/0000-0002-7265-8413"]}, "institutions":
+        [{"id": "https://openalex.org/I66862912", "display_name": "Chalmers University
+        of Technology", "ror": "https://ror.org/040wg7k59", "country_code": "SE",
+        "type": "education", "lineage": ["https://openalex.org/I66862912"]}], "countries":
+        ["SE"], "is_corresponding": false, "raw_author_name": "Chih-Hong Cheng", "raw_affiliation_strings":
+        ["Chalmers University of Technology,Gothenburg,Sweden"], "raw_orcid": null,
+        "affiliations": [{"raw_affiliation_string": "Chalmers University of Technology,Gothenburg,Sweden",
+        "institution_ids": ["https://openalex.org/I66862912"]}]}], "primary_location":
+        {"id": "doi:10.1109/esem64174.2025.00013", "doi": "https://doi.org/10.1109/esem64174.2025.00013",
+        "is_oa": false, "landing_page_url": "https://doi.org/10.1109/esem64174.2025.00013",
+        "pdf_url": null, "source": {"id": "https://openalex.org/S4210197744", "display_name":
+        "Proceedings of the ... ACM-IEEE International Symposium on Empirical Software
+        Engineering and Measurement/International Symposium on Empirical Software
+        Engineering and Measurement", "issn_l": "1938-6451", "issn": ["1938-6451",
+        "1949-3770", "1949-3789"], "is_oa": false, "is_in_doaj": false, "is_core":
+        false, "listed_in": ["norway-1"], "host_organization": null, "host_organization_name":
+        null, "host_organization_lineage": [], "host_organization_lineage_names":
+        [], "type": "conference"}, "license": null, "license_id": null, "version":
+        "publishedVersion", "is_accepted": true, "is_published": true, "raw_source_name":
+        "2025 ACM/IEEE International Symposium on Empirical Software Engineering and
+        Measurement (ESEM)", "raw_type": "proceedings-article"}, "best_oa_location":
+        {"id": "pmh:oai:arXiv.org:2505.16339", "doi": null, "is_oa": true, "landing_page_url":
+        "http://arxiv.org/abs/2505.16339", "pdf_url": "https://arxiv.org/pdf/2505.16339",
+        "source": {"id": "https://openalex.org/S4306400194", "display_name": "arXiv
+        (Cornell University)", "issn_l": "2331-8422", "issn": ["2331-8422"], "is_oa":
+        true, "is_in_doaj": false, "is_core": false, "listed_in": [], "host_organization":
+        "https://openalex.org/I205783295", "host_organization_name": "Cornell University",
+        "host_organization_lineage": ["https://openalex.org/I205783295"], "host_organization_lineage_names":
+        [], "type": "repository"}, "license": null, "license_id": null, "version":
+        "submittedVersion", "is_accepted": false, "is_published": false, "raw_source_name":
+        null, "raw_type": "text"}, "biblio": {"volume": null, "issue": null, "first_page":
+        "488", "last_page": "497"}, "abstract_inverted_index": {"Background:": [0],
+        "Code": [1], "reviews": [2, 36, 73, 132], "are": [3], "a": [4, 61, 81], "critical":
+        [5], "yet": [6], "timeconsuming": [7], "aspect": [8], "of": [9], "modern":
+        [10], "software": [11], "development,": [12], "increasingly": [13], "challenged":
+        [14], "by": [15, 37, 60], "growing": [16], "system": [17], "complexity": [18],
+        "and": [19, 41, 74, 101, 127, 137, 148], "the": [20, 111], "demand": [21],
+        "for": [22, 115], "faster": [23], "delivery.": [24], "Aims:": [25], "We":
+        [26], "examine": [27], "how": [28], "large": [29, 116], "language": [30],
+        "models": [31], "(LLMs)": [32], "can": [33, 133], "support": [34], "code":
+        [35], "addressing": [38], "common": [39], "inefficiencies": [40], "contextual":
+        [42, 88, 99], "gaps.": [43], "Method:": [44], "At": [45], "WirelessCar": [46],
+        "Sweden$A": [47], "B$,": [48], "we": [49], "conducted": [50], "an": [51],
+        "exploratory": [52], "field": [53, 62, 92], "study": [54, 93], "to": [55,
+        85], "identify": [56], "current": [57], "challenges,": [58], "followed": [59],
+        "experiment": [63], "with": [64, 124, 140], "two": [65], "LLM-assisted": [66,
+        131], "review": [67, 128], "prototypes:": [68], "one": [69], "providing":
+        [70], "upfront,": [71], "AIgenerated": [72], "another": [75], "enabling":
+        [76], "on-demand": [77], "interaction.": [78], "Both": [79], "used": [80],
+        "retrieval-augmented": [82], "generation": [83], "pipeline": [84], "assemble":
+        [86], "relevant": [87], "information.": [89], "Results:": [90], "The": [91],
+        "revealed": [94], "frequent": [95], "context": [96], "switching,": [97], "insufficient":
+        [98], "information,": [100], "concerns": [102], "around": [103], "false":
+        [104], "positives.": [105], "In": [106], "practice,": [107], "developers":
+        [108], "generally": [109], "preferred": [110], "AI-led": [112], "approach,":
+        [113], "especially": [114], "or": [117], "unfamiliar": [118], "pull": [119],
+        "requests,": [120], "though": [121], "preferences": [122], "varied": [123],
+        "codebase": [125], "familiarity": [126], "risk.": [129], "Conclusions:": [130],
+        "reduce": [134], "cognitive": [135], "load": [136], "improve": [138], "comprehension,":
+        [139], "hybrid": [141], "proactive/on-demand": [142], "designs": [143], "best":
+        [144], "balancing": [145], "efficiency,": [146], "trust,": [147], "reviewer":
+        [149], "control.": [150]}}, {"id": "https://openalex.org/W7129701496", "doi":
+        "https://doi.org/10.48550/arxiv.2602.13377", "title": "A Survey of Code Review
+        Benchmarks and Evaluation Practices in Pre-LLM and LLM Era", "publication_year":
+        2026, "type": "preprint", "language": "en", "cited_by_count": 0, "is_retracted":
+        false, "authorships": [{"author_position": "first", "author": {"id": "https://openalex.org/A5027537280",
+        "display_name": "Taufiqul Islam Khan", "orcid": null, "observed_orcids": []},
+        "institutions": [], "countries": [], "is_corresponding": false, "raw_author_name":
+        "Khan, Taufiqul Islam", "raw_affiliation_strings": [], "raw_orcid": null,
+        "affiliations": []}, {"author_position": "middle", "author": {"id": "https://openalex.org/A5122175434",
+        "display_name": "Shaowei Wang", "orcid": null, "observed_orcids": []}, "institutions":
+        [], "countries": [], "is_corresponding": false, "raw_author_name": "Wang,
+        Shaowei", "raw_affiliation_strings": [], "raw_orcid": null, "affiliations":
+        []}, {"author_position": "middle", "author": {"id": "https://openalex.org/A5126237827",
+        "display_name": "Haoxiang Zhang", "orcid": null, "observed_orcids": []}, "institutions":
+        [], "countries": [], "is_corresponding": false, "raw_author_name": "Zhang,
+        Haoxiang", "raw_affiliation_strings": [], "raw_orcid": null, "affiliations":
+        []}, {"author_position": "last", "author": {"id": "https://openalex.org/A5126262689",
+        "display_name": "Tse-Hsun Chen", "orcid": null, "observed_orcids": []}, "institutions":
+        [], "countries": [], "is_corresponding": false, "raw_author_name": "Chen,
+        Tse-Hsun", "raw_affiliation_strings": [], "raw_orcid": null, "affiliations":
+        []}], "primary_location": {"id": "pmh:oai:arXiv.org:2602.13377", "doi": null,
+        "is_oa": true, "landing_page_url": "http://arxiv.org/abs/2602.13377", "pdf_url":
+        "https://arxiv.org/pdf/2602.13377", "source": {"id": "https://openalex.org/S4306400194",
+        "display_name": "arXiv (Cornell University)", "issn_l": "2331-8422", "issn":
+        ["2331-8422"], "is_oa": true, "is_in_doaj": false, "is_core": false, "listed_in":
+        [], "host_organization": "https://openalex.org/I205783295", "host_organization_name":
+        "Cornell University", "host_organization_lineage": ["https://openalex.org/I205783295"],
+        "host_organization_lineage_names": [], "type": "repository"}, "license": null,
+        "license_id": null, "version": "submittedVersion", "is_accepted": false, "is_published":
+        false, "raw_source_name": null, "raw_type": "text"}, "best_oa_location": {"id":
+        "pmh:oai:arXiv.org:2602.13377", "doi": null, "is_oa": true, "landing_page_url":
+        "http://arxiv.org/abs/2602.13377", "pdf_url": "https://arxiv.org/pdf/2602.13377",
+        "source": {"id": "https://openalex.org/S4306400194", "display_name": "arXiv
+        (Cornell University)", "issn_l": "2331-8422", "issn": ["2331-8422"], "is_oa":
+        true, "is_in_doaj": false, "is_core": false, "listed_in": [], "host_organization":
+        "https://openalex.org/I205783295", "host_organization_name": "Cornell University",
+        "host_organization_lineage": ["https://openalex.org/I205783295"], "host_organization_lineage_names":
+        [], "type": "repository"}, "license": null, "license_id": null, "version":
+        "submittedVersion", "is_accepted": false, "is_published": false, "raw_source_name":
+        null, "raw_type": "text"}, "biblio": {"volume": null, "issue": null, "first_page":
+        null, "last_page": null}, "abstract_inverted_index": {"Code": [0], "review":
+        [1, 65, 79, 95, 142], "is": [2, 48], "a": [3, 31, 54, 90, 136, 154, 166, 198],
+        "critical": [4], "practice": [5], "in": [6, 45, 71, 168], "modern": [7], "software":
+        [8], "engineering,": [9], "helping": [10], "developers": [11], "detect": [12],
+        "defects": [13], "early,": [14], "improve": [15], "code": [16, 41, 64, 94,
+        141, 210], "quality,": [17], "and": [18, 60, 73, 101, 113, 117, 127, 147,
+        165, 180, 191, 205], "facilitate": [19], "knowledge": [20], "sharing.": [21],
+        "With": [22], "the": [23, 51, 99], "rapid": [24], "advancement": [25], "of":
+        [26, 34, 53, 57, 93, 177], "large": [27], "language": [28], "models": [29],
+        "(LLMs),": [30], "growing": [32], "body": [33], "work": [35], "has": [36],
+        "explored": [37], "automated": [38], "support": [39], "for": [40, 201, 208],
+        "review.": [42, 211], "However,": [43], "progress": [44], "this": [46, 86,
+        132], "area": [47], "hindered": [49], "by": [50], "lack": [52], "systematic":
+        [55], "understanding": [56, 171], "existing": [58], "benchmarks": [59, 96,
+        179, 207], "evaluation": [61, 123], "practices.": [62], "Current": [63], "datasets":
+        [66], "are": [67, 81], "scattered,": [68], "vary": [69], "widely": [70], "design,":
+        [72], "provide": [74], "limited": [75], "insight": [76], "into": [77, 144],
+        "what": [78], "capabilities": [80], "actually": [82], "being": [83], "assessed.":
+        [84], "In": [85], "paper,": [87], "we": [88, 134], "present": [89], "comprehensive":
+        [91, 206], "survey": [92, 196], "spanning": [97], "both": [98], "Pre-LLM":
+        [100, 111], "LLM": [102, 115], "eras": [103], "(2015--2025).": [104], "We":
+        [105, 173], "analyze": [106], "99": [107], "research": [108, 143], "papers":
+        [109], "(58": [110], "era": [112], "41": [114], "era)": [116], "extract":
+        [118], "key": [119], "metadata,": [120], "including": [121, 184], "datasets,":
+        [122], "metrics,": [124], "data": [125], "sources,": [126], "target": [128],
+        "tasks.": [129, 150, 172], "Based": [130], "on": [131], "analysis,": [133],
+        "propose": [135], "multi-level": [137], "taxonomy": [138], "that": [139],
+        "organizes": [140], "five": [145], "domains": [146], "18": [148], "fine-grained":
+        [149, 193], "Our": [151], "study": [152], "reveals": [153], "clear": [155],
+        "shift": [156], "toward": [157], "end-to-end": [158], "generative": [159],
+        "peer": [160], "review,": [161], "increasing": [162], "multilingual": [163],
+        "coverage,": [164, 187], "decline": [167], "standalone": [169], "change":
+        [170], "further": [174], "identify": [175], "limitations": [176], "current":
+        [178], "outline": [181], "future": [182], "directions,": [183], "broader":
+        [185], "task": [186], "dynamic": [188], "runtime": [189], "evaluation,": [190],
+        "taxonomy-guided": [192], "assessment.": [194], "This": [195], "provides":
+        [197], "structured": [199], "foundation": [200], "developing": [202], "more":
+        [203], "realistic": [204], "LLM-based": [209]}}], "group_by": []}'
+    headers:
+      access-control-allow-headers:
+      - Accept, Accept-Language, Accept-Encoding, Authorization, Content-Type, X-OpenAlex-UI,
+        X-Impersonate-User
+      access-control-allow-methods:
+      - GET, HEAD, POST, PATCH, DELETE, OPTIONS
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - Cache-Control, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Onetime-Remaining,
+        X-RateLimit-Credits-Used, X-RateLimit-Credits-Required, X-RateLimit-Reset,
+        X-RateLimit-Limit-USD, X-RateLimit-Remaining-USD, X-RateLimit-Prepaid-Remaining-USD,
+        X-RateLimit-Cost-USD, X-RateLimit-Cost-Required-USD, Retry-After, Location,
+        Content-Disposition, X-OpenAlex-UI-Token
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a5538870eb9d3466-AMS
+      connection:
+      - keep-alive
+      content-length:
+      - '22901'
+      content-type:
+      - application/json
+      date:
+      - Wed, 04 Nov 2026 12:13:29 GMT
+      nel:
+      - '{"report_to":"heroku-nel","response_headers":["Via"],"max_age":3600,"success_fraction":0.01,"failure_fraction":0.1}'
+      report-to:
+      - '{"group":"heroku-nel","endpoints":[{"url":"https://nel.heroku.com/reports?s=zMMdWmtiCk1Rf38g9TF31WRbQoveUx1PQxhKxLtCLNY%3D\u0026sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d\u0026ts=1793794409"}],"max_age":3600}'
+      reporting-endpoints:
+      - heroku-nel="https://nel.heroku.com/reports?s=zMMdWmtiCk1Rf38g9TF31WRbQoveUx1PQxhKxLtCLNY%3D&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&ts=1793794409"
+      server:
+      - cloudflare
+      transfer-encoding:
+      - chunked
+      via:
+      - 2.0 heroku-router
+      x-ratelimit-cost-usd:
+      - '0.001'
+      x-ratelimit-credits-used:
+      - '10'
+      x-ratelimit-limit:
+      - '1000'
+      x-ratelimit-limit-usd:
+      - '0.1'
+      x-ratelimit-onetime-remaining:
+      - '0'
+      x-ratelimit-prepaid-remaining-usd:
+      - '0'
+      x-ratelimit-remaining:
+      - '909'
+      x-ratelimit-remaining-usd:
+      - '0.0909'
+      x-ratelimit-reset:
+      - '42391'
+    status:
+      code: 200
+      message: OK
+version: 1
