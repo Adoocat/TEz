@@ -107,7 +107,7 @@ def _date_filter(request: SearchRequest) -> str | None:
 
 
 class CrossrefProvider(PagedProvider):
-    name: ClassVar[str] = "crossref"
+    name: str = "crossref"
     page_size: ClassVar[int] = 100
 
     def __init__(self, http: HttpClient, *, email: str | None = None) -> None:

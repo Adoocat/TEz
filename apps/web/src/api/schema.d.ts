@@ -112,6 +112,88 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/searches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start Search
+         * @description Start asking the sources; follow it at `/searches/{id}/events`.
+         */
+        post: operations["start_search_searches_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/searches/{search_id}/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search Events
+         * @description Per-source progress as Server-Sent Events (`event: source`), then `event: finished`.
+         *
+         *     Only searches running in this process have events. Afterwards, read `/searches/{id}`.
+         */
+        get: operations["search_events_searches__search_id__events_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/searches/{search_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Search
+         * @description What each source answered, and the counts derived from it.
+         */
+        get: operations["get_search_searches__search_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/searches/{search_id}/results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Results
+         * @description The deduplicated papers of a search, with the sources that found each.
+         */
+        get: operations["get_results_searches__search_id__results_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/settings": {
         parameters: {
             query?: never;
@@ -251,6 +333,120 @@ export interface components {
             schema_revision: string;
         };
         /**
+         * MatchMethod
+         * @enum {string}
+         */
+        MatchMethod: "doi" | "id" | "title_fuzzy" | "new";
+        /** ResultSource */
+        ResultSource: {
+            /** Source */
+            source: string;
+            /** Rank */
+            rank: number;
+            match_method: components["schemas"]["MatchMethod"];
+            /** Match Score */
+            match_score: number | null;
+        };
+        /**
+         * RunStatus
+         * @enum {string}
+         */
+        RunStatus: "ok" | "partial" | "error";
+        /** RunView */
+        RunView: {
+            /** Source */
+            source: string;
+            status: components["schemas"]["RunStatus"];
+            /** Translated Query */
+            translated_query: string | null;
+            /**
+             * Executed At
+             * Format: date-time
+             */
+            executed_at: string;
+            /** Total Reported */
+            total_reported: number | null;
+            /** Retrieved Count */
+            retrieved_count: number;
+            error: components["schemas"]["ErrorDetail"] | null;
+        };
+        /** SearchOverview */
+        SearchOverview: {
+            /** Search Id */
+            search_id: string;
+            /** Review Id */
+            review_id: string;
+            /** Query */
+            query: string;
+            /** Runs */
+            runs: components["schemas"]["RunView"][];
+            /** Retrieved */
+            retrieved: number;
+            /** Unique */
+            unique: number;
+            /** Duplicates */
+            duplicates: number;
+        };
+        /** SearchResultRow */
+        SearchResultRow: {
+            /** Paper Id */
+            paper_id: string;
+            /** Title */
+            title: string;
+            /** First Author */
+            first_author: string | null;
+            /** Author Count */
+            author_count: number;
+            /** Year */
+            year: number | null;
+            /** Venue */
+            venue: string | null;
+            venue_type: components["schemas"]["VenueType"] | null;
+            /** Abstract */
+            abstract: string | null;
+            /** Citation Count */
+            citation_count: number | null;
+            /** Doi */
+            doi: string | null;
+            /** Arxiv Id */
+            arxiv_id: string | null;
+            /** Url */
+            url: string | null;
+            /** Oa Url */
+            oa_url: string | null;
+            /** Language */
+            language: string | null;
+            /** Is Retracted */
+            is_retracted: boolean;
+            /** Sources */
+            sources: components["schemas"]["ResultSource"][];
+        };
+        /** SearchStart */
+        SearchStart: {
+            /** Review Id */
+            review_id: string;
+            /** Query */
+            query: string;
+            /** Sources */
+            sources: string[];
+            /** Year From */
+            year_from?: number | null;
+            /** Year To */
+            year_to?: number | null;
+            /**
+             * Limit
+             * @default 1000
+             */
+            limit: number;
+        };
+        /** SearchStarted */
+        SearchStarted: {
+            /** Search Id */
+            search_id: string;
+            /** Sources */
+            sources: string[];
+        };
+        /**
          * SecretName
          * @enum {string}
          */
@@ -278,6 +474,11 @@ export interface components {
             /** Sources Email */
             sources_email?: string | null;
         };
+        /**
+         * VenueType
+         * @enum {string}
+         */
+        VenueType: "journal" | "conference" | "preprint" | "book" | "chapter" | "thesis" | "report" | "other";
         /** WorkerStatus */
         WorkerStatus: {
             /** Alive */
@@ -587,6 +788,240 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["JobView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_search_searches_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SearchStart"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchStarted"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    search_events_searches__search_id__events_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                search_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": unknown;
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_search_searches__search_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                search_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchOverview"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_results_searches__search_id__results_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                search_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchResultRow"][];
                 };
             };
             /** @description Missing or invalid token */

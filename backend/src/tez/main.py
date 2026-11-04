@@ -18,6 +18,9 @@ from tez.modules.jobs.router import router as jobs_router
 from tez.modules.jobs.supervisor import WorkerSupervisor
 from tez.modules.library.router import router as library_router
 from tez.modules.library.service import Library, open_library
+from tez.modules.search.live import SearchRegistry
+from tez.modules.search.providers.registry import ProviderFactory, open_providers
+from tez.modules.search.router import router as search_router
 from tez.modules.settings.router import secrets_router, settings_router
 from tez.modules.settings.secrets import KeyringSecretStore, SecretStore
 from tez.modules.system.router import router as system_router
@@ -39,6 +42,7 @@ def create_app(
     library: Library | None = None,
     start_worker: bool = False,
     secret_store: SecretStore | None = None,
+    provider_factory: ProviderFactory = open_providers,
 ) -> FastAPI:
     """Build the API. Every route needs `token`; `open_docs` exempts the API docs (dev).
 
@@ -56,6 +60,7 @@ def create_app(
         try:
             yield
         finally:
+            await app.state.search_registry.shutdown()
             if app.state.worker is not None:
                 app.state.worker.stop()
             if library is not None:
@@ -65,6 +70,8 @@ def create_app(
     app.state.library = library
     app.state.worker = None
     app.state.secret_store = secret_store or KeyringSecretStore()
+    app.state.search_registry = SearchRegistry()
+    app.state.provider_factory = provider_factory
     install_error_handlers(app)
     secured = [Depends(bearer_scheme)]
     app.include_router(system_router, dependencies=secured, responses=ERROR_RESPONSES)
@@ -74,6 +81,7 @@ def create_app(
     }
     app.include_router(library_router, dependencies=secured, responses=needs_library)
     app.include_router(jobs_router, dependencies=secured, responses=needs_library)
+    app.include_router(search_router, dependencies=secured, responses=needs_library)
     app.include_router(settings_router, dependencies=secured, responses=needs_library)
     app.include_router(
         secrets_router,

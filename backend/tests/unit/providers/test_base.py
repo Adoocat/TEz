@@ -19,7 +19,7 @@ from tez.shared.http import HttpClient, SourcePolicy
 
 
 class Scripted(PagedProvider):
-    name: ClassVar[str] = "scripted"
+    name = "scripted"
     page_size: ClassVar[int] = 2
 
     def __init__(self, script: Sequence[Page | TezError]) -> None:

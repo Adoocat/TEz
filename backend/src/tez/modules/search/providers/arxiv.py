@@ -71,7 +71,7 @@ def map_entry(entry: ET.Element) -> NormalizedRecord:
 
 
 class ArxivProvider(PagedProvider):
-    name: ClassVar[str] = "arxiv"
+    name: str = "arxiv"
     page_size: ClassVar[int] = 100
 
     def __init__(self, http: HttpClient) -> None:

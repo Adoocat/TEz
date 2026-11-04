@@ -28,7 +28,7 @@ Two project rules shape the design. API keys must never reach the database or lo
 
 ## Consequences
 
-- The cache file belongs in the library folder (`.tez/http-cache.sqlite`, rule 1). Task 13 wires this when it creates the client.
+- The cache file belongs in the library folder (`.tez/http-cache.sqlite`, rule 1). Searches do not use the cache, so the first task with metadata lookups (Task 17) wires it.
 - A provider that sends its key as a query parameter would put it in the cache key and the stored URL. Such a provider must use a header, or the secret transport must learn to add parameters (checked in Task 11).
 - The async SQLite storage runs its connection on a worker thread, so `HttpClient` must be closed; the tests run with `ResourceWarning` as an error.
 - New dependencies: `httpx2` (BSD-3-Clause, moved from dev to runtime), `hishel` (BSD-3-Clause), `tenacity` (Apache-2.0), and through them `anysqlite` (BSD-3-Clause) and `msgpack` (Apache-2.0).

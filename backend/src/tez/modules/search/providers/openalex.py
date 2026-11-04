@@ -117,7 +117,7 @@ def map_work(work: dict[str, Any]) -> NormalizedRecord:
 
 
 class OpenAlexProvider(PagedProvider):
-    name: ClassVar[str] = "openalex"
+    name: str = "openalex"
     page_size: ClassVar[int] = 100
 
     def __init__(self, http: HttpClient, *, has_key: bool = False) -> None:
