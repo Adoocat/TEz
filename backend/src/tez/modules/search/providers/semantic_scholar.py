@@ -88,7 +88,7 @@ def _year_range(request: SearchRequest) -> str | None:
 
 
 class SemanticScholarProvider(PagedProvider):
-    name: ClassVar[str] = "semantic_scholar"
+    name: str = "semantic_scholar"
     page_size: ClassVar[int] = 1000
 
     def __init__(self, http: HttpClient) -> None:

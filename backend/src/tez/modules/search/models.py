@@ -64,6 +64,8 @@ class SearchRun(CreatedMixin, Base):
     review_id: Mapped[str] = mapped_column(ForeignKey("review.id", ondelete="RESTRICT"), index=True)
     # Empty for imports of exported results (Task 15).
     query_id: Mapped[str | None] = mapped_column(ForeignKey("search_query.id", ondelete="RESTRICT"))
+    # Groups the runs of one search across sources. Running a query again is a new search.
+    search_id: Mapped[str | None] = mapped_column(String(36), index=True)
     source: Mapped[str] = mapped_column(String(64))
     # The query as sent to this source; reporting standards ask for it per source.
     translated_query: Mapped[str | None] = mapped_column(Text)

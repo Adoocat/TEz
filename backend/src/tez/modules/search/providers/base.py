@@ -63,8 +63,7 @@ class ProviderResult:
 
 
 class SearchProvider(Protocol):
-    @property
-    def name(self) -> str: ...
+    name: str
 
     async def search(
         self, request: SearchRequest, *, on_wait: OnWait | None = None
@@ -82,7 +81,7 @@ class Page:
 class PagedProvider(ABC):
     """A source that answers page by page. Subclasses translate, fetch one page and map."""
 
-    name: ClassVar[str]
+    name: str
     page_size: ClassVar[int]
 
     def __init__(self, http: HttpClient, policy: SourcePolicy) -> None:

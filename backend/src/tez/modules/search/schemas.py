@@ -10,7 +10,8 @@ Identifiers are kept as the source sent them; deduplication normalizes them (Tas
 
 import re
 from datetime import UTC, datetime
-from typing import Annotated, Any
+from enum import StrEnum
+from typing import Annotated, Any, Self
 
 from pydantic import (
     BaseModel,
@@ -18,9 +19,12 @@ from pydantic import (
     ConfigDict,
     Field,
     field_validator,
+    model_validator,
 )
 
+from tez.core.errors import ErrorDetail
 from tez.modules.library.models import IdentifierScheme, VenueType
+from tez.modules.search.models import MatchMethod, RunStatus
 from tez.shared.text import normalize_title
 
 _MIN_YEAR = 1000
@@ -140,3 +144,99 @@ def _author_name(author: Any) -> bool:
     elif isinstance(author, dict):
         name = author.get("display_name")  # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
     return not isinstance(name, str) or bool(name.strip())
+
+
+# --- API ------------------------------------------------------------------------------
+
+MAX_RESULTS_PER_SOURCE = 5000
+
+
+class SourceState(StrEnum):
+    WAITING = "waiting"
+    SEARCHING = "searching"
+    RATE_LIMITED = "rate_limited"
+    DONE = "done"
+    PARTIAL = "partial"
+    FAILED = "failed"
+
+
+class SearchStart(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    review_id: str
+    query: str = Field(min_length=1, max_length=4000)
+    sources: list[str] = Field(min_length=1)
+    year_from: int | None = None
+    year_to: int | None = None
+    limit: int = Field(default=1000, ge=1, le=MAX_RESULTS_PER_SOURCE)
+
+    @model_validator(mode="after")
+    def _years_in_order(self) -> Self:
+        if (
+            self.year_from is not None
+            and self.year_to is not None
+            and self.year_from > self.year_to
+        ):
+            raise ValueError("year_from is after year_to")
+        return self
+
+
+class SearchStarted(BaseModel):
+    search_id: str
+    sources: list[str]
+
+
+class SourceProgress(BaseModel):
+    source: str
+    state: SourceState
+    retrieved: int | None = None
+    total_reported: int | None = None
+    # While rate limited: how long this wait lasts, for a countdown.
+    wait_seconds: float | None = None
+    error_code: str | None = None
+
+
+class RunView(BaseModel):
+    source: str
+    status: RunStatus
+    translated_query: str | None
+    executed_at: datetime
+    total_reported: int | None
+    retrieved_count: int
+    error: ErrorDetail | None
+
+
+class SearchOverview(BaseModel):
+    search_id: str
+    review_id: str
+    query: str
+    runs: list[RunView]
+    retrieved: int
+    unique: int
+    duplicates: int
+
+
+class ResultSource(BaseModel):
+    source: str
+    rank: int
+    match_method: MatchMethod
+    match_score: float | None
+
+
+class SearchResultRow(BaseModel):
+    paper_id: str
+    title: str
+    first_author: str | None
+    author_count: int
+    year: int | None
+    venue: str | None
+    venue_type: VenueType | None
+    abstract: str | None
+    citation_count: int | None
+    doi: str | None
+    arxiv_id: str | None
+    url: str | None
+    oa_url: str | None
+    language: str | None
+    is_retracted: bool
+    sources: list[ResultSource]

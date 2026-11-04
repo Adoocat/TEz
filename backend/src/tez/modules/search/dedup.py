@@ -95,10 +95,10 @@ def family_name(author: RecordAuthor) -> str | None:
     return words[-1].strip(".") if words else None
 
 
-def is_preprint(record: NormalizedRecord, identifiers: Mapping[Scheme, str]) -> bool:
-    if record.venue_type is VenueType.PREPRINT:
+def is_preprint_type(venue_type: VenueType | None, identifiers: Mapping[Scheme, str]) -> bool:
+    if venue_type is VenueType.PREPRINT:
         return True
-    if record.venue_type in _PUBLISHED_TYPES or Scheme.ARXIV not in identifiers:
+    if venue_type in _PUBLISHED_TYPES or Scheme.ARXIV not in identifiers:
         return False
     doi = identifiers.get(Scheme.DOI)
     return doi is None or doi.startswith(_ARXIV_DOI_PREFIX)
@@ -112,7 +112,7 @@ def candidate_from(paper_id: str, record: NormalizedRecord) -> Candidate:
         title_norm=record.title_norm,
         year=record.year,
         first_author=family_name(record.authors[0]) if record.authors else None,
-        is_preprint=is_preprint(record, identifiers),
+        is_preprint=is_preprint_type(record.venue_type, identifiers),
     )
 
 
@@ -130,15 +130,32 @@ class PaperIndex:
     """The known papers, indexed for matching. Add papers as a search creates them."""
 
     def __init__(self, candidates: Iterable[Candidate]) -> None:
+        self._by_paper: dict[str, Candidate] = {}
         self._by_identifier: dict[tuple[Scheme, str], Candidate] = {}
         self._by_year: defaultdict[int | None, list[Candidate]] = defaultdict(list)
+        self.reload(candidates)
+
+    def reload(self, candidates: Iterable[Candidate]) -> None:
+        self._by_paper.clear()
+        self._by_identifier.clear()
+        self._by_year.clear()
         for candidate in candidates:
             self.add(candidate)
 
     def add(self, candidate: Candidate) -> None:
+        self._by_paper[candidate.paper_id] = candidate
         for scheme, value in candidate.identifiers.items():
             self._by_identifier.setdefault((scheme, value), candidate)
         self._by_year[candidate.year].append(candidate)
+
+    def knows(self, scheme: Scheme, value: str) -> bool:
+        return (scheme, value) in self._by_identifier
+
+    def add_identifiers(self, paper_id: str, identifiers: Mapping[Scheme, str]) -> None:
+        """Identifiers a known paper just gained from another source."""
+        candidate = self._by_paper[paper_id]
+        for scheme, value in identifiers.items():
+            self._by_identifier.setdefault((scheme, value), candidate)
 
     def match(self, record: NormalizedRecord) -> Match:
         incoming = candidate_from("", record)

@@ -41,6 +41,24 @@ class SearchRepository:
         self.session.flush()
         return query
 
+    def find_or_add_query(
+        self, review_id: str, query_text: str, filters_json: dict[str, Any] | None
+    ) -> SearchQuery:
+        """The same query with the same filters in a review stays one row."""
+        for query in self.queries(review_id):
+            if query.query_text == query_text and query.filters_json == filters_json:
+                return query
+        return self.add_query(review_id, query_text, query_text, filters_json)
+
+    def queries(self, review_id: str) -> list[SearchQuery]:
+        return list(
+            self.session.scalars(
+                select(SearchQuery)
+                .where(SearchQuery.review_id == review_id)
+                .order_by(SearchQuery.created_at, SearchQuery.id)
+            )
+        )
+
     def add_run(
         self,
         review_id: str,
@@ -51,6 +69,7 @@ class SearchRepository:
         status: RunStatus,
         results: Sequence[ResultInput],
         query_id: str | None = None,
+        search_id: str | None = None,
         translated_query: str | None = None,
         total_reported: int | None = None,
         error: str | None = None,
@@ -60,6 +79,7 @@ class SearchRepository:
         run = SearchRun(
             review_id=review_id,
             query_id=query_id,
+            search_id=search_id,
             source=source,
             translated_query=translated_query,
             executed_at=executed_at,
@@ -91,6 +111,27 @@ class SearchRepository:
                 select(SearchRun)
                 .where(SearchRun.review_id == review_id)
                 .order_by(SearchRun.executed_at, SearchRun.id)
+            )
+        )
+
+    def runs_of_search(self, search_id: str) -> list[SearchRun]:
+        return list(
+            self.session.scalars(
+                select(SearchRun)
+                .where(SearchRun.search_id == search_id)
+                .order_by(SearchRun.executed_at, SearchRun.id)
+            )
+        )
+
+    def query_of(self, run: SearchRun) -> SearchQuery | None:
+        return self.session.get(SearchQuery, run.query_id) if run.query_id else None
+
+    def paper_ids_of_search(self, search_id: str) -> list[str]:
+        return list(
+            self.session.scalars(
+                select(SearchResult.paper_id)
+                .join(SearchRun, SearchResult.run_id == SearchRun.id)
+                .where(SearchRun.search_id == search_id)
             )
         )
 
