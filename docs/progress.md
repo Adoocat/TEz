@@ -38,7 +38,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (14) Geçmişten açılan arama sorgu formunu doldurmuyor; yeniden çalıştırmak için sorgu elle girilir.
 - (14) Ücretsiz OpenAlex ve Semantic Scholar anahtarları gerçek kullanımda gerekli (ADR 0008); Ayarlar'dan eklenir.
 - (14) Görev 19: kütüphane listesi `paper.library_added_at` üzerinden süzmeli; `list_papers` şu an tüm adayları döndürür.
-- (13) Sidecar paketi `hishel`/`anysqlite` ile yeniden doğrulanmalı; arama yolu artık uygulamanın içinde.
+- (13) Geçici bir PyInstaller derlemesiyle (migration klasörü `--add-data` ile eklenmeli) `serve --token-stdin` açıldı ve arXiv araması çalıştı. HTTP önbellek yolu (`hishel`/`anysqlite`) pakette henüz kullanılmadı; Görev 17'de doğrulanmalı.
 - (13) Bir kaynağın yalnızca yeniden denenmesi (tasarım 4.2 "tekrar dene"): şimdilik tüm arama yeniden başlatılır.
 - (11) DBLP sağlayıcısı: dblp API istemcilerine izin verirse veya koruma kalkarsa eklenir; o zamana dek çip gizli (ADR 0008).
 - (11) OpenAlex'te anahtarla `cursor` sayfalaması henüz kaydedilmedi (anahtar yoktu); ilk gerçek kullanımda doğrulanmalı, sonra kaset eklenmeli.
