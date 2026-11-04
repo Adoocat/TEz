@@ -15,7 +15,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 7 · API istemci üretimi | bitti | `task/7-api-client` · #11 | `pnpm gen:api`: `python -m tez.openapi` → `openapi.json` → openapi-typescript → `schema.d.ts`; `lib/api/client.ts` (openapi-fetch + token); `pnpm check api` CI'daki python işinde |
 | 8 · Ön yüz kabuğu | bitti | `task/8-frontend-shell` · #12 | Kabuk (gezinme şeridi, kenar çubuğu, denetçi, durum çubuğu), hash yönlendirme, TanStack Query, tr/en, açık/koyu (token'lardan CSS değişkenleri), platform adaptörü, Ayarlar (dil, tema, e-posta, API anahtarları → keyring). Rust tarafı sidecar'ı başlatıyor. Ayrıntı: ADR 0006 |
 | 9 · HTTP katmanı | bekliyor | | |
-| 10 · Ortak kayıt şeması | bekliyor | | |
+| 10 · Ortak kayıt şeması | bitti | `task/10-normalized-record` · #14 | `modules/search/schemas.py`: `NormalizedRecord` + `RecordAuthor`. Bozuk isteğe bağlı alan (yıl 0, boş metin, web olmayan bağlantı, geçersiz ORCID) `None` olur, başlıksız kayıt reddedilir; tanımlayıcılar kaynağın gönderdiği gibi kalır (normalleştirme Görev 12) |
 | 11 · Sağlayıcılar | bekliyor | | OpenAlex, Semantic Scholar, arXiv, Crossref — her biri ayrı PR |
 | 12 · Tekilleştirme | bekliyor | | |
 | 13 · Federe arama servisi | bekliyor | | |
