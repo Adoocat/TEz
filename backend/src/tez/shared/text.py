@@ -6,11 +6,13 @@ every i-like letter (I, İ, ı, i) folds to "i" and diacritics are dropped, so "
 "Işık" and "ışık" all become "isik". Columns such as `paper.title_norm` come from here.
 """
 
+import html
 import re
 import unicodedata
 
 _I_VARIANTS = str.maketrans({"I": "i", "İ": "i", "ı": "i"})
 _NON_WORD = re.compile(r"[\W_]+")
+_MARKUP_TAG = re.compile(r"</?[a-zA-Z][^<>]*>")
 
 
 def fold(text: str) -> str:
@@ -23,3 +25,8 @@ def fold(text: str) -> str:
 def normalize_title(title: str) -> str:
     """Folded title with punctuation removed and whitespace collapsed (`title_norm`)."""
     return " ".join(_NON_WORD.sub(" ", fold(title)).split())
+
+
+def strip_markup(text: str) -> str:
+    """Plain text from a metadata field that may hold JATS or HTML tags and entities."""
+    return " ".join(html.unescape(_MARKUP_TAG.sub(" ", text)).split())
