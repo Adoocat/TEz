@@ -14,7 +14,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 6b · İş kuyruğu ve işçi süreci | bitti | `task/6b-job-queue` · #9 | Kira tabanlı kuyruk (`attempts` = ayrıcalık jetonu, geri çekilmeli yeniden deneme), `tez-backend worker`, API'de süpervizör (yeniden başlatma), `GET /jobs/events` SSE (`Last-Event-ID` ile devam). Kabul gerçek süreçlerle: öldürülen işçinin işi kira dolunca 2. denemede biter. Ayrıntı: ADR 0005 |
 | 7 · API istemci üretimi | bitti | `task/7-api-client` · #11 | `pnpm gen:api`: `python -m tez.openapi` → `openapi.json` → openapi-typescript → `schema.d.ts`; `lib/api/client.ts` (openapi-fetch + token); `pnpm check api` CI'daki python işinde |
 | 8 · Ön yüz kabuğu | bitti | `task/8-frontend-shell` · #12 | Kabuk (gezinme şeridi, kenar çubuğu, denetçi, durum çubuğu), hash yönlendirme, TanStack Query, tr/en, açık/koyu (token'lardan CSS değişkenleri), platform adaptörü, Ayarlar (dil, tema, e-posta, API anahtarları → keyring). Rust tarafı sidecar'ı başlatıyor. Ayrıntı: ADR 0006 |
-| 9 · HTTP katmanı | bekliyor | | |
+| 9 · HTTP katmanı | bitti | `task/9-http-layer` · #13 | `tez.shared.http.HttpClient` (httpx2 + hishel + tenacity): kaynak başına hız sınırlayıcı, `Retry-After` uyumlu geri çekilme, istek başına isteğe bağlı önbellek; anahtarlar önbelleğin altında eklenir. 429 ve zaman aşımı gerçek soketli sahte sunucuyla test edildi. Ayrıntı: ADR 0007 |
 | 10 · Ortak kayıt şeması | bekliyor | | |
 | 11 · Sağlayıcılar | bekliyor | | OpenAlex, Semantic Scholar, arXiv, Crossref — her biri ayrı PR |
 | 12 · Tekilleştirme | bekliyor | | |
@@ -32,6 +32,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 ## Sonraya
 
+- (9) PyInstaller paketi `hishel`/`anysqlite` ile yeniden denenmeli (gizli içe aktarma gerekebilir); Görev 13 istemciyi bağlayınca sidecar'la doğrulanmalı.
 - Tasarımda olup Aşama 1'de gizlenecekler: YZ öğeleri, vurgu/not, kart/zaman/atıf grafiği görünümleri, tam metin arama, Zotero, "Yeni makale uyarısı", sistem entegrasyonu adımı (Aşama 6).
 - Eksik tasarımlar: 4.1 karşılama ve yeni review formu, 4.6'nın tamamı, bileşen sayfası, daraltılmış kabuk, boş/yükleniyor/çevrimdışı durumları, İngilizce sürümler, koyu tema (yalnız matris var).
 - Lisans kaydı: PyInstaller GPL + bootloader istisnası (dağıtıma engel değil) — ADR 0001'de yazıldı, Görev 21'deki lisans notlarına da eklenecek.
@@ -60,7 +61,6 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (2) Windows'ta da CI (geliştirme Windows'ta; yol/satır sonu hatalarını yakalar). Paketleme işiyle birlikte (Aşama 6) veya daha önce.
 - (2) Dependabot ile GitHub Actions ve kilit dosyası güncellemeleri.
 - (2) pre-commit'in boşluk / büyük dosya / YAML kontrolleri CI'da da çalışsın (şimdilik yalnız yerelde).
-- (1) Görev 9: Starlette `httpx` yerine `httpx2`'ye geçti; dış HTTP istemcisi seçimi yeniden değerlendirilmeli (ADR 0002).
 - (1) TypeScript 7'ye geçiş: typescript-eslint desteği gelince.
 - (1) Playwright (`pnpm e2e`) hangi görevde kurulacak belli değil; şimdilik yer tutucu.
 - (S1) macOS/Linux'ta Job Object yerine stdin-EOF bekçisi + Linux'ta `PR_SET_PDEATHSIG` (Aşama 6).
@@ -69,9 +69,9 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 Karar ilgili göreve gelindiğinde verilir.
 
-1. **Review oluşturma ve ilk kurulum sihirbazı** (tasarım 4.1) hiçbir göreve atanmamış; Görev 13–14 bir review gerektiriyor. Yeni görev mi, Görev 14'ün parçası mı?
+1. ~~**Review oluşturma**~~ — Karar: Görev 14'te küçük form (başlık + yöntem); araştırma soruları, kriterler ve sihirbaz (tasarım 4.1) sonraya.
 2. ~~**Ayarlar ve keyring API'si**~~ — Karar: Görev 8'de `/settings` ve `/secrets` (keyring) eklendi (ADR 0006).
-3. **DBLP sağlayıcısı** Görev 11'de yok; varsayılan kararlarda öncelikli kaynak ve tasarımda çip olarak var.
+3. ~~**DBLP sağlayıcısı**~~ — Karar: Görev 11'e 5. PR olarak eklenir.
 4. ~~**Tauri iskeleti**~~ — Karar: Görev 1'de küçük iskelet (ADR 0002).
 5. ~~**6b kabulü**~~ — Karar: Aşama 1'de API + SSE testiyle; arayüz kısmı Görev 8'deki durum çubuğunda (ADR 0005).
 6. **`paper_fts`** Görev 6'da yok; Görev 19 kendi migration'ıyla ekleyecek (öneri).

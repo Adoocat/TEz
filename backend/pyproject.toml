@@ -7,9 +7,12 @@ requires-python = ">=3.12"
 dependencies = [
     "alembic>=1",
     "fastapi>=0.162",
+    "hishel[httpx2]>=1.4",
+    "httpx2>=2.16",
     "keyring>=25",
     "pydantic-settings>=2",
     "sqlalchemy>=2",
+    "tenacity>=9.2",
     "uvicorn>=0.54",
 ]
 
@@ -18,7 +21,6 @@ tez-backend = "tez.__main__:main"
 
 [dependency-groups]
 dev = [
-    "httpx2>=2.16",
     "pre-commit>=4.7",
     "pytest>=9.2",
     "ruff>=0.17",
