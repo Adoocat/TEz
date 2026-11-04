@@ -1,0 +1,247 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.semanticscholar.org
+    method: GET
+    uri: https://api.semanticscholar.org/graph/v1/paper/search/bulk?fields=title%2Cabstract%2Cyear%2Cvenue%2CpublicationVenue%2CpublicationTypes%2Cjournal%2Cauthors%2CexternalIds%2Curl%2CopenAccessPdf%2CcitationCount&query=%22code+review%22+LLM+-survey
+  response:
+    body:
+      string: '{"total": 338, "token": null, "data": [{"paperId": "008f84c2d5828481504d5cce64706a4c798d2d00",
+        "externalIds": {"ArXiv": "2507.19902", "DBLP": "journals/corr/abs-2507-19902",
+        "DOI": "10.48550/arXiv.2507.19902", "CorpusId": 280323932}, "publicationVenue":
+        {"id": "1901e811-ee72-4b20-8f7e-de08cd395a10", "name": "arXiv.org", "alternate_names":
+        ["ArXiv"], "issn": "2331-8422", "url": "https://arxiv.org"}, "url": "https://www.semanticscholar.org/paper/008f84c2d5828481504d5cce64706a4c798d2d00",
+        "title": "AgentMesh: A Cooperative Multi-Agent Generative AI Framework for
+        Software Development Automation", "venue": "arXiv.org", "year": 2025, "citationCount":
+        14, "openAccessPdf": {"url": "", "status": null, "license": null, "disclaimer":
+        "Notice: Paper or abstract available at https://arxiv.org/abs/2507.19902,
+        which is subject to the license by the author or copyright owner provided
+        with this content. Please go to the source to verify the license and copyright
+        information for your use."}, "publicationTypes": ["JournalArticle", "Review"],
+        "journal": {"name": "ArXiv", "volume": "abs/2507.19902"}, "authors": [{"authorId":
+        "2217185453", "name": "S. Khanzadeh"}], "abstract": "Software development
+        is a complex, multi-phase process traditionally requiring collaboration among
+        individuals with diverse expertise. We propose AgentMesh, a Python-based framework
+        that uses multiple cooperating LLM-powered agents to automate software development
+        tasks. In AgentMesh, specialized agents - a Planner, Coder, Debugger, and
+        Reviewer - work in concert to transform a high-level requirement into fully
+        realized code. The Planner agent first decomposes user requests into concrete
+        subtasks; the Coder agent implements each subtask in code; the Debugger agent
+        tests and fixes the code; and the Reviewer agent validates the final output
+        for correctness and quality. We describe the architecture and design of these
+        agents and their communication, and provide implementation details including
+        prompt strategies and workflow orchestration. A case study illustrates AgentMesh
+        handling a non-trivial development request via sequential task planning, code
+        generation, iterative debugging, and final code review. We discuss how dividing
+        responsibilities among cooperative agents leverages the strengths of large
+        language models while mitigating single-agent limitations. Finally, we examine
+        current limitations - such as error propagation and context scaling - and
+        outline future work toward more robust, scalable multi-agent AI systems for
+        software engineering automation."}, {"paperId": "0182514f6db322445966b1a35e72256f96bb9d35",
+        "externalIds": {"DOI": "10.22214/ijraset.2026.79005", "CorpusId": 287488029},
+        "publicationVenue": {"id": "100ffd12-b334-4f02-826b-8ac408e7df49", "name":
+        "International Journal for Research in Applied Science and Engineering Technology",
+        "type": "journal", "alternate_names": ["Int J Res Appl Sci Eng Technol"],
+        "issn": "2321-9653", "url": "https://www.ijraset.com/"}, "url": "https://www.semanticscholar.org/paper/0182514f6db322445966b1a35e72256f96bb9d35",
+        "title": "RefactorAI: An Autonomous Code Modernization Agent", "venue": "International
+        Journal for Research in Applied Science and Engineering Technology", "year":
+        2026, "citationCount": 0, "openAccessPdf": {"url": "https://doi.org/10.22214/ijraset.2026.79005",
+        "status": "GOLD", "license": null, "disclaimer": "Notice: Paper or abstract
+        available at https://api.unpaywall.org/v2/10.22214/ijraset.2026.79005?email=<INSERT_YOUR_EMAIL>
+        or https://doi.org/10.22214/ijraset.2026.79005, which is subject to the license
+        by the author or copyright owner provided with this content. Please go to
+        the source to verify the license and copyright information for your use."},
+        "publicationTypes": ["JournalArticle", "Review"], "journal": {"name": "International
+        Journal for Research in Applied Science and Engineering Technology"}, "authors":
+        [{"authorId": "2473611076", "name": "H. Reddy"}], "abstract": "Legacy software
+        systems form the backbone of many organizations, yet over time they accumulate
+        significant technical\ndebt due to outdated architectures, inefficient design
+        patterns, and evolving business requirements. This technical debt increases\nmaintenance
+        costs, reduces system scalability, and slows down innovation. Manual code
+        review and refactoring processes are\noften time-consuming, error-prone, and
+        heavily dependent on developer expertise, making large-scale modernization
+        a\nchallenging task. To address these limitations, this project proposes RefactorAI,
+        an autonomous code modernization agent\ndesigned to intelligently analyze,
+        refactor, and modernize legacy codebases with minimal human intervention.
+        RefactorAI\nintegrates static code analysis techniques with advanced Artificial
+        Intelligence methods, including Abstract Syntax Trees (ASTs),\ndependency
+        graphs, Graph Neural Networks (GNNs), and Large Language Models (LLMs). The
+        system begins by parsing the\nsource code to extract structural and semantic
+        information, constructing a comprehensive architectural and dependency model\nof
+        the codebase. Using this representation, the agent identifies technical debt
+        indicators such as tightly coupled modules, code\nsmells, and inefficient
+        design patterns. An LLM-powered reasoning engine then analyzes these insights
+        to generate strategic\nrefactoring recommendations, including component restructuring
+        and architectural improvements such as monolith\ndecomposition. Beyond analysis
+        and planning, RefactorAI autonomously generates modernized, syntactically
+        correct code\nsnippets for targeted components, ensuring alignment with contemporary
+        software development practices. This end-to-end\nautomation significantly
+        reduces the manual effort required for software maintenance while improving
+        code quality, scalability,\nand architectural integrity. The proposed system
+        serves as a proof-of-concept demonstrating how AI-driven tools can accelerate\nthe
+        software modernization lifecycle, enhance developer productivity, and enable
+        organizations to extend the lifespan and value\nof their legacy systems. Ultimately,
+        RefactorAI aims to empower development teams to maintain high software velocity
+        while\neffectively managing technical debt in complex, real-world applications."},
+        {"paperId": "01ce40f572ae1fc706f3fbd7352e9e28524b3e50", "externalIds": {"DBLP":
+        "conf/esem/MariottoAEBG25", "DOI": "10.1109/ESEM64174.2025.00061", "CorpusId":
+        284726542}, "publicationVenue": {"id": "9d988347-1c3c-4cf9-9b6f-d15117510bf4",
+        "name": "International Symposium on Empirical Software Engineering and Measurement",
+        "type": "conference", "alternate_names": ["ESEM", "Empirical Software Engineering
+        and Measurement", "Int Symp Empir Softw Eng Meas", "Empir Softw Eng Meas"],
+        "issn": "1938-6451", "alternate_issns": ["1949-3770"], "url": "http://www.esem-conferences.org/",
+        "alternate_urls": ["http://portal.acm.org/toc.cfm?CFID=8875694&CFTOKEN=63500259&WantType=Proceedings&coll=portal&dl=ACM&id=SERIES11506&idx=SERIES11506&part=series&title=ESEM&type=series"]},
+        "url": "https://www.semanticscholar.org/paper/01ce40f572ae1fc706f3fbd7352e9e28524b3e50",
+        "title": "From Assessment to Enhancement of Pull Requests at Scale: Aligning
+        Code Reviews with Developer Competencies Using Large Language Models", "venue":
+        "International Symposium on Empirical Software Engineering and Measurement",
+        "year": 2025, "citationCount": 1, "openAccessPdf": {"url": "", "status": "CLOSED",
+        "license": null, "disclaimer": "Notice: Paper or abstract available at https://api.unpaywall.org/v2/10.1109/ESEM64174.2025.00061?email=<INSERT_YOUR_EMAIL>
+        or https://doi.org/10.1109/ESEM64174.2025.00061, which is subject to the license
+        by the author or copyright owner provided with this content. Please go to
+        the source to verify the license and copyright information for your use."},
+        "publicationTypes": ["JournalArticle", "Review"], "journal": {"name": "2025
+        ACM/IEEE International Symposium on Empirical Software Engineering and Measurement
+        (ESEM)", "pages": "478-487"}, "authors": [{"authorId": "2303280210", "name":
+        "L. Mariotto"}, {"authorId": "47671381", "name": "C. M. Adriano"}, {"authorId":
+        "2404521611", "name": "René Eichhorn"}, {"authorId": "1889613", "name": "Daniel
+        Burgstahler"}, {"authorId": "2300124255", "name": "Holger Giese"}], "abstract":
+        "Background] Efficient code review is essential in industrial software development,
+        but writing high-quality Pull Request (PR) descriptions aligned with core
+        software engineering competencies remains challenging. [Aims] To investigate
+        Large Language Models (LLMs) as a reliable PR description assistant, we examined
+        two research problems: (1) how developer competencies relate to real-world
+        PR quality, and (2) how developers perceive PR quality and their variants
+        (LLM-Improved). [Methods] We adopted six software engineering competencies
+        to prompt six LLMs to score 212,687 PRs from 82 opensource projects spanning
+        three repository archetypes. From these, we selected the top six PRs for a
+        controlled experiment with 38 software professionals, using a $6 \\times 6$
+        Latin square design to measure preferences. The LLMs generated three variants
+        of each original (O) PR: degraded (D), improved from the original (IO), and
+        improved from the degraded (ID). We then compared these variants across LLMs
+        for semantic, lexical, and stylistic similarity. [Results] Surprisingly, our
+        controlled experiment with 38 software professionals showed that the ID variant
+        was rated significantly higher than both the Original PR (O) and the LLMDegraded
+        (D) one. However, the IO variant was not significantly better, and participants
+        complained about their verbosity and the “AI tone”. Concerning generalizability,
+        the six LLMs produced semantically similar PRs, but with high lexical and
+        stylistic variation. [Conclusions] This suggests LLMs can enhance PR by providing
+        missing structure but require guidance to retain human nuance. Overall, our
+        findings support human-centered, modelaware integration of LLMs to strengthen
+        competency-aligned code review."}, {"paperId": "04014eb4eb633be610edce0e125f307e8af097de",
+        "externalIds": {"DBLP": "conf/ease/WatanabeK0HYI24", "DOI": "10.1145/3661167.3661183",
+        "CorpusId": 270490690}, "publicationVenue": {"id": "b24455f0-c8b2-4062-8397-1dc279bf6407",
+        "name": "International Conference on Evaluation & Assessment in Software Engineering",
+        "type": "conference", "alternate_names": ["Int Conf Evaluation  Assess Softw
+        Eng", "EASE", "Evaluation Assess Softw Eng", "Evaluation and Assessment in
+        Software Engineering"]}, "url": "https://www.semanticscholar.org/paper/04014eb4eb633be610edce0e125f307e8af097de",
+        "title": "On the Use of ChatGPT for Code Review: Do Developers Like Reviews
+        By ChatGPT?", "venue": "International Conference on Evaluation & Assessment
+        in Software Engineering", "year": 2024, "citationCount": 31, "openAccessPdf":
+        {"url": "https://repository.ubn.ru.nl//bitstream/handle/2066/309005/309005.pdf",
+        "status": "GREEN", "license": null, "disclaimer": "Notice: Paper or abstract
+        available at https://api.unpaywall.org/v2/10.1145/3661167.3661183?email=<INSERT_YOUR_EMAIL>
+        or https://doi.org/10.1145/3661167.3661183, which is subject to the license
+        by the author or copyright owner provided with this content. Please go to
+        the source to verify the license and copyright information for your use."},
+        "publicationTypes": ["JournalArticle", "Book", "Review"], "journal": {"name":
+        "Proceedings of the 28th International Conference on Evaluation and Assessment
+        in Software Engineering"}, "authors": [{"authorId": "2306789863", "name":
+        "Miku Watanabe"}, {"authorId": "40293906", "name": "Yutaro Kashiwa"}, {"authorId":
+        "2274119728", "name": "Bin Lin"}, {"authorId": "1978134", "name": "Toshiki
+        Hirao"}, {"authorId": "2116784234", "name": "Ken''Ichi Yamaguchi"}, {"authorId":
+        "2273975187", "name": "Hajimu Iida"}], "abstract": "Code review is a critical
+        but time-consuming process for ensuring code quality in modern software engineering.
+        To alleviate the effort of reviewing source code, recent studies have investigated
+        the possibility of automating the review process. Moreover, tools based on
+        large language models such as ChatGPT are playing an increasingly important
+        role in this vision. Understanding how these tools are used during code review
+        can provide valuable insights for code review automation. This study investigates
+        for what purposes developers use ChatGPT during code review and how developers
+        react to the information and suggestions provided by ChatGPT. We manually
+        analyze 229 review comments in 205 pull requests from 179 projects. We find
+        that developers often use ChatGPT for outsourcing their work as frequently
+        as asking for references. Moreover, we observe that only 30.7% of responses
+        to the answers provided by ChatGPT are negative. We further analyze the reasons
+        behind the negative reactions. Our results provide valuable insights for improving
+        the effectiveness of LLMs in code reviews."}, {"paperId": "05bccbc8007cef45c1edb7e7e93bfe26ecd898ab",
+        "externalIds": {"DBLP": "journals/corr/abs-2604-05955", "ArXiv": "2604.05955",
+        "DOI": "10.48550/arXiv.2604.05955", "CorpusId": 287209367}, "publicationVenue":
+        {"id": "1901e811-ee72-4b20-8f7e-de08cd395a10", "name": "arXiv.org", "alternate_names":
+        ["ArXiv"], "issn": "2331-8422", "url": "https://arxiv.org"}, "url": "https://www.semanticscholar.org/paper/05bccbc8007cef45c1edb7e7e93bfe26ecd898ab",
+        "title": "Does Pass Rate Tell the Whole Story? Evaluating Design Constraint
+        Compliance in LLM-based Issue Resolution", "venue": "arXiv.org", "year": 2026,
+        "citationCount": 6, "openAccessPdf": {"url": "", "status": null, "license":
+        null, "disclaimer": "Notice: Paper or abstract available at https://arxiv.org/abs/2604.05955,
+        which is subject to the license by the author or copyright owner provided
+        with this content. Please go to the source to verify the license and copyright
+        information for your use."}, "publicationTypes": ["JournalArticle", "Review"],
+        "journal": {"name": "ArXiv", "volume": "abs/2604.05955"}, "authors": [{"authorId":
+        "2324224519", "name": "Kai Yu"}, {"authorId": "2296659524", "name": "Zhen-Hao
+        Zhou"}, {"authorId": "2314347311", "name": "Jun-Hao Zeng"}, {"authorId": "2266161260",
+        "name": "Ying Wang"}, {"authorId": "2133930029", "name": "Xue-Ying Du"}, {"authorId":
+        "2176159206", "name": "Zhi-Qiang Yuan"}, {"authorId": "2226464443", "name":
+        "Jun-Wei Liu"}, {"authorId": "2341558385", "name": "Ziyu Zhou"}, {"authorId":
+        "2353558781", "name": "Yu-Jia Wang"}, {"authorId": "2348700362", "name": "Chong
+        Wang"}, {"authorId": "2326640942", "name": "Xin Peng"}], "abstract": "Repository-level
+        issue resolution benchmarks have become a standard testbed for evaluating
+        LLM-based agents, yet success is still predominantly measured by test pass
+        rates. In practice, however, acceptable patches must also comply with project-specific
+        design constraints, such as architectural conventions, error-handling policies,
+        and maintainability requirements, which are rarely encoded in tests and are
+        often documented only implicitly in code review discussions. This paper introduces
+        \\textit{design-aware issue resolution} and presents \\bench{}, a benchmark
+        that makes such implicit design constraints explicit and measurable. \\bench{}
+        is constructed by mining and validating design constraints from real-world
+        pull requests, linking them to issue instances, and automatically checking
+        patch compliance using an LLM-based verifier, yielding 495 issues and 1,787
+        validated constraints across six repositories, aligned with SWE-bench-Verified
+        and SWE-bench-Pro. Experiments with state-of-the-art agents show that test-based
+        correctness substantially overestimates patch quality: fewer than half of
+        resolved issues are fully design-satisfying, design violations are widespread,
+        and functional correctness exhibits negligible statistical association with
+        design satisfaction. While providing issue-specific design guidance reduces
+        violations, substantial non-compliance remains, highlighting a fundamental
+        gap in current agent capabilities and motivating design-aware evaluation beyond
+        functional correctness."}]}'
+    headers:
+      access-control-allow-origin:
+      - '*'
+      connection:
+      - keep-alive
+      content-type:
+      - application/json
+      date:
+      - Wed, 04 Nov 2026 12:26:25 GMT
+      via:
+      - 1.1 b1f9e0a64296f5239a35411b7783c2ca.cloudfront.net (CloudFront)
+      x-amz-apigw-id:
+      - GUKhyFa-PHcELcw=
+      x-amz-cf-id:
+      - IOSmX-LBMlKvPkRA6AchPaX-zyXk2WsZS4OxlZ6tJ9FsY6nPnE4xkg==
+      x-amz-cf-pop:
+      - IST50-P3
+      x-amzn-remapped-connection:
+      - keep-alive
+      x-amzn-remapped-content-length:
+      - '992753'
+      x-amzn-remapped-date:
+      - Wed, 04 Nov 2026 12:26:25 GMT
+      x-amzn-remapped-server:
+      - gunicorn
+      x-amzn-requestid:
+      - 5cba8c1b-a7a5-4013-8ec1-2573430ef45e
+      x-cache:
+      - Miss from cloudfront
+    status:
+      code: 200
+      message: OK
+version: 1

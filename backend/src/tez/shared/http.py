@@ -233,7 +233,7 @@ class HttpClient:
         seconds, so a UI can show a countdown.
         """
         exponential = wait_exponential_jitter(
-            initial=source.backoff_seconds,
+            multiplier=source.backoff_seconds,
             max=source.max_backoff_seconds,
             jitter=source.jitter_seconds,
         )
