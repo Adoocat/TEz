@@ -1,0 +1,59 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.crossref.org
+    method: GET
+    uri: https://api.crossref.org/works?cursor=%2A&filter=from-pub-date%3A2023%2Cuntil-pub-date%3A2025&order=desc&query.bibliographic=code+review+LLM&rows=3&select=DOI%2Ctitle%2Cauthor%2Cissued%2Ccontainer-title%2Ctype%2Cvolume%2Cissue%2Cpage%2CURL%2Cabstract%2Cis-referenced-by-count%2Cupdated-by&sort=score
+  response:
+    body:
+      string: '{"status":"ok","message-type":"work-list","message-version":"1.0.0","message":{"facets":{},"next-cursor":"MjMuNTQ2MjksMTczNjkxNDQyMTAwMCwxMC4zMjM4OCUyRmdhb2dyNw==","total-results":1583748,"items":[{"DOI":"10.32388\/z3cve7","title":["Review
+        of: \"DRC-Coder: Automated DRC Checker Code Generation Using LLM Autonomous
+        Agent\""],"author":[{"ORCID":"https:\/\/orcid.org\/0009-0005-7482-5819","authenticated-orcid":true,"given":"Sooyong","family":"Lee","sequence":"first","affiliation":[],"role":[{"vocabulary":"crossref","role":"author"}]}],"issued":{"date-parts":[[2025,1,19]]},"type":"peer-review","URL":"https:\/\/doi.org\/10.32388\/z3cve7","is-referenced-by-count":0},{"DOI":"10.32388\/p3nbe5","title":["Review
+        of: \"DRC-Coder: Automated DRC Checker Code Generation Using LLM Autonomous
+        Agent\""],"author":[{"ORCID":"https:\/\/orcid.org\/0009-0008-4804-0446","authenticated-orcid":true,"given":"Jeeyong","family":"Lee","sequence":"first","affiliation":[],"role":[{"vocabulary":"crossref","role":"author"}]}],"issued":{"date-parts":[[2025,2,4]]},"type":"peer-review","URL":"https:\/\/doi.org\/10.32388\/p3nbe5","is-referenced-by-count":0},{"DOI":"10.32388\/gaogr7","title":["Review
+        of: \"DRC-Coder: Automated DRC Checker Code Generation Using LLM Autonomous
+        Agent\""],"author":[{"given":"Yuxiang","family":"Zhao","sequence":"first","affiliation":[],"role":[{"vocabulary":"crossref","role":"author"}]}],"issued":{"date-parts":[[2025,1,15]]},"type":"peer-review","URL":"https:\/\/doi.org\/10.32388\/gaogr7","is-referenced-by-count":0}],"items-per-page":3,"query":{"start-index":0,"search-terms":null}}}'
+    headers:
+      access-control-allow-headers:
+      - X-Requested-With, Accept, Accept-Encoding, Accept-Charset, Accept-Language,
+        Accept-Ranges, Cache-Control
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - Link
+      connection:
+      - keep-alive
+      content-length:
+      - '1599'
+      content-type:
+      - application/json
+      date:
+      - Wed, 04 Nov 2026 12:25:04 GMT
+      permissions-policy:
+      - interest-cohort=()
+      server:
+      - Jetty(9.4.40.v20210413)
+      strict-transport-security:
+      - max-age=31536000;
+      vary:
+      - Accept-Encoding
+      x-api-pool:
+      - public-array
+      x-concurrency-limit:
+      - '1'
+      x-rate-limit-interval:
+      - 1s
+      x-rate-limit-limit:
+      - '1'
+    status:
+      code: 200
+      message: OK
+version: 1

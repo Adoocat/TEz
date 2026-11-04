@@ -9,7 +9,7 @@ from sqlalchemy.exc import StatementError
 
 from tez.core.db import UtcDateTime
 from tez.shared.ids import new_id
-from tez.shared.text import fold, normalize_title
+from tez.shared.text import fold, normalize_title, strip_markup
 
 # --- UUIDv7 ----------------------------------------------------------------------------
 
@@ -119,3 +119,18 @@ def test_utc_datetime_rejects_naive_values(table: tuple[Table, Engine]) -> None:
     t, engine = table
     with pytest.raises(StatementError, match="timezone"), engine.begin() as conn:
         conn.execute(insert(t).values(at=datetime(2026, 11, 3, 19, 0)))  # noqa: DTZ001
+
+
+@pytest.mark.parametrize(
+    ("given", "expected"),
+    [
+        ("<jats:p>We study\n  reviews.</jats:p>", "We study reviews."),
+        ("Kod &amp; <i>Inceleme</i>", "Kod & Inceleme"),
+        ("a < b and c > d", "a < b and c > d"),
+        ("x<sub>2</sub>y", "x 2 y"),
+        ("plain", "plain"),
+        ("", ""),
+    ],
+)
+def test_strip_markup(given: str, expected: str) -> None:
+    assert strip_markup(given) == expected

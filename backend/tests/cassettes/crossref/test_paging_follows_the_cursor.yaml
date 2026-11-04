@@ -1,0 +1,108 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.crossref.org
+    method: GET
+    uri: https://api.crossref.org/works?cursor=%2A&order=desc&query.bibliographic=code+review+llm&rows=2&select=DOI%2Ctitle%2Cauthor%2Cissued%2Ccontainer-title%2Ctype%2Cvolume%2Cissue%2Cpage%2CURL%2Cabstract%2Cis-referenced-by-count%2Cupdated-by&sort=score
+  response:
+    body:
+      string: '{"status":"ok","message-type":"work-list","message-version":"1.0.0","message":{"facets":{},"next-cursor":"MjMuNTc2MDczLDE3MzcyNDc0NjAwMDAsMTAuMzIzODglMkZ6M2N2ZTc=","total-results":7763821,"items":[{"DOI":"10.32388\/enzpy3","title":["Review
+        of: \"DRC-Coder: Automated DRC Checker Code Generation Using LLM Autonomous
+        Agent\""],"author":[{"ORCID":"https:\/\/orcid.org\/0000-0002-9120-7298","authenticated-orcid":true,"given":"Evgenii","family":"Arsentev","sequence":"first","affiliation":[],"role":[{"vocabulary":"crossref","role":"author"}]}],"issued":{"date-parts":[[2026,9,15]]},"type":"peer-review","URL":"https:\/\/doi.org\/10.32388\/enzpy3","is-referenced-by-count":0},{"DOI":"10.32388\/z3cve7","title":["Review
+        of: \"DRC-Coder: Automated DRC Checker Code Generation Using LLM Autonomous
+        Agent\""],"author":[{"ORCID":"https:\/\/orcid.org\/0009-0005-7482-5819","authenticated-orcid":true,"given":"Sooyong","family":"Lee","sequence":"first","affiliation":[],"role":[{"vocabulary":"crossref","role":"author"}]}],"issued":{"date-parts":[[2025,1,19]]},"type":"peer-review","URL":"https:\/\/doi.org\/10.32388\/z3cve7","is-referenced-by-count":0}],"items-per-page":2,"query":{"start-index":0,"search-terms":null}}}'
+    headers:
+      access-control-allow-headers:
+      - X-Requested-With, Accept, Accept-Encoding, Accept-Charset, Accept-Language,
+        Accept-Ranges, Cache-Control
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - Link
+      connection:
+      - keep-alive
+      content-length:
+      - '1211'
+      content-type:
+      - application/json
+      date:
+      - Wed, 04 Nov 2026 12:25:07 GMT
+      permissions-policy:
+      - interest-cohort=()
+      server:
+      - Jetty(9.4.40.v20210413)
+      strict-transport-security:
+      - max-age=31536000;
+      vary:
+      - Accept-Encoding
+      x-api-pool:
+      - public-array
+      x-concurrency-limit:
+      - '1'
+      x-rate-limit-interval:
+      - 1s
+      x-rate-limit-limit:
+      - '1'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.crossref.org
+    method: GET
+    uri: https://api.crossref.org/works?cursor=MjMuNTc2MDczLDE3MzcyNDc0NjAwMDAsMTAuMzIzODglMkZ6M2N2ZTc%3D&order=desc&query.bibliographic=code+review+llm&rows=1&select=DOI%2Ctitle%2Cauthor%2Cissued%2Ccontainer-title%2Ctype%2Cvolume%2Cissue%2Cpage%2CURL%2Cabstract%2Cis-referenced-by-count%2Cupdated-by&sort=score
+  response:
+    body:
+      string: '{"status":"ok","message-type":"work-list","message-version":"1.0.0","message":{"facets":{},"next-cursor":"MjMuNTY0Nzc0LDE3Mzg2NDA3MTIwMDAsMTAuMzIzODglMkZwM25iZTU=","total-results":7763822,"items":[{"DOI":"10.32388\/p3nbe5","title":["Review
+        of: \"DRC-Coder: Automated DRC Checker Code Generation Using LLM Autonomous
+        Agent\""],"author":[{"ORCID":"https:\/\/orcid.org\/0009-0008-4804-0446","authenticated-orcid":true,"given":"Jeeyong","family":"Lee","sequence":"first","affiliation":[],"role":[{"vocabulary":"crossref","role":"author"}]}],"issued":{"date-parts":[[2025,2,4]]},"type":"peer-review","URL":"https:\/\/doi.org\/10.32388\/p3nbe5","is-referenced-by-count":0}],"items-per-page":1,"query":{"start-index":0,"search-terms":null}}}'
+    headers:
+      access-control-allow-headers:
+      - X-Requested-With, Accept, Accept-Encoding, Accept-Charset, Accept-Language,
+        Accept-Ranges, Cache-Control
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - Link
+      connection:
+      - keep-alive
+      content-type:
+      - application/json
+      date:
+      - Wed, 04 Nov 2026 12:25:07 GMT
+      permissions-policy:
+      - interest-cohort=()
+      server:
+      - Jetty(9.4.40.v20210413)
+      strict-transport-security:
+      - max-age=31536000;
+      transfer-encoding:
+      - chunked
+      x-api-pool:
+      - public-array
+      x-concurrency-limit:
+      - '1'
+      x-rate-limit-interval:
+      - 1s
+      x-rate-limit-limit:
+      - '1'
+    status:
+      code: 200
+      message: OK
+version: 1
