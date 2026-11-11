@@ -52,17 +52,18 @@ export const tauriPlatform: Platform = {
   onOpenRequests(handle) {
     // The event is only a nudge: requests are taken from the shell's queue, so those from
     // start-up and those from a later `tez <file>` arrive the same way, and none twice.
-    let active = true;
+    // Taken requests are always handled, even if this subscription has just been undone: the
+    // queue no longer holds them, so dropping them would lose them (React StrictMode
+    // subscribes, unsubscribes and subscribes again on start-up).
     const take = async () => {
       const requests = await invoke<OpenRequest[]>("take_open_requests");
-      if (active && requests.length > 0) handle(requests);
+      if (requests.length > 0) handle(requests);
     };
     const unlisten = listen("open-requests", () => {
       void take();
     });
     void unlisten.then(take);
     return () => {
-      active = false;
       void unlisten.then((stop) => {
         stop();
       });

@@ -56,6 +56,47 @@ export function useOpenRequests() {
   const notices = useUploadStore();
   const selectPaper = useLibraryView((state) => state.selectPaper);
   const setImportPath = useOpenStore((state) => state.setImportPath);
+  async function fromPaths(paths: string[]) {
+    const results = unwrap(await client.POST("/pdfs/from-paths", { body: { paths } }));
+    void queryClient.invalidateQueries({ queryKey: ["library"] });
+    return results;
+  }
+
+  async function addOne(path: string) {
+    const id = notices.start(fileName(path));
+    try {
+      const [result] = await fromPaths([path]);
+      if (result?.added) {
+        notices.update(id, { state: result.added.status });
+        void navigate(`/reader/${result.added.attachment_id}`);
+      } else {
+        notices.update(id, {
+          state: "failed",
+          errorCode: result?.error?.code ?? "unknown",
+          errorParams: result?.error?.params ?? {},
+        });
+      }
+    } catch {
+      notices.update(id, { state: "failed", errorCode: "unknown" });
+    }
+  }
+
+  async function addMany(folder: string | null, paths: string[], truncated: boolean) {
+    const id = notices.start(folder ? fileName(folder) : `${String(paths.length)} PDF`);
+    try {
+      const results = await fromPaths(paths);
+      const added = results.filter((r) => r.added?.status === "added").length;
+      const duplicates = results.filter((r) => r.added?.status === "duplicate").length;
+      notices.update(id, {
+        state: "info",
+        messageKey: truncated ? "open.addedSomeTruncated" : "open.addedSome",
+        messageParams: { added, duplicates, failed: results.length - added - duplicates },
+      });
+    } catch {
+      notices.update(id, { state: "failed", errorCode: "unknown" });
+    }
+  }
+
   // An effect event: the subscription stays put while the handler sees fresh state.
   const onRequests = useEffectEvent((requests: OpenRequest[]) => {
     void (async () => {
@@ -100,47 +141,6 @@ export function useOpenRequests() {
       else if (pdfs.length > 1) await addMany(null, pdfs, false);
     })();
   });
-
-  async function fromPaths(paths: string[]) {
-    const results = unwrap(await client.POST("/pdfs/from-paths", { body: { paths } }));
-    void queryClient.invalidateQueries({ queryKey: ["library"] });
-    return results;
-  }
-
-  async function addOne(path: string) {
-    const id = notices.start(fileName(path));
-    try {
-      const [result] = await fromPaths([path]);
-      if (result?.added) {
-        notices.update(id, { state: result.added.status });
-        void navigate(`/reader/${result.added.attachment_id}`);
-      } else {
-        notices.update(id, {
-          state: "failed",
-          errorCode: result?.error?.code ?? "unknown",
-          errorParams: result?.error?.params ?? {},
-        });
-      }
-    } catch {
-      notices.update(id, { state: "failed", errorCode: "unknown" });
-    }
-  }
-
-  async function addMany(folder: string | null, paths: string[], truncated: boolean) {
-    const id = notices.start(folder ? fileName(folder) : `${String(paths.length)} PDF`);
-    try {
-      const results = await fromPaths(paths);
-      const added = results.filter((r) => r.added?.status === "added").length;
-      const duplicates = results.filter((r) => r.added?.status === "duplicate").length;
-      notices.update(id, {
-        state: "info",
-        messageKey: truncated ? "open.addedSomeTruncated" : "open.addedSome",
-        messageParams: { added, duplicates, failed: results.length - added - duplicates },
-      });
-    } catch {
-      notices.update(id, { state: "failed", errorCode: "unknown" });
-    }
-  }
 
   useEffect(
     () =>

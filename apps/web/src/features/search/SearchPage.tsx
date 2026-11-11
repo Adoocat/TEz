@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Segmented } from "@/components/ui/segmented";
 import { useFindOpenAccess } from "@/features/files/api";
 import { ImportDialog } from "@/features/imports/ImportDialog";
+import { useOpenStore } from "@/features/open/store";
 import { ReviewForm } from "@/features/reviews/ReviewForm";
 import { useActiveReview } from "@/features/reviews/store";
 import { useReviews } from "@/features/reviews/api";
@@ -54,6 +55,8 @@ export function SearchPage() {
   const { activeSearchId, openSearch } = useSearchView();
   const [tab, setTab] = useState<Tab>("results");
   const [importing, setImporting] = useState(false);
+  // A .bib/.ris file opened from outside (Task 22) opens the dialog with it.
+  const { importPath, setImportPath } = useOpenStore();
 
   if (reviews.isSuccess && !review) {
     return (
@@ -94,8 +97,12 @@ export function SearchPage() {
       </header>
       <ImportDialog
         reviewId={review.id}
-        open={importing}
-        onOpenChange={setImporting}
+        open={importing || importPath !== null}
+        initialPath={importPath}
+        onOpenChange={(open) => {
+          setImporting(open);
+          if (!open) setImportPath(null);
+        }}
         onShowResults={(searchId) => {
           openSearch(searchId);
           setTab("results");

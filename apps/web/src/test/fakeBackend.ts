@@ -231,6 +231,26 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
         const { paper_ids } = body as { paper_ids: string[] };
         return json({ changed: paper_ids.length, unchanged: 0 });
       }
+      if (route === "POST /pdfs/from-paths") {
+        // A path with "dup" in it is already in the library; "bad" is not a PDF.
+        const { paths } = body as { paths: string[] };
+        return json(
+          paths.map((path, index) =>
+            path.includes("bad")
+              ? { path, error: { code: "pdf.not_a_pdf", params: { file_name: path } } }
+              : {
+                  path,
+                  added: {
+                    status: path.includes("dup") ? "duplicate" : "added",
+                    paper_id: `paper-${String(index)}`,
+                    attachment_id: `att-${String(index)}`,
+                    job_id: null,
+                    file_name: path.split("/").pop(),
+                  },
+                },
+          ),
+        );
+      }
       if (route === "POST /pdfs/open-access") {
         const { paper_ids } = body as { paper_ids: string[] };
         return json(

@@ -146,7 +146,7 @@ function NoticeItem({ notice }: { notice: UploadNotice }) {
           defaultValue: t("errors.unknown"),
         })
       : notice.state === "info"
-        ? t(notice.messageKey ?? "errors.unknown", notice.messageParams)
+        ? t(notice.messageKey ?? "errors.unknown", notice.messageParams ?? {})
         : t(`files.notice.${notice.state}`);
 
   return (
