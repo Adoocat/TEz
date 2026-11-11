@@ -1163,6 +1163,160 @@
         }
       }
     },
+    "/imports/preview": {
+      "post": {
+        "tags": [
+          "imports"
+        ],
+        "summary": "Preview Import",
+        "description": "Read a BibTeX or RIS file and say what importing it would do. Writes nothing.",
+        "operationId": "preview_import_imports_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportFile"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportPreview"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/imports": {
+      "post": {
+        "tags": [
+          "imports"
+        ],
+        "summary": "Import File",
+        "description": "Import a BibTeX or RIS file. With `log`, it becomes a search run in the review.",
+        "operationId": "import_file_imports_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportOutcome"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/settings": {
       "get": {
         "tags": [
@@ -1619,6 +1773,309 @@
         ],
         "title": "Health"
       },
+      "ImportFile": {
+        "properties": {
+          "file_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "File Name"
+          },
+          "content_base64": {
+            "type": "string",
+            "maxLength": 40000000,
+            "minLength": 1,
+            "title": "Content Base64"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "file_name",
+          "content_base64"
+        ],
+        "title": "ImportFile"
+      },
+      "ImportFormat": {
+        "type": "string",
+        "enum": [
+          "bibtex",
+          "ris"
+        ],
+        "title": "ImportFormat"
+      },
+      "ImportIssueView": {
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/IssueCode"
+          },
+          "line": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Line"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          },
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "line",
+          "key",
+          "detail"
+        ],
+        "title": "ImportIssueView"
+      },
+      "ImportLog": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Source",
+            "examples": [
+              "IEEE Xplore"
+            ]
+          },
+          "searched_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Searched At"
+          },
+          "query": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "source"
+        ],
+        "title": "ImportLog",
+        "description": "Log the import as a search run: the systematic record of a database search."
+      },
+      "ImportOutcome": {
+        "properties": {
+          "format": {
+            "$ref": "#/components/schemas/ImportFormat"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "imported": {
+            "type": "integer",
+            "title": "Imported"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/ImportIssueView"
+            },
+            "type": "array",
+            "title": "Issues"
+          },
+          "new_papers": {
+            "type": "integer",
+            "title": "New Papers"
+          },
+          "search_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Search Id"
+          },
+          "added_to_review": {
+            "type": "integer",
+            "title": "Added To Review"
+          },
+          "added_to_library": {
+            "type": "integer",
+            "title": "Added To Library"
+          }
+        },
+        "type": "object",
+        "required": [
+          "format",
+          "total",
+          "imported",
+          "issues",
+          "new_papers",
+          "search_id",
+          "added_to_review",
+          "added_to_library"
+        ],
+        "title": "ImportOutcome"
+      },
+      "ImportPreview": {
+        "properties": {
+          "format": {
+            "$ref": "#/components/schemas/ImportFormat"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "readable": {
+            "type": "integer",
+            "title": "Readable"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/ImportIssueView"
+            },
+            "type": "array",
+            "title": "Issues"
+          },
+          "new": {
+            "type": "integer",
+            "title": "New"
+          },
+          "known": {
+            "type": "integer",
+            "title": "Known"
+          },
+          "in_library": {
+            "type": "integer",
+            "title": "In Library"
+          },
+          "repeated": {
+            "type": "integer",
+            "title": "Repeated"
+          },
+          "warnings": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/RecordWarning"
+            },
+            "type": "object",
+            "title": "Warnings"
+          },
+          "sample": {
+            "items": {
+              "$ref": "#/components/schemas/PreviewRecord"
+            },
+            "type": "array",
+            "title": "Sample"
+          }
+        },
+        "type": "object",
+        "required": [
+          "format",
+          "total",
+          "readable",
+          "issues",
+          "new",
+          "known",
+          "in_library",
+          "repeated",
+          "warnings",
+          "sample"
+        ],
+        "title": "ImportPreview"
+      },
+      "ImportRequest": {
+        "properties": {
+          "file_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "File Name"
+          },
+          "content_base64": {
+            "type": "string",
+            "maxLength": 40000000,
+            "minLength": 1,
+            "title": "Content Base64"
+          },
+          "review_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review Id"
+          },
+          "log": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ImportLog"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "add_to_review": {
+            "type": "boolean",
+            "title": "Add To Review",
+            "default": false
+          },
+          "add_to_library": {
+            "type": "boolean",
+            "title": "Add To Library",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "file_name",
+          "content_base64"
+        ],
+        "title": "ImportRequest"
+      },
       "InitiatedVia": {
         "type": "string",
         "enum": [
@@ -1626,6 +2083,18 @@
           "cli"
         ],
         "title": "InitiatedVia"
+      },
+      "IssueCode": {
+        "type": "string",
+        "enum": [
+          "import.entry_unparseable",
+          "import.entry_no_title",
+          "import.entry_duplicate_key",
+          "import.entry_truncated",
+          "import.stray_text"
+        ],
+        "title": "IssueCode",
+        "description": "Why an entry was skipped. The frontend turns each into a translated sentence."
       },
       "JobStatus": {
         "type": "string",
@@ -1767,6 +2236,142 @@
           "paper_ids"
         ],
         "title": "PaperSelection"
+      },
+      "PreviewRecord": {
+        "properties": {
+          "line": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Line"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "first_author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Author"
+          },
+          "author_count": {
+            "type": "integer",
+            "title": "Author Count"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "venue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venue"
+          },
+          "venue_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VenueType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "doi": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doi"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/RecordWarning"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "new",
+              "known",
+              "in_library",
+              "repeated"
+            ],
+            "title": "Status"
+          },
+          "match_method": {
+            "$ref": "#/components/schemas/MatchMethod"
+          }
+        },
+        "type": "object",
+        "required": [
+          "line",
+          "key",
+          "title",
+          "first_author",
+          "author_count",
+          "year",
+          "venue",
+          "venue_type",
+          "doi",
+          "warnings",
+          "status",
+          "match_method"
+        ],
+        "title": "PreviewRecord"
+      },
+      "RecordWarning": {
+        "type": "string",
+        "enum": [
+          "no_authors",
+          "no_year",
+          "no_identifier",
+          "bad_year",
+          "bad_link"
+        ],
+        "title": "RecordWarning",
+        "description": "A record was read, but a field the user would expect is missing or unusable."
       },
       "ResultSource": {
         "properties": {
@@ -1955,6 +2560,17 @@
           "query": {
             "type": "string",
             "title": "Query"
+          },
+          "file_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Name"
           },
           "filters": {
             "anyOf": [

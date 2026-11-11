@@ -209,7 +209,10 @@ class RunView(BaseModel):
 class SearchOverview(BaseModel):
     search_id: str
     review_id: str
+    # For an import: the query the user ran at the source, if they gave it.
     query: str
+    # Set for an imported export file (Task 15); a search asked of sources has none.
+    file_name: str | None = None
     filters: dict[str, Any] | None
     initiated_via: InitiatedVia
     started_at: datetime

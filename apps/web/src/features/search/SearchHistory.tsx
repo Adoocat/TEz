@@ -13,8 +13,17 @@ export function SearchHistory({
   const { t, i18n } = useTranslation();
   const history = useSearchHistory(reviewId);
   const number = (value: number) => value.toLocaleString(i18n.language);
-  const when = (value: string) =>
-    new Date(value).toLocaleString(i18n.language, { dateStyle: "medium", timeStyle: "short" });
+  // An import carries only the day the user searched the database: no time to show.
+  const when = (search: SearchOverview) =>
+    search.file_name
+      ? new Date(search.started_at).toLocaleDateString(i18n.language, {
+          dateStyle: "medium",
+          timeZone: "UTC",
+        })
+      : new Date(search.started_at).toLocaleString(i18n.language, {
+          dateStyle: "medium",
+          timeStyle: "short",
+        });
 
   if (history.data?.length === 0) {
     return <p className="p-6 text-ui text-fg-muted">{t("search.historyEmpty")}</p>;
@@ -38,7 +47,7 @@ export function SearchHistory({
           {history.data?.map((search) => (
             <tr key={search.search_id} className="border-b border-line align-top hover:bg-hovered">
               <td className="py-2 pr-3 whitespace-nowrap text-fg-muted">
-                {when(search.started_at)}
+                {when(search)}
                 <div className="text-meta">{t(`search.history.via.${search.initiated_via}`)}</div>
               </td>
               <td className="py-2 pr-3">
@@ -49,8 +58,17 @@ export function SearchHistory({
                     onOpen(search.search_id);
                   }}
                 >
-                  {search.query}
+                  {search.file_name ? (
+                    <span className="font-sans">
+                      {t("search.history.imported", { file: search.file_name })}
+                    </span>
+                  ) : (
+                    search.query
+                  )}
                 </button>
+                {search.file_name && search.query && (
+                  <div className="font-mono text-meta text-fg-muted">{search.query}</div>
+                )}
               </td>
               <td className="py-2 pr-3 text-meta">
                 {search.runs.map((run) => (

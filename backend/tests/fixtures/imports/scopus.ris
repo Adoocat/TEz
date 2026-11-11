@@ -1,0 +1,42 @@
+TY  - JOUR
+AU  - Yılmaz, A.
+AU  - Çelik, M.
+TI  - Automated code review with large language models: an empirical study
+PY  - 2024
+T2  - IEEE Transactions on Software Engineering
+VL  - 50
+IS  - 3
+SP  - 512
+EP  - 530
+DO  - 10.1109/tse.2024.0012345
+UR  - https://www.scopus.com/inward/record.uri?eid=2-s2.0-1
+AB  - We study how LLMs review code.
+LA  - English
+ID  - scopus-1
+ER  - 
+
+TY  - CONF
+AU  - Öztürk, Zeynep
+TI  - Mining Code Review Data at Scale
+PY  - 2022///
+T2  - Proceedings of MSR 2022
+SP  - 100
+EP  - 110
+DO  - 10.1145/3524842.3528000
+ER  - 
+
+TY  - JOUR
+AU  - Anonymous
+PY  - 2021
+T2  - Journal Without Titles
+ER  - 
+
+TY  - CHAP
+TI  - Code Review: A Handbook Chapter
+PY  - 2020
+UR  - not a link
+ER  - 
+
+TY  - JOUR
+TI  - A Record Cut Short By The Download
+AU  - Last, First

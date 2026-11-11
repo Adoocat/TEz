@@ -74,6 +74,7 @@ class SearchRepository:
         total_reported: int | None = None,
         error: str | None = None,
         snapshot_path: str | None = None,
+        file_name: str | None = None,
     ) -> SearchRun:
         """Write a finished run and its results at once; neither changes afterwards."""
         run = SearchRun(
@@ -89,6 +90,7 @@ class SearchRepository:
             status=status,
             error=error,
             snapshot_path=snapshot_path,
+            file_name=file_name,
         )
         self.session.add(run)
         self.session.flush()

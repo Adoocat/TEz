@@ -132,7 +132,16 @@
     "source.rejected": "The source refused the request ({{status}}).",
     "source.bad_response": "The source sent an unreadable answer.",
     "source.query_unsupported": "This query cannot be expressed for this source.",
-    "source.key_required": "Without an API key this source gives only its first page of results."
+    "source.key_required": "Without an API key this source gives only its first page of results.",
+    "import.unknown_format": "{{file_name}} is neither a BibTeX nor a RIS file.",
+    "import.empty": "{{file_name}} has no record that can be imported.",
+    "import.invalid_content": "The file could not be sent.",
+    "import.entries_skipped": "{{skipped}} entries of the file could not be read.",
+    "import.entry_unparseable": "cannot be read (broken syntax)",
+    "import.entry_no_title": "has no title",
+    "import.entry_duplicate_key": "repeats a key used earlier in the file",
+    "import.entry_truncated": "is cut short (the file ends inside it)",
+    "import.stray_text": "text outside any record"
   },
   "reviews": {
     "active": "Active review",
@@ -248,7 +257,70 @@
         "ok": "complete",
         "partial": "partial",
         "error": "failed"
-      }
+      },
+      "imported": "Imported: {{file}}"
     }
+  },
+  "imports": {
+    "open": "Import file",
+    "title": "Import exported results",
+    "dropHere": "Drop a BibTeX or RIS file here",
+    "formats": "Exports from IEEE Xplore, ACM DL, Scopus, Web of Science (.bib, .ris)",
+    "chooseFile": "Choose file",
+    "readFailed": "The file could not be read.",
+    "reading": "Reading the file…",
+    "summary": "{{format}} · {{total}} entries · {{readable}} readable: {{new}} new, {{known}} already found by a search, {{inLibrary}} in the library, {{repeated}} repeated in the file",
+    "formatNames": {
+      "bibtex": "BibTeX",
+      "ris": "RIS"
+    },
+    "issues_one": "{{count}} entry cannot be imported",
+    "issues_other": "{{count}} entries cannot be imported",
+    "issuesLabel": "Entries that cannot be imported",
+    "line": "line {{line}}",
+    "warnings": {
+      "no_authors_one": "{{count}} without authors",
+      "no_authors_other": "{{count}} without authors",
+      "no_year_one": "{{count}} without a year",
+      "no_year_other": "{{count}} without a year",
+      "bad_year_one": "{{count}} with an unreadable year",
+      "bad_year_other": "{{count}} with an unreadable year",
+      "no_identifier_one": "{{count}} without a DOI or other identifier",
+      "no_identifier_other": "{{count}} without a DOI or other identifier",
+      "bad_link_one": "{{count}} with an unusable link",
+      "bad_link_other": "{{count}} with an unusable link"
+    },
+    "sample": "First records, with missing fields marked",
+    "columns": {
+      "title": "Title",
+      "author": "First author",
+      "year": "Year",
+      "doi": "DOI",
+      "status": "Status"
+    },
+    "status": {
+      "new": "new",
+      "known": "already found",
+      "in_library": "in library",
+      "repeated": "repeated in file"
+    },
+    "logLegend": "What to do with it",
+    "logRun": "Log it as a search run (history and PRISMA)",
+    "database": "Database",
+    "otherDatabase": "Other…",
+    "otherDatabaseName": "Database name",
+    "searchedAt": "Searched on",
+    "query": "Query used",
+    "queryPlaceholder": "The query exactly as you ran it at the database",
+    "toReview": "Add the records to the review's screening queue",
+    "toLibrary": "Add the records to the library",
+    "needTarget": "Choose at least one.",
+    "import_one": "Import {{count}} record",
+    "import_other": "Import {{count}} records",
+    "importing": "Importing…",
+    "cancel": "Cancel",
+    "close": "Close",
+    "showResults": "Show results",
+    "done": "{{imported}} records imported: {{newPapers}} new papers, {{toReview}} added to the review."
   }
 }

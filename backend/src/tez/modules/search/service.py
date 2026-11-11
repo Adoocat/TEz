@@ -160,18 +160,23 @@ def _write_snapshot(
     """Keep the raw answer, for reproducibility. Failing to write it must not lose the run."""
     if not result.raw_pages:
         return None
-    relative = Path(SNAPSHOT_FOLDER) / f"{new_id()}.json.gz"
     document = {
         "source": result.source,
         "translated_query": result.translated_query,
         "executed_at": executed_at.isoformat(),
         "pages": result.raw_pages,
     }
+    return _write_snapshot_document(library_path, document)
+
+
+def _write_snapshot_document(library_path: Path, document: dict[str, Any]) -> str | None:
+    relative = Path(SNAPSHOT_FOLDER) / f"{new_id()}.json.gz"
     try:
         with gzip.open(library_path / relative, "wt", encoding="utf-8") as file:
             json.dump(document, file, ensure_ascii=False)
     except OSError as exc:
-        logger.warning("snapshot not written", extra={"source": result.source, "error": repr(exc)})
+        source = document.get("source")
+        logger.warning("snapshot not written", extra={"source": source, "error": repr(exc)})
         return None
     return relative.as_posix()
 
@@ -193,7 +198,7 @@ class _Recorded:
 class _Plan:
     search_id: str
     review_id: str
-    query_id: str
+    query_id: str | None
     initiated_via: InitiatedVia
 
 
@@ -330,3 +335,118 @@ async def run_search(
         for task in pending:
             task.cancel()
     return search_id
+
+
+# --- imported search results (Task 15) -----------------------------------------------
+
+_IN_FILE = "file:"
+
+
+@dataclass(frozen=True)
+class PreviewMatch:
+    """What importing one record would do, worked out without writing anything."""
+
+    method: MatchMethod
+    # The known paper it matches; None when it is new or repeats an earlier record of the file.
+    paper_id: str | None = None
+    in_library: bool = False
+    # Index of the earlier record of the same file that this one repeats.
+    repeats: int | None = None
+
+
+def preview_matches(db: Database, records: Sequence[NormalizedRecord]) -> list[PreviewMatch]:
+    """Match records the way an import would: against known papers, then each other."""
+    with db.session() as session:
+        cards = PaperService(session).all_cards()
+    index = PaperIndex(_candidate(card) for card in cards)
+    kept = {card.paper.id for card in cards if card.paper.library_added_at is not None}
+    matches: list[PreviewMatch] = []
+    for position, record in enumerate(records):
+        match = index.match(record)
+        if match.paper_id is None:
+            index.add(candidate_from(f"{_IN_FILE}{position}", record))
+            matches.append(PreviewMatch(MatchMethod.NEW))
+        elif match.paper_id.startswith(_IN_FILE):
+            earlier = int(match.paper_id.removeprefix(_IN_FILE))
+            matches.append(PreviewMatch(match.method, repeats=earlier))
+        else:
+            in_library = match.paper_id in kept
+            matches.append(PreviewMatch(match.method, match.paper_id, in_library))
+    return matches
+
+
+@dataclass(frozen=True)
+class ImportRun:
+    """How an import is logged as a search: where the export came from and when."""
+
+    review_id: str
+    source: str
+    executed_at: datetime
+    file_name: str
+    raw_text: str
+    total_reported: int
+    skipped: int
+    query: str | None = None
+    initiated_via: InitiatedVia = InitiatedVia.GUI
+
+
+@dataclass(frozen=True)
+class ImportedRecords:
+    # One per record, in file order; a repeated record repeats its paper.
+    paper_ids: list[str]
+    new_papers: int
+    search_id: str | None = None
+
+
+def store_imported(
+    db: Database,
+    library_path: Path,
+    records: Sequence[NormalizedRecord],
+    run: ImportRun | None = None,
+) -> ImportedRecords:
+    """Match imported records like a source's answer, and log them as a search run if asked.
+
+    One transaction: an import is one file, so it is recorded whole or not at all.
+    """
+    search_id = new_id() if run is not None else None
+    snapshot = _import_snapshot(library_path, run) if run is not None else None
+    with db.write_session() as session:
+        papers = PaperService(session)
+        index = PaperIndex(_candidate(card) for card in papers.all_cards())
+        results = _store_records(papers, index, records)
+        if run is not None:
+            error = None
+            if run.skipped:
+                error = TezError(ErrorCode.IMPORT_ENTRIES_SKIPPED, {"skipped": run.skipped})
+            SearchRepository(session).add_run(
+                run.review_id,
+                search_id=search_id,
+                source=run.source,
+                executed_at=run.executed_at,
+                initiated_via=run.initiated_via,
+                status=RunStatus.PARTIAL if error else RunStatus.OK,
+                results=results,
+                translated_query=run.query,
+                total_reported=run.total_reported,
+                error=_error_text(error),
+                snapshot_path=snapshot,
+                file_name=run.file_name,
+            )
+    return ImportedRecords(
+        paper_ids=[result.paper_id for result in results],
+        new_papers=sum(result.match_method is MatchMethod.NEW for result in results),
+        search_id=search_id,
+    )
+
+
+def _import_snapshot(library_path: Path, run: ImportRun) -> str | None:
+    """The exported file as it was, so the run can be checked against it later."""
+    document = {
+        "source": run.source,
+        "file_name": run.file_name,
+        "query": run.query,
+        "executed_at": run.executed_at.isoformat(),
+        "imported_at": utcnow().isoformat(),
+        "content": run.raw_text,
+    }
+    return _write_snapshot_document(library_path, document)

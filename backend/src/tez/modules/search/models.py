@@ -77,6 +77,8 @@ class SearchRun(CreatedMixin, Base):
     error: Mapped[str | None] = mapped_column(Text)
     # Raw API response, compressed, relative to the library folder.
     snapshot_path: Mapped[str | None] = mapped_column(Text)
+    # Imports only: the exported file's name, as the user knows it.
+    file_name: Mapped[str | None] = mapped_column(Text)
 
 
 class SearchResult(CreatedMixin, Base):

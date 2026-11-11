@@ -20,7 +20,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 12 · Tekilleştirme | bitti | `task/12-dedup` · #19 | `shared/identifiers.py` (DOI, arXiv, ISBN normalleştirme), `modules/search/dedup.py` (`PaperIndex`): önce tanımlayıcı, sonra bulanık başlık + yıl ±1 + ilk yazar. Ön baskı ve yayın ayrı kalır, `version_of` ile bağlanır. Yanlış birleştirme kaçan tekrardan kötü sayıldı. Zor vakalar tablosu `test_dedup.py`'de |
 | 13 · Federe arama servisi | bitti | `task/13-federated-search` · #20 | `modules/search/service.py`: kaynaklar paralel, her cevap geldiği anda kendi işleminde yazılır. Çöken kaynak hata kaydıyla `search_run` olur, diğerleri gelir. Ham yanıt `snapshots/*.json.gz`. API: `POST /searches`, `GET /searches/{id}`, `/results`, `/events` (SSE). Migration 0003: `search_run.search_id`. Ayrıntı: ADR 0009 |
 | 14 · Arama arayüzü | bitti | `task/14-search-ui` · #21 | Sorgu formu, kaynak çipleri (bekliyor, aranıyor, hız sınırı geri sayımı, sonuç, kısmi, hata), özet şeridi, sanallaştırılmış liste, denetçide birleştirme ayrıntısı, review'a/kütüphaneye ekleme, geçmiş. Küçük review formu ve üst çubukta seçici. Migration 0004: `paper.library_added_at`. Üretim derlemesinde 1.368 satırda kaydırma adımı p95 3,8 ms (tekerlek), 10,6 ms (hızlı). Gerçek dört kaynakla denendi: 1.662 kayıt, 294 tekrar, 1.368 benzersiz |
-| 15 · BibTeX/RIS içe aktarma | bekliyor | | |
+| 15 · BibTeX/RIS içe aktarma | bitti | `task/15-bib-ris-import` · #23 | `modules/importers`: bibtexparser v2 + rispy, LaTeX → Türkçe harf, bozuk girdi (satır + anahtar + kod) rapora düşer, içe aktarma durmaz. Önizleme hiçbir şey yazmaz; içe aktarma tek işlemde, tekilleştirmeden geçer, `search_run` olarak loglanır (dosya snapshot'ta). Migration 0005: `search_run.file_name`. Arayüz: arama ekranında "Dosyadan içe aktar" diyaloğu. Ayrıntı: ADR 0010 |
 | 16 · PDF ekleme | bekliyor | | |
 | 17 · Açık erişim PDF | bekliyor | | |
 | 18 · Koleksiyon ve etiketler | bekliyor | | |
@@ -32,6 +32,10 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 ## Sonraya
 
+- (15) İçe aktarma hedefi olarak koleksiyon (tasarım 4.6 adım 4) Görev 18 ile.
+- (15) BibTeX atıf anahtarları saklanmıyor; `citekey` üretimiyle birlikte (Görev 19 veya dışa aktarma) karar verilmeli.
+- (15) `.bib`/`.ris` dosyasını pencereye veya uygulama simgesine bırakma (tasarım 4.6) Görev 22 ile; şimdilik diyaloğun bırakma alanı.
+- (15) Önizleme yalnızca ilk 5 kaydı gösteriyor; tüm uyarılı kayıtları listeleme gerekirse eklenir.
 - (14) Tauri'de dış bağlantılar (DOI, PDF): `target=_blank` webview'da açılmaz; `lib/platform` üzerinden opener eklentisi gerekir. Masaüstünde denenmedi.
 - (14) Kaydırma, gizli tarayıcı panelinde ana iş parçacığı maliyetiyle ölçüldü; gerçek fps görünür pencerede (tercihen WebView2) doğrulanmalı.
 - (14) Tasarım 4.2'den kalanlar: boolean sözdizimi renklendirmesi, kaynak başına sorguyu düzenleme, sorgu kaydetme ve uyarılar, terminal komutunu kopyalama (Görev 23), "PDF'leri bul" (Görev 17), yöntem bölümü dışa aktarımı, kenar çubuğunda kayıtlı sorgular, j/k kısayolları.

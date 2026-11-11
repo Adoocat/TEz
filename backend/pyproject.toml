@@ -6,12 +6,15 @@ license = "MIT"
 requires-python = ">=3.12"
 dependencies = [
     "alembic>=1",
+    "bibtexparser>=2.1",
     "fastapi>=0.162",
     "hishel[httpx2]>=1.4",
     "httpx2>=2.16",
     "keyring>=25",
     "pydantic-settings>=2",
+    "pylatexenc>=2.10",
     "rapidfuzz>=3.14",
+    "rispy>=0.10",
     "sqlalchemy>=2",
     "tenacity>=9.2",
     "uvicorn>=0.54",

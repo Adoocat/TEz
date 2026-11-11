@@ -47,6 +47,10 @@ class ErrorCode(StrEnum):
     SOURCE_BAD_RESPONSE = "source.bad_response"
     SOURCE_QUERY_UNSUPPORTED = "source.query_unsupported"
     SOURCE_KEY_REQUIRED = "source.key_required"
+    IMPORT_UNKNOWN_FORMAT = "import.unknown_format"
+    IMPORT_EMPTY = "import.empty"
+    IMPORT_INVALID_CONTENT = "import.invalid_content"
+    IMPORT_ENTRIES_SKIPPED = "import.entries_skipped"
 
 
 class TezError(Exception):
