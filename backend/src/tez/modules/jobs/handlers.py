@@ -3,6 +3,7 @@
 import time
 from typing import Any
 
+from tez.modules.backup.service import BACKUP_JOB, backup_job
 from tez.modules.files.open_access import FETCH_JOB, fetch_open_access
 from tez.modules.files.service import INSPECT_JOB, inspect_attachment
 from tez.modules.jobs.registry import JobContext, Registry
@@ -10,6 +11,7 @@ from tez.modules.jobs.registry import JobContext, Registry
 registry = Registry()
 registry.handler(INSPECT_JOB)(inspect_attachment)
 registry.handler(FETCH_JOB)(fetch_open_access)
+registry.handler(BACKUP_JOB)(backup_job)
 
 
 @registry.handler("diagnostics.sleep")

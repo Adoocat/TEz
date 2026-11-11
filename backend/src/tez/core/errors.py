@@ -68,6 +68,8 @@ class ErrorCode(StrEnum):
     PDF_MISSING = "pdf.missing"
     ATTACHMENT_NOT_FOUND = "attachment.not_found"
     PDF_NO_OPEN_ACCESS = "pdf.no_open_access"
+    BACKUP_DAMAGED = "backup.damaged"
+    BACKUP_UNSUPPORTED = "backup.unsupported"
 
 
 class TezError(Exception):

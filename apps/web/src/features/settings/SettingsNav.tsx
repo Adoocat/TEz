@@ -1,16 +1,17 @@
-import { Info, Library, Network, SlidersHorizontal, type LucideIcon } from "lucide-react";
+import { Archive, Info, Library, Network, SlidersHorizontal, type LucideIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router";
 
 import { cn } from "@/lib/cn";
 
-export const settingsSections = ["general", "sources", "library", "about"] as const;
+export const settingsSections = ["general", "sources", "library", "backup", "about"] as const;
 export type SettingsSection = (typeof settingsSections)[number];
 
 const icons: Record<SettingsSection, LucideIcon> = {
   general: SlidersHorizontal,
   sources: Network,
   library: Library,
+  backup: Archive,
   about: Info,
 };
 

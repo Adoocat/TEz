@@ -15,6 +15,9 @@ and every mode exits with status 3.
 
 `worker --library <folder>` runs queued jobs; `serve` starts it as a child process when a
 library is open (`tez.worker`). `cli` arrives in Task 23.
+
+`restore <backup.zip> <folder>` unpacks a backup into a new library folder, checks it, and
+brings its schema up to date (Task 21).
 """
 
 import argparse
@@ -59,7 +62,13 @@ def main(argv: list[str] | None = None) -> None:
     serve.add_argument("--create", action="store_true", help="create the library if missing")
     worker = modes.add_parser("worker", help="run queued jobs (started by serve)")
     worker.add_argument("--library", type=Path, required=True, help="library folder")
+    restore = modes.add_parser("restore", help="restore a backup into a new library folder")
+    restore.add_argument("backup", type=Path, help="a TEz-backup-*.zip file")
+    restore.add_argument("folder", type=Path, help="a new or empty folder")
     args = parser.parse_args(argv)
+
+    if args.mode == "restore":
+        sys.exit(_restore(args.backup, args.folder))
 
     if args.mode == "worker":
         settings = Settings()
@@ -145,6 +154,26 @@ def _serve_sidecar(host: str, port: int, library_path: Path | None, *, create: b
     finally:
         if library is not None:
             library.close()
+
+
+def _restore(backup: Path, folder: Path) -> int:
+    from tez.modules.backup.service import restore_backup
+
+    configure_logging(Settings())
+    try:
+        restored = restore_backup(backup, folder)
+        # Opening migrates a backup made by an older version, and indexes it.
+        open_library(restored.path).close()
+    except TezError as error:
+        details = ", ".join(f"{key} {value}" for key, value in error.params.items())
+        print(f"tez-backend: {error.code.value}: {details}", file=sys.stderr)
+        return EXIT_LIBRARY_ERROR
+    print(
+        f"restored {restored.papers} papers and {restored.files} files "
+        f"(schema {restored.schema_revision}) into {restored.path}",
+        flush=True,
+    )
+    return 0
 
 
 def _open(library_path: Path | None, *, create: bool) -> Library | None:
