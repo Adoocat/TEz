@@ -28,10 +28,13 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 20 · PDF görüntüleyici | bitti | `task/20-pdf-viewer` · #29 | `GET /attachments/{id}/file` (Range → 206, başarılı aralık istekleri DEBUG). pdf.js ilk kullanımda yüklenir, yalnız aralıklar (autoFetch kapalı), sanallaştırılmış sayfalar (görünen ±2), metin katmanı, yakınlaştırma, `#/reader/<id>?page=N`. Kabul (300 sayfa, 6,1 MB, headless Chromium): 150. sayfada açılış 1,7 MB, DOM'da en çok 3 tuval, JS yığını 35 MB sabit, kaydırma adımı p95 34 ms. Ayrıntı: ADR 0015 |
 | 21 · Kapanış | bitti | `task/21-closing` · #30 | Yedek: SQLite backup API ile tutarlı veritabanı kopyası + `files/` + `snapshots/` + SHA-256'lı manifest, tek zip; işçide iş, Ayarlar › Yedekleme. `tez-backend restore <zip> <klasör>`: yalnızca boş klasöre, her girdi doğrulanır, `..` reddedilir, bozuksa yarım klasör silinir. Kabul testi: geri yüklenen kütüphanede makaleler, atıf anahtarları, koleksiyonlar, arama, arama geçmişi ve PDF baytları aynı. README, `docs/architecture.md`, `docs/licenses.md`; Playwright duman testi (ekranlar, dil kalıcılığı, gerçek işçiyle yedek). Ayrıntı: ADR 0016 |
 | 22 · Tek örnek ve argüman iletimi | bitti | `task/22-single-instance` · #31 | `single-instance` + `deep-link` eklentileri. Argümanlar Rust'ta sınıflandırılır (PDF, .bib/.ris, klasör, `tez://`, yok/desteklenmeyen) ve bir kuyruğa yazılır; pencere yalnızca dürtülür ve kuyruğu kendisi alır, böylece açık ve kapalı uygulamada aynı yol. PDF Gelen kutusuna + okuyucuda açılır; klasördeki PDF'ler tek özet bildirimle; .bib/.ris içe aktarma diyaloğunda (arka uç yoldan okur); kütüphane klasörü yalnız bildirim; `tez://` yalnız gezinir. Windows hata ayıklama derlemesiyle denendi: açıkken ikinci çağrı 150 ms'de çıktı, tek süreç kaldı, PDF eklendi; kapalıyken aynı komut aynı sonucu verdi. Ayrıntı: ADR 0017 |
-| 23 · Başsız CLI çekirdeği | bekliyor | | |
+| 23 · Başsız CLI çekirdeği | bitti | `task/23-headless-cli` · #32 | `tez search / import / add / export` (Typer). Kütüphane açık bir pencerede kullanılıyorsa onun API'si (`.tez/instance.json`), değilse kilit alınıp doğrudan servisler; iki yol aynı yanıt modellerini döndürür. Çıkış kodları 0/1/2, `--json` (İngilizce alanlar), çıktı hep UTF-8. `--help` ve mesajlar Türkçe/İngilizce (`--lang`, `TEZ_LANG`, sistem dili). Yeni: `modules/export` (BibTeX/RIS, içe aktarıcıyla gidiş-dönüş testi), `GET /export`. Kabul: 16 uçtan uca test iki modda da (gerçek uvicorn sunucusu ve doğrudan) geçiyor. Ayrıntı: ADR 0018 |
 
 ## Sonraya
 
+- (23) Planın komut tablosundaki `tez list`, `tez jobs`, `tez backup`, `tez prisma` ve pencere komutları (`tez <dosya>` masaüstünü başlatır) Aşama 6'daki konsol kabuğuyla.
+- (23) Typer'ın gömülü Click'inde "Usage:" ve "Try … for help." sabit yazılı; Türkçe yardımda İngilizce kalıyor.
+- (23) Dışa aktarma ekranı (tasarım 5.10): kapsam seçimi, atıf anahtarı biçimi önizlemesi.
 - (22) `tez://` şemasının işletim sistemine kaydı, PATH'teki `tez` komutu ve "Open with TEz" kurulum paketiyle (Aşama 6).
 - (22) Klasör için içe aktarma önizleme diyaloğu (tasarım 4.6) ve kütüphane değiştirme (açık soru 1).
 - (22) `lib/platform/tauri.ts` açma istekleri yolunun otomatik testi yok (Tauri API taklidi gerekir); masaüstünde elle doğrulandı.
@@ -70,7 +73,6 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (S1) Sidecar'ı Tauri eklentileri yüklenmeden, `run()` başında `std::process` ile başlatmak ~300 ms kazandırır (Görev 3/8).
 - (S1) Açılışta "süreç → Rust main" ~600 ms; imzalı paketle yeniden ölçülmeli (Aşama 6, kod imzalama).
 - (S1/20) pdf.js belleği WebView2'de gerçek makalelerle ölçülmeli (spike: 170 → ~410 MB; Görev 20 headless Chromium'da JS yığını 35 MB sabit, tuval en çok 3).
-- (S1) Görev 23 belgeleri: PowerShell 5.1 boru hatlarında UTF-8 için `[Console]::OutputEncoding` notu.
 - (3) SSE uçları uzun yaşadığı için tek satır log; PDF aralık istekleri Görev 20'de DEBUG'a indirildi.
 - (4) Görev 5: kütüphane açılışında `migrate(db)` çağrılmalı; migration öncesi `backups/`'a kopya alınması değerlendirilmeli.
 - (5) Arayüzden kütüphane oluştur/aç uçları ve karşılama ekranı (tasarım 4.1) — açık soru 1 ile birlikte karara bağlanmalı.

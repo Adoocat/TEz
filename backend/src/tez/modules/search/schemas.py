@@ -169,6 +169,8 @@ class SearchStart(BaseModel):
     year_from: int | None = None
     year_to: int | None = None
     limit: int = Field(default=1000, ge=1, le=MAX_RESULTS_PER_SOURCE)
+    # `tez search` says "cli", so the record shows where the search was started (plan).
+    initiated_via: InitiatedVia = InitiatedVia.GUI
 
     @model_validator(mode="after")
     def _years_in_order(self) -> Self:

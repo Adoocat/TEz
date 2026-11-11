@@ -14,6 +14,7 @@ A local-first desktop workbench for systematic literature reviews, built for gra
 - **PDFs** can be dropped on the window. Each file is stored once by hash and checked in a separate worker process, so a broken file cannot crash the app. Free copies can be fetched from arXiv and Unpaywall in the background.
 - **A reader** built on pdf.js streams the PDF in byte ranges and draws only the pages near the screen. It has a selectable text layer, zoom, and links to a page (`#/reader/<id>?page=12`).
 - **Backups** are one zip with checksums. Restoring goes into a new folder and is verified before the library opens.
+- **The `tez` terminal command** searches, imports exported results, adds PDFs and exports BibTeX or RIS. It works through the open window when there is one, or on the library directly when there is not.
 
 ## Principles
 
@@ -46,6 +47,17 @@ pnpm format        apply Prettier and ruff formatting
 The first `pnpm e2e` needs a browser: `pnpm --filter @tez/web exec playwright install chromium`.
 
 `pnpm dev` opens a development library in `backend/.dev/TEz Library` (git-ignored, created on first run). Every API request needs `Authorization: Bearer <token>`. `pnpm dev` prints a fresh token at start-up; in dev mode the API docs at `http://127.0.0.1:8787/docs` open without it (use "Authorize" to call endpoints). Settings come from `TEZ_*` environment variables (`TEZ_LOG_LEVEL`, `TEZ_LOG_FORMAT=json|console`, `TEZ_CORS_ORIGINS`).
+
+### The `tez` command
+
+```text
+tez search '"code review" AND LLM' --sources oa,s2 --review "My SLR"
+tez import scopus.ris --source Scopus --searched-at 2026-11-01 --query '"code review"'
+tez add papers/ --collection Thesis
+tez export --format bibtex --review "My SLR" -o refs.bib
+```
+
+In development, run it as `uv run --project backend tez …`. Common options: `--library <folder>` (default: `TEZ_LIBRARY`, or `Documents/TEz Library`), `--json` for scripts, `--lang tr|en`, `--quiet`. Exit codes: 0 done, 1 failed, 2 partly done. Output is UTF-8. In Windows PowerShell 5.1, piping it into another command needs `[Console]::OutputEncoding = [Text.Encoding]::UTF8` first.
 
 ### Useful commands
 

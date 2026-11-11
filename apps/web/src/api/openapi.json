@@ -3327,6 +3327,116 @@
         ]
       }
     },
+    "/export": {
+      "get": {
+        "tags": [
+          "export"
+        ],
+        "summary": "Export References",
+        "description": "References as BibTeX or RIS: a review's papers, a collection, or the whole library.",
+        "operationId": "export_references_export_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/ExportFormat",
+              "default": "bibtex"
+            }
+          },
+          {
+            "name": "review_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Review Id"
+            }
+          },
+          {
+            "name": "collection_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Collection Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/settings": {
       "get": {
         "tags": [
@@ -4136,6 +4246,41 @@
         ],
         "title": "ErrorResponse"
       },
+      "ExportFormat": {
+        "type": "string",
+        "enum": [
+          "bibtex",
+          "ris"
+        ],
+        "title": "ExportFormat"
+      },
+      "ExportResult": {
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "bibtex",
+              "ris"
+            ],
+            "title": "Format"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "format",
+          "count",
+          "content"
+        ],
+        "title": "ExportResult"
+      },
       "Health": {
         "properties": {
           "status": {
@@ -4501,6 +4646,10 @@
             "type": "boolean",
             "title": "Add To Library",
             "default": false
+          },
+          "initiated_via": {
+            "$ref": "#/components/schemas/InitiatedVia",
+            "default": "gui"
           }
         },
         "additionalProperties": false,
@@ -5968,6 +6117,10 @@
             "minimum": 1.0,
             "title": "Limit",
             "default": 1000
+          },
+          "initiated_via": {
+            "$ref": "#/components/schemas/InitiatedVia",
+            "default": "gui"
           }
         },
         "additionalProperties": false,

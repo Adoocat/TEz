@@ -18,10 +18,12 @@ dependencies = [
     "rispy>=0.10",
     "sqlalchemy>=2",
     "tenacity>=9.2",
+    "typer>=0.29",
     "uvicorn>=0.54",
 ]
 
 [project.scripts]
+tez = "tez.cli.main:main"
 tez-backend = "tez.__main__:main"
 
 [dependency-groups]

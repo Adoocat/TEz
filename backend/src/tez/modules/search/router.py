@@ -72,6 +72,7 @@ async def start_search(
                 search_request,
                 providers,
                 search_id=search_id,
+                initiated_via=body.initiated_via,
                 listener=live.publish,
             )
 
