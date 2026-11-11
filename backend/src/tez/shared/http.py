@@ -184,6 +184,14 @@ def _user_agent() -> str:
         return "TEz"
 
 
+@dataclass(frozen=True)
+class Download:
+    content: bytes
+    content_type: str
+    # After redirects: where the file really came from.
+    final_url: str
+
+
 class HttpClient:
     """The one way out to academic sources. Use as an async context manager."""
 
@@ -193,8 +201,10 @@ class HttpClient:
         cache_path: Path | None = None,
         secret_headers: Mapping[str, Mapping[str, str]] | None = None,
         sleep: Sleep = asyncio.sleep,
+        transport: httpx2.AsyncBaseTransport | None = None,
     ) -> None:
-        network = _SecretHeaders(httpx2.AsyncHTTPTransport(), secret_headers or {})
+        """`transport` replaces the network, for tests; keys and the cache still apply."""
+        network = _SecretHeaders(transport or httpx2.AsyncHTTPTransport(), secret_headers or {})
         self._client = httpx2.AsyncClient(
             transport=_OptionalCache(network, cache_path),
             headers={"User-Agent": _user_agent()},
@@ -301,6 +311,54 @@ class HttpClient:
             raise _error(ErrorCode.SOURCE_REJECTED, source, status=response.status_code)
         return response
 
+    async def download(
+        self,
+        source: SourcePolicy,
+        url: str,
+        *,
+        max_bytes: int,
+        on_progress: Callable[[int, int | None], None] | None = None,
+    ) -> Download:
+        """Stream a file, telling `on_progress` (bytes so far, total if known) as it comes.
+
+        One attempt, rate limited, never cached: a download is large and is retried as a whole
+        job. Raises `TezError` with a `source.*` code, or `source.too_large` past `max_bytes`.
+        """
+        limiter = self._limiters.setdefault(source.name, RateLimiter(source.requests_per_second))
+        delay = limiter.reserve()
+        if delay > 0:
+            await self._sleep(delay)
+        try:
+            async with self._client.stream("GET", url, timeout=source.timeout_seconds) as response:
+                if response.status_code == _TOO_MANY_REQUESTS:
+                    raise _unwrap(self._rate_limited(source, limiter, response))
+                if not response.is_success:
+                    code = (
+                        ErrorCode.SOURCE_UNAVAILABLE
+                        if response.status_code in _RETRIED_STATUSES
+                        else ErrorCode.SOURCE_REJECTED
+                    )
+                    raise _error(code, source, status=response.status_code)
+                total = _content_length(response)
+                if total is not None and total > max_bytes:
+                    raise _error(ErrorCode.SOURCE_TOO_LARGE, source, size=total)
+                body = bytearray()
+                async for chunk in response.aiter_bytes():
+                    body += chunk
+                    if len(body) > max_bytes:
+                        raise _error(ErrorCode.SOURCE_TOO_LARGE, source, size=len(body))
+                    if on_progress is not None:
+                        on_progress(len(body), total)
+                return Download(
+                    content=bytes(body),
+                    content_type=response.headers.get("Content-Type", ""),
+                    final_url=str(response.url),
+                )
+        except httpx2.TimeoutException as exc:
+            raise _error(ErrorCode.SOURCE_TIMEOUT, source) from exc
+        except httpx2.TransportError as exc:
+            raise _error(ErrorCode.SOURCE_NETWORK, source) from exc
+
     def _rate_limited(
         self, source: SourcePolicy, limiter: RateLimiter, response: httpx2.Response
     ) -> Exception:
@@ -311,6 +369,18 @@ class HttpClient:
         if retry_after is not None and retry_after > source.max_retry_after_seconds:
             return error
         return _Retry(error, retry_after)
+
+
+def _content_length(response: httpx2.Response) -> int | None:
+    value = response.headers.get("Content-Length", "")
+    return int(value) if value.isdigit() else None
+
+
+def _unwrap(failure: Exception) -> TezError:
+    if isinstance(failure, _Retry):
+        return failure.error
+    assert isinstance(failure, TezError)
+    return failure
 
 
 def _error(code: ErrorCode, source: SourcePolicy, **params: Any) -> TezError:

@@ -1663,6 +1663,83 @@
         }
       }
     },
+    "/pdfs/open-access": {
+      "post": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Find Open Access Pdfs",
+        "description": "Look for free PDFs (arXiv, Unpaywall, the source's link) in the background, one job\nper paper. The papers are kept in the library.",
+        "operationId": "find_open_access_pdfs_pdfs_open_access_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAccessRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAccessQueued"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/settings": {
       "get": {
         "tags": [
@@ -2656,6 +2733,51 @@
           "new"
         ],
         "title": "MatchMethod"
+      },
+      "OpenAccessQueued": {
+        "properties": {
+          "job_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Job Ids"
+          },
+          "already_have_pdf": {
+            "type": "integer",
+            "title": "Already Have Pdf"
+          },
+          "no_source": {
+            "type": "integer",
+            "title": "No Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_ids",
+          "already_have_pdf",
+          "no_source"
+        ],
+        "title": "OpenAccessQueued"
+      },
+      "OpenAccessRequest": {
+        "properties": {
+          "paper_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 5000,
+            "minItems": 1,
+            "title": "Paper Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "paper_ids"
+        ],
+        "title": "OpenAccessRequest"
       },
       "PaperSelection": {
         "properties": {

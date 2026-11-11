@@ -14,9 +14,10 @@ import threading
 import time
 from datetime import timedelta
 from pathlib import Path
+from typing import Any
 
 from tez.core.db import Database, utcnow
-from tez.modules.jobs.registry import JobContext, Registry
+from tez.modules.jobs.registry import JobContext, JobFailed, Registry
 from tez.modules.jobs.repository import JobsRepository
 
 logger = logging.getLogger("tez.worker")
@@ -72,19 +73,24 @@ class Worker:
         )
         logger.info("job started", extra=log)
         heartbeat.start()
+        failure: JobFailed | None = None
         try:
             handler(payload, ctx)
+        except JobFailed as error:
+            # An expected failure with its own code; the handler says whether to retry.
+            logger.info("job failed", extra={**log, "code": error.code})
+            failure = error
         except Exception as error:
             logger.exception("job failed", extra=log)
-            failure: str | None = type(error).__name__
-        else:
-            failure = None
+            failure = JobFailed(
+                "job.handler_failed", {"exception": type(error).__name__}, retry=True
+            )
         finally:
             stop_heartbeat.set()
             heartbeat.join()
 
         if failure is not None:
-            self._finish_failed(job_id, attempt, "job.handler_failed", {"exception": failure}, True)
+            self._finish_failed(job_id, attempt, failure.code, failure.params, failure.retry)
         else:
             with self.db.write_session() as s:
                 owned = JobsRepository(s).complete(job_id, attempt=attempt)
@@ -95,7 +101,7 @@ class Worker:
         return True
 
     def _finish_failed(
-        self, job_id: str, attempt: int, code: str, params: dict[str, str], retry: bool
+        self, job_id: str, attempt: int, code: str, params: dict[str, Any], retry: bool
     ) -> None:
         with self.db.write_session() as s:
             JobsRepository(s).fail(

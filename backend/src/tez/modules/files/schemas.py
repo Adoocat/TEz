@@ -50,3 +50,17 @@ class PdfPathResult(BaseModel):
     path: str
     added: PdfAdded | None = None
     error: ErrorDetail | None = None
+
+
+class OpenAccessRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    paper_ids: list[str] = Field(min_length=1, max_length=5000)
+
+
+class OpenAccessQueued(BaseModel):
+    # One background job per paper; follow them on /jobs/events.
+    job_ids: list[str]
+    already_have_pdf: int
+    # No DOI, arXiv id or open-access link: nowhere to look.
+    no_source: int

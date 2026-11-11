@@ -46,7 +46,9 @@
     "progress": "Progress",
     "attempts": "Attempts",
     "types": {
-      "diagnostics.sleep": "Diagnostics"
+      "diagnostics.sleep": "Diagnostics",
+      "pdf.inspect": "PDF inspection",
+      "pdf.fetch_open_access": "Open-access PDF download"
     },
     "statuses": {
       "queued": "Queued",
@@ -148,7 +150,10 @@
     "pdf.unreadable": "The PDF is damaged and cannot be read.",
     "pdf.crashed": "Reading this PDF crashed the worker {{attempts}} times; it was skipped.",
     "pdf.missing": "The stored file is missing from the library folder.",
-    "attachment.not_found": "This file no longer exists."
+    "attachment.not_found": "This file no longer exists.",
+    "pdf.no_open_access": "No free copy was found ({{tried}} places tried).",
+    "source.too_large": "The file is too large to download.",
+    "source.email_required": "Unpaywall needs your e-mail address. Add it in Settings."
   },
   "reviews": {
     "active": "Active review",
@@ -266,7 +271,9 @@
         "error": "failed"
       },
       "imported": "Imported: {{file}}"
-    }
+    },
+    "findPdfs": "Find PDFs ({{count}})",
+    "pdfsQueued": "{{queued}} downloads queued · {{have}} already have a PDF · {{none}} have no DOI, arXiv id or link"
   },
   "imports": {
     "open": "Import file",

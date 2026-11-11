@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Segmented } from "@/components/ui/segmented";
+import { useFindOpenAccess } from "@/features/files/api";
 import { ImportDialog } from "@/features/imports/ImportDialog";
 import { ReviewForm } from "@/features/reviews/ReviewForm";
 import { useActiveReview } from "@/features/reviews/store";
@@ -402,24 +403,36 @@ function BulkActions({
   const { t } = useTranslation();
   const toReview = useAddToReview(reviewId, searchId);
   const toLibrary = useAddToLibrary(searchId);
+  const findPdfs = useFindOpenAccess();
   const none = paperIds.length === 0;
   const outcome = toReview.data ?? toLibrary.data;
-  const failed = toReview.isError || toLibrary.isError;
+  const failed = toReview.isError || toLibrary.isError || findPdfs.isError;
+  const resetAll = () => {
+    toReview.reset();
+    toLibrary.reset();
+    findPdfs.reset();
+  };
 
   return (
     <div className="flex items-center gap-2">
       <span aria-live="polite" className="text-meta text-fg-muted">
         {failed
           ? t("search.addFailed")
-          : outcome &&
-            t("search.added", { added: outcome.added, present: outcome.already_present })}
+          : findPdfs.data
+            ? t("search.pdfsQueued", {
+                queued: findPdfs.data.job_ids.length,
+                have: findPdfs.data.already_have_pdf,
+                none: findPdfs.data.no_source,
+              })
+            : outcome &&
+              t("search.added", { added: outcome.added, present: outcome.already_present })}
       </span>
       <Button
         size="sm"
         variant="primary"
         disabled={none || toReview.isPending}
         onClick={() => {
-          toLibrary.reset();
+          resetAll();
           toReview.mutate(paperIds);
         }}
       >
@@ -429,11 +442,21 @@ function BulkActions({
         size="sm"
         disabled={none || toLibrary.isPending}
         onClick={() => {
-          toReview.reset();
+          resetAll();
           toLibrary.mutate(paperIds);
         }}
       >
         {t("search.addToLibrary", { count: paperIds.length })}
+      </Button>
+      <Button
+        size="sm"
+        disabled={none || findPdfs.isPending}
+        onClick={() => {
+          resetAll();
+          findPdfs.mutate(paperIds);
+        }}
+      >
+        {t("search.findPdfs", { count: paperIds.length })}
       </Button>
     </div>
   );

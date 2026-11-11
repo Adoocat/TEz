@@ -59,6 +59,22 @@ class JobContext:
         self._cancelled.set()
 
 
+class JobFailed(Exception):
+    """Raise from a handler for a failure with its own error code.
+
+    `retry=False` ends the job at once (the answer will not change: no open-access copy
+    exists); `retry=True` counts as one failed attempt, like any other exception.
+    """
+
+    def __init__(
+        self, code: str, params: dict[str, Any] | None = None, *, retry: bool = False
+    ) -> None:
+        super().__init__(code)
+        self.code = code
+        self.params: dict[str, Any] = dict(params or {})
+        self.retry = retry
+
+
 Handler = Callable[[dict[str, Any], JobContext], None]
 
 

@@ -22,7 +22,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 14 · Arama arayüzü | bitti | `task/14-search-ui` · #21 | Sorgu formu, kaynak çipleri (bekliyor, aranıyor, hız sınırı geri sayımı, sonuç, kısmi, hata), özet şeridi, sanallaştırılmış liste, denetçide birleştirme ayrıntısı, review'a/kütüphaneye ekleme, geçmiş. Küçük review formu ve üst çubukta seçici. Migration 0004: `paper.library_added_at`. Üretim derlemesinde 1.368 satırda kaydırma adımı p95 3,8 ms (tekerlek), 10,6 ms (hızlı). Gerçek dört kaynakla denendi: 1.662 kayıt, 294 tekrar, 1.368 benzersiz |
 | 15 · BibTeX/RIS içe aktarma | bitti | `task/15-bib-ris-import` · #23 | `modules/importers`: bibtexparser v2 + rispy, LaTeX → Türkçe harf, bozuk girdi (satır + anahtar + kod) rapora düşer, içe aktarma durmaz. Önizleme hiçbir şey yazmaz; içe aktarma tek işlemde, tekilleştirmeden geçer, `search_run` olarak loglanır (dosya snapshot'ta). Migration 0005: `search_run.file_name`. Arayüz: arama ekranında "Dosyadan içe aktar" diyaloğu. Ayrıntı: ADR 0010 |
 | 16 · PDF ekleme | bitti | `task/16-pdf-add` · #24 | API PDF'i açmaz: başlık kontrolü, sha256, `files/<2 hex>/<sha>.pdf` (atomik), `attachment` + `pdf.inspect` işi. İşçi pypdfium2 ile sayfa sayısı ve metin katmanı (ok / needs_ocr / failed + neden). Son denemede önceden `pdf.crashed` işaretlenir, işçi çökse de dosya atlanır. Aynı içerik `duplicate`. Yeni makale "Gelen kutusu" sistem koleksiyonuna. Pencereye bırakma + köşe bildirimleri; `POST /pdfs/from-paths` (Görev 22 için). Migration 0006. Ayrıntı: ADR 0011 |
-| 17 · Açık erişim PDF | bekliyor | | |
+| 17 · Açık erişim PDF | bitti | `task/17-open-access-pdf` · #25 | Makale başına `pdf.fetch_open_access` işi (işçide): sıra arXiv → Unpaywall (Ayarlar'daki e-posta) → kaynağın OA bağlantısı; PDF olmayan cevap (giriş sayfası) atlanır. İndirme akışlı, ilerleme iş kuyruğundan durum çubuğuna ve İşler ekranına. `JobFailed` ile işler kendi kodlarıyla biter: `pdf.no_open_access` yeniden denenmez, ağ hataları denenir. Arama sonuçlarında "PDF'leri bul". Ayrıntı: ADR 0012 |
 | 18 · Koleksiyon ve etiketler | bekliyor | | |
 | 19 · Kütüphane listesi | bekliyor | | |
 | 20 · PDF görüntüleyici | bekliyor | | |
@@ -32,6 +32,9 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 ## Sonraya
 
+- (17) Unpaywall'ın gerçek bir yanıtı kaydedilmedi (gerçek e-posta gerekir); ilk gerçek kullanımda şema doğrulanmalı, kaset eklenmeli.
+- (17) JavaScript/çerez arkasındaki yayıncı sayfaları takip edilmiyor; bu makaleler `pdf.no_open_access` ile biter.
+- (17) Kütüphane listesinden (Görev 19) de "PDF'leri bul" eylemi.
 - (16) PDF'ten DOI okuma ve meta veri getirme (tasarım 4.6 "DOI bulundu, meta veri getiriliyor"); şimdilik başlık dosya adından.
 - (16) Bırakılan tek PDF'i okuyucuda açma (tasarım 4.6) Görev 20 ile.
 - (16) Çöp kutusunu boşaltırken `files/` içindeki dosyalar da silinmeli (bkz. (6) notu).

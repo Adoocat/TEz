@@ -46,7 +46,9 @@
     "progress": "İlerleme",
     "attempts": "Deneme",
     "types": {
-      "diagnostics.sleep": "Tanılama"
+      "diagnostics.sleep": "Tanılama",
+      "pdf.inspect": "PDF inceleme",
+      "pdf.fetch_open_access": "Açık erişim PDF indirme"
     },
     "statuses": {
       "queued": "Sırada",
@@ -148,7 +150,10 @@
     "pdf.unreadable": "PDF bozuk, okunamıyor.",
     "pdf.crashed": "Bu PDF'i okumak işçiyi {{attempts}} kez çökertti; atlandı.",
     "pdf.missing": "Saklanan dosya kütüphane klasöründe yok.",
-    "attachment.not_found": "Bu dosya artık yok."
+    "attachment.not_found": "Bu dosya artık yok.",
+    "pdf.no_open_access": "Ücretsiz bir kopya bulunamadı ({{tried}} yere bakıldı).",
+    "source.too_large": "Dosya indirilemeyecek kadar büyük.",
+    "source.email_required": "Unpaywall e-posta adresinizi istiyor. Ayarlar'dan ekleyin."
   },
   "reviews": {
     "active": "Etkin review",
@@ -266,7 +271,9 @@
         "error": "hata"
       },
       "imported": "İçe aktarıldı: {{file}}"
-    }
+    },
+    "findPdfs": "PDF'leri bul ({{count}})",
+    "pdfsQueued": "{{queued}} indirme kuyruğa alındı · {{have}} tanesinin PDF'i zaten var · {{none}} tanesinde DOI, arXiv kimliği veya bağlantı yok"
   },
   "imports": {
     "open": "Dosyadan içe aktar",
