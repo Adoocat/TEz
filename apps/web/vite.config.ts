@@ -49,6 +49,8 @@ export default defineConfig({
   },
   clearScreen: false,
   test: {
+    // e2e/ holds Playwright tests (pnpm e2e), which need a real browser and backend.
+    include: ["src/**/*.test.{ts,tsx}"],
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
   },

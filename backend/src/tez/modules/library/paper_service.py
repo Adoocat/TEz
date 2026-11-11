@@ -68,6 +68,10 @@ class PaperService:
         )
         return [_card(paper) for paper in self._session.scalars(query)]
 
+    def cards_where(self, *conditions: Any) -> list[PaperCard]:
+        """Papers matching SQL conditions on `Paper`, for lists that filter in the database."""
+        return self._cards(*conditions)
+
     def all_cards(self) -> list[PaperCard]:
         """Every paper, including the trash: a trashed paper's DOI still belongs to it."""
         return self._cards()

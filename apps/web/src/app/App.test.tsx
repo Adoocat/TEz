@@ -93,7 +93,9 @@ describe("shell", () => {
       expect(within(nav).getByRole("link", { name: label })).toBeInTheDocument();
     }
     expect(await screen.findByText("Kütüphane: TEz Library")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 1, name: "Kütüphane" })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Tüm makaleler" }),
+    ).toBeInTheDocument();
   });
 
   it("panels can be closed and stay closed", async () => {

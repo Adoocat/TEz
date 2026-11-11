@@ -7,6 +7,9 @@ type AppSettings = components["schemas"]["AppSettings"];
 type ImportOutcome = components["schemas"]["ImportOutcome"];
 type ImportPreview = components["schemas"]["ImportPreview"];
 type JobView = components["schemas"]["JobView"];
+type CollectionView = components["schemas"]["CollectionView"];
+type TagView = components["schemas"]["TagView"];
+type LibraryPaperRow = components["schemas"]["LibraryPaperRow"];
 type ReviewView = components["schemas"]["ReviewView"];
 type SearchOverview = components["schemas"]["SearchOverview"];
 type SearchResultRow = components["schemas"]["SearchResultRow"];
@@ -31,6 +34,9 @@ export interface FakeBackend {
   /** When set, the preview fails with this error instead. */
   importPreviewError: { code: string; params: Record<string, unknown> } | null;
   importOutcome: ImportOutcome;
+  collections: CollectionView[];
+  tags: TagView[];
+  papers: LibraryPaperRow[];
   /** What the next POST /pdfs answers, in order; "added" when empty. */
   pdfReplies: (
     | { status: "added" | "duplicate" }
@@ -59,6 +65,9 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     importPreviewError: null,
     importOutcome: importOutcome(),
     pdfReplies: [],
+    collections: [],
+    tags: [],
+    papers: [],
     emitSource(searchId, update) {
       const data = {
         state: "searching",
@@ -142,6 +151,63 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
           : json(backend.importPreview);
       }
       if (route === "POST /imports") return json(backend.importOutcome, 201);
+      if (route === "GET /collections") return json(backend.collections);
+      if (route === "POST /collections") {
+        const { name, parent_id } = body as { name: string; parent_id: string | null };
+        const created: CollectionView = {
+          id: `collection-${String(backend.collections.length + 1)}`,
+          parent_id,
+          name,
+          sort_order: 0,
+          is_system: false,
+          paper_count: 0,
+        };
+        backend.collections.push(created);
+        return json(created, 201);
+      }
+      const collectionOf = /^\/collections\/([^/]+)$/.exec(path)?.[1];
+      if (collectionOf && request.method === "PATCH") {
+        const found = backend.collections.find((c) => c.id === collectionOf);
+        if (!found) return json({ error: { code: "collection.not_found", params: {} } }, 404);
+        Object.assign(found, body);
+        return json(found);
+      }
+      if (collectionOf && request.method === "DELETE") {
+        backend.collections = backend.collections.filter((c) => c.id !== collectionOf);
+        return new Response(null, { status: 204 });
+      }
+      if (/^\/(collections|tags)\/[^/]+\/papers(\/remove)?$/.test(path)) {
+        const { paper_ids } = body as { paper_ids: string[] };
+        return json({ changed: paper_ids.length, unchanged: 0 });
+      }
+      if (route === "GET /tags") return json(backend.tags);
+      if (route === "POST /tags") {
+        const { name, color } = body as { name: string; color: string | null };
+        const created: TagView = {
+          id: `tag-${String(backend.tags.length + 1)}`,
+          name,
+          color,
+          paper_count: 0,
+        };
+        backend.tags.push(created);
+        return json(created, 201);
+      }
+      if (route === "GET /papers") {
+        const query = new URL(request.url, "http://test").searchParams;
+        const collection = query.get("collection_id");
+        const tag = query.get("tag_id");
+        return json(
+          backend.papers.filter(
+            (p) =>
+              (!collection || p.collection_ids.includes(collection)) &&
+              (!tag || p.tag_ids.includes(tag)),
+          ),
+        );
+      }
+      if (route === "PATCH /papers/reading-status") {
+        const { paper_ids } = body as { paper_ids: string[] };
+        return json({ changed: paper_ids.length, unchanged: 0 });
+      }
       if (route === "POST /pdfs/open-access") {
         const { paper_ids } = body as { paper_ids: string[] };
         return json(
@@ -370,6 +436,27 @@ export function importOutcome(overrides: Partial<ImportOutcome> = {}): ImportOut
     search_id: "search-import",
     added_to_review: 2,
     added_to_library: 0,
+    ...overrides,
+  };
+}
+
+export function libraryPaper(overrides: Partial<LibraryPaperRow> = {}): LibraryPaperRow {
+  return {
+    id: "paper-1",
+    title: "Automated code review with LLMs",
+    first_author: "Ayşe Yılmaz",
+    author_count: 2,
+    year: 2024,
+    venue: "ICSE",
+    venue_type: "conference",
+    doi: "10.1145/1",
+    citekey: null,
+    citation_count: 4,
+    reading_status: "unread",
+    tag_ids: [],
+    collection_ids: [],
+    pdf: "none",
+    added_at: "2026-11-11T10:00:00+00:00",
     ...overrides,
   };
 }

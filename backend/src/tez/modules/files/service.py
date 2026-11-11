@@ -8,16 +8,19 @@ down only the worker. A broken file is marked `failed`, with a reason, and nothi
 
 import json
 import logging
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path, PurePath
 
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
 
 from tez.core.db import Database
 from tez.core.errors import ErrorCode, ErrorDetail, TezError
 from tez.modules.files import storage
 from tez.modules.files.inspection import inspect_pdf
-from tez.modules.files.models import Attachment, TextStatus
+from tez.modules.files.models import Attachment, AttachmentKind, TextStatus
 from tez.modules.files.repository import FilesRepository
 from tez.modules.files.schemas import (
     MAX_PDF_BYTES,
@@ -33,6 +36,8 @@ logger = logging.getLogger(__name__)
 
 INSPECT_JOB = "pdf.inspect"
 MANUAL_SOURCE = "manual"
+# SQLite allows a limited number of query parameters; long id lists go in batches.
+_BATCH = 500
 
 
 def _title_from(file_name: str) -> str:
@@ -238,3 +243,22 @@ def inspect_attachment(payload: dict[str, object], ctx: JobContext) -> None:
     status = TextStatus.OK if found.has_text else TextStatus.NEEDS_OCR
     _mark(ctx.db, attachment_id, status, page_count=found.page_count)
     ctx.report(1.0)
+
+
+def pdf_states(session: Session, paper_ids: Iterable[str]) -> dict[str, TextStatus]:
+    """Each paper's best PDF state, for lists: a readable file wins over a failed one."""
+    rank = {TextStatus.OK: 0, TextStatus.NEEDS_OCR: 1, TextStatus.PENDING: 2, TextStatus.FAILED: 3}
+    states: dict[str, TextStatus] = {}
+    wanted = list(paper_ids)
+    for start in range(0, len(wanted), _BATCH):
+        batch = wanted[start : start + _BATCH]
+        rows = session.execute(
+            select(Attachment.paper_id, Attachment.text_status).where(
+                Attachment.paper_id.in_(batch), Attachment.kind == AttachmentKind.PDF
+            )
+        )
+        for paper_id, status in rows:
+            known = states.get(paper_id)
+            if known is None or rank[status] < rank[known]:
+                states[paper_id] = status
+    return states

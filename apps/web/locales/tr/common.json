@@ -153,7 +153,12 @@
     "attachment.not_found": "Bu dosya artık yok.",
     "pdf.no_open_access": "Ücretsiz bir kopya bulunamadı ({{tried}} yere bakıldı).",
     "source.too_large": "Dosya indirilemeyecek kadar büyük.",
-    "source.email_required": "Unpaywall e-posta adresinizi istiyor. Ayarlar'dan ekleyin."
+    "source.email_required": "Unpaywall e-posta adresinizi istiyor. Ayarlar'dan ekleyin.",
+    "collection.not_found": "Bu koleksiyon artık yok.",
+    "collection.system": "Gelen kutusu yeniden adlandırılamaz, taşınamaz veya silinemez.",
+    "collection.name_taken": "Burada zaten “{{name}}” adlı bir koleksiyon var.",
+    "tag.not_found": "Bu etiket artık yok.",
+    "tag.name_taken": "Zaten “{{name}}” adlı bir etiket var."
   },
   "reviews": {
     "active": "Etkin review",
@@ -344,6 +349,50 @@
       "uploading": "Ekleniyor…",
       "added": "Gelen kutusuna eklendi.",
       "duplicate": "Zaten kütüphanede: hiçbir şey kopyalanmadı."
+    }
+  },
+  "library": {
+    "sidebar": "Kütüphane",
+    "inbox": "Gelen kutusu",
+    "allPapers": "Tüm makaleler",
+    "collections": "Koleksiyonlar",
+    "tags": "Etiketler",
+    "newCollection": "Yeni koleksiyon",
+    "newCollectionName": "Koleksiyon adı",
+    "newSubcollection": "{{name}} içinde yeni koleksiyon",
+    "renameCollection": "Yeni ad",
+    "renameTag": "Yeni etiket adı",
+    "renameNamed": "{{name}} adını değiştir",
+    "deleteNamed": "{{name}} sil",
+    "recolorNamed": "{{name}} rengini değiştir",
+    "newTag": "Yeni etiket",
+    "newTagName": "Etiket adı",
+    "noCollections": "Henüz koleksiyon yok.",
+    "noTags": "Henüz etiket yok.",
+    "expand": "Aç",
+    "collapse": "Kapat",
+    "deleteCollectionTitle": "“{{name}}” silinsin mi?",
+    "deleteCollectionText": "Alt koleksiyonları da silinir. Makaleler kütüphanede kalır.",
+    "deleteTagTitle": "#{{name}} silinsin mi?",
+    "deleteTagText": "Etiket tüm makalelerden kaldırılır. Makaleler kütüphanede kalır.",
+    "delete": "Sil",
+    "cancel": "Vazgeç",
+    "paperCount_one": "{{count}} makale",
+    "paperCount_other": "{{count}} makale",
+    "papers": "Makaleler",
+    "selectAll": "Tümünü seç",
+    "selectPaper": "Seç: {{title}}",
+    "selected_one": "{{count}} seçili",
+    "selected_other": "{{count}} seçili",
+    "setReading": "Okuma durumu…",
+    "addTag": "Etiket ekle…",
+    "removeFromCollection": "Bu koleksiyondan çıkar",
+    "emptyLibrary": "Kütüphane boş. Bir aramadan makale ekleyin, dosya içe aktarın veya PDF'leri buraya bırakın.",
+    "emptyScope": "Burada henüz bir şey yok. Kenar çubuğunda makaleleri buraya sürükleyin.",
+    "reading": {
+      "unread": "Okunmadı",
+      "reading": "Okunuyor",
+      "read": "Okundu"
     }
   }
 }

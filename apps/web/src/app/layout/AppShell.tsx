@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import { PdfDrop } from "@/features/files/PdfDrop";
 import { useJobEvents } from "@/features/jobs/useJobEvents";
+import { LibrarySidebar } from "@/features/library/LibrarySidebar";
 import { ReviewPicker } from "@/features/reviews/ReviewPicker";
 import { SearchInspector } from "@/features/search/SearchInspector";
 import { useSettings, useUpdateSettings } from "@/features/settings/api";
@@ -68,7 +69,13 @@ export function AppShell() {
           <NavRail />
           {sidebarOpen && (
             <aside className="w-sidebar shrink-0 overflow-y-auto border-r border-line bg-surface">
-              {settingsRoute ? <SettingsNav /> : <SidebarPlaceholder />}
+              {settingsRoute ? (
+                <SettingsNav />
+              ) : pathname.startsWith("/library") ? (
+                <LibrarySidebar />
+              ) : (
+                <SidebarPlaceholder />
+              )}
             </aside>
           )}
           <main className="min-w-0 flex-1 overflow-y-auto">

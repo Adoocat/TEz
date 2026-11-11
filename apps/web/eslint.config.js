@@ -7,7 +7,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig(
-  { ignores: ["dist", "src/api"] },
+  { ignores: ["dist", "src/api", "playwright-report", "test-results"] },
   js.configs.recommended,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
@@ -17,7 +17,7 @@ export default defineConfig(
       parserOptions: {
         // Tool configs live outside tsconfig.json (browser code); lint them with the node config.
         projectService: {
-          allowDefaultProject: ["eslint.config.js", "vite.config.ts"],
+          allowDefaultProject: ["eslint.config.js", "vite.config.ts", "playwright.config.ts"],
           defaultProject: "tsconfig.node.json",
         },
         tsconfigRootDir: import.meta.dirname,
