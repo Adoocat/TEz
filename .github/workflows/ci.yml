@@ -57,10 +57,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Install Tauri system packages
+        timeout-minutes: 10
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libxdo-dev libssl-dev \
-            libayatana-appindicator3-dev librsvg2-dev
+          # Use Ubuntu's main archive only. When the runners' Azure mirror cannot be resolved,
+          # apt waits 20 s on it for every file and the job runs into its timeout (2026-11-11).
+          echo "http://archive.ubuntu.com/ubuntu/" | sudo tee /etc/apt/apt-mirrors.txt
+          sudo apt-get -o Acquire::Retries=3 update
+          sudo apt-get -o Acquire::Retries=3 install -y libwebkit2gtk-4.1-dev libxdo-dev \
+            libssl-dev libayatana-appindicator3-dev librsvg2-dev
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
