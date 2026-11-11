@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import { PdfDrop } from "@/features/files/PdfDrop";
 import { useJobEvents } from "@/features/jobs/useJobEvents";
+import { LibraryInspector } from "@/features/library/LibraryInspector";
 import { LibrarySidebar } from "@/features/library/LibrarySidebar";
 import { ReviewPicker } from "@/features/reviews/ReviewPicker";
 import { SearchInspector } from "@/features/search/SearchInspector";
@@ -63,7 +64,7 @@ export function AppShell() {
     <TooltipProvider delayDuration={300}>
       <PreferencesSync />
       <PdfDrop />
-      <div className="grid h-full grid-rows-[auto_minmax(0,1fr)_auto] bg-canvas text-fg">
+      <div className="grid h-full grid-cols-[minmax(0,1fr)] grid-rows-[auto_minmax(0,1fr)_auto] bg-canvas text-fg">
         <TopBar />
         <div className="flex min-h-0">
           <NavRail />
@@ -177,6 +178,8 @@ function Inspector({ route }: { route: string }) {
     >
       {route.startsWith("/search") ? (
         <SearchInspector />
+      ) : route.startsWith("/library") ? (
+        <LibraryInspector />
       ) : (
         <>
           <h2 className="mb-2 text-h3">{t("shell.inspectorTitle")}</h2>

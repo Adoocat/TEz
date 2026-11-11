@@ -42,6 +42,8 @@ class ErrorCode(StrEnum):
     SECRETS_UNAVAILABLE = "secrets.unavailable"
     REVIEW_NOT_FOUND = "review.not_found"
     PAPER_NOT_FOUND = "paper.not_found"
+    CITEKEY_TAKEN = "citekey.taken"
+    CITEKEY_INVALID = "citekey.invalid"
     SEARCH_NOT_FOUND = "search.not_found"
     SOURCE_UNKNOWN = "source.unknown"
     SOURCE_RATE_LIMITED = "source.rate_limited"

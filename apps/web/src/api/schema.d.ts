@@ -92,6 +92,49 @@ export interface paths {
         patch: operations["set_reading_status_papers_reading_status_patch"];
         trace?: never;
     };
+    "/papers/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search Papers
+         * @description Metadata full-text search (title, authors, abstract, venue, identifiers, citation key).
+         *
+         *     Every word must match, as a word or its beginning; Turkish letters fold ("isik" = "Işık").
+         */
+        get: operations["search_papers_papers_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/papers/{paper_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Paper */
+        get: operations["get_paper_papers__paper_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Paper
+         * @description Change the citation key; it must be unused and BibTeX-safe.
+         */
+        patch: operations["update_paper_papers__paper_id__patch"];
+        trace?: never;
+    };
     "/collections": {
         parameters: {
             query?: never;
@@ -681,6 +724,19 @@ export interface components {
              */
             created_at: string;
         };
+        /** AuthorView */
+        AuthorView: {
+            /** Display Name */
+            display_name: string;
+            /** Family */
+            family: string | null;
+            /** Given */
+            given: string | null;
+            /** Orcid */
+            orcid: string | null;
+            /** Affiliation */
+            affiliation: string | null;
+        };
         /** ChangeCount */
         ChangeCount: {
             /** Changed */
@@ -746,6 +802,11 @@ export interface components {
             /** Version */
             version: string;
         };
+        /**
+         * IdentifierScheme
+         * @enum {string}
+         */
+        IdentifierScheme: "doi" | "arxiv" | "s2" | "openalex" | "dblp" | "isbn" | "zotero";
         /** ImportFile */
         ImportFile: {
             /** File Name */
@@ -951,10 +1012,66 @@ export interface components {
             /** Paper Ids */
             paper_ids: string[];
         };
+        /**
+         * PaperDetail
+         * @description Everything the inspector shows about one paper (design 4.4).
+         */
+        PaperDetail: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Abstract */
+            abstract: string | null;
+            /** Year */
+            year: number | null;
+            /** Venue */
+            venue: string | null;
+            venue_type: components["schemas"]["VenueType"] | null;
+            /** Volume */
+            volume: string | null;
+            /** Issue */
+            issue: string | null;
+            /** Pages */
+            pages: string | null;
+            /** Language */
+            language: string | null;
+            /** Url */
+            url: string | null;
+            /** Oa Url */
+            oa_url: string | null;
+            /** Citation Count */
+            citation_count: number | null;
+            reading_status: components["schemas"]["ReadingStatus"];
+            /** Citekey */
+            citekey: string | null;
+            retraction_status: components["schemas"]["RetractionStatus"];
+            /** Added At */
+            added_at: string | null;
+            /** Authors */
+            authors: components["schemas"]["AuthorView"][];
+            /** Identifiers */
+            identifiers: {
+                [key: string]: string;
+            };
+            /** Tag Ids */
+            tag_ids: string[];
+            /** Collection Ids */
+            collection_ids: string[];
+            /** Attachments */
+            attachments: components["schemas"]["AttachmentView"][];
+            /** Related */
+            related: components["schemas"]["RelatedPaper"][];
+        };
         /** PaperIds */
         PaperIds: {
             /** Paper Ids */
             paper_ids: string[];
+        };
+        /** PaperPatch */
+        PaperPatch: {
+            /** Citekey */
+            citekey: string;
         };
         /** PaperSelection */
         PaperSelection: {
@@ -1041,6 +1158,20 @@ export interface components {
          * @enum {string}
          */
         RecordWarning: "no_authors" | "no_year" | "no_identifier" | "bad_year" | "bad_link";
+        /** RelatedPaper */
+        RelatedPaper: {
+            /** Paper Id */
+            paper_id: string;
+            /** Title */
+            title: string;
+            /** Year */
+            year: number | null;
+            /**
+             * Relation
+             * @enum {string}
+             */
+            relation: "preprint" | "published_version" | "erratum" | "retraction";
+        };
         /** ResultSource */
         ResultSource: {
             /** Source */
@@ -1051,6 +1182,11 @@ export interface components {
             /** Match Score */
             match_score: number | null;
         };
+        /**
+         * RetractionStatus
+         * @enum {string}
+         */
+        RetractionStatus: "none" | "retracted" | "expression_of_concern";
         /** ReviewCreate */
         ReviewCreate: {
             /** Title */
@@ -1103,6 +1239,13 @@ export interface components {
             /** Retrieved Count */
             retrieved_count: number;
             error: components["schemas"]["ErrorDetail"] | null;
+        };
+        /** SearchHits */
+        SearchHits: {
+            /** Paper Ids */
+            paper_ids: string[];
+            /** Elapsed Ms */
+            elapsed_ms: number;
         };
         /** SearchOverview */
         SearchOverview: {
@@ -1547,6 +1690,184 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ChangeCount"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    search_papers_papers_search_get: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchHits"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_paper_papers__paper_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                paper_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaperDetail"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_paper_papers__paper_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                paper_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaperPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaperDetail"];
                 };
             };
             /** @description Missing or invalid token */

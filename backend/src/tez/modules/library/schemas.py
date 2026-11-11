@@ -3,7 +3,8 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
-from tez.modules.library.models import ReadingStatus, VenueType
+from tez.modules.files.schemas import AttachmentView
+from tez.modules.library.models import IdentifierScheme, ReadingStatus, RetractionStatus, VenueType
 
 InstanceKind = Literal["app", "cli"]
 
@@ -136,3 +137,59 @@ class LibraryPaperRow(BaseModel):
     collection_ids: list[str]
     pdf: PdfState
     added_at: datetime | None
+
+
+class SearchHits(BaseModel):
+    # Best match first. The list filters its loaded rows by these ids.
+    paper_ids: list[str]
+    elapsed_ms: float
+
+
+class AuthorView(BaseModel):
+    display_name: str
+    family: str | None
+    given: str | None
+    orcid: str | None
+    affiliation: str | None
+
+
+class RelatedPaper(BaseModel):
+    paper_id: str
+    title: str
+    year: int | None
+    # How the related paper stands to this one.
+    relation: Literal["preprint", "published_version", "erratum", "retraction"]
+
+
+class PaperDetail(BaseModel):
+    """Everything the inspector shows about one paper (design 4.4)."""
+
+    id: str
+    title: str
+    abstract: str | None
+    year: int | None
+    venue: str | None
+    venue_type: VenueType | None
+    volume: str | None
+    issue: str | None
+    pages: str | None
+    language: str | None
+    url: str | None
+    oa_url: str | None
+    citation_count: int | None
+    reading_status: ReadingStatus
+    citekey: str | None
+    retraction_status: RetractionStatus
+    added_at: datetime | None
+    authors: list[AuthorView]
+    identifiers: dict[IdentifierScheme, str]
+    tag_ids: list[str]
+    collection_ids: list[str]
+    attachments: list[AttachmentView]
+    related: list[RelatedPaper]
+
+
+class PaperPatch(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    citekey: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=128)]

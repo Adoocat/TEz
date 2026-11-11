@@ -8,6 +8,7 @@ or deleted.
 
 from collections import defaultdict
 from collections.abc import Iterable, Sequence
+from typing import Literal
 
 from sqlalchemy import ColumnElement, func, select
 from sqlalchemy.orm import Session
@@ -16,21 +17,28 @@ from tez.core.db import Database
 from tez.core.errors import ErrorCode, TezError
 from tez.modules.files import service as files_service
 from tez.modules.files.models import TextStatus
+from tez.modules.library import citekeys, search_index
 from tez.modules.library.models import (
     Collection,
     CollectionPaper,
     IdentifierScheme,
     Paper,
+    PaperRelation,
     PaperTag,
     ReadingStatus,
+    RelationKind,
     Tag,
 )
 from tez.modules.library.paper_service import PaperCard, PaperService
 from tez.modules.library.repository import LibraryRepository
 from tez.modules.library.schemas import (
+    AuthorView,
     ChangeCount,
     CollectionView,
     LibraryPaperRow,
+    PaperDetail,
+    RelatedPaper,
+    SearchHits,
     TagView,
 )
 from tez.shared.text import fold
@@ -360,3 +368,109 @@ def list_papers(
         rows = [_row(card, tags, collections, pdfs) for card in cards]
     rows.sort(key=lambda row: (row.added_at is not None, row.added_at), reverse=True)
     return rows
+
+
+# --- one paper (the inspector) --------------------------------------------------------
+
+RelationName = Literal["preprint", "published_version", "erratum", "retraction"]
+_RELATION_NAMES: dict[tuple[RelationKind, bool], RelationName] = {
+    # (kind, this paper is the "from" side) -> what the other paper is to this one
+    (RelationKind.VERSION_OF, True): "published_version",
+    (RelationKind.VERSION_OF, False): "preprint",
+    (RelationKind.ERRATUM_OF, True): "erratum",
+    (RelationKind.ERRATUM_OF, False): "erratum",
+    (RelationKind.RETRACTION_OF, True): "retraction",
+    (RelationKind.RETRACTION_OF, False): "retraction",
+}
+
+
+def _related(session: Session, paper_id: str) -> list[RelatedPaper]:
+    found: list[RelatedPaper] = []
+    relations = session.scalars(
+        select(PaperRelation).where(
+            (PaperRelation.from_paper_id == paper_id) | (PaperRelation.to_paper_id == paper_id)
+        )
+    )
+    for relation in relations:
+        outgoing = relation.from_paper_id == paper_id
+        other = session.get(Paper, relation.to_paper_id if outgoing else relation.from_paper_id)
+        if other is None:
+            continue
+        found.append(
+            RelatedPaper(
+                paper_id=other.id,
+                title=other.title,
+                year=other.year,
+                relation=_RELATION_NAMES[(relation.kind, outgoing)],
+            )
+        )
+    return found
+
+
+def _detail(session: Session, paper: Paper) -> PaperDetail:
+    ids = [paper.id]
+    return PaperDetail(
+        id=paper.id,
+        title=paper.title,
+        abstract=paper.abstract,
+        year=paper.year,
+        venue=paper.venue,
+        venue_type=paper.venue_type,
+        volume=paper.volume,
+        issue=paper.issue,
+        pages=paper.pages,
+        language=paper.language,
+        url=paper.url,
+        oa_url=paper.oa_url,
+        citation_count=paper.citation_count,
+        reading_status=paper.reading_status,
+        citekey=paper.citekey,
+        retraction_status=paper.retraction_status,
+        added_at=paper.library_added_at,
+        authors=[
+            AuthorView(
+                display_name=link.author.display_name,
+                family=link.author.family,
+                given=link.author.given,
+                orcid=link.author.orcid,
+                affiliation=link.affiliation_raw,
+            )
+            for link in paper.authors
+        ],
+        identifiers={i.scheme: i.value for i in paper.identifiers},
+        tag_ids=_memberships(session, PaperTag, ids).get(paper.id, []),
+        collection_ids=_memberships(session, CollectionPaper, ids).get(paper.id, []),
+        attachments=files_service.attachments_in(session, paper.id),
+        related=_related(session, paper.id),
+    )
+
+
+def _paper(session: Session, paper_id: str) -> Paper:
+    paper = session.get(Paper, paper_id)
+    if paper is None:
+        raise TezError(ErrorCode.PAPER_NOT_FOUND, {"paper_ids": [paper_id]}, status=404)
+    return paper
+
+
+def paper_detail(db: Database, paper_id: str) -> PaperDetail:
+    with db.session() as session:
+        return _detail(session, _paper(session, paper_id))
+
+
+def update_paper(db: Database, paper_id: str, *, citekey: str) -> PaperDetail:
+    """The user's own citation key. It must be BibTeX-safe and unused."""
+    if not citekeys.is_valid(citekey):
+        raise TezError(ErrorCode.CITEKEY_INVALID, {"citekey": citekey}, status=422)
+    with db.write_session() as session:
+        paper = _paper(session, paper_id)
+        holder = session.scalar(select(Paper.id).where(Paper.citekey == citekey))
+        if holder is not None and holder != paper_id:
+            raise TezError(ErrorCode.CITEKEY_TAKEN, {"citekey": citekey}, status=409)
+        paper.citekey = citekey
+        session.flush()
+        return _detail(session, paper)
+
+
+def search_papers(db: Database, query: str) -> SearchHits:
+    hits = search_index.search(db, query)
+    return SearchHits(paper_ids=hits.paper_ids, elapsed_ms=round(hits.elapsed_ms, 2))

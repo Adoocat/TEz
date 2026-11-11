@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "@/app/App";
 import { useLayoutStore } from "@/app/layout/uiStore";
@@ -18,6 +18,28 @@ beforeEach(() => {
   useActiveReviewStore.setState({ activeReviewId: null });
   useLibraryView.setState({ scope: { kind: "all" }, selectedPaperId: null });
   window.location.hash = "#/library";
+  // jsdom has no layout; the virtualized table needs a size to decide which rows to draw.
+  vi.spyOn(Element.prototype, "clientHeight", "get").mockReturnValue(600);
+  vi.spyOn(Element.prototype, "clientWidth", "get").mockReturnValue(900);
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      observe() {
+        return undefined;
+      }
+      unobserve() {
+        return undefined;
+      }
+      disconnect() {
+        return undefined;
+      }
+    },
+  );
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 function withLibrary() {
@@ -222,9 +244,9 @@ describe("the paper list", () => {
     await user.click(screen.getByRole("checkbox", { name: "Select: Second paper" }));
 
     const data: Record<string, string> = {};
-    fireEvent.dragStart(screen.getByText("First paper").closest("li") as Element, {
-      dataTransfer: transfer(data),
-    });
+    const row = screen.getByText("First paper").closest('[role="row"]');
+    expect(row).not.toBeNull();
+    fireEvent.dragStart(row ?? document.body, { dataTransfer: transfer(data) });
 
     expect(JSON.parse(data[PAPERS_TYPE] ?? "[]")).toEqual(["p1", "p2"]);
   });

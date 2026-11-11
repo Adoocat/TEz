@@ -24,7 +24,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 16 · PDF ekleme | bitti | `task/16-pdf-add` · #24 | API PDF'i açmaz: başlık kontrolü, sha256, `files/<2 hex>/<sha>.pdf` (atomik), `attachment` + `pdf.inspect` işi. İşçi pypdfium2 ile sayfa sayısı ve metin katmanı (ok / needs_ocr / failed + neden). Son denemede önceden `pdf.crashed` işaretlenir, işçi çökse de dosya atlanır. Aynı içerik `duplicate`. Yeni makale "Gelen kutusu" sistem koleksiyonuna. Pencereye bırakma + köşe bildirimleri; `POST /pdfs/from-paths` (Görev 22 için). Migration 0006. Ayrıntı: ADR 0011 |
 | 17 · Açık erişim PDF | bitti | `task/17-open-access-pdf` · #25 | Makale başına `pdf.fetch_open_access` işi (işçide): sıra arXiv → Unpaywall (Ayarlar'daki e-posta) → kaynağın OA bağlantısı; PDF olmayan cevap (giriş sayfası) atlanır. İndirme akışlı, ilerleme iş kuyruğundan durum çubuğuna ve İşler ekranına. `JobFailed` ile işler kendi kodlarıyla biter: `pdf.no_open_access` yeniden denenmez, ağ hataları denenir. Arama sonuçlarında "PDF'leri bul". Ayrıntı: ADR 0012 |
 | 18 · Koleksiyon ve etiketler | bitti | `task/18-collections-tags` · #26 | Koleksiyon ağacı (oluştur, yeniden adlandır, taşı, sil; döngü ve kardeş ad kontrolü, Türkçe katlama), çoklu koleksiyon, etiketler (renkler token adı), toplu okuma durumu; sayılar türetilir. Kenar çubuğu: Gelen kutusu, Tüm makaleler, ağaç, etiketler; satırlar koleksiyona/etikete, koleksiyonlar birbirine sürüklenir. Playwright kuruldu: `pnpm e2e` gerçek arka uç + geçici kütüphaneyle; CI'da `e2e` işi. Ayrıntı: ADR 0013 |
-| 19 · Kütüphane listesi | bekliyor | | |
+| 19 · Kütüphane listesi | bitti | `task/19-library-list` · #27 | `paper_fts` (migration 0007) Türkçe katlanmış metinle; ORM `after_flush` ile aynı işlemde güncellenir, kütüphane açılışında eksikse yeniden kurulur. `GET /papers/search` (her kelime, önek), detay ve atıf anahtarı (`yilmaz2024automated`, düzenlenebilir). TanStack Table v8 + Virtual tablo: sıralama, yıl/okuma/etiket/PDF filtreleri, denetçi. Demo kütüphane: `python -m tez.devtools.demo`. Kabul: 2000 makalede sunucu ~1–2 ms, tarayıcı gidiş-dönüş medyan ~5 ms. Ayrıntı: ADR 0014 |
 | 20 · PDF görüntüleyici | bekliyor | | |
 | 21 · Kapanış | bekliyor | | |
 | 22 · Tek örnek ve argüman iletimi | bekliyor | | |
@@ -32,6 +32,9 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 ## Sonraya
 
+- (19) Sütun gizleme/yeniden sıralama, kart/zaman çizelgesi/atıf grafiği görünümleri (tasarım 4.3).
+- (19) Toplu SQL ile makale silme `paper_fts`'i atlar; çöp kutusunu boşaltma ORM ile yapılmalı veya ardından yeniden indekslemeli.
+- (19) Web modunda token'lı bağlantı aynı sekmede yalnızca hash değişirse alınmıyor (sayfa yeniden yüklenmeli); `tez serve` bağlantısı yeni sekmede açıldığı için sorun değil, istenirse `hashchange` dinlenebilir.
 - (18) Koleksiyonları elle sıralama (`sort_order` var, arayüz yok); akıllı koleksiyonlar (tasarım 4.3).
 - (18) Kenar çubuğu klavyeyle ağaç gezintisi (ok tuşları, `role="tree"`).
 - (CI) 2026-11-11'de GitHub runner'larında `azure.archive.ubuntu.com` DNS'te çözülemedi; Rust işi `apt-get`'te takıldı. Tekrarlarsa apt adımına zaman aşımı/ayna değişikliği eklenmeli.
@@ -42,7 +45,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (16) Bırakılan tek PDF'i okuyucuda açma (tasarım 4.6) Görev 20 ile.
 - (16) Çöp kutusunu boşaltırken `files/` içindeki dosyalar da silinmeli (bkz. (6) notu).
 - (15) İçe aktarma hedefi olarak koleksiyon (tasarım 4.6 adım 4) Görev 18 ile.
-- (15) BibTeX atıf anahtarları saklanmıyor; `citekey` üretimiyle birlikte (Görev 19 veya dışa aktarma) karar verilmeli.
+- (15) İçe aktarılan BibTeX anahtarları kullanılmıyor; anahtarlar Görev 19'dan beri uygulamada üretiliyor (ADR 0014). İstenirse içe aktarmada dosyadaki anahtar korunabilir.
 - (15) `.bib`/`.ris` dosyasını pencereye veya uygulama simgesine bırakma (tasarım 4.6) Görev 22 ile; şimdilik diyaloğun bırakma alanı.
 - (15) Önizleme yalnızca ilk 5 kaydı gösteriyor; tüm uyarılı kayıtları listeleme gerekirse eklenir.
 - (14) Tauri'de dış bağlantılar (DOI, PDF): `target=_blank` webview'da açılmaz; `lib/platform` üzerinden opener eklentisi gerekir. Masaüstünde denenmedi.
@@ -50,7 +53,6 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (14) Tasarım 4.2'den kalanlar: boolean sözdizimi renklendirmesi, kaynak başına sorguyu düzenleme, sorgu kaydetme ve uyarılar, terminal komutunu kopyalama (Görev 23), "PDF'leri bul" (Görev 17), yöntem bölümü dışa aktarımı, kenar çubuğunda kayıtlı sorgular, j/k kısayolları.
 - (14) Geçmişten açılan arama sorgu formunu doldurmuyor; yeniden çalıştırmak için sorgu elle girilir.
 - (14) Ücretsiz OpenAlex ve Semantic Scholar anahtarları gerçek kullanımda gerekli (ADR 0008); Ayarlar'dan eklenir.
-- (14) Görev 19: kütüphane listesi `paper.library_added_at` üzerinden süzmeli; `list_papers` şu an tüm adayları döndürür.
 - (13) Geçici bir PyInstaller derlemesiyle (migration klasörü `--add-data` ile eklenmeli) `serve --token-stdin` açıldı ve arXiv araması çalıştı. HTTP önbellek yolu (`hishel`/`anysqlite`) pakette henüz kullanılmadı; Görev 17'de doğrulanmalı.
 - (13) Bir kaynağın yalnızca yeniden denenmesi (tasarım 4.2 "tekrar dene"): şimdilik tüm arama yeniden başlatılır.
 - (11) DBLP sağlayıcısı: dblp API istemcilerine izin verirse veya koruma kalkarsa eklenir; o zamana dek çip gizli (ADR 0008).
@@ -68,7 +70,6 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (5) Arayüzden kütüphane oluştur/aç uçları ve karşılama ekranı (tasarım 4.1) — açık soru 1 ile birlikte karara bağlanmalı.
 - (5) Kütüphane OneDrive/Dropbox/ağ sürücüsündeyse uyarı (SQLite WAL ve dosya kilidi bu klasörlerde güvenilmez).
 - (5) Arka uç testleri ~35 sn (gerçek süreç başlatan entegrasyon testleri, her biri ~3 sn); uzarsa `pytest-xdist` ile paralel çalıştırma.
-- (6) `citekey` üretimi (içe aktarma / Görev 15 veya 19) ve "Gelen kutusu" sistem koleksiyonunun oluşturulması (Görev 16).
 - (6) Çöp kutusunu boşaltma: ek dosyalar (diskteki PDF'lerle) makaleden önce açıkça silinmeli (`attachment` RESTRICT).
 - (6) Alembic otomatik üretimi tetikleyicileri ve kısmi indeks koşullarını görmez; bunlara dokunan migration'lar elle yazılmalı (ADR 0004).
 - (6b) Arka uç testleri ~80 sn'ye çıktı (gerçek süreçli kuyruk testleri); `pytest-xdist` ile paralel çalıştırma artık değerlendirilmeli.
@@ -94,7 +95,7 @@ Karar ilgili göreve gelindiğinde verilir.
 3. ~~**DBLP sağlayıcısı**~~ — Karar: sonraya. `dblp.org` API isteklerine Anubis bot kontrolü döndürüyor (ADR 0008).
 4. ~~**Tauri iskeleti**~~ — Karar: Görev 1'de küçük iskelet (ADR 0002).
 5. ~~**6b kabulü**~~ — Karar: Aşama 1'de API + SSE testiyle; arayüz kısmı Görev 8'deki durum çubuğunda (ADR 0005).
-6. **`paper_fts`** Görev 6'da yok; Görev 19 kendi migration'ıyla ekleyecek (öneri).
+6. ~~**`paper_fts`**~~ — Karar: Görev 19'da migration 0007 ile (ADR 0014).
 7. ~~**Görev 16 UI'ı**~~ — Karar: Görev 16'da pencereye bırakma + köşe bildirimleri geldi; eklenen PDF'lerin listede görünmesi Görev 19'da.
 8. **Görev 22** `tez <klasör>` içe aktarma önizlemesi ve `.bib` sihirbazı tanımsız; Aşama 1'de "öne getir + basit yanıt" ile sınırlı tutulsun mu?
 9. ~~**`pnpm setup`**~~ — Karar: `pnpm bootstrap`; CLAUDE.md güncellendi (ADR 0002).

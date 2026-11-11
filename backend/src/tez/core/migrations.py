@@ -16,6 +16,16 @@ from tez.core.db import Database
 
 MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"
 
+# Tables that have no model: FTS5 virtual tables and the shadow tables FTS5 keeps for them.
+UNMODELLED_TABLE_PREFIXES = ("paper_fts",)
+
+
+def include_name(name: str | None, type_: str, parent_names: object) -> bool:
+    """For autogenerate and the model check: leave tables without a model out."""
+    if type_ == "table" and name is not None:
+        return not name.startswith(UNMODELLED_TABLE_PREFIXES)
+    return True
+
 
 def alembic_config(connection: Connection | None = None) -> Config:
     config = Config()

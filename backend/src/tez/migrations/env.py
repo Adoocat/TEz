@@ -14,6 +14,7 @@ from alembic.autogenerate.api import AutogenContext
 from sqlalchemy import Connection, make_url
 
 from tez.core.db import Database, UtcDateTime
+from tez.core.migrations import include_name
 from tez.models import Base
 
 config = context.config
@@ -37,6 +38,7 @@ def run(connection: Connection) -> None:
         transactional_ddl=True,
         compare_type=True,
         render_item=render_item,
+        include_name=include_name,
     )
     with context.begin_transaction():
         context.run_migrations()

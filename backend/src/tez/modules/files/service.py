@@ -181,7 +181,11 @@ def add_pdfs_from_paths(
 
 def attachments_of(db: Database, paper_id: str) -> list[AttachmentView]:
     with db.session() as session:
-        return [view(a) for a in FilesRepository(session).for_paper(paper_id)]
+        return attachments_in(session, paper_id)
+
+
+def attachments_in(session: Session, paper_id: str) -> list[AttachmentView]:
+    return [view(a) for a in FilesRepository(session).for_paper(paper_id)]
 
 
 def get_attachment(db: Database, attachment_id: str) -> AttachmentView:

@@ -385,6 +385,247 @@
         ]
       }
     },
+    "/papers/search": {
+      "get": {
+        "tags": [
+          "library"
+        ],
+        "summary": "Search Papers",
+        "description": "Metadata full-text search (title, authors, abstract, venue, identifiers, citation key).\n\nEvery word must match, as a word or its beginning; Turkish letters fold (\"isik\" = \"Işık\").",
+        "operationId": "search_papers_papers_search_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchHits"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/papers/{paper_id}": {
+      "get": {
+        "tags": [
+          "library"
+        ],
+        "summary": "Get Paper",
+        "operationId": "get_paper_papers__paper_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "paper_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Paper Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaperDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "library"
+        ],
+        "summary": "Update Paper",
+        "description": "Change the citation key; it must be unused and BibTeX-safe.",
+        "operationId": "update_paper_papers__paper_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "paper_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Paper Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaperPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaperDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/collections": {
       "get": {
         "tags": [
@@ -3378,6 +3619,67 @@
         ],
         "title": "AttachmentView"
       },
+      "AuthorView": {
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "family": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Family"
+          },
+          "given": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Given"
+          },
+          "orcid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Orcid"
+          },
+          "affiliation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Affiliation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "display_name",
+          "family",
+          "given",
+          "orcid",
+          "affiliation"
+        ],
+        "title": "AuthorView"
+      },
       "ChangeCount": {
         "properties": {
           "changed": {
@@ -3551,6 +3853,19 @@
           "version"
         ],
         "title": "Health"
+      },
+      "IdentifierScheme": {
+        "type": "string",
+        "enum": [
+          "doi",
+          "arxiv",
+          "s2",
+          "openalex",
+          "dblp",
+          "isbn",
+          "zotero"
+        ],
+        "title": "IdentifierScheme"
       },
       "ImportFile": {
         "properties": {
@@ -4183,6 +4498,240 @@
         ],
         "title": "OpenAccessRequest"
       },
+      "PaperDetail": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "abstract": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Abstract"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "venue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venue"
+          },
+          "venue_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VenueType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "volume": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Volume"
+          },
+          "issue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Issue"
+          },
+          "pages": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pages"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "oa_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Oa Url"
+          },
+          "citation_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citation Count"
+          },
+          "reading_status": {
+            "$ref": "#/components/schemas/ReadingStatus"
+          },
+          "citekey": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citekey"
+          },
+          "retraction_status": {
+            "$ref": "#/components/schemas/RetractionStatus"
+          },
+          "added_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Added At"
+          },
+          "authors": {
+            "items": {
+              "$ref": "#/components/schemas/AuthorView"
+            },
+            "type": "array",
+            "title": "Authors"
+          },
+          "identifiers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/IdentifierScheme"
+            },
+            "type": "object",
+            "title": "Identifiers"
+          },
+          "tag_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tag Ids"
+          },
+          "collection_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Collection Ids"
+          },
+          "attachments": {
+            "items": {
+              "$ref": "#/components/schemas/AttachmentView"
+            },
+            "type": "array",
+            "title": "Attachments"
+          },
+          "related": {
+            "items": {
+              "$ref": "#/components/schemas/RelatedPaper"
+            },
+            "type": "array",
+            "title": "Related"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "abstract",
+          "year",
+          "venue",
+          "venue_type",
+          "volume",
+          "issue",
+          "pages",
+          "language",
+          "url",
+          "oa_url",
+          "citation_count",
+          "reading_status",
+          "citekey",
+          "retraction_status",
+          "added_at",
+          "authors",
+          "identifiers",
+          "tag_ids",
+          "collection_ids",
+          "attachments",
+          "related"
+        ],
+        "title": "PaperDetail",
+        "description": "Everything the inspector shows about one paper (design 4.4)."
+      },
       "PaperIds": {
         "properties": {
           "paper_ids": {
@@ -4201,6 +4750,22 @@
           "paper_ids"
         ],
         "title": "PaperIds"
+      },
+      "PaperPatch": {
+        "properties": {
+          "citekey": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Citekey"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "citekey"
+        ],
+        "title": "PaperPatch"
       },
       "PaperSelection": {
         "properties": {
@@ -4508,6 +5073,47 @@
         "title": "RecordWarning",
         "description": "A record was read, but a field the user would expect is missing or unusable."
       },
+      "RelatedPaper": {
+        "properties": {
+          "paper_id": {
+            "type": "string",
+            "title": "Paper Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "preprint",
+              "published_version",
+              "erratum",
+              "retraction"
+            ],
+            "title": "Relation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "paper_id",
+          "title",
+          "year",
+          "relation"
+        ],
+        "title": "RelatedPaper"
+      },
       "ResultSource": {
         "properties": {
           "source": {
@@ -4541,6 +5147,15 @@
           "match_score"
         ],
         "title": "ResultSource"
+      },
+      "RetractionStatus": {
+        "type": "string",
+        "enum": [
+          "none",
+          "retracted",
+          "expression_of_concern"
+        ],
+        "title": "RetractionStatus"
       },
       "ReviewCreate": {
         "properties": {
@@ -4681,6 +5296,27 @@
           "error"
         ],
         "title": "RunView"
+      },
+      "SearchHits": {
+        "properties": {
+          "paper_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Paper Ids"
+          },
+          "elapsed_ms": {
+            "type": "number",
+            "title": "Elapsed Ms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "paper_ids",
+          "elapsed_ms"
+        ],
+        "title": "SearchHits"
       },
       "SearchOverview": {
         "properties": {
