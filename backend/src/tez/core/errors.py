@@ -47,6 +47,8 @@ class ErrorCode(StrEnum):
     SOURCE_BAD_RESPONSE = "source.bad_response"
     SOURCE_QUERY_UNSUPPORTED = "source.query_unsupported"
     SOURCE_KEY_REQUIRED = "source.key_required"
+    SOURCE_TOO_LARGE = "source.too_large"
+    SOURCE_EMAIL_REQUIRED = "source.email_required"
     IMPORT_UNKNOWN_FORMAT = "import.unknown_format"
     IMPORT_EMPTY = "import.empty"
     IMPORT_INVALID_CONTENT = "import.invalid_content"
@@ -58,6 +60,7 @@ class ErrorCode(StrEnum):
     PDF_CRASHED = "pdf.crashed"
     PDF_MISSING = "pdf.missing"
     ATTACHMENT_NOT_FOUND = "attachment.not_found"
+    PDF_NO_OPEN_ACCESS = "pdf.no_open_access"
 
 
 class TezError(Exception):

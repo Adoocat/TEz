@@ -48,3 +48,12 @@ export function useAttachments(paperId: string | null) {
       ),
   });
 }
+
+/** Queue a background download of a free PDF for each paper (arXiv, Unpaywall, OA link). */
+export function useFindOpenAccess() {
+  const api = useApi();
+  return useMutation({
+    mutationFn: async (paperIds: string[]) =>
+      unwrap(await api.POST("/pdfs/open-access", { body: { paper_ids: paperIds } })),
+  });
+}

@@ -371,6 +371,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/pdfs/open-access": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Find Open Access Pdfs
+         * @description Look for free PDFs (arXiv, Unpaywall, the source's link) in the background, one job
+         *     per paper. The papers are kept in the library.
+         */
+        post: operations["find_open_access_pdfs_pdfs_open_access_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/settings": {
         parameters: {
             query?: never;
@@ -654,6 +675,20 @@ export interface components {
          * @enum {string}
          */
         MatchMethod: "doi" | "id" | "title_fuzzy" | "new";
+        /** OpenAccessQueued */
+        OpenAccessQueued: {
+            /** Job Ids */
+            job_ids: string[];
+            /** Already Have Pdf */
+            already_have_pdf: number;
+            /** No Source */
+            no_source: number;
+        };
+        /** OpenAccessRequest */
+        OpenAccessRequest: {
+            /** Paper Ids */
+            paper_ids: string[];
+        };
         /** PaperSelection */
         PaperSelection: {
             /** Paper Ids */
@@ -2147,6 +2182,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AttachmentView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    find_open_access_pdfs_pdfs_open_access_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OpenAccessRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OpenAccessQueued"];
                 };
             };
             /** @description Missing or invalid token */

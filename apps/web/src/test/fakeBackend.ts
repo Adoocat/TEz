@@ -142,6 +142,17 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
           : json(backend.importPreview);
       }
       if (route === "POST /imports") return json(backend.importOutcome, 201);
+      if (route === "POST /pdfs/open-access") {
+        const { paper_ids } = body as { paper_ids: string[] };
+        return json(
+          {
+            job_ids: paper_ids.slice(1).map((id) => `job-${id}`),
+            already_have_pdf: 0,
+            no_source: 1,
+          },
+          202,
+        );
+      }
       if (route === "POST /pdfs") {
         const fileName = new URL(request.url, "http://test").searchParams.get("file_name") ?? "";
         const reply = backend.pdfReplies.shift() ?? { status: "added" };

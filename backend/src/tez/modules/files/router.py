@@ -4,10 +4,12 @@ from fastapi import APIRouter, Depends, Query, Request
 from starlette.concurrency import run_in_threadpool
 
 from tez.core.errors import ErrorCode, TezError
-from tez.modules.files import service
+from tez.modules.files import open_access, service
 from tez.modules.files.schemas import (
     MAX_PDF_BYTES,
     AttachmentView,
+    OpenAccessQueued,
+    OpenAccessRequest,
     PdfAdded,
     PdfPathResult,
     PdfPaths,
@@ -60,3 +62,15 @@ def paper_attachments(paper_id: str, library: LibraryDep) -> list[AttachmentView
 @router.get("/attachments/{attachment_id}")
 def get_attachment(attachment_id: str, library: LibraryDep) -> AttachmentView:
     return service.get_attachment(library.db, attachment_id)
+
+
+@router.post("/pdfs/open-access", status_code=202)
+def find_open_access_pdfs(body: OpenAccessRequest, library: LibraryDep) -> OpenAccessQueued:
+    """Look for free PDFs (arXiv, Unpaywall, the source's link) in the background, one job
+    per paper. The papers are kept in the library."""
+    queued = open_access.queue_fetches(library.db, body.paper_ids)
+    return OpenAccessQueued(
+        job_ids=queued.job_ids,
+        already_have_pdf=queued.already_have_pdf,
+        no_source=queued.no_source,
+    )

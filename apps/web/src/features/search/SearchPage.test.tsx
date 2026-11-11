@@ -350,6 +350,33 @@ describe("results", () => {
     });
   });
 
+  it("can have their free PDFs looked for in the background", async () => {
+    const backend = withReview();
+    backend.searchResults = [
+      resultRow({ paper_id: "p1", title: "First" }),
+      resultRow({ paper_id: "p2", title: "Second" }),
+    ];
+    backend.searchOverview = overview();
+    const user = await startSearch(backend);
+    act(() => {
+      backend.finishSearch("search-1");
+    });
+
+    await user.click(await screen.findByRole("checkbox", { name: "Select all" }));
+    await user.click(screen.getByRole("button", { name: "Find PDFs (2)" }));
+
+    await waitFor(() => {
+      expect(backend.requests.find((r) => r.path === "/pdfs/open-access")?.body).toEqual({
+        paper_ids: ["p1", "p2"],
+      });
+    });
+    expect(
+      await screen.findByText(
+        "1 downloads queued · 0 already have a PDF · 1 have no DOI, arXiv id or link",
+      ),
+    ).toBeVisible();
+  });
+
   it("can be filtered by open access", async () => {
     const backend = withReview();
     backend.searchResults = [
