@@ -57,3 +57,17 @@ export function useFindOpenAccess() {
       unwrap(await api.POST("/pdfs/open-access", { body: { paper_ids: paperIds } })),
   });
 }
+
+export function useAttachment(attachmentId: string | null) {
+  const api = useApi();
+  return useQuery({
+    queryKey: ["attachments", attachmentId ?? ""] as const,
+    enabled: attachmentId !== null,
+    queryFn: async () =>
+      unwrap(
+        await api.GET("/attachments/{attachment_id}", {
+          params: { path: { attachment_id: attachmentId ?? "" } },
+        }),
+      ),
+  });
+}

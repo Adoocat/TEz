@@ -3111,6 +3111,86 @@
         ]
       }
     },
+    "/attachments/{attachment_id}/file": {
+      "get": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Attachment File",
+        "description": "The stored file. Supports `Range` requests, so the reader fetches only the pages it\nshows (pdf.js), and a 300-page scan is never loaded whole.",
+        "operationId": "attachment_file_attachments__attachment_id__file_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Attachment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The file",
+            "content": {
+              "application/pdf": {}
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "206": {
+            "content": {
+              "application/pdf": {}
+            },
+            "description": "A byte range of it"
+          }
+        }
+      }
+    },
     "/settings": {
       "get": {
         "tags": [

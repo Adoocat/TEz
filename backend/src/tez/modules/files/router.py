@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, Request
+from fastapi.responses import FileResponse
 from starlette.concurrency import run_in_threadpool
 
 from tez.core.errors import ErrorCode, TezError
@@ -73,4 +74,25 @@ def find_open_access_pdfs(body: OpenAccessRequest, library: LibraryDep) -> OpenA
         job_ids=queued.job_ids,
         already_have_pdf=queued.already_have_pdf,
         no_source=queued.no_source,
+    )
+
+
+@router.get(
+    "/attachments/{attachment_id}/file",
+    response_class=FileResponse,
+    responses={
+        200: {"content": {"application/pdf": {}}, "description": "The file"},
+        206: {"content": {"application/pdf": {}}, "description": "A byte range of it"},
+    },
+)
+def attachment_file(attachment_id: str, library: LibraryDep) -> FileResponse:
+    """The stored file. Supports `Range` requests, so the reader fetches only the pages it
+    shows (pdf.js), and a 300-page scan is never loaded whole."""
+    path, attachment = service.file_of(library.db, library.path, attachment_id)
+    return FileResponse(
+        path,
+        media_type="application/pdf",
+        filename=attachment.file_name or f"{attachment.sha256}.pdf",
+        content_disposition_type="inline",
+        headers={"Cache-Control": "private, max-age=31536000, immutable"},
     )

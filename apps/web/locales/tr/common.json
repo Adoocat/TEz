@@ -450,6 +450,21 @@
     "noFiles": "Dosya yok. Pencereye PDF bırakın veya bir aramada PDF'leri bul'u kullanın.",
     "pages_one": "{{count}} sayfa",
     "pages_other": "{{count}} sayfa",
-    "megabytes": "{{size}} MB"
+    "megabytes": "{{size}} MB",
+    "openPdf": "PDF'i aç",
+    "openNamed": "{{name}} aç"
+  },
+  "reader": {
+    "title": "Okuyucu",
+    "nothingOpen": "Kütüphaneden bir PDF açın: bir makale seçip PDF'i aç'a basın.",
+    "loading": "PDF açılıyor…",
+    "failed": "PDF açılamadı.",
+    "page": "Sayfa",
+    "of": "/ {{total}}",
+    "zoomIn": "Yakınlaştır",
+    "zoomOut": "Uzaklaştır",
+    "fitWidth": "Genişliğe sığdır",
+    "pageLabel": "Sayfa {{page}}",
+    "pageFailed": "Bu sayfa çizilemedi."
   }
 }

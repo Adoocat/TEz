@@ -1,6 +1,7 @@
 """Per-request context: id, access log and the last-resort 500 handler."""
 
 import logging
+import re
 import secrets
 import time
 
@@ -10,6 +11,10 @@ from tez.core.errors import ErrorCode, error_response
 from tez.core.logging import request_id_var
 
 logger = logging.getLogger("tez.request")
+
+# Requests that come in streams: a PDF read in byte ranges (dozens per page turn). Successful
+# ones are logged at DEBUG so the log keeps what matters; failures stay at INFO.
+_CHATTY_PATH = re.compile(r"^/attachments/[^/]+/file$")
 
 
 class RequestContextMiddleware:
@@ -55,7 +60,9 @@ class RequestContextMiddleware:
             )
             await response(scope, receive, send_with_id)
         finally:
-            logger.info(
+            chatty = status < 400 and _CHATTY_PATH.match(scope["path"]) is not None
+            logger.log(
+                logging.DEBUG if chatty else logging.INFO,
                 "request",
                 extra={
                     "request_id": request_id,
