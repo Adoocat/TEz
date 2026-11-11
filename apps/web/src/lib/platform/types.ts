@@ -37,4 +37,9 @@ export interface Platform {
    * A browser has none. Returns an unsubscribe function.
    */
   onOpenRequests(handle: (requests: OpenRequest[]) => void): () => void;
+  /**
+   * Open an http(s) link (DOI, arXiv, an open-access PDF) in the user's own browser. The
+   * desktop window ignores `target="_blank"`, so outside links go through here.
+   */
+  openExternal(url: string): Promise<void>;
 }

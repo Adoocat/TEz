@@ -3,6 +3,7 @@
 // code subscribes, so subscribe first, then ask for the current state (ADR 0001).
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { openUrl } from "@tauri-apps/plugin-opener";
 
 import type { BackendError, BackendState, OpenRequest, Platform } from "./types";
 
@@ -69,4 +70,7 @@ export const tauriPlatform: Platform = {
       });
     };
   },
+  // The opener plugin hands the link to the OS default browser. Its permission is limited to
+  // http(s) URLs (apps/desktop/src-tauri/capabilities/default.json).
+  openExternal: (url) => openUrl(url),
 };

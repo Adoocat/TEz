@@ -6,6 +6,7 @@ import { App } from "@/app/App";
 import { useLayoutStore } from "@/app/layout/uiStore";
 import { useJobsStore } from "@/features/jobs/store";
 import { useActiveReviewStore } from "@/features/reviews/store";
+import type { Platform } from "@/lib/platform";
 import {
   fakeBackend,
   overview,
@@ -52,8 +53,8 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function open(backend: FakeBackend) {
-  return render(<App platform={readyPlatform} fetch={backend.fetch} />);
+function open(backend: FakeBackend, platform: Platform = readyPlatform) {
+  return render(<App platform={platform} fetch={backend.fetch} />);
 }
 
 const withReview = () => {
@@ -62,9 +63,13 @@ const withReview = () => {
   return backend;
 };
 
-async function startSearch(backend: FakeBackend, query = '"code review" AND LLM') {
+async function startSearch(
+  backend: FakeBackend,
+  query = '"code review" AND LLM',
+  platform: Platform = readyPlatform,
+) {
   const user = userEvent.setup();
-  open(backend);
+  open(backend, platform);
   await user.type(await screen.findByRole("textbox", { name: "Search query" }), query);
   await user.click(screen.getByRole("button", { name: "Search" }));
   await waitFor(() => {
@@ -425,6 +430,25 @@ describe("results", () => {
       "https://doi.org/10.1000/abc",
     );
     expect(within(inspector).getByText(/title similarity.*%97/i)).toBeVisible();
+  });
+
+  it("open outside links through the platform, which the desktop window needs", async () => {
+    const backend = withReview();
+    backend.searchResults = [
+      resultRow({ title: "Selected paper", oa_url: "https://example.org/a.pdf" }),
+    ];
+    backend.searchOverview = overview();
+    const openExternal = vi.fn(() => Promise.resolve());
+    const user = await startSearch(backend, "llm", { ...readyPlatform, openExternal });
+    act(() => {
+      backend.finishSearch("search-1");
+    });
+
+    await user.click(await screen.findByRole("button", { name: /Selected paper/ }));
+    const inspector = screen.getByRole("complementary", { name: "Inspector" });
+    await user.click(within(inspector).getByRole("link", { name: "Open PDF" }));
+
+    expect(openExternal).toHaveBeenCalledWith("https://example.org/a.pdf");
   });
 
   it("say so when nothing was found", async () => {

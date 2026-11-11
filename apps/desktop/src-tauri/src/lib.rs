@@ -36,6 +36,8 @@ pub fn run() {
             open::deliver(app, open::classify(&args, std::path::Path::new(&cwd)));
         }))
         .plugin(tauri_plugin_deep_link::init())
+        // Outside links (DOI, open-access PDFs) open in the user's browser.
+        .plugin(tauri_plugin_opener::init())
         .manage(Backend::new())
         .manage(OpenQueue::default())
         .invoke_handler(tauri::generate_handler![backend_status, take_open_requests])

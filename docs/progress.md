@@ -65,7 +65,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (15) İçe aktarılan BibTeX anahtarları kullanılmıyor; anahtarlar Görev 19'dan beri uygulamada üretiliyor (ADR 0014). İstenirse içe aktarmada dosyadaki anahtar korunabilir.
 - (15) `.bib`/`.ris` dosyasını pencereye veya uygulama simgesine bırakma (tasarım 4.6) Görev 22 ile; şimdilik diyaloğun bırakma alanı.
 - (15) Önizleme yalnızca ilk 5 kaydı gösteriyor; tüm uyarılı kayıtları listeleme gerekirse eklenir.
-- (14) Tauri'de dış bağlantılar (DOI, PDF): `target=_blank` webview'da açılmaz; `lib/platform` üzerinden opener eklentisi gerekir. Masaüstünde denenmedi.
+- ~~(14) Tauri'de dış bağlantılar (DOI, PDF)~~ — Düzeltildi (`task/fix-external-links`): `platform.openExternal`, masaüstünde `tauri-plugin-opener` (yalnız http/https). Yeni dış bağlantı eklenirse bu yoldan açılmalı.
 - (14) Kaydırma, gizli tarayıcı panelinde ana iş parçacığı maliyetiyle ölçüldü; gerçek fps görünür pencerede (tercihen WebView2) doğrulanmalı.
 - (14) Tasarım 4.2'den kalanlar: boolean sözdizimi renklendirmesi, kaynak başına sorguyu düzenleme, sorgu kaydetme ve uyarılar, terminal komutunu kopyalama (Görev 23), "PDF'leri bul" (Görev 17), yöntem bölümü dışa aktarımı, kenar çubuğunda kayıtlı sorgular, j/k kısayolları.
 - (14) Geçmişten açılan arama sorgu formunu doldurmuyor; yeniden çalıştırmak için sorgu elle girilir.
