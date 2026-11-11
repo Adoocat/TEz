@@ -25,13 +25,16 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 17 · Açık erişim PDF | bitti | `task/17-open-access-pdf` · #25 | Makale başına `pdf.fetch_open_access` işi (işçide): sıra arXiv → Unpaywall (Ayarlar'daki e-posta) → kaynağın OA bağlantısı; PDF olmayan cevap (giriş sayfası) atlanır. İndirme akışlı, ilerleme iş kuyruğundan durum çubuğuna ve İşler ekranına. `JobFailed` ile işler kendi kodlarıyla biter: `pdf.no_open_access` yeniden denenmez, ağ hataları denenir. Arama sonuçlarında "PDF'leri bul". Ayrıntı: ADR 0012 |
 | 18 · Koleksiyon ve etiketler | bitti | `task/18-collections-tags` · #26 | Koleksiyon ağacı (oluştur, yeniden adlandır, taşı, sil; döngü ve kardeş ad kontrolü, Türkçe katlama), çoklu koleksiyon, etiketler (renkler token adı), toplu okuma durumu; sayılar türetilir. Kenar çubuğu: Gelen kutusu, Tüm makaleler, ağaç, etiketler; satırlar koleksiyona/etikete, koleksiyonlar birbirine sürüklenir. Playwright kuruldu: `pnpm e2e` gerçek arka uç + geçici kütüphaneyle; CI'da `e2e` işi. Ayrıntı: ADR 0013 |
 | 19 · Kütüphane listesi | bitti | `task/19-library-list` · #27 | `paper_fts` (migration 0007) Türkçe katlanmış metinle; ORM `after_flush` ile aynı işlemde güncellenir, kütüphane açılışında eksikse yeniden kurulur. `GET /papers/search` (her kelime, önek), detay ve atıf anahtarı (`yilmaz2024automated`, düzenlenebilir). TanStack Table v8 + Virtual tablo: sıralama, yıl/okuma/etiket/PDF filtreleri, denetçi. Demo kütüphane: `python -m tez.devtools.demo`. Kabul: 2000 makalede sunucu ~1–2 ms, tarayıcı gidiş-dönüş medyan ~5 ms. Ayrıntı: ADR 0014 |
-| 20 · PDF görüntüleyici | bekliyor | | |
+| 20 · PDF görüntüleyici | bitti | `task/20-pdf-viewer` · #28 | `GET /attachments/{id}/file` (Range → 206, başarılı aralık istekleri DEBUG). pdf.js ilk kullanımda yüklenir, yalnız aralıklar (autoFetch kapalı), sanallaştırılmış sayfalar (görünen ±2), metin katmanı, yakınlaştırma, `#/reader/<id>?page=N`. Kabul (300 sayfa, 6,1 MB, headless Chromium): 150. sayfada açılış 1,7 MB, DOM'da en çok 3 tuval, JS yığını 35 MB sabit, kaydırma adımı p95 34 ms. Ayrıntı: ADR 0015 |
 | 21 · Kapanış | bekliyor | | |
 | 22 · Tek örnek ve argüman iletimi | bekliyor | | |
 | 23 · Başsız CLI çekirdeği | bekliyor | | |
 
 ## Sonraya
 
+- (20) Belge içi arama, vurgular, ana hat/küçük resim kenar çubuğu, döndürme; farklı boyutlu sayfalar (şimdi hepsi 1. sayfa boyutunda).
+- (20) pdf.js `standardFontDataUrl` ve `wasmUrl` (JPEG 2000 vb.) ayarlanmadı; gömülmemiş standart yazı tipli PDF'ler yedek yazı tipiyle çizilir.
+- (20) Ana paket ~760 kB (pdf.js ayrı parçada); rota bazlı kod bölme hâlâ yapılabilir (bkz. (8)).
 - (19) Sütun gizleme/yeniden sıralama, kart/zaman çizelgesi/atıf grafiği görünümleri (tasarım 4.3).
 - (19) Toplu SQL ile makale silme `paper_fts`'i atlar; çöp kutusunu boşaltma ORM ile yapılmalı veya ardından yeniden indekslemeli.
 - (19) Web modunda token'lı bağlantı aynı sekmede yalnızca hash değişirse alınmıyor (sayfa yeniden yüklenmeli); `tez serve` bağlantısı yeni sekmede açıldığı için sorun değil, istenirse `hashchange` dinlenebilir.
@@ -42,7 +45,6 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (17) JavaScript/çerez arkasındaki yayıncı sayfaları takip edilmiyor; bu makaleler `pdf.no_open_access` ile biter.
 - (17) Kütüphane listesinden (Görev 19) de "PDF'leri bul" eylemi.
 - (16) PDF'ten DOI okuma ve meta veri getirme (tasarım 4.6 "DOI bulundu, meta veri getiriliyor"); şimdilik başlık dosya adından.
-- (16) Bırakılan tek PDF'i okuyucuda açma (tasarım 4.6) Görev 20 ile.
 - (16) Çöp kutusunu boşaltırken `files/` içindeki dosyalar da silinmeli (bkz. (6) notu).
 - (15) İçe aktarma hedefi olarak koleksiyon (tasarım 4.6 adım 4) Görev 18 ile.
 - (15) İçe aktarılan BibTeX anahtarları kullanılmıyor; anahtarlar Görev 19'dan beri uygulamada üretiliyor (ADR 0014). İstenirse içe aktarmada dosyadaki anahtar korunabilir.
@@ -63,9 +65,9 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - Lisans kaydı: PyInstaller GPL + bootloader istisnası (dağıtıma engel değil) — ADR 0001'de yazıldı, Görev 21'deki lisans notlarına da eklenecek.
 - (S1) Sidecar'ı Tauri eklentileri yüklenmeden, `run()` başında `std::process` ile başlatmak ~300 ms kazandırır (Görev 3/8).
 - (S1) Açılışta "süreç → Rust main" ~600 ms; imzalı paketle yeniden ölçülmeli (Aşama 6, kod imzalama).
-- (S1) Görev 20'de pdf.js belleği gerçek makalelerle tekrar ölçülmeli (spike: boşta 170 MB → 300 sayfa kaydırma sonrası ~410 MB private).
+- (S1/20) pdf.js belleği WebView2'de gerçek makalelerle ölçülmeli (spike: 170 → ~410 MB; Görev 20 headless Chromium'da JS yığını 35 MB sabit, tuval en çok 3).
 - (S1) Görev 23 belgeleri: PowerShell 5.1 boru hatlarında UTF-8 için `[Console]::OutputEncoding` notu.
-- (3) Her istek INFO düzeyinde loglanıyor; PDF Range ve SSE gelince gürültü olursa bu uçlar DEBUG'a indirilmeli.
+- (3) SSE uçları uzun yaşadığı için tek satır log; PDF aralık istekleri Görev 20'de DEBUG'a indirildi.
 - (4) Görev 5: kütüphane açılışında `migrate(db)` çağrılmalı; migration öncesi `backups/`'a kopya alınması değerlendirilmeli.
 - (5) Arayüzden kütüphane oluştur/aç uçları ve karşılama ekranı (tasarım 4.1) — açık soru 1 ile birlikte karara bağlanmalı.
 - (5) Kütüphane OneDrive/Dropbox/ağ sürücüsündeyse uyarı (SQLite WAL ve dosya kilidi bu klasörlerde güvenilmez).

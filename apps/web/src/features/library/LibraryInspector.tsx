@@ -1,9 +1,10 @@
 // The paper inspector for the library (design 4.4): warnings, title and citation, quick
 // actions (reading status, tags), identifiers, the editable citation key, and tabs for the
 // abstract and the files.
-import { Check, Copy, Pencil } from "lucide-react";
+import { BookOpen, Check, Copy, Pencil } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +45,11 @@ function PaperInspector({ paper }: { paper: PaperDetail }) {
   const [tab, setTab] = useState<Tab>("abstract");
   const authors = paper.authors.map((a) => a.display_name).join(", ");
   const published = paper.related.find((r) => r.relation === "published_version");
+  const navigate = useNavigate();
+  // A readable file first; a broken one can still be tried.
+  const pdf =
+    paper.attachments.find((a) => a.kind === "pdf" && a.text_status !== "failed") ??
+    paper.attachments[0];
 
   return (
     <div className="space-y-4">
@@ -71,6 +77,18 @@ function PaperInspector({ paper }: { paper: PaperDetail }) {
             .join(" · ")}
         </p>
       </div>
+      {pdf && (
+        <Button
+          variant="primary"
+          className="w-full"
+          onClick={() => {
+            void navigate(`/reader/${pdf.id}`);
+          }}
+        >
+          <BookOpen aria-hidden />
+          {t("library.openPdf")}
+        </Button>
+      )}
       <QuickActions paper={paper} />
       <dl className="space-y-1 text-meta">
         {Object.entries(paper.identifiers).map(([scheme, value]) => (
@@ -274,6 +292,7 @@ function CitekeyEditor({ paper }: { paper: PaperDetail }) {
 
 function Files({ paper }: { paper: PaperDetail }) {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   if (paper.attachments.length === 0) {
     return <p className="text-meta text-fg-muted">{t("library.noFiles")}</p>;
   }
@@ -283,7 +302,18 @@ function Files({ paper }: { paper: PaperDetail }) {
         <li key={file.id} className="flex items-start gap-2 text-meta">
           <PdfIcon state={file.text_status} />
           <div className="min-w-0 flex-1">
-            <p className="truncate">{file.file_name ?? file.sha256.slice(0, 12)}</p>
+            <button
+              type="button"
+              className="max-w-full truncate text-left text-primary hover:underline"
+              aria-label={t("library.openNamed", {
+                name: file.file_name ?? file.sha256.slice(0, 12),
+              })}
+              onClick={() => {
+                void navigate(`/reader/${file.id}`);
+              }}
+            >
+              {file.file_name ?? file.sha256.slice(0, 12)}
+            </button>
             <p className="text-fg-muted">
               {[
                 file.page_count !== null && t("library.pages", { count: file.page_count }),

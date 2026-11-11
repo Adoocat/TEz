@@ -266,3 +266,15 @@ def pdf_states(session: Session, paper_ids: Iterable[str]) -> dict[str, TextStat
             if known is None or rank[status] < rank[known]:
                 states[paper_id] = status
     return states
+
+
+def file_of(db: Database, library_path: Path, attachment_id: str) -> tuple[Path, AttachmentView]:
+    """Where an attachment's file is on disk; `pdf.missing` if it is not there any more."""
+    found = get_attachment(db, attachment_id)
+    with db.session() as session:
+        attachment = FilesRepository(session).get(attachment_id)
+        assert attachment is not None
+        path = library_path / attachment.rel_path
+    if not path.is_file():
+        raise TezError(ErrorCode.PDF_MISSING, {"path": attachment.rel_path}, status=404)
+    return path, found

@@ -6,6 +6,7 @@ import { createHashRouter, Navigate, RouterProvider } from "react-router";
 
 import { JobsPage } from "@/features/jobs/JobsPage";
 import { LibraryPage } from "@/features/library/LibraryPage";
+import { ReaderPage } from "@/features/reader/ReaderPage";
 import { SearchPage } from "@/features/search/SearchPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
 import { createI18n } from "@/i18n";
@@ -16,7 +17,7 @@ import { BackendGate, type FetchLike } from "./backend";
 import { ComingSoon } from "./ComingSoon";
 import { AppShell } from "./layout/AppShell";
 
-const sections = ["screening", "reader", "notes", "matrix"] as const;
+const sections = ["screening", "notes", "matrix"] as const;
 
 function createRouter() {
   // Hash routing: works the same from Tauri's asset protocol and any static server.
@@ -30,6 +31,7 @@ function createRouter() {
           element: <ComingSoon section={section} />,
         })),
         { path: "/library", element: <LibraryPage /> },
+        { path: "/reader/:attachmentId?", element: <ReaderPage /> },
         { path: "/search", element: <SearchPage /> },
         { path: "/jobs", element: <JobsPage /> },
         { path: "/settings/:section?", element: <SettingsPage /> },

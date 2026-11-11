@@ -450,6 +450,21 @@
     "noFiles": "No files. Drop a PDF on the window or use Find PDFs in a search.",
     "pages_one": "{{count}} page",
     "pages_other": "{{count}} pages",
-    "megabytes": "{{size}} MB"
+    "megabytes": "{{size}} MB",
+    "openPdf": "Open PDF",
+    "openNamed": "Open {{name}}"
+  },
+  "reader": {
+    "title": "Reader",
+    "nothingOpen": "Open a PDF from the library: select a paper and choose Open PDF.",
+    "loading": "Opening the PDF…",
+    "failed": "The PDF could not be opened.",
+    "page": "Page",
+    "of": "of {{total}}",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "fitWidth": "Fit to width",
+    "pageLabel": "Page {{page}}",
+    "pageFailed": "This page could not be drawn."
   }
 }

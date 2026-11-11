@@ -3,6 +3,7 @@
 import { CheckCircle2, CircleAlert, Copy, FileDown, Loader2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { ApiError } from "@/lib/api/query";
@@ -23,6 +24,7 @@ export function PdfDrop() {
   const { mutateAsync: uploadPdf } = useUploadPdf();
   const { start, update } = useUploadStore();
   const [dragging, setDragging] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // dragenter/dragleave fire for every child element; count them to know when we left.
@@ -58,6 +60,8 @@ export function PdfDrop() {
         try {
           const added = await uploadPdf({ file });
           update(id, { state: added.status });
+          // A single PDF is opened to read (design 4.6); several only go to the inbox.
+          if (files.length === 1) void navigate(`/reader/${added.attachment_id}`);
         } catch (error) {
           update(id, {
             state: "failed",
@@ -78,7 +82,7 @@ export function PdfDrop() {
       window.removeEventListener("dragover", over);
       window.removeEventListener("drop", drop);
     };
-  }, [start, update, uploadPdf]);
+  }, [start, update, uploadPdf, navigate]);
 
   return (
     <>
