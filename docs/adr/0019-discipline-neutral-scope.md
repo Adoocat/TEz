@@ -25,7 +25,8 @@ What we checked (November 2026):
 - **YÖK Ulusal Tez Merkezi** has no official API. The community clients scrape the site. Some full texts are closed or need an e-Devlet login.
 - **PubMed** (E-utilities) and **Europe PMC** have free, documented APIs. So do DOAJ, ERIC and CORE, and DergiPark has OAI-PMH.
 - **OpenAlex**, already a source, covers all fields, including books and book chapters. It is the closest legal match to Google Scholar's breadth.
-- **Citation styles:** the Citation Style Language (CSL) has thousands of styles (APA 7, MLA, Chicago, Vancouver, IEEE…) and a Turkish locale. The styles are CC BY-SA 3.0 (data, attribution needed). `citeproc-js` is AGPL/CPAL, so rule 6 rules it out. `citeproc-py` is the Python processor, but its license is not yet confirmed.
+- **Citation styles:** the Citation Style Language (CSL) has thousands of styles (APA 7, MLA, Chicago, Vancouver, IEEE…) and a Turkish locale. The styles are CC BY-SA 3.0 (data, attribution needed). `citeproc-js` is AGPL/CPAL, so rule 6 rules it out. `citeproc-py`, the Python processor, is BSD-2-Clause-Views (permissive, compatible with MIT).
+- **Contacts:** TR Dizin (TÜBİTAK ULAKBİM) lists `trdizin@tubitak.gov.tr`; YÖK Ulusal Tez Merkezi lists `tezmerkezi@yok.gov.tr` on its contact page.
 
 ## Decision
 
@@ -35,18 +36,20 @@ What we checked (November 2026):
   - *File road:* every other database comes in through its export (Task 15, ADR 0010). Imports are already logged as a `search_run` with the database name, the search date and the query, and PRISMA counts them like an API source.
   - **The file road is first-class, not a fallback.** It gets database presets and export guides (below).
 - **No scraping.** TEz does not scrape a site whose terms forbid automation or that blocks bots (Google Scholar, JSTOR). It does not bypass CAPTCHAs. A source with unclear terms is not added until the terms are clear.
-- **New providers, one at a time.** Each new API source needs the owner's approval, a check of the current API documents, an ADR, and an update of the network list in CLAUDE.md rule 1. Candidates, in no fixed order: PubMed, Europe PMC, DOAJ, ERIC, CORE, DergiPark (OAI-PMH), TR Dizin. The order is set when Phase 2 is planned.
+- **New providers, one at a time, in this order:** (1) PubMed and Europe PMC, (2) DOAJ, ERIC and CORE, (3) TR Dizin and DergiPark (OAI-PMH). DergiPark may move up, since its terms are open. Each one needs the owner's approval, a check of the current API documents and its own ADR. The network list in CLAUDE.md rule 1 stays as it is until a source is actually added.
+- **TR Dizin and YÖK Tez: ask first.** The owner e-mails both services and asks for an official API or data access, permission for user-initiated metadata queries from a desktop app, rate limits, registration and attribution terms. A yes makes the source a provider (in the order above). A no, "there is no such thing", or no answer means the file road only: TR Dizin comes in as BibTeX exported from its site, and YÖK Tez is not added unless it offers an export.
+- **Two-reviewer screening at the end of Phase 2.** Single-reviewer screening comes first. Then decisions are moved between libraries (each person keeps their own library), conflicts get their own tab, and Cohen's kappa is reported. The schema's `reviewer` field already allows it.
 - **Method default: PRISMA 2020.** New reviews default to PRISMA 2020. Kitchenham SLR (and later systematic mapping) remains a choice. Snowballing stays a method for every field. Today's review form still defaults to `kitchenham_slr`; that changes with Phase 2.
 - **Grey literature in PRISMA.** The PRISMA diagram is designed in Phase 2 with the "other methods" branch, covering theses, reports and registers as well as snowballing. A thesis source added later then needs no PRISMA change.
 - **Formatted bibliographies with CSL**, rendered in the backend (never `citeproc-js` in the frontend). At least APA 7, MLA, Chicago, Vancouver and IEEE, in Turkish and English. Institute thesis styles can come later as custom CSL files. This lands at the end of Phase 2, because its main scope ("the studies included in this review") needs screening decisions.
-- **Theses (YÖK Tez) come in Phase 4,** with saved-query alerts, because the need ("which theses are being written now") is monitoring. It starts as an experimental source, off by default, and only if its terms allow it.
+- **Theses (YÖK Tez) come in Phase 4,** with saved-query alerts, because the need ("which theses are being written now") is monitoring. It starts as an experimental source, off by default, and only with YÖK's written consent.
 - **Out of scope:** a Word cite-while-you-write plugin. Zotero export (Phase 6) covers that road.
 
 ## Consequences
 
 - The plan's decision table, risk table and "missing from the plan" list are updated. A new plan section places each item in a phase.
-- Phase 2 planning starts with: the method default, database import presets and export guides, the grey-literature branch of PRISMA, and the order of new providers.
+- Phase 2 planning starts with: the method default, database import presets and export guides, the grey-literature branch of PRISMA, and PubMed + Europe PMC as the first new providers. It ends with formatted bibliographies and two-reviewer screening.
 - Quality assessment (`quality_question`, `quality_assessment`) must stay tool-neutral. Users bring their own questions and scales or start from a common checklist (Kitchenham, JBI, risk-of-bias tools such as RoB 2). Some fields use none at all. The schema already allows this; no Kitchenham-only checklist is hard-coded.
 - Publication-type filters and exports must handle books, book chapters and theses as well as journals and conferences. The BibTeX writer currently writes every thesis as `@phdthesis`; master's theses need `@mastersthesis` (noted in progress, "Later").
-- Open questions moved to `docs/progress.md`: two-reviewer screening with Cohen's kappa in Phase 2 or later; the terms of use of TR Dizin and YÖK Tez; the license of `citeproc-py`.
+- One item waits on outside answers: the terms of TR Dizin and YÖK Tez (tracked in `docs/progress.md`, open question 15).
 - No code changes with this ADR.

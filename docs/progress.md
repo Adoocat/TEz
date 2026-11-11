@@ -114,7 +114,8 @@ Karar ilgili göreve gelindiğinde verilir.
 10. **Koyu tema tokenları** tek ekrandan türetilmiş taslak (`docs/design/tokens.json`); onay gerekiyor. Ayrıca açık temada YZ (`#7c3aed`) ve "tekrar bakılacak" (`#9333ea`) renkleri neredeyse aynı — ayırt edilmeli.
 11. **Kısayol çakışması:** eleme ekranında J/K önceki/sonraki kayıt ve Space "Atla"; design prompt'ta "Atla" `→`. Görev 8'de kısayol haritası netleştirilmeli.
 12. Plan "24 adım" diyor, liste 25 (S1 + 1–23 + 6b) — plan metninde düzeltilecek.
-13. **İki değerlendiricili eleme ve Cohen kappa** Aşama 2'de mi, sonra mı? Sağlık ve psikoloji taramalarında neredeyse zorunlu; şema hazır (`reviewer`), tasarımda "Çakışmalar" sekmesinin yeri var. Aşama 2 planlanırken karar verilecek.
-14. **Yeni API sağlayıcılarının sırası** (PubMed, Europe PMC, DOAJ, ERIC, CORE, DergiPark, TR Dizin): Aşama 2 planlanırken; her biri ayrı onay + ADR + CLAUDE.md 1. kural güncellemesi (ADR 0019).
-15. **TR Dizin ve YÖK Tez kullanım koşulları:** TR Dizin'in API hizmeti resmi belgede doğrulanmadı; YÖK Tez'in API'si yok, otomatik erişime izin verip vermediği belirsiz. Netleşmeden doğrudan sağlayıcı yazılmaz.
-16. **`citeproc-py` lisansı** doğrulanmadı (BSD olduğu düşünülüyor); CSL kaynakça görevinden önce kontrol edilmeli. Uymazsa alternatif aranır; `citeproc-js` (AGPL/CPAL) kullanılmaz.
+13. ~~**İki değerlendiricili eleme ve Cohen kappa**~~ — Karar: Aşama 2 sonunda. Önce tek kişilik eleme biter; sonra kararlar kütüphaneler arasında aktarılarak iki hakem, "Çakışmalar" sekmesi ve kappa (ADR 0019).
+14. ~~**Yeni API sağlayıcılarının sırası**~~ — Karar: (1) PubMed + Europe PMC, (2) DOAJ + ERIC + CORE, (3) TR Dizin + DergiPark; DergiPark öne alınabilir. Her biri ayrı onay + ADR; CLAUDE.md 1. kuraldaki liste ancak kaynak eklendiğinde güncellenir (ADR 0019).
+15. **TR Dizin ve YÖK Tez kullanım koşulları** — Karar: e-postayla sorulacak (`trdizin@tubitak.gov.tr`, `tezmerkezi@yok.gov.tr`). Olumsuz, "yok" veya cevapsız kalırsa yalnız dosya yolu. **Durum:** e-postalar gönderilecek, cevap bekleniyor.
+16. ~~**`citeproc-py` lisansı**~~ — Karar: BSD-2-Clause-Views (izin verici, MIT ile uyumlu); CSL kaynakçası arka uçta bununla. `citeproc-js` (AGPL/CPAL) kullanılmaz.
+17. ~~**Varsayılan review yöntemi**~~ — Karar: PRISMA 2020; Kitchenham SLR seçenek (ADR 0019).

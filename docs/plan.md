@@ -298,14 +298,22 @@ Dosya yolu yedek değil, birinci sınıf yoldur. Kazıma (scraping) yok: kullan�
 | Veritabanı ön ayarlı içe aktarma: kullanıcı "JSTOR", "Web of Science", "Google Scholar"… seçer; her birinin dışa aktarma biçimi (WoS düz metni, Scopus CSV, tek tek BibTeX) ve tuhaflıkları TEz'de çözülür | 2, başı | Her veritabanından gerçek, küçük, kendi ürettiğimiz örnek dosya |
 | "Bu veritabanından nasıl dışa aktarılır" kısa rehberi (arama ekranında) | 2, başı | Ön ayarlarla birlikte |
 | PRISMA diyagramında "diğer yöntemler" dalı: kartopu ile birlikte gri literatür (tez, rapor, kayıt) | 2 | PRISMA görevi |
-| Hangi yeni API sağlayıcılarının, hangi sırayla ekleneceği | 2 planlanırken karar | Aday listesi yukarıda |
-| TR Dizin: önce arayüzünden alınan BibTeX dosyasıyla içe aktarma denemesi; sonra doğrudan sağlayıcı | 2 (deneme hemen) | Doğrudan sağlayıcı için resmi API koşulları |
-| Biçimlendirilmiş kaynakça (CSL): en az APA 7, MLA, Chicago, Vancouver, IEEE; Türkçe ve İngilizce; kapsam seçili / koleksiyon / review'da dahil edilenler; panoya ve dosyaya. Dışa aktarma ekranıyla (tasarım 5.10) birlikte | 2, sonu | Eleme kararları; `citeproc-py` lisans kontrolü. `citeproc-js` AGPL/CPAL olduğu için kullanılmaz |
+| Yeni API sağlayıcıları, bu sırayla: (1) PubMed + Europe PMC, (2) DOAJ + ERIC + CORE, (3) TR Dizin + DergiPark (DergiPark'ın koşulları açık olduğu için öne alınabilir) | 2'den başlayarak | Her biri ayrı onay + güncel belge kontrolü + ADR + CLAUDE.md 1. kural güncellemesi |
+| TR Dizin: önce arayüzünden alınan BibTeX dosyasıyla içe aktarma denemesi; sonra doğrudan sağlayıcı | 2 (deneme hemen) | Doğrudan sağlayıcı için TR Dizin'in yazılı onayı (aşağıda "Kullanım koşulları") |
+| İki değerlendiricili eleme: kararların bir kütüphaneden diğerine aktarılması, "Çakışmalar" sekmesi, Cohen kappa | 2, sonu | Tek kişilik eleme bitmiş olmalı; şema hazır (`reviewer`) |
+| Biçimlendirilmiş kaynakça (CSL): en az APA 7, MLA, Chicago, Vancouver, IEEE; Türkçe ve İngilizce; kapsam seçili / koleksiyon / review'da dahil edilenler; panoya ve dosyaya. Dışa aktarma ekranıyla (tasarım 5.10) birlikte | 2, sonu | Eleme kararları. Arka uçta `citeproc-py` (BSD-2-Clause-Views, uygun); `citeproc-js` AGPL/CPAL olduğu için kullanılmaz |
 | Enstitü tez yazım kılavuzlarına göre özel CSL stilleri | CSL'den sonra, ihtiyaç doğdukça | — |
 | Kalite değerlendirmesi alandan bağımsız: kullanıcının kendi soruları ve ölçeği veya hazır kontrol listesi (Kitchenham, JBI, RoB 2 gibi yanlılık riski araçları) | Kalite değerlendirme görevi geldiğinde | Şema hazır (`quality_question`, `quality_assessment`) |
 | Yayın türlerinde kitap, kitap bölümü ve tez: filtreler ve dışa aktarma | Arama filtreleri ve dışa aktarma ekranıyla | — |
-| YÖK Ulusal Tez Merkezi: deneysel, varsayılanı kapalı kaynak; "şu an hangi tezler yapılıyor" için kayıtlı sorgu uyarılarıyla | 4 | Kullanım koşulları; resmi API yok |
+| YÖK Ulusal Tez Merkezi: deneysel, varsayılanı kapalı kaynak; "şu an hangi tezler yapılıyor" için kayıtlı sorgu uyarılarıyla | 4 | YÖK'ün yazılı onayı; resmi API yok |
 | Word içinde yazarken atıf eklentisi | Kapsam dışı | Zotero'ya aktarım (Aşama 6) bu yolu karşılar |
+
+### Kullanım koşulları: TR Dizin ve YÖK Tez
+
+İkisine de e-postayla sorulur: TR Dizin için `trdizin@tubitak.gov.tr` (TÜBİTAK ULAKBİM), YÖK Ulusal Tez Merkezi için `tezmerkezi@yok.gov.tr`. Sorular: resmi bir API veya veri erişim yolu var mı; kullanıcının başlattığı aramalarla bir masaüstü uygulamasının meta veri (başlık, yazar, özet, yıl, DOI) çekmesine izin veriliyor mu; hız sınırı, kayıt/anahtar ve atıf şartı.
+
+- **Olumlu cevap:** ilgili kaynak, yukarıdaki sıraya göre sağlayıcı olarak eklenir (ADR + onay).
+- **Olumsuz cevap, "böyle bir şey yok" veya cevap yok:** doğrudan sağlayıcı yazılmaz; yalnız dosya yolu. TR Dizin arayüzden alınan BibTeX ile gelir; YÖK Tez'in dışa aktarımı yoksa kaynak eklenmez.
 
 ## Riskler, eksikler ve alternatifler
 
