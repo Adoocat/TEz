@@ -249,3 +249,36 @@ def test_an_unknown_review_is_404(client: TestClient) -> None:
 
     assert response.status_code == 404
     assert response.json()["error"]["code"] == "review.not_found"
+
+
+# --- by path (Task 22: "Open with TEz" and the terminal) ------------------------------
+
+
+def test_a_file_on_this_computer_is_previewed_and_imported_by_path(
+    client: TestClient, library: Library
+) -> None:
+    path = str(FIXTURES / "scopus.ris")
+
+    preview = client.post("/imports/preview", json={"file_name": "scopus.ris", "path": path})
+    outcome = client.post(
+        "/imports", json={"file_name": "scopus.ris", "path": path, "add_to_library": True}
+    )
+
+    assert preview.status_code == 200, preview.text
+    assert preview.json()["readable"] == 3
+    assert outcome.json()["added_to_library"] == 3
+
+
+def test_a_missing_path_or_two_sources_are_refused(client: TestClient, tmp_path: Path) -> None:
+    missing = client.post(
+        "/imports/preview", json={"file_name": "x.ris", "path": str(tmp_path / "gone.ris")}
+    )
+    both = client.post(
+        "/imports/preview",
+        json={**file_body("scopus.ris"), "path": str(FIXTURES / "scopus.ris")},
+    )
+    neither = client.post("/imports/preview", json={"file_name": "x.ris"})
+
+    assert (missing.status_code, missing.json()["error"]["code"]) == (404, "import.file_not_found")
+    assert both.status_code == 422
+    assert neither.status_code == 422

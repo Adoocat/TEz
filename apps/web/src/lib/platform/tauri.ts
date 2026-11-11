@@ -4,7 +4,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
-import type { BackendError, BackendState, Platform } from "./types";
+import type { BackendError, BackendState, OpenRequest, Platform } from "./types";
 
 type ShellStatus =
   | { status: "starting" }
@@ -42,6 +42,25 @@ export const tauriPlatform: Platform = {
       const current = await invoke<ShellStatus>("backend_status");
       if (active) onChange(fromShell(current));
     });
+    return () => {
+      active = false;
+      void unlisten.then((stop) => {
+        stop();
+      });
+    };
+  },
+  onOpenRequests(handle) {
+    // The event is only a nudge: requests are taken from the shell's queue, so those from
+    // start-up and those from a later `tez <file>` arrive the same way, and none twice.
+    let active = true;
+    const take = async () => {
+      const requests = await invoke<OpenRequest[]>("take_open_requests");
+      if (active && requests.length > 0) handle(requests);
+    };
+    const unlisten = listen("open-requests", () => {
+      void take();
+    });
+    void unlisten.then(take);
     return () => {
       active = false;
       void unlisten.then((stop) => {

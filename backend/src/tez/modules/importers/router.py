@@ -15,8 +15,7 @@ LibraryDep = Annotated[Library, Depends(get_library)]
 @router.post("/preview")
 def preview_import(body: ImportFile, library: LibraryDep) -> ImportPreview:
     """Read a BibTeX or RIS file and say what importing it would do. Writes nothing."""
-    data = service.decode_base64(body.content_base64)
-    return service.preview(library.db, body.file_name, data)
+    return service.preview(library.db, body.file_name, service.read_input(body))
 
 
 @router.post("", status_code=201)

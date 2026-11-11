@@ -1,6 +1,6 @@
 // Drop PDFs anywhere on the window to add them to the library (design 4.3, 4.6). Each file
 // becomes a notice in the corner: added to the inbox, already in the library, or why not.
-import { CheckCircle2, CircleAlert, Copy, FileDown, Loader2, X } from "lucide-react";
+import { CheckCircle2, CircleAlert, Copy, FileDown, Info, Loader2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
@@ -137,6 +137,7 @@ function NoticeItem({ notice }: { notice: UploadNotice }) {
     added: <CheckCircle2 aria-hidden className="size-4 text-success" />,
     duplicate: <Copy aria-hidden className="size-4 text-fg-muted" />,
     failed: <CircleAlert aria-hidden className="size-4 text-danger" />,
+    info: <Info aria-hidden className="size-4 text-primary" />,
   }[notice.state];
   const message =
     notice.state === "failed"
@@ -144,7 +145,9 @@ function NoticeItem({ notice }: { notice: UploadNotice }) {
           ...notice.errorParams,
           defaultValue: t("errors.unknown"),
         })
-      : t(`files.notice.${notice.state}`);
+      : notice.state === "info"
+        ? t(notice.messageKey ?? "errors.unknown", notice.messageParams)
+        : t(`files.notice.${notice.state}`);
 
   return (
     <li className="flex items-start gap-2 rounded-md border border-line bg-raised p-2 text-meta shadow-popover">

@@ -4,10 +4,13 @@ import { create } from "zustand";
 export interface UploadNotice {
   id: number;
   fileName: string;
-  state: "uploading" | "added" | "duplicate" | "failed";
+  state: "uploading" | "added" | "duplicate" | "failed" | "info";
   /** For failed: the backend's error code (an i18n key under errors.). */
   errorCode?: string;
   errorParams?: Record<string, unknown>;
+  /** For info: an i18n key and its values. */
+  messageKey?: string;
+  messageParams?: Record<string, unknown>;
 }
 
 interface UploadState {
@@ -15,6 +18,8 @@ interface UploadState {
   start: (fileName: string) => number;
   update: (id: number, change: Partial<Omit<UploadNotice, "id">>) => void;
   dismiss: (id: number) => void;
+  /** A notice that only tells something, about a file or folder. */
+  inform: (fileName: string, messageKey: string, messageParams?: Record<string, unknown>) => void;
 }
 
 let nextId = 1;
@@ -35,5 +40,11 @@ export const useUploadStore = create<UploadState>((set) => ({
   },
   dismiss(id) {
     set((state) => ({ notices: state.notices.filter((notice) => notice.id !== id) }));
+  },
+  inform(fileName, messageKey, messageParams = {}) {
+    const id = nextId++;
+    set((state) => ({
+      notices: [...state.notices, { id, fileName, state: "info", messageKey, messageParams }],
+    }));
   },
 }));

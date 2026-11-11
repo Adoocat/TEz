@@ -381,6 +381,7 @@ export function platformWith(state: BackendState): Platform {
       onChange(state);
       return () => undefined;
     },
+    onOpenRequests: () => () => undefined,
   };
 }
 

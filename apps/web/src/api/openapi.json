@@ -4177,19 +4177,39 @@
             "title": "File Name"
           },
           "content_base64": {
-            "type": "string",
-            "maxLength": 40000000,
-            "minLength": 1,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40000000,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Content Base64"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4096,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Path"
           }
         },
         "additionalProperties": false,
         "type": "object",
         "required": [
-          "file_name",
-          "content_base64"
+          "file_name"
         ],
-        "title": "ImportFile"
+        "title": "ImportFile",
+        "description": "The file to read: its bytes (from a browser) or its path on this computer (from the\ndesktop app's \"open with\" and the terminal). Exactly one of the two."
       },
       "ImportFormat": {
         "type": "string",
@@ -4426,10 +4446,30 @@
             "title": "File Name"
           },
           "content_base64": {
-            "type": "string",
-            "maxLength": 40000000,
-            "minLength": 1,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40000000,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Content Base64"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4096,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Path"
           },
           "review_id": {
             "anyOf": [
@@ -4466,8 +4506,7 @@
         "additionalProperties": false,
         "type": "object",
         "required": [
-          "file_name",
-          "content_base64"
+          "file_name"
         ],
         "title": "ImportRequest"
       },

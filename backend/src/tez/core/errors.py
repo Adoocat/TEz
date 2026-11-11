@@ -59,6 +59,7 @@ class ErrorCode(StrEnum):
     IMPORT_UNKNOWN_FORMAT = "import.unknown_format"
     IMPORT_EMPTY = "import.empty"
     IMPORT_INVALID_CONTENT = "import.invalid_content"
+    IMPORT_FILE_NOT_FOUND = "import.file_not_found"
     IMPORT_ENTRIES_SKIPPED = "import.entries_skipped"
     PDF_NOT_A_PDF = "pdf.not_a_pdf"
     PDF_TOO_LARGE = "pdf.too_large"

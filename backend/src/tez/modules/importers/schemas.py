@@ -13,11 +13,21 @@ SAMPLE_SIZE = 5
 
 
 class ImportFile(BaseModel):
+    """The file to read: its bytes (from a browser) or its path on this computer (from the
+    desktop app's "open with" and the terminal). Exactly one of the two."""
+
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
     file_name: str = Field(min_length=1, max_length=255)
     # The file's bytes, base64: the server decodes them (UTF-8, else Windows-1252).
-    content_base64: str = Field(min_length=1, max_length=MAX_CONTENT_LENGTH)
+    content_base64: str | None = Field(default=None, min_length=1, max_length=MAX_CONTENT_LENGTH)
+    path: str | None = Field(default=None, min_length=1, max_length=4096)
+
+    @model_validator(mode="after")
+    def _one_source(self) -> Self:
+        if (self.content_base64 is None) == (self.path is None):
+            raise ValueError("give either content_base64 or path")
+        return self
 
 
 class ImportLog(BaseModel):

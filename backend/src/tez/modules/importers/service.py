@@ -21,6 +21,7 @@ from tez.modules.importers.parsing import EntryIssue, ImportFormat, ParsedEntry,
 from tez.modules.importers.ris import parse_ris
 from tez.modules.importers.schemas import (
     SAMPLE_SIZE,
+    ImportFile,
     ImportIssueView,
     ImportOutcome,
     ImportPreview,
@@ -50,6 +51,23 @@ def decode_base64(content: str) -> bytes:
         return base64.b64decode(content, validate=True)
     except (binascii.Error, ValueError) as exc:
         raise TezError(ErrorCode.IMPORT_INVALID_CONTENT, status=422) from exc
+
+
+MAX_FILE_BYTES = 30 * 1024 * 1024
+
+
+def read_input(file: ImportFile) -> bytes:
+    """The file's bytes, from the request body or from disk."""
+    if file.content_base64 is not None:
+        return decode_base64(file.content_base64)
+    path = Path(file.path or "")
+    try:
+        if path.stat().st_size > MAX_FILE_BYTES:
+            raise TezError(ErrorCode.IMPORT_INVALID_CONTENT, {"path": str(path)}, status=422)
+        return path.read_bytes()
+    except (FileNotFoundError, IsADirectoryError, NotADirectoryError, PermissionError) as exc:
+        params = {"path": str(path)}
+        raise TezError(ErrorCode.IMPORT_FILE_NOT_FOUND, params, status=404) from exc
 
 
 def decode_text(data: bytes) -> str:
@@ -152,7 +170,7 @@ def run_import(
     *,
     initiated_via: InitiatedVia = InitiatedVia.GUI,
 ) -> ImportOutcome:
-    data = decode_base64(request.content_base64)
+    data = read_input(request)
     return import_bytes(db, library_path, request, data, initiated_via=initiated_via)
 
 

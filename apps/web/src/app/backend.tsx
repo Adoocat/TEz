@@ -14,6 +14,7 @@ interface Backend {
   client: ApiClient;
   connection: BackendConnection;
   fetch: FetchLike;
+  platform: Platform;
 }
 
 const BackendContext = createContext<Backend | null>(null);
@@ -46,9 +47,10 @@ export function BackendGate({
       connection && {
         connection,
         fetch,
+        platform,
         client: createApiClient({ baseUrl: connection.baseUrl, token: connection.token, fetch }),
       },
-    [connection, fetch],
+    [connection, fetch, platform],
   );
 
   if (state.status === "failed")
