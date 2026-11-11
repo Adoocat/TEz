@@ -134,6 +134,7 @@ describe("the query form", () => {
         year_from: 2020,
         year_to: 2024,
         limit: 1000,
+        initiated_via: "gui",
       });
     });
   });

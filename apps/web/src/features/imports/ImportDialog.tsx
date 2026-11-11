@@ -152,6 +152,7 @@ function ImportWizard({
       log: logRun ? { source, searched_at: searchedAt || null, query: query.trim() || null } : null,
       add_to_review: toReview,
       add_to_library: toLibrary,
+      initiated_via: "gui",
     });
   }
 

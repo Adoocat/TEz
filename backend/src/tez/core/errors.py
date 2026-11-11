@@ -71,6 +71,11 @@ class ErrorCode(StrEnum):
     PDF_NO_OPEN_ACCESS = "pdf.no_open_access"
     BACKUP_DAMAGED = "backup.damaged"
     BACKUP_UNSUPPORTED = "backup.unsupported"
+    EXPORT_ONE_SCOPE = "export.one_scope"
+    CLI_REVIEW_REQUIRED = "cli.review_required"
+    CLI_NO_REVIEW = "cli.no_review"
+    CLI_LIBRARY_BUSY = "cli.library_busy"
+    CLI_API_UNREACHABLE = "cli.api_unreachable"
 
 
 class TezError(Exception):

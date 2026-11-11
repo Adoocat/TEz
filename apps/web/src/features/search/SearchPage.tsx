@@ -169,6 +169,7 @@ function Results({
         year_from: parseYear(yearFrom),
         year_to: parseYear(yearTo),
         limit: RESULT_LIMIT,
+        initiated_via: "gui",
       },
       {
         onSuccess: ({ search_id }) => {

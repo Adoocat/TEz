@@ -666,6 +666,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Export References
+         * @description References as BibTeX or RIS: a review's papers, a collection, or the whole library.
+         */
+        get: operations["export_references_export_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/settings": {
         parameters: {
             query?: never;
@@ -862,6 +882,23 @@ export interface components {
         ErrorResponse: {
             error: components["schemas"]["ErrorDetail"];
         };
+        /**
+         * ExportFormat
+         * @enum {string}
+         */
+        ExportFormat: "bibtex" | "ris";
+        /** ExportResult */
+        ExportResult: {
+            /**
+             * Format
+             * @enum {string}
+             */
+            format: "bibtex" | "ris";
+            /** Count */
+            count: number;
+            /** Content */
+            content: string;
+        };
         /** Health */
         Health: {
             /**
@@ -983,6 +1020,8 @@ export interface components {
              * @default false
              */
             add_to_library: boolean;
+            /** @default gui */
+            initiated_via: components["schemas"]["InitiatedVia"];
         };
         /**
          * InitiatedVia
@@ -1411,6 +1450,8 @@ export interface components {
              * @default 1000
              */
             limit: number;
+            /** @default gui */
+            initiated_via: components["schemas"]["InitiatedVia"];
         };
         /** SearchStarted */
         SearchStarted: {
@@ -3958,6 +3999,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BackupStarted"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    export_references_export_get: {
+        parameters: {
+            query?: {
+                format?: components["schemas"]["ExportFormat"];
+                review_id?: string | null;
+                collection_id?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportResult"];
                 };
             };
             /** @description Missing or invalid token */

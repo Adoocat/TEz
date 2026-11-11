@@ -21,4 +21,4 @@ def preview_import(body: ImportFile, library: LibraryDep) -> ImportPreview:
 @router.post("", status_code=201)
 def import_file(body: ImportRequest, library: LibraryDep) -> ImportOutcome:
     """Import a BibTeX or RIS file. With `log`, it becomes a search run in the review."""
-    return service.run_import(library.db, library.path, body)
+    return service.run_import(library.db, library.path, body, initiated_via=body.initiated_via)

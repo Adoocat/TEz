@@ -20,6 +20,8 @@ TEz is MIT-licensed. Every dependency that ships with the app has a licence comp
 | sqlalchemy | 2.1 | MIT | database access |
 | starlette | 1.10 | BSD-3-Clause | ASGI toolkit (FastAPI) |
 | tenacity | 9.2 | Apache-2.0 | retries |
+| typer | 0.29 | MIT (bundles Click, BSD-3-Clause) | the `tez` command |
+| rich, shellingham | 15.0, 1.5 | MIT, ISC | Typer's output and shell detection |
 | uvicorn | 0.54 | BSD-3-Clause | ASGI server |
 
 **PyInstaller** builds the backend binary. It is GPL-2.0 with a bootloader exception, which explicitly allows distributing programs built with it under any licence. It is a build tool, not part of TEz's code (ADR 0001).

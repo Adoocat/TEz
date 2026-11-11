@@ -14,7 +14,7 @@ fails, the sidecar prints `TEZ_ERROR {"code": ..., "params": ...}` instead of `T
 and every mode exits with status 3.
 
 `worker --library <folder>` runs queued jobs; `serve` starts it as a child process when a
-library is open (`tez.worker`). `cli` arrives in Task 23.
+library is open (`tez.worker`). `cli ...` runs the `tez` terminal command (Task 23).
 
 `restore <backup.zip> <folder>` unpacks a backup into a new library folder, checks it, and
 brings its schema up to date (Task 21).
@@ -48,6 +48,13 @@ DEV_LIBRARY = Path(__file__).resolve().parents[2] / ".dev" / "TEz Library"
 
 
 def main(argv: list[str] | None = None) -> None:
+    arguments = sys.argv[1:] if argv is None else argv
+    if arguments[:1] == ["cli"]:
+        # The packaged `tez` console program forwards here (plan: a thin console shell).
+        from tez.cli.main import main as cli_main
+
+        cli_main(arguments[1:])
+        return
     parser = argparse.ArgumentParser(prog="tez-backend")
     modes = parser.add_subparsers(dest="mode", required=True)
     serve = modes.add_parser("serve", help="run the API server")

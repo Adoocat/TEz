@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from tez.modules.importers.parsing import ImportFormat, IssueCode, RecordWarning
 from tez.modules.library.models import VenueType
-from tez.modules.search.models import MatchMethod
+from tez.modules.search.models import InitiatedVia, MatchMethod
 
 # Base64 of a 30 MB export; IEEE Xplore caps an export at 2000 records, far below this.
 MAX_CONTENT_LENGTH = 40_000_000
@@ -46,6 +46,8 @@ class ImportRequest(ImportFile):
     log: ImportLog | None = None
     add_to_review: bool = False
     add_to_library: bool = False
+    # `tez import` says "cli", so the logged run shows where it was started.
+    initiated_via: InitiatedVia = InitiatedVia.GUI
 
     @model_validator(mode="after")
     def _has_a_target(self) -> Self:
