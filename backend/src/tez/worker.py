@@ -52,6 +52,7 @@ class Worker:
             if job is None:
                 return False
             job_id, attempt, job_type = job.id, job.attempts, job.type
+            max_attempts = job.max_attempts
             payload = dict(job.payload_json)
         log = {"job_id": job_id, "job_type": job_type, "attempt": attempt}
 
@@ -61,7 +62,7 @@ class Worker:
             self._finish_failed(job_id, attempt, "job.unknown_type", {"type": job_type}, False)
             return True
 
-        ctx = JobContext(job_id)
+        ctx = JobContext(job_id, db=self.db, attempt=attempt, max_attempts=max_attempts)
         stop_heartbeat = threading.Event()
         heartbeat = threading.Thread(
             target=self._heartbeat,

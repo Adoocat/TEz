@@ -296,6 +296,81 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/pdfs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload Pdf
+         * @description Add a PDF sent as the raw request body. Without `paper_id` it becomes a new paper in
+         *     the inbox. The same file twice is `duplicate` and changes nothing.
+         */
+        post: operations["upload_pdf_pdfs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/pdfs/from-paths": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add Pdfs From Paths
+         * @description Add PDFs by their paths on this computer; each file succeeds or fails on its own.
+         */
+        post: operations["add_pdfs_from_paths_pdfs_from_paths_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/papers/{paper_id}/attachments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Paper Attachments */
+        get: operations["paper_attachments_papers__paper_id__attachments_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attachments/{attachment_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Attachment */
+        get: operations["get_attachment_attachments__attachment_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/settings": {
         parameters: {
             query?: never;
@@ -368,6 +443,36 @@ export interface components {
             theme: "light" | "dark" | "system";
             /** Sources Email */
             sources_email?: string | null;
+        };
+        /**
+         * AttachmentKind
+         * @enum {string}
+         */
+        AttachmentKind: "pdf" | "supplement";
+        /** AttachmentView */
+        AttachmentView: {
+            /** Id */
+            id: string;
+            /** Paper Id */
+            paper_id: string;
+            kind: components["schemas"]["AttachmentKind"];
+            /** File Name */
+            file_name: string | null;
+            /** Sha256 */
+            sha256: string;
+            /** Size */
+            size: number | null;
+            /** Page Count */
+            page_count: number | null;
+            text_status: components["schemas"]["TextStatus"];
+            error: components["schemas"]["ErrorDetail"] | null;
+            /** Source */
+            source: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** ErrorDetail */
         ErrorDetail: {
@@ -555,6 +660,39 @@ export interface components {
             paper_ids: string[];
             /** Search Id */
             search_id?: string | null;
+        };
+        /** PdfAdded */
+        PdfAdded: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "added" | "duplicate";
+            /** Paper Id */
+            paper_id: string;
+            /** Attachment Id */
+            attachment_id: string;
+            /** Job Id */
+            job_id: string | null;
+            /** File Name */
+            file_name: string;
+        };
+        /** PdfPathResult */
+        PdfPathResult: {
+            /** Path */
+            path: string;
+            added?: components["schemas"]["PdfAdded"] | null;
+            error?: components["schemas"]["ErrorDetail"] | null;
+        };
+        /**
+         * PdfPaths
+         * @description Files on this computer: the desktop app's drops, `tez <file.pdf>`, the CLI.
+         */
+        PdfPaths: {
+            /** Paths */
+            paths: string[];
+            /** Paper Id */
+            paper_id?: string | null;
         };
         /** PreviewRecord */
         PreviewRecord: {
@@ -801,6 +939,11 @@ export interface components {
          * @enum {string}
          */
         SourceState: "waiting" | "searching" | "rate_limited" | "done" | "partial" | "failed";
+        /**
+         * TextStatus
+         * @enum {string}
+         */
+        TextStatus: "pending" | "ok" | "needs_ocr" | "failed";
         /**
          * VenueType
          * @enum {string}
@@ -1765,6 +1908,245 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ImportOutcome"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    upload_pdf_pdfs_post: {
+        parameters: {
+            query: {
+                file_name: string;
+                paper_id?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/pdf": string;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PdfAdded"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_pdfs_from_paths_pdfs_from_paths_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PdfPaths"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PdfPathResult"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    paper_attachments_papers__paper_id__attachments_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                paper_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_attachment_attachments__attachment_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentView"];
                 };
             };
             /** @description Missing or invalid token */

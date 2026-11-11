@@ -14,6 +14,7 @@ from tez.core.config import Settings
 from tez.core.errors import ERROR_RESPONSES, ErrorResponse, install_error_handlers
 from tez.core.logging import configure_logging
 from tez.core.requests import RequestContextMiddleware
+from tez.modules.files.router import router as files_router
 from tez.modules.importers.router import router as imports_router
 from tez.modules.jobs.router import router as jobs_router
 from tez.modules.jobs.supervisor import WorkerSupervisor
@@ -86,6 +87,7 @@ def create_app(
     app.include_router(reviews_router, dependencies=secured, responses=needs_library)
     app.include_router(search_router, dependencies=secured, responses=needs_library)
     app.include_router(imports_router, dependencies=secured, responses=needs_library)
+    app.include_router(files_router, dependencies=secured, responses=needs_library)
     app.include_router(settings_router, dependencies=secured, responses=needs_library)
     app.include_router(
         secrets_router,

@@ -8,14 +8,45 @@ failed; it is retried until `max_attempts`.
 
 import threading
 from collections.abc import Callable
-from typing import Any
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from tez.core.db import Database
 
 
 class JobContext:
-    def __init__(self, job_id: str) -> None:
+    """What a handler gets besides its payload: the library, and which attempt this is."""
+
+    def __init__(
+        self,
+        job_id: str,
+        *,
+        db: "Database | None" = None,
+        attempt: int = 1,
+        max_attempts: int = 1,
+    ) -> None:
         self.job_id = job_id
+        self._db = db
+        # A handler that can crash the process (native code) sees its last chance here.
+        self.attempt = attempt
+        self.max_attempts = max_attempts
         self.progress: float | None = None
         self._cancelled = threading.Event()
+
+    @property
+    def db(self) -> "Database":
+        if self._db is None:
+            raise RuntimeError("this job context has no database")
+        return self._db
+
+    @property
+    def library_path(self) -> Path:
+        return self.db.path.parent
+
+    @property
+    def last_attempt(self) -> bool:
+        return self.attempt >= self.max_attempts
 
     def report(self, progress: float) -> None:
         self.progress = min(max(progress, 0.0), 1.0)

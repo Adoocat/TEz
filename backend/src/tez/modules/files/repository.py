@@ -17,6 +17,8 @@ class FilesRepository:
         kind: AttachmentKind = AttachmentKind.PDF,
         page_count: int | None = None,
         source: str | None = None,
+        file_name: str | None = None,
+        size: int | None = None,
     ) -> Attachment:
         attachment = Attachment(
             paper_id=paper_id,
@@ -25,6 +27,8 @@ class FilesRepository:
             kind=kind,
             page_count=page_count,
             source=source,
+            file_name=file_name,
+            size=size,
         )
         self.session.add(attachment)
         self.session.flush()
@@ -41,3 +45,6 @@ class FilesRepository:
                 .order_by(Attachment.created_at)
             )
         )
+
+    def get(self, attachment_id: str) -> Attachment | None:
+        return self.session.get(Attachment, attachment_id)

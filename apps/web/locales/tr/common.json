@@ -141,7 +141,14 @@
     "import.entry_no_title": "başlığı yok",
     "import.entry_duplicate_key": "dosyada daha önce kullanılmış bir anahtarı tekrarlıyor",
     "import.entry_truncated": "yarıda kesilmiş (dosya kaydın ortasında bitiyor)",
-    "import.stray_text": "hiçbir kayda ait olmayan metin"
+    "import.stray_text": "hiçbir kayda ait olmayan metin",
+    "pdf.not_a_pdf": "{{file_name}} bir PDF dosyası değil.",
+    "pdf.too_large": "{{file_name}} eklenemeyecek kadar büyük.",
+    "pdf.file_not_found": "Dosya bulunamadı: {{path}}",
+    "pdf.unreadable": "PDF bozuk, okunamıyor.",
+    "pdf.crashed": "Bu PDF'i okumak işçiyi {{attempts}} kez çökertti; atlandı.",
+    "pdf.missing": "Saklanan dosya kütüphane klasöründe yok.",
+    "attachment.not_found": "Bu dosya artık yok."
   },
   "reviews": {
     "active": "Etkin review",
@@ -322,5 +329,14 @@
     "close": "Kapat",
     "showResults": "Sonuçları göster",
     "done": "{{imported}} kayıt içe aktarıldı: {{newPapers}} yeni makale, {{toReview}} kayıt review'a eklendi."
+  },
+  "files": {
+    "dropToAdd": "Kütüphaneye eklemek için PDF'leri bırakın",
+    "dismiss": "Kapat",
+    "notice": {
+      "uploading": "Ekleniyor…",
+      "added": "Gelen kutusuna eklendi.",
+      "duplicate": "Zaten kütüphanede: hiçbir şey kopyalanmadı."
+    }
   }
 }

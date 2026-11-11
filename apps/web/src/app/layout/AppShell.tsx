@@ -20,6 +20,7 @@ import { NavLink, Outlet, useLocation } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
+import { PdfDrop } from "@/features/files/PdfDrop";
 import { useJobEvents } from "@/features/jobs/useJobEvents";
 import { ReviewPicker } from "@/features/reviews/ReviewPicker";
 import { SearchInspector } from "@/features/search/SearchInspector";
@@ -60,6 +61,7 @@ export function AppShell() {
   return (
     <TooltipProvider delayDuration={300}>
       <PreferencesSync />
+      <PdfDrop />
       <div className="grid h-full grid-rows-[auto_minmax(0,1fr)_auto] bg-canvas text-fg">
         <TopBar />
         <div className="flex min-h-0">

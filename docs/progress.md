@@ -21,7 +21,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 13 · Federe arama servisi | bitti | `task/13-federated-search` · #20 | `modules/search/service.py`: kaynaklar paralel, her cevap geldiği anda kendi işleminde yazılır. Çöken kaynak hata kaydıyla `search_run` olur, diğerleri gelir. Ham yanıt `snapshots/*.json.gz`. API: `POST /searches`, `GET /searches/{id}`, `/results`, `/events` (SSE). Migration 0003: `search_run.search_id`. Ayrıntı: ADR 0009 |
 | 14 · Arama arayüzü | bitti | `task/14-search-ui` · #21 | Sorgu formu, kaynak çipleri (bekliyor, aranıyor, hız sınırı geri sayımı, sonuç, kısmi, hata), özet şeridi, sanallaştırılmış liste, denetçide birleştirme ayrıntısı, review'a/kütüphaneye ekleme, geçmiş. Küçük review formu ve üst çubukta seçici. Migration 0004: `paper.library_added_at`. Üretim derlemesinde 1.368 satırda kaydırma adımı p95 3,8 ms (tekerlek), 10,6 ms (hızlı). Gerçek dört kaynakla denendi: 1.662 kayıt, 294 tekrar, 1.368 benzersiz |
 | 15 · BibTeX/RIS içe aktarma | bitti | `task/15-bib-ris-import` · #23 | `modules/importers`: bibtexparser v2 + rispy, LaTeX → Türkçe harf, bozuk girdi (satır + anahtar + kod) rapora düşer, içe aktarma durmaz. Önizleme hiçbir şey yazmaz; içe aktarma tek işlemde, tekilleştirmeden geçer, `search_run` olarak loglanır (dosya snapshot'ta). Migration 0005: `search_run.file_name`. Arayüz: arama ekranında "Dosyadan içe aktar" diyaloğu. Ayrıntı: ADR 0010 |
-| 16 · PDF ekleme | bekliyor | | |
+| 16 · PDF ekleme | bitti | `task/16-pdf-add` · #24 | API PDF'i açmaz: başlık kontrolü, sha256, `files/<2 hex>/<sha>.pdf` (atomik), `attachment` + `pdf.inspect` işi. İşçi pypdfium2 ile sayfa sayısı ve metin katmanı (ok / needs_ocr / failed + neden). Son denemede önceden `pdf.crashed` işaretlenir, işçi çökse de dosya atlanır. Aynı içerik `duplicate`. Yeni makale "Gelen kutusu" sistem koleksiyonuna. Pencereye bırakma + köşe bildirimleri; `POST /pdfs/from-paths` (Görev 22 için). Migration 0006. Ayrıntı: ADR 0011 |
 | 17 · Açık erişim PDF | bekliyor | | |
 | 18 · Koleksiyon ve etiketler | bekliyor | | |
 | 19 · Kütüphane listesi | bekliyor | | |
@@ -32,6 +32,9 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 ## Sonraya
 
+- (16) PDF'ten DOI okuma ve meta veri getirme (tasarım 4.6 "DOI bulundu, meta veri getiriliyor"); şimdilik başlık dosya adından.
+- (16) Bırakılan tek PDF'i okuyucuda açma (tasarım 4.6) Görev 20 ile.
+- (16) Çöp kutusunu boşaltırken `files/` içindeki dosyalar da silinmeli (bkz. (6) notu).
 - (15) İçe aktarma hedefi olarak koleksiyon (tasarım 4.6 adım 4) Görev 18 ile.
 - (15) BibTeX atıf anahtarları saklanmıyor; `citekey` üretimiyle birlikte (Görev 19 veya dışa aktarma) karar verilmeli.
 - (15) `.bib`/`.ris` dosyasını pencereye veya uygulama simgesine bırakma (tasarım 4.6) Görev 22 ile; şimdilik diyaloğun bırakma alanı.
@@ -88,7 +91,7 @@ Karar ilgili göreve gelindiğinde verilir.
 4. ~~**Tauri iskeleti**~~ — Karar: Görev 1'de küçük iskelet (ADR 0002).
 5. ~~**6b kabulü**~~ — Karar: Aşama 1'de API + SSE testiyle; arayüz kısmı Görev 8'deki durum çubuğunda (ADR 0005).
 6. **`paper_fts`** Görev 6'da yok; Görev 19 kendi migration'ıyla ekleyecek (öneri).
-7. **Görev 16 UI'ı** (sürükle-bırak) kütüphane listesinden (19) önce geliyor; UI kısmı 19'a kaysın mı?
+7. ~~**Görev 16 UI'ı**~~ — Karar: Görev 16'da pencereye bırakma + köşe bildirimleri geldi; eklenen PDF'lerin listede görünmesi Görev 19'da.
 8. **Görev 22** `tez <klasör>` içe aktarma önizlemesi ve `.bib` sihirbazı tanımsız; Aşama 1'de "öne getir + basit yanıt" ile sınırlı tutulsun mu?
 9. ~~**`pnpm setup`**~~ — Karar: `pnpm bootstrap`; CLAUDE.md güncellendi (ADR 0002).
 10. **Koyu tema tokenları** tek ekrandan türetilmiş taslak (`docs/design/tokens.json`); onay gerekiyor. Ayrıca açık temada YZ (`#7c3aed`) ve "tekrar bakılacak" (`#9333ea`) renkleri neredeyse aynı — ayırt edilmeli.

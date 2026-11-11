@@ -3,9 +3,11 @@
 import time
 from typing import Any
 
+from tez.modules.files.service import INSPECT_JOB, inspect_attachment
 from tez.modules.jobs.registry import JobContext, Registry
 
 registry = Registry()
+registry.handler(INSPECT_JOB)(inspect_attachment)
 
 
 @registry.handler("diagnostics.sleep")
