@@ -66,7 +66,13 @@ jobs:
           enable-cache: true
       - run: uv sync --locked --project backend
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @tez/web exec playwright install --with-deps chromium
+      - name: Install Chromium and its system packages
+        timeout-minutes: 10
+        run: |
+          # Ubuntu's main archive only: the runners' Azure apt mirror could not be resolved on
+          # 2026-11-11, and apt then waits on it for every file.
+          echo "http://archive.ubuntu.com/ubuntu/" | sudo tee /etc/apt/apt-mirrors.txt
+          pnpm --filter @tez/web exec playwright install --with-deps chromium
       - run: pnpm e2e # web mode against a real backend on a temporary library
       - uses: actions/upload-artifact@v5
         if: failure()
