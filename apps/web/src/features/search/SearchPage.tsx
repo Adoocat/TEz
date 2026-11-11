@@ -1,12 +1,13 @@
 // The systematic search screen (design 4.2): query, sources and their state, summary, the
 // deduplicated results, and the history of searches in this review.
-import { Play } from "lucide-react";
+import { FileUp, Play } from "lucide-react";
 import { useCallback, useMemo, useState, type KeyboardEvent, type SyntheticEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Segmented } from "@/components/ui/segmented";
+import { ImportDialog } from "@/features/imports/ImportDialog";
 import { ReviewForm } from "@/features/reviews/ReviewForm";
 import { useActiveReview } from "@/features/reviews/store";
 import { useReviews } from "@/features/reviews/api";
@@ -51,6 +52,7 @@ export function SearchPage() {
   const review = useActiveReview();
   const { activeSearchId, openSearch } = useSearchView();
   const [tab, setTab] = useState<Tab>("results");
+  const [importing, setImporting] = useState(false);
 
   if (reviews.isSuccess && !review) {
     return (
@@ -67,16 +69,37 @@ export function SearchPage() {
     <div className="flex h-full min-h-0 flex-col">
       <header className="flex items-center justify-between gap-3 px-4 pt-3 pb-2">
         <h1 className="text-h2">{t("search.title")}</h1>
-        <Segmented
-          aria-label={t("search.view")}
-          value={tab}
-          onValueChange={setTab}
-          options={[
-            { value: "results", label: t("search.results") },
-            { value: "history", label: t("search.historyTab") },
-          ]}
-        />
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => {
+              setImporting(true);
+            }}
+          >
+            <FileUp aria-hidden />
+            {t("imports.open")}
+          </Button>
+          <Segmented
+            aria-label={t("search.view")}
+            value={tab}
+            onValueChange={setTab}
+            options={[
+              { value: "results", label: t("search.results") },
+              { value: "history", label: t("search.historyTab") },
+            ]}
+          />
+        </div>
       </header>
+      <ImportDialog
+        reviewId={review.id}
+        open={importing}
+        onOpenChange={setImporting}
+        onShowResults={(searchId) => {
+          openSearch(searchId);
+          setTab("results");
+        }}
+      />
       {tab === "results" ? (
         <Results reviewId={review.id} searchId={activeSearchId} onStarted={openSearch} />
       ) : (

@@ -4,6 +4,8 @@ import type { FetchLike } from "@/app/backend";
 import type { BackendState, Platform } from "@/lib/platform";
 
 type AppSettings = components["schemas"]["AppSettings"];
+type ImportOutcome = components["schemas"]["ImportOutcome"];
+type ImportPreview = components["schemas"]["ImportPreview"];
 type JobView = components["schemas"]["JobView"];
 type ReviewView = components["schemas"]["ReviewView"];
 type SearchOverview = components["schemas"]["SearchOverview"];
@@ -25,6 +27,10 @@ export interface FakeBackend {
   emitSource: (searchId: string, update: Partial<SourceProgress> & { source: string }) => void;
   /** End the search's event stream, as the backend does when all sources have answered. */
   finishSearch: (searchId: string) => void;
+  importPreview: ImportPreview;
+  /** When set, the preview fails with this error instead. */
+  importPreviewError: { code: string; params: Record<string, unknown> } | null;
+  importOutcome: ImportOutcome;
 }
 
 const json = (body: unknown, status = 200) =>
@@ -44,6 +50,9 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     searchOverview: null,
     searchResults: [],
     searchHistory: [],
+    importPreview: importPreview(),
+    importPreviewError: null,
+    importOutcome: importOutcome(),
     emitSource(searchId, update) {
       const data = {
         state: "searching",
@@ -116,6 +125,12 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
         return json({ search_id: "search-1", sources }, 202);
       }
       if (route === "GET /searches") return json(backend.searchHistory);
+      if (route === "POST /imports/preview") {
+        return backend.importPreviewError
+          ? json({ error: backend.importPreviewError }, 422)
+          : json(backend.importPreview);
+      }
+      if (route === "POST /imports") return json(backend.importOutcome, 201);
       if (/^\/reviews\/[^/]+\/records$/.test(path) || route === "POST /library/papers") {
         const { paper_ids } = body as { paper_ids: string[] };
         return json({ added: paper_ids.length, already_present: 0 });
@@ -259,6 +274,65 @@ export function job(overrides: Partial<JobView> = {}): JobView {
     error: null,
     created_at: "2026-11-04T10:00:00.000000+00:00",
     updated_at: "2026-11-04T10:00:01.000000+00:00",
+    ...overrides,
+  };
+}
+
+export function importPreview(overrides: Partial<ImportPreview> = {}): ImportPreview {
+  return {
+    format: "ris",
+    total: 3,
+    readable: 2,
+    issues: [{ code: "import.entry_no_title", line: 9, key: null, detail: null }],
+    new: 1,
+    known: 0,
+    in_library: 1,
+    repeated: 0,
+    warnings: { no_authors: 1 },
+    sample: [
+      {
+        line: 1,
+        key: "scopus-1",
+        title: "Automated code review with LLMs",
+        first_author: "A. Yılmaz",
+        author_count: 2,
+        year: 2024,
+        venue: "TSE",
+        venue_type: "journal",
+        doi: "10.1109/tse.2024.1",
+        warnings: [],
+        status: "in_library",
+        match_method: "doi",
+      },
+      {
+        line: 15,
+        key: null,
+        title: "A chapter",
+        first_author: null,
+        author_count: 0,
+        year: 2020,
+        venue: null,
+        venue_type: "chapter",
+        doi: null,
+        warnings: ["no_authors"],
+        status: "new",
+        match_method: "new",
+      },
+    ],
+    ...overrides,
+  };
+}
+
+export function importOutcome(overrides: Partial<ImportOutcome> = {}): ImportOutcome {
+  return {
+    format: "ris",
+    total: 3,
+    imported: 2,
+    issues: [],
+    new_papers: 1,
+    search_id: "search-import",
+    added_to_review: 2,
+    added_to_library: 0,
     ...overrides,
   };
 }

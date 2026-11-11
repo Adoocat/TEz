@@ -47,7 +47,8 @@ def _overview(session: Session, search_id: str) -> SearchOverview | None:
     return SearchOverview(
         search_id=search_id,
         review_id=first.review_id,
-        query=query.query_text if query else "",
+        query=query.query_text if query else (first.translated_query or ""),
+        file_name=first.file_name,
         filters=query.filters_json if query else None,
         initiated_via=first.initiated_via,
         started_at=first.executed_at,

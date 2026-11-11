@@ -256,6 +256,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/imports/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Import
+         * @description Read a BibTeX or RIS file and say what importing it would do. Writes nothing.
+         */
+        post: operations["preview_import_imports_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/imports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Import File
+         * @description Import a BibTeX or RIS file. With `log`, it becomes a search run in the review.
+         */
+        post: operations["import_file_imports_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/settings": {
         parameters: {
             query?: never;
@@ -355,11 +395,116 @@ export interface components {
             /** Version */
             version: string;
         };
+        /** ImportFile */
+        ImportFile: {
+            /** File Name */
+            file_name: string;
+            /** Content Base64 */
+            content_base64: string;
+        };
+        /**
+         * ImportFormat
+         * @enum {string}
+         */
+        ImportFormat: "bibtex" | "ris";
+        /** ImportIssueView */
+        ImportIssueView: {
+            code: components["schemas"]["IssueCode"];
+            /** Line */
+            line: number | null;
+            /** Key */
+            key: string | null;
+            /** Detail */
+            detail: string | null;
+        };
+        /**
+         * ImportLog
+         * @description Log the import as a search run: the systematic record of a database search.
+         */
+        ImportLog: {
+            /**
+             * Source
+             * @example IEEE Xplore
+             */
+            source: string;
+            /** Searched At */
+            searched_at?: string | null;
+            /** Query */
+            query?: string | null;
+        };
+        /** ImportOutcome */
+        ImportOutcome: {
+            format: components["schemas"]["ImportFormat"];
+            /** Total */
+            total: number;
+            /** Imported */
+            imported: number;
+            /** Issues */
+            issues: components["schemas"]["ImportIssueView"][];
+            /** New Papers */
+            new_papers: number;
+            /** Search Id */
+            search_id: string | null;
+            /** Added To Review */
+            added_to_review: number;
+            /** Added To Library */
+            added_to_library: number;
+        };
+        /** ImportPreview */
+        ImportPreview: {
+            format: components["schemas"]["ImportFormat"];
+            /** Total */
+            total: number;
+            /** Readable */
+            readable: number;
+            /** Issues */
+            issues: components["schemas"]["ImportIssueView"][];
+            /** New */
+            new: number;
+            /** Known */
+            known: number;
+            /** In Library */
+            in_library: number;
+            /** Repeated */
+            repeated: number;
+            /** Warnings */
+            warnings: {
+                [key: string]: number;
+            };
+            /** Sample */
+            sample: components["schemas"]["PreviewRecord"][];
+        };
+        /** ImportRequest */
+        ImportRequest: {
+            /** File Name */
+            file_name: string;
+            /** Content Base64 */
+            content_base64: string;
+            /** Review Id */
+            review_id?: string | null;
+            log?: components["schemas"]["ImportLog"] | null;
+            /**
+             * Add To Review
+             * @default false
+             */
+            add_to_review: boolean;
+            /**
+             * Add To Library
+             * @default false
+             */
+            add_to_library: boolean;
+        };
         /**
          * InitiatedVia
          * @enum {string}
          */
         InitiatedVia: "gui" | "cli";
+        /**
+         * IssueCode
+         * @description Why an entry was skipped. The frontend turns each into a translated sentence.
+         * @enum {string}
+         */
+        IssueCode: "import.entry_unparseable" | "import.entry_no_title" | "import.entry_duplicate_key" | "import.entry_truncated" | "import.stray_text";
         /**
          * JobStatus
          * @enum {string}
@@ -411,6 +556,40 @@ export interface components {
             /** Search Id */
             search_id?: string | null;
         };
+        /** PreviewRecord */
+        PreviewRecord: {
+            /** Line */
+            line: number | null;
+            /** Key */
+            key: string | null;
+            /** Title */
+            title: string;
+            /** First Author */
+            first_author: string | null;
+            /** Author Count */
+            author_count: number;
+            /** Year */
+            year: number | null;
+            /** Venue */
+            venue: string | null;
+            venue_type: components["schemas"]["VenueType"] | null;
+            /** Doi */
+            doi: string | null;
+            /** Warnings */
+            warnings: components["schemas"]["RecordWarning"][];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "new" | "known" | "in_library" | "repeated";
+            match_method: components["schemas"]["MatchMethod"];
+        };
+        /**
+         * RecordWarning
+         * @description A record was read, but a field the user would expect is missing or unusable.
+         * @enum {string}
+         */
+        RecordWarning: "no_authors" | "no_year" | "no_identifier" | "bad_year" | "bad_link";
         /** ResultSource */
         ResultSource: {
             /** Source */
@@ -482,6 +661,8 @@ export interface components {
             review_id: string;
             /** Query */
             query: string;
+            /** File Name */
+            file_name?: string | null;
             /** Filters */
             filters: {
                 [key: string]: unknown;
@@ -1464,6 +1645,126 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchResultRow"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    preview_import_imports_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportFile"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportPreview"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    import_file_imports_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportOutcome"];
                 };
             };
             /** @description Missing or invalid token */

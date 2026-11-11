@@ -132,7 +132,16 @@
     "source.rejected": "Kaynak isteği reddetti ({{status}}).",
     "source.bad_response": "Kaynak okunamayan bir yanıt gönderdi.",
     "source.query_unsupported": "Bu sorgu bu kaynak için ifade edilemiyor.",
-    "source.key_required": "API anahtarı olmadan bu kaynak yalnızca ilk sonuç sayfasını veriyor."
+    "source.key_required": "API anahtarı olmadan bu kaynak yalnızca ilk sonuç sayfasını veriyor.",
+    "import.unknown_format": "{{file_name}} BibTeX ya da RIS dosyası değil.",
+    "import.empty": "{{file_name}} içinde içe aktarılabilecek kayıt yok.",
+    "import.invalid_content": "Dosya gönderilemedi.",
+    "import.entries_skipped": "Dosyadaki {{skipped}} girdi okunamadı.",
+    "import.entry_unparseable": "okunamıyor (bozuk sözdizimi)",
+    "import.entry_no_title": "başlığı yok",
+    "import.entry_duplicate_key": "dosyada daha önce kullanılmış bir anahtarı tekrarlıyor",
+    "import.entry_truncated": "yarıda kesilmiş (dosya kaydın ortasında bitiyor)",
+    "import.stray_text": "hiçbir kayda ait olmayan metin"
   },
   "reviews": {
     "active": "Etkin review",
@@ -248,7 +257,70 @@
         "ok": "tamamlandı",
         "partial": "kısmi",
         "error": "hata"
-      }
+      },
+      "imported": "İçe aktarıldı: {{file}}"
     }
+  },
+  "imports": {
+    "open": "Dosyadan içe aktar",
+    "title": "Dışa aktarılmış sonuçları içe aktar",
+    "dropHere": "BibTeX veya RIS dosyasını buraya bırakın",
+    "formats": "IEEE Xplore, ACM DL, Scopus, Web of Science dışa aktarımları (.bib, .ris)",
+    "chooseFile": "Dosya seç",
+    "readFailed": "Dosya okunamadı.",
+    "reading": "Dosya okunuyor…",
+    "summary": "{{format}} · {{total}} girdi · {{readable}} okunabilir: {{new}} yeni, {{known}} bir aramada zaten bulunmuş, {{inLibrary}} kütüphanede, {{repeated}} dosyada tekrar",
+    "formatNames": {
+      "bibtex": "BibTeX",
+      "ris": "RIS"
+    },
+    "issues_one": "{{count}} girdi içe aktarılamıyor",
+    "issues_other": "{{count}} girdi içe aktarılamıyor",
+    "issuesLabel": "İçe aktarılamayan girdiler",
+    "line": "satır {{line}}",
+    "warnings": {
+      "no_authors_one": "{{count}} kayıtta yazar yok",
+      "no_authors_other": "{{count}} kayıtta yazar yok",
+      "no_year_one": "{{count}} kayıtta yıl yok",
+      "no_year_other": "{{count}} kayıtta yıl yok",
+      "bad_year_one": "{{count}} kayıtta yıl okunamadı",
+      "bad_year_other": "{{count}} kayıtta yıl okunamadı",
+      "no_identifier_one": "{{count}} kayıtta DOI veya başka tanımlayıcı yok",
+      "no_identifier_other": "{{count}} kayıtta DOI veya başka tanımlayıcı yok",
+      "bad_link_one": "{{count}} kayıtta bağlantı kullanılamıyor",
+      "bad_link_other": "{{count}} kayıtta bağlantı kullanılamıyor"
+    },
+    "sample": "İlk kayıtlar; eksik alanlar işaretli",
+    "columns": {
+      "title": "Başlık",
+      "author": "İlk yazar",
+      "year": "Yıl",
+      "doi": "DOI",
+      "status": "Durum"
+    },
+    "status": {
+      "new": "yeni",
+      "known": "zaten bulunmuş",
+      "in_library": "kütüphanede",
+      "repeated": "dosyada tekrar"
+    },
+    "logLegend": "Ne yapılsın",
+    "logRun": "Arama kaydı olarak logla (geçmiş ve PRISMA)",
+    "database": "Veritabanı",
+    "otherDatabase": "Diğer…",
+    "otherDatabaseName": "Veritabanı adı",
+    "searchedAt": "Arama tarihi",
+    "query": "Kullanılan sorgu",
+    "queryPlaceholder": "Sorgu, veritabanında çalıştırdığınız haliyle",
+    "toReview": "Kayıtları review'un eleme kuyruğuna ekle",
+    "toLibrary": "Kayıtları kütüphaneye ekle",
+    "needTarget": "En az birini seçin.",
+    "import_one": "{{count}} kaydı içe aktar",
+    "import_other": "{{count}} kaydı içe aktar",
+    "importing": "İçe aktarılıyor…",
+    "cancel": "Vazgeç",
+    "close": "Kapat",
+    "showResults": "Sonuçları göster",
+    "done": "{{imported}} kayıt içe aktarıldı: {{newPapers}} yeni makale, {{toReview}} kayıt review'a eklendi."
   }
 }
