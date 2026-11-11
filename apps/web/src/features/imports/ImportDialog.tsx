@@ -4,7 +4,7 @@
 import type { TFunction } from "i18next";
 import { FileUp } from "lucide-react";
 import { Dialog } from "radix-ui";
-import { useId, useState, type DragEvent, type SyntheticEvent } from "react";
+import { useEffect, useId, useState, type DragEvent, type SyntheticEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
@@ -43,11 +43,14 @@ export function ImportDialog({
   open,
   onOpenChange,
   onShowResults,
+  initialPath = null,
 }: {
   reviewId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onShowResults: (searchId: string) => void;
+  /** A file on this computer to start with: `tez refs.bib`, "Open with TEz" (Task 22). */
+  initialPath?: string | null;
 }) {
   const { t } = useTranslation();
   return (
@@ -65,6 +68,7 @@ export function ImportDialog({
           {open && (
             <ImportWizard
               reviewId={reviewId}
+              initialPath={initialPath}
               onClose={() => {
                 onOpenChange(false);
               }}
@@ -80,19 +84,28 @@ export function ImportDialog({
   );
 }
 
+function fromPath(path: string): ImportFile {
+  return { file_name: path.split(/[\\/]/).pop() ?? path, path };
+}
+
 function ImportWizard({
   reviewId,
+  initialPath,
   onClose,
   onShowResults,
 }: {
   reviewId: string;
+  initialPath: string | null;
   onClose: () => void;
   onShowResults: (searchId: string) => void;
 }) {
   const { t } = useTranslation();
   const preview = usePreviewImport();
   const run = useRunImport(reviewId);
-  const [file, setFile] = useState<ImportFile | null>(null);
+  // A file given by path is read by the backend, which can reach this computer's disk.
+  const [file, setFile] = useState<ImportFile | null>(() =>
+    initialPath ? fromPath(initialPath) : null,
+  );
   const [readFailed, setReadFailed] = useState(false);
   const [logRun, setLogRun] = useState(true);
   const [database, setDatabase] = useState<string>(knownDatabases[0]);
@@ -101,6 +114,11 @@ function ImportWizard({
   const [query, setQuery] = useState("");
   const [toReview, setToReview] = useState(true);
   const [toLibrary, setToLibrary] = useState(false);
+
+  const { mutate: startPreview } = preview;
+  useEffect(() => {
+    if (initialPath) startPreview(fromPath(initialPath));
+  }, [initialPath, startPreview]);
 
   async function choose(chosen: File) {
     setReadFailed(false);

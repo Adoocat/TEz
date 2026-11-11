@@ -183,7 +183,8 @@
     "citekey.taken": "Another paper already has the key {{citekey}}.",
     "citekey.invalid": "A citation key may hold only letters, digits and _ : . - + /.",
     "backup.damaged": "The backup is damaged ({{entry}}); nothing was restored.",
-    "backup.unsupported": "This backup was made by a newer version of TEz."
+    "backup.unsupported": "This backup was made by a newer version of TEz.",
+    "import.file_not_found": "File not found: {{path}}"
   },
   "reviews": {
     "active": "Active review",
@@ -489,5 +490,14 @@
     "fitWidth": "Fit to width",
     "pageLabel": "Page {{page}}",
     "pageFailed": "This page could not be drawn."
+  },
+  "open": {
+    "isLibrary": "This folder is a TEz library. Switching libraries is not possible yet; open it with tez-backend serve --library.",
+    "noPdfs": "No PDFs in this folder.",
+    "missing": "File not found.",
+    "unsupported": "TEz opens PDF, BibTeX and RIS files.",
+    "unknownLink": "TEz does not know this link.",
+    "addedSome": "{{added}} added to the inbox · {{duplicates}} already in the library · {{failed}} could not be added",
+    "addedSomeTruncated": "{{added}} added to the inbox · {{duplicates}} already in the library · {{failed}} could not be added (only the first 500 PDFs were looked at)"
   }
 }

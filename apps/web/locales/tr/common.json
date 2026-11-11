@@ -183,7 +183,8 @@
     "citekey.taken": "{{citekey}} anahtarı başka bir makalede kullanılıyor.",
     "citekey.invalid": "Atıf anahtarında yalnızca harf, rakam ve _ : . - + / olabilir.",
     "backup.damaged": "Yedek bozuk ({{entry}}); hiçbir şey geri yüklenmedi.",
-    "backup.unsupported": "Bu yedek TEz'in daha yeni bir sürümüyle yapılmış."
+    "backup.unsupported": "Bu yedek TEz'in daha yeni bir sürümüyle yapılmış.",
+    "import.file_not_found": "Dosya bulunamadı: {{path}}"
   },
   "reviews": {
     "active": "Etkin review",
@@ -489,5 +490,14 @@
     "fitWidth": "Genişliğe sığdır",
     "pageLabel": "Sayfa {{page}}",
     "pageFailed": "Bu sayfa çizilemedi."
+  },
+  "open": {
+    "isLibrary": "Bu klasör bir TEz kütüphanesi. Kütüphane değiştirme henüz yok; tez-backend serve --library ile açın.",
+    "noPdfs": "Bu klasörde PDF yok.",
+    "missing": "Dosya bulunamadı.",
+    "unsupported": "TEz PDF, BibTeX ve RIS dosyalarını açar.",
+    "unknownLink": "TEz bu bağlantıyı tanımıyor.",
+    "addedSome": "{{added}} tanesi Gelen kutusuna eklendi · {{duplicates}} tanesi zaten kütüphanede · {{failed}} tanesi eklenemedi",
+    "addedSomeTruncated": "{{added}} tanesi Gelen kutusuna eklendi · {{duplicates}} tanesi zaten kütüphanede · {{failed}} tanesi eklenemedi (yalnızca ilk 500 PDF'e bakıldı)"
   }
 }

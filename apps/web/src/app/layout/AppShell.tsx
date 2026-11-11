@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import { PdfDrop } from "@/features/files/PdfDrop";
 import { useJobEvents } from "@/features/jobs/useJobEvents";
+import { useOpenRequests } from "@/features/open/useOpenRequests";
 import { LibraryInspector } from "@/features/library/LibraryInspector";
 import { LibrarySidebar } from "@/features/library/LibrarySidebar";
 import { ReviewPicker } from "@/features/reviews/ReviewPicker";
@@ -56,6 +57,7 @@ const bottomNav: NavItem[] = [
 
 export function AppShell() {
   useJobEvents();
+  useOpenRequests();
   const { sidebarOpen, inspectorOpen } = useLayoutStore();
   const { pathname } = useLocation();
   const settingsRoute = pathname.startsWith("/settings");

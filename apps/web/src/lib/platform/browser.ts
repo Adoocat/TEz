@@ -53,4 +53,6 @@ export const browserPlatform: Platform = {
     onChange(browserBackendState(import.meta.env.DEV));
     return () => undefined;
   },
+  // Files and links reach the desktop app only.
+  onOpenRequests: () => () => undefined,
 };

@@ -877,12 +877,18 @@ export interface components {
          * @enum {string}
          */
         IdentifierScheme: "doi" | "arxiv" | "s2" | "openalex" | "dblp" | "isbn" | "zotero";
-        /** ImportFile */
+        /**
+         * ImportFile
+         * @description The file to read: its bytes (from a browser) or its path on this computer (from the
+         *     desktop app's "open with" and the terminal). Exactly one of the two.
+         */
         ImportFile: {
             /** File Name */
             file_name: string;
             /** Content Base64 */
-            content_base64: string;
+            content_base64?: string | null;
+            /** Path */
+            path?: string | null;
         };
         /**
          * ImportFormat
@@ -961,7 +967,9 @@ export interface components {
             /** File Name */
             file_name: string;
             /** Content Base64 */
-            content_base64: string;
+            content_base64?: string | null;
+            /** Path */
+            path?: string | null;
             /** Review Id */
             review_id?: string | null;
             log?: components["schemas"]["ImportLog"] | null;

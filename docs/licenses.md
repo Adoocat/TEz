@@ -49,6 +49,7 @@ The reader's text-layer CSS (`apps/web/src/styles/index.css`) is adapted from pd
 | Crate | Licence |
 | --- | --- |
 | tauri | Apache-2.0 or MIT |
+| tauri-plugin-single-instance, tauri-plugin-deep-link | Apache-2.0 or MIT |
 | serde, serde_json | Apache-2.0 or MIT |
 | getrandom | Apache-2.0 or MIT |
 | windows | Apache-2.0 or MIT |
