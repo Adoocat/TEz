@@ -275,6 +275,38 @@ Aşama 1, 24 küçük adımdan oluşur; her adım tek bir PR'dır ve yanındaki 
 
 Aşama 1'e bilerek alınmayanlar: PDF tam metin indeksleme (Aşama 3), kayıtlı sorgu uyarıları ve kartopu (Aşama 4), Zotero, PATH kurulumu, sağ tık menüsü ve dosya ilişkilendirme (Aşama 6, kurulum paketiyle).
 
+## Aşama 1 sonrası kararlar: her alana açık TEz
+
+Nov 11, 2026 · Ayrıntı ve gerekçe: ADR 0019
+
+Aşama 1 bittikten sonra bir akademisyenin (psikolog) geri bildirimiyle kapsam netleşti: **TEz her daldan araştırma ve tez içindir** (beşerî bilimler, hukuk, eğitim, sağlık, mühendislik…). Hiçbir alan grubu esas alınmaz. Plandaki bilgisayar bilimine yaslanan varsayılanlar (Kitchenham, DBLP, IEEE/ACM vurgusu, örnek matris sütunları) bu yüzden ürünün kapsamı değil, sahibinin tezinden gelen başlangıç ayarlarıdır.
+
+### Veritabanları için iki yol
+
+| Yol | Ne zaman | Örnekler | Nasıl |
+| --- | --- | --- | --- |
+| API | Açık, belgeli API'si olan ve kullanım koşulları uygun kaynak | Var: OpenAlex, Semantic Scholar, arXiv, Crossref. Aday: PubMed, Europe PMC, DOAJ, ERIC, CORE, DergiPark (OAI-PMH), TR Dizin | Sağlayıcı adaptörü (ADR 0008); her biri için onay, güncel belge kontrolü, ADR ve CLAUDE.md 1. kuraldaki ağ listesinin güncellenmesi |
+| Dosya | API'si olmayan, ücretli veya otomasyonu yasaklayan kaynak | Google Scholar, JSTOR, Scopus, Web of Science, ScienceDirect, EBSCO, ProQuest, PsycINFO, HeinOnline, IEEE Xplore, ACM DL | Dışa aktarılan dosya arama kaydı olarak içe alınır (Görev 15); veritabanı adı, tarih ve sorgu kaydedilir, PRISMA'da kendi kutusuyla sayılır |
+
+Dosya yolu yedek değil, birinci sınıf yoldur. Kazıma (scraping) yok: kullanım koşulları otomasyonu yasaklayan veya bot kontrolü yapan siteye (Google Scholar, JSTOR) bağlanılmaz, CAPTCHA aşılmaz. Koşulları belirsiz kaynak, koşullar netleşene kadar eklenmez.
+
+### Aşamalara dağılım
+
+| Ne | Aşama | Ön koşul |
+| --- | --- | --- |
+| Yeni review'larda varsayılan yöntem PRISMA 2020 (Kitchenham SLR seçenek olarak kalır); review formundaki varsayılan değişir | 2, başı | — |
+| Veritabanı ön ayarlı içe aktarma: kullanıcı "JSTOR", "Web of Science", "Google Scholar"… seçer; her birinin dışa aktarma biçimi (WoS düz metni, Scopus CSV, tek tek BibTeX) ve tuhaflıkları TEz'de çözülür | 2, başı | Her veritabanından gerçek, küçük, kendi ürettiğimiz örnek dosya |
+| "Bu veritabanından nasıl dışa aktarılır" kısa rehberi (arama ekranında) | 2, başı | Ön ayarlarla birlikte |
+| PRISMA diyagramında "diğer yöntemler" dalı: kartopu ile birlikte gri literatür (tez, rapor, kayıt) | 2 | PRISMA görevi |
+| Hangi yeni API sağlayıcılarının, hangi sırayla ekleneceği | 2 planlanırken karar | Aday listesi yukarıda |
+| TR Dizin: önce arayüzünden alınan BibTeX dosyasıyla içe aktarma denemesi; sonra doğrudan sağlayıcı | 2 (deneme hemen) | Doğrudan sağlayıcı için resmi API koşulları |
+| Biçimlendirilmiş kaynakça (CSL): en az APA 7, MLA, Chicago, Vancouver, IEEE; Türkçe ve İngilizce; kapsam seçili / koleksiyon / review'da dahil edilenler; panoya ve dosyaya. Dışa aktarma ekranıyla (tasarım 5.10) birlikte | 2, sonu | Eleme kararları; `citeproc-py` lisans kontrolü. `citeproc-js` AGPL/CPAL olduğu için kullanılmaz |
+| Enstitü tez yazım kılavuzlarına göre özel CSL stilleri | CSL'den sonra, ihtiyaç doğdukça | — |
+| Kalite değerlendirmesi alandan bağımsız: kullanıcının kendi soruları ve ölçeği veya hazır kontrol listesi (Kitchenham, JBI, RoB 2 gibi yanlılık riski araçları) | Kalite değerlendirme görevi geldiğinde | Şema hazır (`quality_question`, `quality_assessment`) |
+| Yayın türlerinde kitap, kitap bölümü ve tez: filtreler ve dışa aktarma | Arama filtreleri ve dışa aktarma ekranıyla | — |
+| YÖK Ulusal Tez Merkezi: deneysel, varsayılanı kapalı kaynak; "şu an hangi tezler yapılıyor" için kayıtlı sorgu uyarılarıyla | 4 | Kullanım koşulları; resmi API yok |
+| Word içinde yazarken atıf eklentisi | Kapsam dışı | Zotero'ya aktarım (Aşama 6) bu yolu karşılar |
+
 ## Riskler, eksikler ve alternatifler
 
 En büyük risk teknik değil: aracın kendisi tez taramasını geciktirebilir. Bu yüzden önce taramanın kritik yolunu (arama → eleme → okuma → matris) uçtan uca çalışır hale getirmeyi, gerisini ihtiyaç doğdukça eklemeyi öneriyorum.
@@ -283,9 +315,10 @@ En büyük risk teknik değil: aracın kendisi tez taramasını geciktirebilir. 
 
 | Risk | Etkisi | Önlem |
 | --- | --- | --- |
-| Kapsam | 6 aşama tek kişiye çok; tez takvimini zorlar | Kritik yol önce; kartopu Aşama 4'ten 2'ye (yazılım mühendisliği taramalarında ana yöntem, API ile ucuz); grafik ve uyarılar sonra |
+| Kapsam | 6 aşama tek kişiye çok; tez takvimini zorlar | Kritik yol önce; kartopu Aşama 4'ten 2'ye (her alanda kullanılan tamamlayıcı yöntem, API ile ucuz); grafik ve uyarılar sonra |
 | Paket boyutu | Docling/torch ve OCR modelleri paketi GB'lara çıkarır | Çekirdek uygulama hafif; ağır işleme isteğe bağlı indirilen paket veya harici servis |
-| Veri kaynağı kapsamı | Jüri IEEE Xplore, ACM DL, Scopus bekleyebilir; API'leri kurumsal anahtar ister | Bu veritabanlarının RIS/BibTeX dışa aktarımı arama kaydı olarak içe alınır (görev 15); bilgisayar bilimi için DBLP eklenir |
+| Veri kaynağı kapsamı | Her alanın jürisi kendi veritabanlarını bekler (Scopus, Web of Science, JSTOR, PubMed, PsycINFO, TR Dizin, Google Scholar…); çoğunun açık API'si yok | İki yol (ADR 0019): açık API'si olan kaynak sağlayıcı olur; diğerlerinin dışa aktarımı ön ayarlı içe aktarmayla arama kaydı olur (görev 15) |
+| Kaynak kullanım koşulları | Google Scholar ve JSTOR otomasyonu yasaklar veya engeller; TR Dizin ve YÖK Tez'in koşulları belirsiz | Kazıma yok; koşulları belirsiz kaynak netleşene kadar eklenmez, eklenirse deneysel ve varsayılanı kapalı |
 | Sorgu eşdeğerliği | Tek sorgu her API'de farklı yorumlanır; raporlama standartları kaynak başına tam sorgu ister | Kaynak başına çevrilmiş sorgu saklanır, gösterilir ve düzenlenebilir |
 | API koşulları | Kota, anahtar ve e-posta (polite pool) kuralları sık değişir | Sağlayıcı ayarları yapılandırılabilir; her sağlayıcı yazılmadan önce güncel belgeleri kontrol edilir |
 | Konum kayması | PDF yeni sürümle değişirse vurgular ve kanıtlar kayar | Anchor'da metin alıntısı + önek/sonek ile yeniden konumlama |
@@ -296,8 +329,8 @@ En büyük risk teknik değil: aracın kendisi tez taramasını geciktirebilir. 
 ### Planda eksik olanlar
 
 - **Review (tarama projesi) kavramı:** arama, kriter, eleme ve PRISMA'yı kütüphaneden ayırır; aynı makale iki taramada farklı karar alabilir.
-- **Kalite değerlendirmesi:** Kitchenham SLR yönteminde zorunlu aşama; şemaya eklendi.
-- **PRISMA 2020 ayrıntıları:** "diğer yöntemlerle bulunanlar" dalı (kartopu) ve "tam metnine erişilemeyen" kayıtlar.
+- **Kalite değerlendirmesi:** Kitchenham SLR'de zorunlu, sağlık taramalarında yanlılık riski olarak beklenir; şemaya eklendi. Araçtan bağımsız tutulur (ADR 0019).
+- **PRISMA 2020 ayrıntıları:** "diğer yöntemlerle bulunanlar" dalı (kartopu ve gri literatür: tez, rapor, kayıt) ve "tam metnine erişilemeyen" kayıtlar.
 - **Sürüm ilişkisi:** arXiv ön baskısı ile konferans sürümü ayrı kayıt olarak tutulup bağlanmalı.
 - **Tekrarlanabilirlik:** her aramanın ham API yanıtı saklanmalı.
 - **Güvenlik:** API anahtarları işletim sistemi anahtar zincirinde; sidecar yalnızca 127.0.0.1 + token.
@@ -315,8 +348,9 @@ Sorular yanıtlanana kadar geliştirme bu varsayılanlarla ilerler; bir varsayı
 
 | Soru | Varsayılan karar | Etkisi |
 | --- | --- | --- |
-| Tez alanı | LLM destekli kod inceleme; kaynak önceliği arXiv, ACM DL, IEEE Xplore, DBLP | Örnek veri, sağlayıcı sırası |
-| Tarama yöntemi | Kitchenham SLR + kartopu (Wohlin); raporlama için PRISMA 2020 diyagramı | Eleme aşamaları (Aşama 2) |
+| Kapsam | Her daldan araştırma ve tez; hiçbir alan esas alınmaz (ADR 0019) | Varsayılanlar, sağlayıcılar, örnek veri |
+| Tez alanı (sahibinin) | LLM destekli kod inceleme; yalnızca demo kütüphanesini ve ilk denemeleri belirler, ürünün kapsamını değil | Örnek veri |
+| Tarama yöntemi | Varsayılan PRISMA 2020; Kitchenham SLR seçenek; kartopu (Wohlin) her yöntemle (ADR 0019) | Eleme aşamaları ve review formu (Aşama 2) |
 | Çalışma biçimi | Tek kullanıcı: masaüstü + yerel web modu (`tez serve`); çok kullanıcılı sunucu yok | Kimlik doğrulama yok, yalnız token |
 | İşletim sistemi | Geliştirme Windows'ta, CI Ubuntu'da; paketler Aşama 6'da Windows → macOS → Linux | S1 denemesi Windows'ta |
 | Lisans | MIT; PyMuPDF ve Marker yok, yerine pypdfium2 ve Docling | Bağımlılık seçimi |

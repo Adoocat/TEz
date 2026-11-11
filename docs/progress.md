@@ -32,6 +32,10 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 ## Sonraya
 
+- (ADR 0019) Kapsam her daldan araştırma ve tez olarak netleşti; Aşama 2+ işlerinin aşamalara dağılımı `docs/plan.md` → "Aşama 1 sonrası kararlar" bölümünde.
+- (ADR 0019) Review formunda varsayılan yöntem hâlâ `kitchenham_slr` (`ReviewForm.tsx`); Aşama 2 başında PRISMA 2020 olacak.
+- (ADR 0019) TR Dizin arayüzünden alınan BibTeX dışa aktarımıyla içe aktarma denemesi (Türkçe karakterler, alan adları); küçük bir örnek dosya test verisine eklenmeli.
+- (23) BibTeX yazıcısı her tezi `@phdthesis` yazıyor (`writers.py`); yüksek lisans tezi `@mastersthesis` olmalı (RIS'te ikisi de `THES`). Tez türü (yüksek lisans/doktora) şimdilik saklanmıyor.
 - (23) Planın komut tablosundaki `tez list`, `tez jobs`, `tez backup`, `tez prisma` ve pencere komutları (`tez <dosya>` masaüstünü başlatır) Aşama 6'daki konsol kabuğuyla.
 - (23) Typer'ın gömülü Click'inde "Usage:" ve "Try … for help." sabit yazılı; Türkçe yardımda İngilizce kalıyor.
 - (23) Dışa aktarma ekranı (tasarım 5.10): kapsam seçimi, atıf anahtarı biçimi önizlemesi.
@@ -110,3 +114,7 @@ Karar ilgili göreve gelindiğinde verilir.
 10. **Koyu tema tokenları** tek ekrandan türetilmiş taslak (`docs/design/tokens.json`); onay gerekiyor. Ayrıca açık temada YZ (`#7c3aed`) ve "tekrar bakılacak" (`#9333ea`) renkleri neredeyse aynı — ayırt edilmeli.
 11. **Kısayol çakışması:** eleme ekranında J/K önceki/sonraki kayıt ve Space "Atla"; design prompt'ta "Atla" `→`. Görev 8'de kısayol haritası netleştirilmeli.
 12. Plan "24 adım" diyor, liste 25 (S1 + 1–23 + 6b) — plan metninde düzeltilecek.
+13. **İki değerlendiricili eleme ve Cohen kappa** Aşama 2'de mi, sonra mı? Sağlık ve psikoloji taramalarında neredeyse zorunlu; şema hazır (`reviewer`), tasarımda "Çakışmalar" sekmesinin yeri var. Aşama 2 planlanırken karar verilecek.
+14. **Yeni API sağlayıcılarının sırası** (PubMed, Europe PMC, DOAJ, ERIC, CORE, DergiPark, TR Dizin): Aşama 2 planlanırken; her biri ayrı onay + ADR + CLAUDE.md 1. kural güncellemesi (ADR 0019).
+15. **TR Dizin ve YÖK Tez kullanım koşulları:** TR Dizin'in API hizmeti resmi belgede doğrulanmadı; YÖK Tez'in API'si yok, otomatik erişime izin verip vermediği belirsiz. Netleşmeden doğrudan sağlayıcı yazılmaz.
+16. **`citeproc-py` lisansı** doğrulanmadı (BSD olduğu düşünülüyor); CSL kaynakça görevinden önce kontrol edilmeli. Uymazsa alternatif aranır; `citeproc-js` (AGPL/CPAL) kullanılmaz.
