@@ -55,4 +55,8 @@ export const browserPlatform: Platform = {
   },
   // Files and links reach the desktop app only.
   onOpenRequests: () => () => undefined,
+  openExternal(url) {
+    window.open(url, "_blank", "noopener,noreferrer");
+    return Promise.resolve();
+  },
 };

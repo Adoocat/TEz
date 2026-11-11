@@ -402,6 +402,7 @@ export function platformWith(state: BackendState): Platform {
       return () => undefined;
     },
     onOpenRequests: () => () => undefined,
+    openExternal: () => Promise.resolve(),
   };
 }
 

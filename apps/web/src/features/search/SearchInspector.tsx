@@ -1,6 +1,8 @@
 // The selected result: everything known about it, and how its records were merged.
 import { useTranslation } from "react-i18next";
 
+import { useBackend } from "@/app/backend";
+
 import { useSearchResults } from "./api";
 import { useSearchView } from "./store";
 
@@ -84,11 +86,22 @@ export function SearchInspector() {
 }
 
 function Identifier({ label, value, href }: { label: string; value: string; href: string }) {
+  const { platform } = useBackend();
   return (
     <div className="flex gap-2">
       <dt className="text-fg-muted">{label}</dt>
       <dd className="min-w-0 truncate">
-        <a href={href} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className="text-primary hover:underline"
+          onClick={(event) => {
+            // The desktop window ignores target="_blank"; the platform opens the user's browser.
+            event.preventDefault();
+            void platform.openExternal(href);
+          }}
+        >
           {value}
         </a>
       </dd>
