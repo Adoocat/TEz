@@ -48,7 +48,8 @@
     "types": {
       "diagnostics.sleep": "Diagnostics",
       "pdf.inspect": "PDF inspection",
-      "pdf.fetch_open_access": "Open-access PDF download"
+      "pdf.fetch_open_access": "Open-access PDF download",
+      "library.backup": "Library backup"
     },
     "statuses": {
       "queued": "Queued",
@@ -64,7 +65,8 @@
       "general": "General",
       "sources": "Search sources",
       "library": "Library",
-      "about": "About"
+      "about": "About",
+      "backup": "Backup"
     },
     "language": "Language",
     "languageHelp": "Interface language. \"System\" follows the operating system.",
@@ -97,7 +99,26 @@
     "libraryPath": "Location",
     "librarySchema": "Schema version",
     "version": "Version",
-    "license": "Open-source software under the MIT license."
+    "license": "Open-source software under the MIT license.",
+    "backup": {
+      "about": "A backup is one zip file in the library's backups folder: the database, the PDFs and the raw search answers, with a checksum for each. Copy it somewhere else (an external disk, a cloud folder) to keep it safe.",
+      "now": "Back up now",
+      "running": "Backing up…",
+      "progress": "{{percent}}% done",
+      "done": "Backup written.",
+      "failed": "The backup failed; see Jobs.",
+      "none": "No backups yet.",
+      "date": "Date",
+      "contents": "Contents",
+      "size": "Size",
+      "file": "File",
+      "counts": "{{papers}} papers, {{files}} files",
+      "unreadable": "Cannot be read",
+      "megabytes": "{{size}} MB",
+      "restoreTitle": "Restoring",
+      "restoreText": "A backup is restored into a new, empty folder, which then opens as a library. Every file is checked against the backup's checksums. In this version, restore from a terminal:",
+      "newFolder": "new folder"
+    }
   },
   "errors": {
     "unknown": "Something unexpected went wrong.",
@@ -160,7 +181,9 @@
     "tag.not_found": "This tag no longer exists.",
     "tag.name_taken": "There is already a tag named “{{name}}”.",
     "citekey.taken": "Another paper already has the key {{citekey}}.",
-    "citekey.invalid": "A citation key may hold only letters, digits and _ : . - + /."
+    "citekey.invalid": "A citation key may hold only letters, digits and _ : . - + /.",
+    "backup.damaged": "The backup is damaged ({{entry}}); nothing was restored.",
+    "backup.unsupported": "This backup was made by a newer version of TEz."
   },
   "reviews": {
     "active": "Active review",

@@ -48,7 +48,8 @@
     "types": {
       "diagnostics.sleep": "Tanılama",
       "pdf.inspect": "PDF inceleme",
-      "pdf.fetch_open_access": "Açık erişim PDF indirme"
+      "pdf.fetch_open_access": "Açık erişim PDF indirme",
+      "library.backup": "Kütüphane yedeği"
     },
     "statuses": {
       "queued": "Sırada",
@@ -64,7 +65,8 @@
       "general": "Genel",
       "sources": "Arama kaynakları",
       "library": "Kütüphane",
-      "about": "Hakkında"
+      "about": "Hakkında",
+      "backup": "Yedekleme"
     },
     "language": "Dil",
     "languageHelp": "Arayüz dili. \"Sistem\" işletim sisteminin dilini izler.",
@@ -97,7 +99,26 @@
     "libraryPath": "Konum",
     "librarySchema": "Şema sürümü",
     "version": "Sürüm",
-    "license": "MIT lisanslı açık kaynak yazılım."
+    "license": "MIT lisanslı açık kaynak yazılım.",
+    "backup": {
+      "about": "Yedek, kütüphanenin backups klasöründe tek bir zip dosyasıdır: veritabanı, PDF'ler ve aramaların ham yanıtları, her biri için bir sağlama değeriyle. Güvende tutmak için başka bir yere (harici disk, bulut klasörü) kopyalayın.",
+      "now": "Şimdi yedekle",
+      "running": "Yedekleniyor…",
+      "progress": "%{{percent}} tamamlandı",
+      "done": "Yedek yazıldı.",
+      "failed": "Yedekleme başarısız; İşler'e bakın.",
+      "none": "Henüz yedek yok.",
+      "date": "Tarih",
+      "contents": "İçerik",
+      "size": "Boyut",
+      "file": "Dosya",
+      "counts": "{{papers}} makale, {{files}} dosya",
+      "unreadable": "Okunamıyor",
+      "megabytes": "{{size}} MB",
+      "restoreTitle": "Geri yükleme",
+      "restoreText": "Yedek yeni ve boş bir klasöre geri yüklenir; klasör sonra kütüphane olarak açılır. Her dosya yedekteki sağlama değerleriyle denetlenir. Bu sürümde geri yükleme terminalden yapılır:",
+      "newFolder": "yeni klasör"
+    }
   },
   "errors": {
     "unknown": "Beklenmeyen bir hata oluştu.",
@@ -160,7 +181,9 @@
     "tag.not_found": "Bu etiket artık yok.",
     "tag.name_taken": "Zaten “{{name}}” adlı bir etiket var.",
     "citekey.taken": "{{citekey}} anahtarı başka bir makalede kullanılıyor.",
-    "citekey.invalid": "Atıf anahtarında yalnızca harf, rakam ve _ : . - + / olabilir."
+    "citekey.invalid": "Atıf anahtarında yalnızca harf, rakam ve _ : . - + / olabilir.",
+    "backup.damaged": "Yedek bozuk ({{entry}}); hiçbir şey geri yüklenmedi.",
+    "backup.unsupported": "Bu yedek TEz'in daha yeni bir sürümüyle yapılmış."
   },
   "reviews": {
     "active": "Etkin review",

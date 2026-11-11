@@ -26,12 +26,14 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 18 · Koleksiyon ve etiketler | bitti | `task/18-collections-tags` · #26 | Koleksiyon ağacı (oluştur, yeniden adlandır, taşı, sil; döngü ve kardeş ad kontrolü, Türkçe katlama), çoklu koleksiyon, etiketler (renkler token adı), toplu okuma durumu; sayılar türetilir. Kenar çubuğu: Gelen kutusu, Tüm makaleler, ağaç, etiketler; satırlar koleksiyona/etikete, koleksiyonlar birbirine sürüklenir. Playwright kuruldu: `pnpm e2e` gerçek arka uç + geçici kütüphaneyle; CI'da `e2e` işi. Ayrıntı: ADR 0013 |
 | 19 · Kütüphane listesi | bitti | `task/19-library-list` · #27 | `paper_fts` (migration 0007) Türkçe katlanmış metinle; ORM `after_flush` ile aynı işlemde güncellenir, kütüphane açılışında eksikse yeniden kurulur. `GET /papers/search` (her kelime, önek), detay ve atıf anahtarı (`yilmaz2024automated`, düzenlenebilir). TanStack Table v8 + Virtual tablo: sıralama, yıl/okuma/etiket/PDF filtreleri, denetçi. Demo kütüphane: `python -m tez.devtools.demo`. Kabul: 2000 makalede sunucu ~1–2 ms, tarayıcı gidiş-dönüş medyan ~5 ms. Ayrıntı: ADR 0014 |
 | 20 · PDF görüntüleyici | bitti | `task/20-pdf-viewer` · #28 | `GET /attachments/{id}/file` (Range → 206, başarılı aralık istekleri DEBUG). pdf.js ilk kullanımda yüklenir, yalnız aralıklar (autoFetch kapalı), sanallaştırılmış sayfalar (görünen ±2), metin katmanı, yakınlaştırma, `#/reader/<id>?page=N`. Kabul (300 sayfa, 6,1 MB, headless Chromium): 150. sayfada açılış 1,7 MB, DOM'da en çok 3 tuval, JS yığını 35 MB sabit, kaydırma adımı p95 34 ms. Ayrıntı: ADR 0015 |
-| 21 · Kapanış | bekliyor | | |
+| 21 · Kapanış | bitti | `task/21-closing` · #30 | Yedek: SQLite backup API ile tutarlı veritabanı kopyası + `files/` + `snapshots/` + SHA-256'lı manifest, tek zip; işçide iş, Ayarlar › Yedekleme. `tez-backend restore <zip> <klasör>`: yalnızca boş klasöre, her girdi doğrulanır, `..` reddedilir, bozuksa yarım klasör silinir. Kabul testi: geri yüklenen kütüphanede makaleler, atıf anahtarları, koleksiyonlar, arama, arama geçmişi ve PDF baytları aynı. README, `docs/architecture.md`, `docs/licenses.md`; Playwright duman testi (ekranlar, dil kalıcılığı, gerçek işçiyle yedek). Ayrıntı: ADR 0016 |
 | 22 · Tek örnek ve argüman iletimi | bekliyor | | |
 | 23 · Başsız CLI çekirdeği | bekliyor | | |
 
 ## Sonraya
 
+- (21) Otomatik/zamanlanmış yedek ve son *n* yedeği tutma; durum çubuğunda "son yedek" (tasarım).
+- (21) Arayüzden geri yükleme: kütüphane seçici/karşılama ekranı (açık soru 1) ile birlikte.
 - (20) Belge içi arama, vurgular, ana hat/küçük resim kenar çubuğu, döndürme; farklı boyutlu sayfalar (şimdi hepsi 1. sayfa boyutunda).
 - (20) pdf.js `standardFontDataUrl` ve `wasmUrl` (JPEG 2000 vb.) ayarlanmadı; gömülmemiş standart yazı tipli PDF'ler yedek yazı tipiyle çizilir.
 - (20) Ana paket ~760 kB (pdf.js ayrı parçada); rota bazlı kod bölme hâlâ yapılabilir (bkz. (8)).
@@ -62,7 +64,6 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (11) Sağlayıcı ayarları (hız, kota) yapılandırılabilir olmalı (plan, riskler); şimdilik kodda.
 - Tasarımda olup Aşama 1'de gizlenecekler: YZ öğeleri, vurgu/not, kart/zaman/atıf grafiği görünümleri, tam metin arama, Zotero, "Yeni makale uyarısı", sistem entegrasyonu adımı (Aşama 6).
 - Eksik tasarımlar: 4.1 karşılama ve yeni review formu, 4.6'nın tamamı, bileşen sayfası, daraltılmış kabuk, boş/yükleniyor/çevrimdışı durumları, İngilizce sürümler, koyu tema (yalnız matris var).
-- Lisans kaydı: PyInstaller GPL + bootloader istisnası (dağıtıma engel değil) — ADR 0001'de yazıldı, Görev 21'deki lisans notlarına da eklenecek.
 - (S1) Sidecar'ı Tauri eklentileri yüklenmeden, `run()` başında `std::process` ile başlatmak ~300 ms kazandırır (Görev 3/8).
 - (S1) Açılışta "süreç → Rust main" ~600 ms; imzalı paketle yeniden ölçülmeli (Aşama 6, kod imzalama).
 - (S1/20) pdf.js belleği WebView2'de gerçek makalelerle ölçülmeli (spike: 170 → ~410 MB; Görev 20 headless Chromium'da JS yığını 35 MB sabit, tuval en çok 3).

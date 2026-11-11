@@ -17,6 +17,7 @@ import {
   useUpdateSettings,
   type SecretName,
 } from "./api";
+import { BackupSection } from "./BackupSection";
 import { settingsSections, type SettingsSection } from "./SettingsNav";
 
 export function SettingsPage() {
@@ -34,6 +35,7 @@ function SettingsBody({ section }: { section: SettingsSection }) {
       {section === "general" && <GeneralSection />}
       {section === "sources" && <SourcesSection />}
       {section === "library" && <LibrarySection />}
+      {section === "backup" && <BackupSection />}
       {section === "about" && <AboutSection />}
     </div>
   );
