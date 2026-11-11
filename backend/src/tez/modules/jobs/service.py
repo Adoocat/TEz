@@ -2,8 +2,10 @@
 
 from collections.abc import AsyncGenerator
 from datetime import datetime
+from typing import Any
 
 import anyio
+from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
 from tez.core.db import Database
@@ -76,3 +78,20 @@ def get_job(db: Database, job_id: str) -> JobView | None:
     with db.session() as s:
         job = JobsRepository(s).get(job_id)
         return None if job is None else JobView.of(job)
+
+
+def enqueue(
+    session: Session,
+    job_type: str,
+    payload: dict[str, Any],
+    *,
+    dedupe_key: str | None = None,
+    priority: int = 0,
+    max_attempts: int = 3,
+) -> str:
+    """Queue a job in the caller's write session; returns its id (the active one if a twin is
+    already queued). For other modules, which do not use the jobs repository directly."""
+    job, _ = JobsRepository(session).enqueue(
+        job_type, payload, dedupe_key=dedupe_key, priority=priority, max_attempts=max_attempts
+    )
+    return job.id

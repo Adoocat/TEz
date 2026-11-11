@@ -35,6 +35,9 @@ class Attachment(TimestampMixin, Base):
     # The same file is stored once.
     sha256: Mapped[str] = mapped_column(String(64), unique=True)
     page_count: Mapped[int | None] = mapped_column(Integer)
+    # The name the file had when it was added; the stored name is its hash.
+    file_name: Mapped[str | None] = mapped_column(Text)
+    size: Mapped[int | None] = mapped_column(Integer)
     source: Mapped[str | None] = mapped_column(Text)
     text_status: Mapped[TextStatus] = mapped_column(
         enum_type(TextStatus, "text_status"), default=TextStatus.PENDING

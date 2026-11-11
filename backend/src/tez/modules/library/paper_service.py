@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session, selectinload
 from tez.core.db import utcnow
 from tez.core.errors import ErrorCode, TezError
 from tez.modules.library.models import (
+    Collection,
     IdentifierScheme,
     Paper,
     PaperAuthor,
@@ -19,6 +20,8 @@ from tez.modules.library.models import (
 )
 from tez.modules.library.repository import AuthorInput, LibraryRepository
 
+# The system collection new files land in until the user files them (plan, "Gelen kutusu").
+INBOX = "inbox"
 _FILLABLE = ("abstract", "year", "venue", "venue_type", "volume", "issue", "pages", "language")
 _FILLABLE_LINKS = ("url", "oa_url")
 
@@ -131,3 +134,15 @@ class PaperService:
 
     def link_versions(self, preprint_id: str, published_id: str) -> None:
         self._repository.add_relation(preprint_id, published_id, RelationKind.VERSION_OF)
+
+    def inbox_id(self) -> str:
+        """The inbox collection, made the first time a file needs it."""
+        found = self._session.scalar(
+            select(Collection.id).where(Collection.is_system, Collection.name == INBOX)
+        )
+        if found is not None:
+            return found
+        return self._repository.add_collection(INBOX, is_system=True, sort_order=-1).id
+
+    def put_in_inbox(self, paper_id: str) -> None:
+        self._repository.add_to_collection(self.inbox_id(), paper_id)

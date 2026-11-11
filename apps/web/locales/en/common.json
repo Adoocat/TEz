@@ -141,7 +141,14 @@
     "import.entry_no_title": "has no title",
     "import.entry_duplicate_key": "repeats a key used earlier in the file",
     "import.entry_truncated": "is cut short (the file ends inside it)",
-    "import.stray_text": "text outside any record"
+    "import.stray_text": "text outside any record",
+    "pdf.not_a_pdf": "{{file_name}} is not a PDF file.",
+    "pdf.too_large": "{{file_name}} is too large to add.",
+    "pdf.file_not_found": "File not found: {{path}}",
+    "pdf.unreadable": "The PDF is damaged and cannot be read.",
+    "pdf.crashed": "Reading this PDF crashed the worker {{attempts}} times; it was skipped.",
+    "pdf.missing": "The stored file is missing from the library folder.",
+    "attachment.not_found": "This file no longer exists."
   },
   "reviews": {
     "active": "Active review",
@@ -322,5 +329,14 @@
     "close": "Close",
     "showResults": "Show results",
     "done": "{{imported}} records imported: {{newPapers}} new papers, {{toReview}} added to the review."
+  },
+  "files": {
+    "dropToAdd": "Drop PDFs to add them to the library",
+    "dismiss": "Dismiss",
+    "notice": {
+      "uploading": "Adding…",
+      "added": "Added to the inbox.",
+      "duplicate": "Already in the library: nothing was copied."
+    }
   }
 }

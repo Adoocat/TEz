@@ -51,6 +51,13 @@ class ErrorCode(StrEnum):
     IMPORT_EMPTY = "import.empty"
     IMPORT_INVALID_CONTENT = "import.invalid_content"
     IMPORT_ENTRIES_SKIPPED = "import.entries_skipped"
+    PDF_NOT_A_PDF = "pdf.not_a_pdf"
+    PDF_TOO_LARGE = "pdf.too_large"
+    PDF_FILE_NOT_FOUND = "pdf.file_not_found"
+    PDF_UNREADABLE = "pdf.unreadable"
+    PDF_CRASHED = "pdf.crashed"
+    PDF_MISSING = "pdf.missing"
+    ATTACHMENT_NOT_FOUND = "attachment.not_found"
 
 
 class TezError(Exception):

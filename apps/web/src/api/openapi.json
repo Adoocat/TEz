@@ -1317,6 +1317,352 @@
         ]
       }
     },
+    "/pdfs": {
+      "post": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Upload Pdf",
+        "description": "Add a PDF sent as the raw request body. Without `paper_id` it becomes a new paper in\nthe inbox. The same file twice is `duplicate` and changes nothing.",
+        "operationId": "upload_pdf_pdfs_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "file_name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255,
+              "title": "File Name"
+            }
+          },
+          {
+            "name": "paper_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Paper Id"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PdfAdded"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/pdf": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pdfs/from-paths": {
+      "post": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Add Pdfs From Paths",
+        "description": "Add PDFs by their paths on this computer; each file succeeds or fails on its own.",
+        "operationId": "add_pdfs_from_paths_pdfs_from_paths_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PdfPaths"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PdfPathResult"
+                  },
+                  "type": "array",
+                  "title": "Response Add Pdfs From Paths Pdfs From Paths Post"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/papers/{paper_id}/attachments": {
+      "get": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Paper Attachments",
+        "operationId": "paper_attachments_papers__paper_id__attachments_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "paper_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Paper Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AttachmentView"
+                  },
+                  "title": "Response Paper Attachments Papers  Paper Id  Attachments Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/attachments/{attachment_id}": {
+      "get": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Get Attachment",
+        "operationId": "get_attachment_attachments__attachment_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Attachment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttachmentView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/settings": {
       "get": {
         "tags": [
@@ -1720,6 +2066,110 @@
         },
         "type": "object",
         "title": "AppSettings"
+      },
+      "AttachmentKind": {
+        "type": "string",
+        "enum": [
+          "pdf",
+          "supplement"
+        ],
+        "title": "AttachmentKind"
+      },
+      "AttachmentView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "paper_id": {
+            "type": "string",
+            "title": "Paper Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/AttachmentKind"
+          },
+          "file_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Name"
+          },
+          "sha256": {
+            "type": "string",
+            "title": "Sha256"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size"
+          },
+          "page_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Count"
+          },
+          "text_status": {
+            "$ref": "#/components/schemas/TextStatus"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "paper_id",
+          "kind",
+          "file_name",
+          "sha256",
+          "size",
+          "page_count",
+          "text_status",
+          "error",
+          "source",
+          "created_at"
+        ],
+        "title": "AttachmentView"
       },
       "ErrorDetail": {
         "properties": {
@@ -2236,6 +2686,114 @@
           "paper_ids"
         ],
         "title": "PaperSelection"
+      },
+      "PdfAdded": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "added",
+              "duplicate"
+            ],
+            "title": "Status"
+          },
+          "paper_id": {
+            "type": "string",
+            "title": "Paper Id"
+          },
+          "attachment_id": {
+            "type": "string",
+            "title": "Attachment Id"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          },
+          "file_name": {
+            "type": "string",
+            "title": "File Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "paper_id",
+          "attachment_id",
+          "job_id",
+          "file_name"
+        ],
+        "title": "PdfAdded"
+      },
+      "PdfPathResult": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "added": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PdfAdded"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "path"
+        ],
+        "title": "PdfPathResult"
+      },
+      "PdfPaths": {
+        "properties": {
+          "paths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 1000,
+            "minItems": 1,
+            "title": "Paths"
+          },
+          "paper_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paper Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "paths"
+        ],
+        "title": "PdfPaths",
+        "description": "Files on this computer: the desktop app's drops, `tez <file.pdf>`, the CLI."
       },
       "PreviewRecord": {
         "properties": {
@@ -3071,6 +3629,16 @@
           "failed"
         ],
         "title": "SourceState"
+      },
+      "TextStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "ok",
+          "needs_ocr",
+          "failed"
+        ],
+        "title": "TextStatus"
       },
       "VenueType": {
         "type": "string",

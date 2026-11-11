@@ -31,6 +31,11 @@ export interface FakeBackend {
   /** When set, the preview fails with this error instead. */
   importPreviewError: { code: string; params: Record<string, unknown> } | null;
   importOutcome: ImportOutcome;
+  /** What the next POST /pdfs answers, in order; "added" when empty. */
+  pdfReplies: (
+    | { status: "added" | "duplicate" }
+    | { error: { code: string; params: Record<string, unknown> }; httpStatus: number }
+  )[];
 }
 
 const json = (body: unknown, status = 200) =>
@@ -53,6 +58,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     importPreview: importPreview(),
     importPreviewError: null,
     importOutcome: importOutcome(),
+    pdfReplies: [],
     emitSource(searchId, update) {
       const data = {
         state: "searching",
@@ -81,8 +87,13 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     },
     async fetch(request) {
       const path = new URL(request.url, "http://test").pathname;
+      const isJson = request.headers.get("Content-Type")?.includes("json") ?? false;
       const body: unknown =
-        request.method === "GET" || request.method === "DELETE" ? undefined : await request.json();
+        request.method === "GET" || request.method === "DELETE"
+          ? undefined
+          : isJson
+            ? await request.json()
+            : await request.arrayBuffer();
       backend.requests.push({ method: request.method, path, body });
 
       const route = `${request.method} ${path}`;
@@ -131,6 +142,21 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
           : json(backend.importPreview);
       }
       if (route === "POST /imports") return json(backend.importOutcome, 201);
+      if (route === "POST /pdfs") {
+        const fileName = new URL(request.url, "http://test").searchParams.get("file_name") ?? "";
+        const reply = backend.pdfReplies.shift() ?? { status: "added" };
+        if ("error" in reply) return json({ error: reply.error }, reply.httpStatus);
+        return json(
+          {
+            status: reply.status,
+            paper_id: "paper-pdf",
+            attachment_id: "attachment-1",
+            job_id: reply.status === "added" ? "job-pdf" : null,
+            file_name: fileName,
+          },
+          201,
+        );
+      }
       if (/^\/reviews\/[^/]+\/records$/.test(path) || route === "POST /library/papers") {
         const { paper_ids } = body as { paper_ids: string[] };
         return json({ added: paper_ids.length, already_present: 0 });
