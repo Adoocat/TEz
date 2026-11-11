@@ -306,6 +306,9 @@ Dosya yolu yedek değil, birinci sınıf yoldur. Kazıma (scraping) yok: kullan�
 | Kalite değerlendirmesi alandan bağımsız: kullanıcının kendi soruları ve ölçeği veya hazır kontrol listesi (Kitchenham, JBI, RoB 2 gibi yanlılık riski araçları) | Kalite değerlendirme görevi geldiğinde | Şema hazır (`quality_question`, `quality_assessment`) |
 | Yayın türlerinde kitap, kitap bölümü ve tez: filtreler ve dışa aktarma | Arama filtreleri ve dışa aktarma ekranıyla | — |
 | YÖK Ulusal Tez Merkezi: yalnız dosya yolu; sitenin arama sonuçlarını dosyaya aktarma imkânı varsa ön ayarlı içe aktarmaya eklenir, yoksa kaynak olarak eklenmez. Tezler yine her dosya kaynağından ve PRISMA'nın gri literatür dalından gelebilir | 2, ön ayarlarla | YÖK Tez'in dışa aktarımı olup olmadığı kontrol edilir |
+| Kayıtlı harici arama (dosya yolundaki her veritabanı için): sorgu ve veritabanı review'da saklanır; "Siteyi aç" siteyi kullanıcının tarayıcısında açar ve sorguyu panoya kopyalar. Aynı arama yeniden içe aktarılınca "son içe aktarmadan beri N yeni kayıt" farkı gösterilir, eleme kuyruğuna yalnız yeniler girer; her içe aktarma yine ayrı `search_run` | 2, ön ayarlarla | `search_query`'ye harici veritabanı bilgisi (migration) |
+| Harici aramalar için yenileme hatırlatması ("YÖK Tez'de son arama 32 gün önce, yenilensin mi?"); ağa çıkmaz, yalnız son içe aktarma tarihine bakar | 4, kayıtlı sorgu uyarılarıyla | Kayıtlı harici arama |
+| Tezler API'li kaynaklardan: OpenAlex'in tez (`dissertation`) türü ve CORE'un topladığı üniversite açık arşivleri; Aşama 4 uyarıları tezler için de otomatik çalışır. YÖK Tez'in yerini tutmaz, boşluğu kısmen kapatır | OpenAlex: 2 (yayın türü filtresiyle); CORE: kendi sağlayıcı sırasında | Örnek sorgularla Türk tezleri kapsamının ölçülmesi |
 | Word içinde yazarken atıf eklentisi | Kapsam dışı | Zotero'ya aktarım (Aşama 6) bu yolu karşılar |
 
 ### TR Dizin ve YÖK Tez: yalnız dosya yolu

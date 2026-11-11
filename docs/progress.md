@@ -36,6 +36,8 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (ADR 0019) Review formunda varsayılan yöntem hâlâ `kitchenham_slr` (`ReviewForm.tsx`); Aşama 2 başında PRISMA 2020 olacak.
 - (ADR 0019) TR Dizin arayüzünden alınan BibTeX dışa aktarımıyla içe aktarma denemesi (Türkçe karakterler, alan adları); küçük bir örnek dosya test verisine eklenmeli.
 - (ADR 0019) YÖK Tez'in arama sonuçlarını dosyaya (RIS/BibTeX/CSV) aktarıp aktarmadığı kontrol edilmeli; aktarıyorsa ön ayarlı içe aktarmaya eklenir.
+- (ADR 0019) Zotero Connector'ın YÖK Tez sayfalarını tanıyıp tanımadığı bir kez denenmeli; tanıyorsa Zotero → RIS → TEz yolu bugün kullanılabilir ve dışa aktarma rehberine yazılır.
+- (ADR 0019) Tarayıcı bağlayıcısı (Zotero Connector benzeri): kullanıcı açtığı sonuç sayfasını tek tıkla TEz'e gönderir; YÖK Tez, Google Scholar, JSTOR. Yeni mimari bileşen; Aşama 6 sonrası, onay + ADR ile.
 - (23) BibTeX yazıcısı her tezi `@phdthesis` yazıyor (`writers.py`); yüksek lisans tezi `@mastersthesis` olmalı (RIS'te ikisi de `THES`). Tez türü (yüksek lisans/doktora) şimdilik saklanmıyor.
 - (23) Planın komut tablosundaki `tez list`, `tez jobs`, `tez backup`, `tez prisma` ve pencere komutları (`tez <dosya>` masaüstünü başlatır) Aşama 6'daki konsol kabuğuyla.
 - (23) Typer'ın gömülü Click'inde "Usage:" ve "Try … for help." sabit yazılı; Türkçe yardımda İngilizce kalıyor.

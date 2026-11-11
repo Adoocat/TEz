@@ -132,6 +132,7 @@ Bu ekranlar ilk geliştirme aşamasında kodlanacak; en yüksek detay bunlarda o
 - **Toplu eylemler:** Seçilenleri "Review'a ekle" (eleme kuyruğuna girer), "Kütüphaneye ekle", "PDF'leri bul ve indir".
 - **Arama geçmişi (ayrı sekme):** Tablo — tarih/saat, başlatan (arayüz / terminal), sorgu, kaynak, filtreler, bildirilen sonuç, alınan sonuç, durum. "Yöntem bölümü için dışa aktar" düğmesi.
 - **Dosyadan içe aktar (API'si olmayan veritabanları için birinci sınıf yol):** Kullanıcı önce veritabanını listeden seçer (Google Scholar, JSTOR, Scopus, Web of Science, ScienceDirect, EBSCO, ProQuest, PsycINFO, HeinOnline, IEEE Xplore, ACM DL, TR Dizin, YÖK Tez (dışa aktarımı varsa), "Diğer…"), sonra o veritabanından indirdiği dosyayı (RIS, BibTeX, WoS düz metni, CSV) bırakır. Seçilen veritabanı için "Buradan nasıl dışa aktarılır" adım adım kısa rehber (ekran görüntüsüz, metin). Arama tarihi ve sorgu alanları; içe aktarma geçmişte ve PRISMA'da veritabanının adıyla görünür (ör. "JSTOR · 412 kayıt").
+- **Kayıtlı harici arama:** Dosya yolundaki bir veritabanı araması (veritabanı + sorgu) kaydedilebilir ve kenar çubuğunda kayıtlı sorguların yanında görünür. "Siteyi aç" düğmesi siteyi tarayıcıda açar ve sorguyu panoya kopyalar. Aynı arama yeniden içe aktarılınca önizlemede "Son içe aktarmadan (12 Eki) beri 7 yeni kayıt" yazar; eleme kuyruğuna yalnız yeniler girer. Uzun süre yenilenmeyen aramada küçük bir hatırlatma ("YÖK Tez · son arama 32 gün önce").
 
 ### 4.3 Kütüphane (Explorer)
 
