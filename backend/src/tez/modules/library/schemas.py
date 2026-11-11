@@ -1,6 +1,9 @@
-from typing import Literal
+from datetime import datetime
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
+
+from tez.modules.library.models import ReadingStatus, VenueType
 
 InstanceKind = Literal["app", "cli"]
 
@@ -38,3 +41,98 @@ class PaperSelection(BaseModel):
 class SelectionResult(BaseModel):
     added: int
     already_present: int
+
+
+# --- collections, tags, reading status (Task 18) ----------------------------------------
+
+Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
+# A colour token name or a #rrggbb value; the UI maps names to design tokens.
+Color = Annotated[str, StringConstraints(pattern=r"^(#[0-9a-fA-F]{6}|[a-z]+)$", max_length=16)]
+
+
+class CollectionView(BaseModel):
+    id: str
+    parent_id: str | None
+    name: str
+    sort_order: int
+    # System collections (the inbox) have a fixed name the UI translates.
+    is_system: bool
+    # Papers directly in it, trash excluded.
+    paper_count: int
+
+
+class CollectionCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: Name
+    parent_id: str | None = None
+
+
+class CollectionPatch(BaseModel):
+    """Only the fields sent change; `parent_id: null` moves it to the top level."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: Name | None = None
+    parent_id: str | None = None
+
+
+class TagView(BaseModel):
+    id: str
+    name: str
+    color: str | None
+    paper_count: int
+
+
+class TagCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=64)]
+    color: Color | None = None
+
+
+class TagPatch(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: (
+        Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=64)] | None
+    ) = None
+    color: Color | None = None
+
+
+class PaperIds(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    paper_ids: list[str] = Field(min_length=1, max_length=20000)
+
+
+class ReadingStatusChange(PaperIds):
+    reading_status: ReadingStatus
+
+
+class ChangeCount(BaseModel):
+    changed: int
+    unchanged: int
+
+
+PdfState = Literal["none", "pending", "ok", "needs_ocr", "failed"]
+
+
+class LibraryPaperRow(BaseModel):
+    """A paper in the library list (Task 18; Task 19 adds the columns of the full table)."""
+
+    id: str
+    title: str
+    first_author: str | None
+    author_count: int
+    year: int | None
+    venue: str | None
+    venue_type: VenueType | None
+    doi: str | None
+    citekey: str | None
+    citation_count: int | None
+    reading_status: ReadingStatus
+    tag_ids: list[str]
+    collection_ids: list[str]
+    pdf: PdfState
+    added_at: datetime | None

@@ -153,7 +153,12 @@
     "attachment.not_found": "This file no longer exists.",
     "pdf.no_open_access": "No free copy was found ({{tried}} places tried).",
     "source.too_large": "The file is too large to download.",
-    "source.email_required": "Unpaywall needs your e-mail address. Add it in Settings."
+    "source.email_required": "Unpaywall needs your e-mail address. Add it in Settings.",
+    "collection.not_found": "This collection no longer exists.",
+    "collection.system": "The inbox cannot be renamed, moved or deleted.",
+    "collection.name_taken": "There is already a collection named “{{name}}” here.",
+    "tag.not_found": "This tag no longer exists.",
+    "tag.name_taken": "There is already a tag named “{{name}}”."
   },
   "reviews": {
     "active": "Active review",
@@ -344,6 +349,50 @@
       "uploading": "Adding…",
       "added": "Added to the inbox.",
       "duplicate": "Already in the library: nothing was copied."
+    }
+  },
+  "library": {
+    "sidebar": "Library",
+    "inbox": "Inbox",
+    "allPapers": "All papers",
+    "collections": "Collections",
+    "tags": "Tags",
+    "newCollection": "New collection",
+    "newCollectionName": "Collection name",
+    "newSubcollection": "New collection inside {{name}}",
+    "renameCollection": "New name",
+    "renameTag": "New tag name",
+    "renameNamed": "Rename {{name}}",
+    "deleteNamed": "Delete {{name}}",
+    "recolorNamed": "Change the colour of {{name}}",
+    "newTag": "New tag",
+    "newTagName": "Tag name",
+    "noCollections": "No collections yet.",
+    "noTags": "No tags yet.",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "deleteCollectionTitle": "Delete “{{name}}”?",
+    "deleteCollectionText": "Its sub-collections are deleted too. The papers stay in the library.",
+    "deleteTagTitle": "Delete #{{name}}?",
+    "deleteTagText": "The tag is removed from every paper. The papers stay in the library.",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "paperCount_one": "{{count}} paper",
+    "paperCount_other": "{{count}} papers",
+    "papers": "Papers",
+    "selectAll": "Select all",
+    "selectPaper": "Select: {{title}}",
+    "selected_one": "{{count}} selected",
+    "selected_other": "{{count}} selected",
+    "setReading": "Reading status…",
+    "addTag": "Add tag…",
+    "removeFromCollection": "Remove from this collection",
+    "emptyLibrary": "The library is empty. Add papers from a search, import a file, or drop PDFs here.",
+    "emptyScope": "Nothing here yet. Drag papers onto it in the sidebar.",
+    "reading": {
+      "unread": "Unread",
+      "reading": "Reading",
+      "read": "Read"
     }
   }
 }

@@ -23,7 +23,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 15 · BibTeX/RIS içe aktarma | bitti | `task/15-bib-ris-import` · #23 | `modules/importers`: bibtexparser v2 + rispy, LaTeX → Türkçe harf, bozuk girdi (satır + anahtar + kod) rapora düşer, içe aktarma durmaz. Önizleme hiçbir şey yazmaz; içe aktarma tek işlemde, tekilleştirmeden geçer, `search_run` olarak loglanır (dosya snapshot'ta). Migration 0005: `search_run.file_name`. Arayüz: arama ekranında "Dosyadan içe aktar" diyaloğu. Ayrıntı: ADR 0010 |
 | 16 · PDF ekleme | bitti | `task/16-pdf-add` · #24 | API PDF'i açmaz: başlık kontrolü, sha256, `files/<2 hex>/<sha>.pdf` (atomik), `attachment` + `pdf.inspect` işi. İşçi pypdfium2 ile sayfa sayısı ve metin katmanı (ok / needs_ocr / failed + neden). Son denemede önceden `pdf.crashed` işaretlenir, işçi çökse de dosya atlanır. Aynı içerik `duplicate`. Yeni makale "Gelen kutusu" sistem koleksiyonuna. Pencereye bırakma + köşe bildirimleri; `POST /pdfs/from-paths` (Görev 22 için). Migration 0006. Ayrıntı: ADR 0011 |
 | 17 · Açık erişim PDF | bitti | `task/17-open-access-pdf` · #25 | Makale başına `pdf.fetch_open_access` işi (işçide): sıra arXiv → Unpaywall (Ayarlar'daki e-posta) → kaynağın OA bağlantısı; PDF olmayan cevap (giriş sayfası) atlanır. İndirme akışlı, ilerleme iş kuyruğundan durum çubuğuna ve İşler ekranına. `JobFailed` ile işler kendi kodlarıyla biter: `pdf.no_open_access` yeniden denenmez, ağ hataları denenir. Arama sonuçlarında "PDF'leri bul". Ayrıntı: ADR 0012 |
-| 18 · Koleksiyon ve etiketler | bekliyor | | |
+| 18 · Koleksiyon ve etiketler | bitti | `task/18-collections-tags` · #26 | Koleksiyon ağacı (oluştur, yeniden adlandır, taşı, sil; döngü ve kardeş ad kontrolü, Türkçe katlama), çoklu koleksiyon, etiketler (renkler token adı), toplu okuma durumu; sayılar türetilir. Kenar çubuğu: Gelen kutusu, Tüm makaleler, ağaç, etiketler; satırlar koleksiyona/etikete, koleksiyonlar birbirine sürüklenir. Playwright kuruldu: `pnpm e2e` gerçek arka uç + geçici kütüphaneyle; CI'da `e2e` işi. Ayrıntı: ADR 0013 |
 | 19 · Kütüphane listesi | bekliyor | | |
 | 20 · PDF görüntüleyici | bekliyor | | |
 | 21 · Kapanış | bekliyor | | |
@@ -32,6 +32,9 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 
 ## Sonraya
 
+- (18) Koleksiyonları elle sıralama (`sort_order` var, arayüz yok); akıllı koleksiyonlar (tasarım 4.3).
+- (18) Kenar çubuğu klavyeyle ağaç gezintisi (ok tuşları, `role="tree"`).
+- (CI) 2026-11-11'de GitHub runner'larında `azure.archive.ubuntu.com` DNS'te çözülemedi; Rust işi `apt-get`'te takıldı. Tekrarlarsa apt adımına zaman aşımı/ayna değişikliği eklenmeli.
 - (17) Unpaywall'ın gerçek bir yanıtı kaydedilmedi (gerçek e-posta gerekir); ilk gerçek kullanımda şema doğrulanmalı, kaset eklenmeli.
 - (17) JavaScript/çerez arkasındaki yayıncı sayfaları takip edilmiyor; bu makaleler `pdf.no_open_access` ile biter.
 - (17) Kütüphane listesinden (Görev 19) de "PDF'leri bul" eylemi.
@@ -74,14 +77,12 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (8) Sürüm modu kütüphanesi şimdilik `Belgeler/TEz Library`; karşılama ekranı (açık soru 1) gelince kullanıcı seçecek, son açılan kütüphane hatırlanacak.
 - (8) Ayarlar 5.11'in kalan kategorileri (yoğunluk, yedekleme, YZ, PDF/GROBID, kısayollar, sistem entegrasyonu) ilgili görevlerle.
 - (8) Komut paleti (Ctrl+K), özel pencere başlığı ve panel genişliği ayarlama henüz yok.
-- (8) Playwright E2E (`pnpm e2e`) hâlâ yer tutucu; ilk akış (ayarlar kalıcılığı) bununla da yazılabilir.
 - (S1/8) Sidecar'ı `setup()` yerine `run()` başında başlatmak ~300 ms kazandırabilir (ölçülmedi).
 - (2) Branch koruması (CI geçmeden `main`'e birleştirme yok): özel repoda GitHub Pro gerekiyor; repo açık olunca veya Pro ile açılmalı.
 - (2) Windows'ta da CI (geliştirme Windows'ta; yol/satır sonu hatalarını yakalar). Paketleme işiyle birlikte (Aşama 6) veya daha önce.
 - (2) Dependabot ile GitHub Actions ve kilit dosyası güncellemeleri.
 - (2) pre-commit'in boşluk / büyük dosya / YAML kontrolleri CI'da da çalışsın (şimdilik yalnız yerelde).
 - (1) TypeScript 7'ye geçiş: typescript-eslint desteği gelince.
-- (1) Playwright (`pnpm e2e`) hangi görevde kurulacak belli değil; şimdilik yer tutucu.
 - (S1) macOS/Linux'ta Job Object yerine stdin-EOF bekçisi + Linux'ta `PR_SET_PDEATHSIG` (Aşama 6).
 
 ## Açık sorular
