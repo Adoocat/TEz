@@ -8,7 +8,7 @@ Sen, araştırma ve veri yoğun masaüstü araçlarında deneyimli bir ürün ta
 
 **Ürün:** TEz, lisansüstü öğrencilerin tezleri için sistematik literatür taraması yapmasını sağlayan, yerel öncelikli (local-first) bir masaüstü uygulaması. Arama, eleme, okuma, not alma, içerik çıkarma ve tez yazımına hazırlığı tek bir iş akışında birleştirir. Tüm veri kullanıcının bilgisayarında durur; internet yalnızca akademik arama, meta veri ve PDF indirme için kullanılır.
 
-**Kullanıcı:** Bilgisayar mühendisliği yüksek lisans öğrencisi; ilk olarak tek kullanıcı, sonra lab arkadaşları. Teknik okuryazarlığı yüksek, klavyeyi seven, günde saatlerce aynı araçta çalışan biri. Kütüphanesinde 200 ile 2000+ makale olur. Tez konusu örnek veri için: LLM destekli kod inceleme.
+**Kullanıcı:** Her daldan lisansüstü öğrenci ve araştırmacı: beşerî bilimler, hukuk, eğitim, sağlık, psikoloji, mühendislik… Hiçbir alan esas alınmaz (ADR 0019). İlk kullanıcı bir bilgisayar mühendisliği yüksek lisans öğrencisi, sonra lab arkadaşları ve başka alanlardan araştırmacılar. Teknik okuryazarlığı yüksek, klavyeyi seven, günde saatlerce aynı araçta çalışır. Kütüphanesinde 200 ile 2000+ kayıt olur (makale, kitap, kitap bölümü, tez). Örnek veri için tez konusu: LLM destekli kod inceleme (yalnızca maketler için).
 
 **Giriş kapıları:** Uygulama yalnızca penceresinden kullanılmaz. Kurulumdan sonra kullanıcı terminalden (`tez .`, `tez makale.pdf`, `tez search …` — PowerShell, cmd, bash, zsh) ve dosya yöneticisinin sağ tık menüsündeki **"Open with TEz"** seçeneğinden de çalışır; tıpkı VS Code'daki `code .` ve "Open with Code" gibi. Arayüz, dışarıdan gelen bu içeriği akışı bölmeden karşılamalı (bkz. 4.6).
 
@@ -20,7 +20,7 @@ Sen, araştırma ve veri yoğun masaüstü araçlarında deneyimli bir ürün ta
 4. Dahil edilen makaleleri okur, vurgular, not alır; tabloları ve şekilleri çıkarır.
 5. Literatür matrisini doldurur (satır = makale, sütun = yöntem, veri seti, metrik vb.); her hücre PDF'teki kaynak cümleye bağlıdır.
 6. Yapay zekâdan öneri alır ama her öneriyi kaynağıyla görüp kendisi onaylar.
-7. PRISMA diyagramını, kaynakçayı (BibTeX) ve tez taslağını dışa aktarır.
+7. PRISMA diyagramını, kaynakçayı (BibTeX/RIS veya APA, MLA gibi biçimlendirilmiş) ve tez taslağını dışa aktarır.
 
 **Üründe aklında tutman gereken üç vaat:** her bilgi kaynağına kadar izlenebilir; yapılan her eleme kararı gerekçesiyle kayıtlı; yapay zekâ önerir, kullanıcı karar verir.
 
@@ -124,14 +124,15 @@ Bu ekranlar ilk geliştirme aşamasında kodlanacak; en yüksek detay bunlarda o
 **Düzen:** Üstte sorgu alanı, altında filtreler ve kaynak seçimi; ortada sonuç listesi; sağda seçili sonucun denetçisi; kenar çubuğunda kayıtlı sorgular ve geçmiş.
 
 - **Sorgu alanı:** Çok satırlı, monospace, boolean sözdizimi renklendirmesi (`AND`, `OR`, `NOT`, tırnaklı ifadeler, parantez). Yanında "Sorguyu kaydet" ve "Yeni makale uyarısı" anahtarı; ayrıca bu aramanın birebir tez search karşılığını panoya alan "Terminal komutunu kopyala" düğmesi.
-- **Filtreler:** Yıl aralığı, yayın türü (dergi, konferans, ön baskı), yalnızca açık erişim, dil.
-- **Kaynak çipleri:** OpenAlex, Semantic Scholar, arXiv, Crossref, DBLP — her biri açılıp kapatılabilir. Arama sırasında her çip kendi durumunu gösterir: bekliyor, aranıyor (ilerleme), tamamlandı (sonuç sayısı), hız sınırında (geri sayım), hata (tekrar dene). Bir kaynağın hatası diğerlerini durdurmaz.
+- **Filtreler:** Yıl aralığı, yayın türü (dergi, konferans, ön baskı, kitap, kitap bölümü, tez), yalnızca açık erişim, dil.
+- **Kaynak çipleri:** OpenAlex, Semantic Scholar, arXiv, Crossref, DBLP — her biri açılıp kapatılabilir. Liste zamanla büyür (PubMed, Europe PMC, DOAJ, ERIC, CORE, DergiPark adayları; ADR 0019); çip alanı 10+ kaynağa sığmalı. Arama sırasında her çip kendi durumunu gösterir: bekliyor, aranıyor (ilerleme), tamamlandı (sonuç sayısı), hız sınırında (geri sayım), hata (tekrar dene). Bir kaynağın hatası diğerlerini durdurmaz.
 - **Kaynak başına sorgu:** Her çipin altında açılır bir alan: o kaynağa gönderilen çevrilmiş sorgu (düzenlenebilir). Bu, yöntem raporu için önemli.
 - **Özet şeridi:** "5 kaynakta 1.912 kayıt · 487 tekrar · 1.425 benzersiz · 312'si zaten kütüphanede".
 - **Sonuç listesi (sanallaştırılmış):** Her satırda başlık, ilk yazar + "vd.", yıl, mekân (venue), atıf sayısı, bulunduğu kaynakların mini rozetleri (örn. OA · S2 · arXiv), açık erişim PDF ikonu, "zaten kütüphanede" işareti. Tekrar olarak birleştirilmiş kayıtlarda "3 kayıt birleştirildi" ipucu; üzerine gelince hangi kayıtların ve neye göre (DOI / başlık benzerliği %) birleştiği görünür.
 - **Toplu eylemler:** Seçilenleri "Review'a ekle" (eleme kuyruğuna girer), "Kütüphaneye ekle", "PDF'leri bul ve indir".
 - **Arama geçmişi (ayrı sekme):** Tablo — tarih/saat, başlatan (arayüz / terminal), sorgu, kaynak, filtreler, bildirilen sonuç, alınan sonuç, durum. "Yöntem bölümü için dışa aktar" düğmesi.
-- **Dosyadan içe aktar:** IEEE Xplore, ACM, Scopus gibi veritabanlarından indirilen RIS/BibTeX dosyasını sürükle-bırak ile içe alma; içe aktarma da bir arama kaydı olarak geçmişte görünür.
+- **Dosyadan içe aktar (API'si olmayan veritabanları için birinci sınıf yol):** Kullanıcı önce veritabanını listeden seçer (Google Scholar, JSTOR, Scopus, Web of Science, ScienceDirect, EBSCO, ProQuest, PsycINFO, HeinOnline, IEEE Xplore, ACM DL, TR Dizin, YÖK Tez (dışa aktarımı varsa), "Diğer…"), sonra o veritabanından indirdiği dosyayı (RIS, BibTeX, WoS düz metni, CSV) bırakır. Seçilen veritabanı için "Buradan nasıl dışa aktarılır" adım adım kısa rehber (ekran görüntüsüz, metin). Arama tarihi ve sorgu alanları; içe aktarma geçmişte ve PRISMA'da veritabanının adıyla görünür (ör. "JSTOR · 412 kayıt").
+- **Kayıtlı harici arama:** Dosya yolundaki bir veritabanı araması (veritabanı + sorgu) kaydedilebilir ve kenar çubuğunda kayıtlı sorguların yanında görünür. "Siteyi aç" düğmesi siteyi tarayıcıda açar ve sorguyu panoya kopyalar. Aynı arama yeniden içe aktarılınca önizlemede "Son içe aktarmadan (12 Eki) beri 7 yeni kayıt" yazar; eleme kuyruğuna yalnız yeniler girer. Uzun süre yenilenmeyen aramada küçük bir hatırlatma ("YÖK Tez · son arama 32 gün önce").
 
 ### 4.3 Kütüphane (Explorer)
 
@@ -266,7 +267,8 @@ Arka plan işlerinin listesi: başlatan (arayüz / terminal rozeti), tür (PDF i
 
 ### 5.10 Dışa aktarma ve tez köprüsü
 
-- Kaynakça dışa aktarma diyaloğu: biçim (BibTeX, RIS), kapsam (seçili, koleksiyon, review'da dahil edilenler), atıf anahtarı biçimi önizlemesi.
+- Kaynakça dışa aktarma diyaloğu: biçim (BibTeX, RIS veya biçimlendirilmiş kaynakça), kapsam (seçili, koleksiyon, review'da dahil edilenler), atıf anahtarı biçimi önizlemesi.
+- Biçimlendirilmiş kaynakça: stil seçici (APA 7, MLA, Chicago, Vancouver, IEEE; aranabilir liste, sık kullanılanlar üstte; ileride enstitü tez stilleri), dil (Türkçe/İngilizce), canlı önizleme (ilk birkaç girdi), "Panoya kopyala" (Word'e biçimiyle yapışır) ve dosyaya kaydet.
 - Taslak oluşturucu: makale notlarını ve matris satırlarını seçip sürükleyerek bölüm taslağı oluşturma; Markdown/Word önizleme.
 - Geri çekilme kontrolü sonuç ekranı: sorunlu kaynakların listesi.
 
