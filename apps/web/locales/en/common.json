@@ -158,7 +158,9 @@
     "collection.system": "The inbox cannot be renamed, moved or deleted.",
     "collection.name_taken": "There is already a collection named “{{name}}” here.",
     "tag.not_found": "This tag no longer exists.",
-    "tag.name_taken": "There is already a tag named “{{name}}”."
+    "tag.name_taken": "There is already a tag named “{{name}}”.",
+    "citekey.taken": "Another paper already has the key {{citekey}}.",
+    "citekey.invalid": "A citation key may hold only letters, digits and _ : . - + /."
   },
   "reviews": {
     "active": "Active review",
@@ -393,6 +395,61 @@
       "unread": "Unread",
       "reading": "Reading",
       "read": "Read"
-    }
+    },
+    "columns": {
+      "reading": "Reading status",
+      "title": "Title",
+      "authors": "Authors",
+      "year": "Year",
+      "venue": "Venue",
+      "tags": "Tags",
+      "pdf": "PDF",
+      "added": "Added",
+      "citekey": "Citation key"
+    },
+    "showing": "{{shown}} of {{total}} papers shown",
+    "search": "Search the library",
+    "searchPlaceholder": "Title, author, abstract, DOI…",
+    "filters": "Filters",
+    "yearFrom": "From",
+    "yearTo": "To",
+    "filterReading": "Reading status",
+    "anyReading": "Any status",
+    "filterTag": "Tag",
+    "anyTag": "Any tag",
+    "filterPdf": "PDF",
+    "pdfAny": "PDF: any",
+    "pdfHas": "Has a PDF",
+    "pdfNone": "No PDF",
+    "clearFilters": "Clear filters",
+    "noMatches": "No paper matches the search and filters.",
+    "pdf": {
+      "none": "No PDF",
+      "pending": "PDF being checked",
+      "ok": "PDF with text",
+      "needs_ocr": "Scanned PDF (needs OCR)",
+      "failed": "PDF could not be read"
+    },
+    "inspectorEmpty": "Select a paper to see its details.",
+    "retraction": {
+      "retracted": "This paper has been retracted.",
+      "expression_of_concern": "An expression of concern has been published for this paper."
+    },
+    "hasPublishedVersion": "A published version is in the library: {{title}} ({{year}})",
+    "inspectorTabs": "Details",
+    "tabAbstract": "Abstract",
+    "tabFiles_one": "Files ({{count}})",
+    "tabFiles_other": "Files ({{count}})",
+    "noAbstract": "No abstract.",
+    "readingStatus": "Reading status",
+    "removeTag": "Remove #{{name}}",
+    "inCollections": "In:",
+    "copyNamed": "Copy {{name}}",
+    "citekey": "Key",
+    "editCitekey": "Edit the citation key",
+    "noFiles": "No files. Drop a PDF on the window or use Find PDFs in a search.",
+    "pages_one": "{{count}} page",
+    "pages_other": "{{count}} pages",
+    "megabytes": "{{size}} MB"
   }
 }

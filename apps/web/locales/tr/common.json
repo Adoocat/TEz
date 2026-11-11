@@ -158,7 +158,9 @@
     "collection.system": "Gelen kutusu yeniden adlandırılamaz, taşınamaz veya silinemez.",
     "collection.name_taken": "Burada zaten “{{name}}” adlı bir koleksiyon var.",
     "tag.not_found": "Bu etiket artık yok.",
-    "tag.name_taken": "Zaten “{{name}}” adlı bir etiket var."
+    "tag.name_taken": "Zaten “{{name}}” adlı bir etiket var.",
+    "citekey.taken": "{{citekey}} anahtarı başka bir makalede kullanılıyor.",
+    "citekey.invalid": "Atıf anahtarında yalnızca harf, rakam ve _ : . - + / olabilir."
   },
   "reviews": {
     "active": "Etkin review",
@@ -393,6 +395,61 @@
       "unread": "Okunmadı",
       "reading": "Okunuyor",
       "read": "Okundu"
-    }
+    },
+    "columns": {
+      "reading": "Okuma durumu",
+      "title": "Başlık",
+      "authors": "Yazarlar",
+      "year": "Yıl",
+      "venue": "Mekân",
+      "tags": "Etiketler",
+      "pdf": "PDF",
+      "added": "Eklenme",
+      "citekey": "Atıf anahtarı"
+    },
+    "showing": "{{total}} makaleden {{shown}} tanesi gösteriliyor",
+    "search": "Kütüphanede ara",
+    "searchPlaceholder": "Başlık, yazar, özet, DOI…",
+    "filters": "Filtreler",
+    "yearFrom": "Başlangıç",
+    "yearTo": "Bitiş",
+    "filterReading": "Okuma durumu",
+    "anyReading": "Tüm durumlar",
+    "filterTag": "Etiket",
+    "anyTag": "Tüm etiketler",
+    "filterPdf": "PDF",
+    "pdfAny": "PDF: hepsi",
+    "pdfHas": "PDF var",
+    "pdfNone": "PDF yok",
+    "clearFilters": "Filtreleri temizle",
+    "noMatches": "Aramaya ve filtrelere uyan makale yok.",
+    "pdf": {
+      "none": "PDF yok",
+      "pending": "PDF inceleniyor",
+      "ok": "Metinli PDF",
+      "needs_ocr": "Taranmış PDF (OCR gerekli)",
+      "failed": "PDF okunamadı"
+    },
+    "inspectorEmpty": "Ayrıntıları görmek için bir makale seçin.",
+    "retraction": {
+      "retracted": "Bu makale geri çekilmiş.",
+      "expression_of_concern": "Bu makale için endişe bildirimi yayımlanmış."
+    },
+    "hasPublishedVersion": "Yayımlanmış sürümü kütüphanede: {{title}} ({{year}})",
+    "inspectorTabs": "Ayrıntılar",
+    "tabAbstract": "Özet",
+    "tabFiles_one": "Dosyalar ({{count}})",
+    "tabFiles_other": "Dosyalar ({{count}})",
+    "noAbstract": "Özet yok.",
+    "readingStatus": "Okuma durumu",
+    "removeTag": "#{{name}} kaldır",
+    "inCollections": "Koleksiyonlar:",
+    "copyNamed": "{{name}} kopyala",
+    "citekey": "Anahtar",
+    "editCitekey": "Atıf anahtarını düzenle",
+    "noFiles": "Dosya yok. Pencereye PDF bırakın veya bir aramada PDF'leri bul'u kullanın.",
+    "pages_one": "{{count}} sayfa",
+    "pages_other": "{{count}} sayfa",
+    "megabytes": "{{size}} MB"
   }
 }

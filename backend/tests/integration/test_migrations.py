@@ -17,7 +17,7 @@ from alembic.script import ScriptDirectory
 from sqlalchemy import inspect
 
 from tez.core.db import Base, Database
-from tez.core.migrations import MIGRATIONS_DIR, alembic_config, migrate
+from tez.core.migrations import MIGRATIONS_DIR, alembic_config, include_name, migrate
 
 
 @pytest.fixture
@@ -85,7 +85,8 @@ def test_models_match_migrations(db: Database) -> None:
     migrate(db)
 
     with db.engine.connect() as conn:
-        diff = compare_metadata(MigrationContext.configure(conn), Base.metadata)
+        context = MigrationContext.configure(conn, opts={"include_name": include_name})
+        diff = compare_metadata(context, Base.metadata)
 
     assert diff == []
 

@@ -1,41 +1,68 @@
-// The library (design 4.3): the papers of the chosen collection or tag, organised in place.
-// Rows drag onto the sidebar's collections and tags; a selection gets a bulk bar for reading
-// status, tags and leaving the current collection.
-import { useMemo, useState } from "react";
+// The library (design 4.3): the papers of the chosen scope in a sortable, virtualized table,
+// with full-text search, filters and a bulk bar. Selecting a row fills the inspector.
+import type { SortingState } from "@tanstack/react-table";
+import { Search, X } from "lucide-react";
+import { useCallback, useDeferredValue, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ApiError } from "@/lib/api/query";
-import { cn } from "@/lib/cn";
 
 import {
   readingStatuses,
   useCollections,
   useLibraryPapers,
+  useLibrarySearch,
   useRemoveFromCollection,
   useSetReadingStatus,
   useTagPapers,
   useTags,
-  type LibraryPaperRow,
-  type ReadingStatus,
   type TagView,
 } from "./api";
-import { dragPapers } from "./dnd";
-import { tagColorVar } from "./LibrarySidebar";
+import {
+  applyFilters,
+  isFiltered,
+  noLibraryFilters,
+  type LibraryFilters,
+  type PdfFilter,
+} from "./filters";
+import { PaperTable } from "./PaperTable";
 import { useLibraryView } from "./store";
 
+const DEFAULT_SORT: SortingState = [{ id: "added", desc: true }];
+
+function parseYear(text: string): number | null {
+  const value = Number.parseInt(text, 10);
+  return Number.isNaN(value) ? null : value;
+}
+
 export function LibraryPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { scope, selectedPaperId, selectPaper } = useLibraryView();
   const papers = useLibraryPapers(scope);
   const collections = useCollections();
   const tags = useTags();
+  const [query, setQuery] = useState("");
+  // Typing stays responsive; the search follows the deferred text.
+  const deferredQuery = useDeferredValue(query);
+  const search = useLibrarySearch(deferredQuery);
+  const [filters, setFilters] = useState<LibraryFilters>(noLibraryFilters);
+  const [sorting, setSorting] = useState<SortingState>(DEFAULT_SORT);
   const [checked, setChecked] = useState<ReadonlySet<string>>(new Set());
+
   const rows = useMemo(() => papers.data ?? [], [papers.data]);
+  const searching = deferredQuery.trim() !== "";
+  const hitIds = search.data?.paper_ids;
+  const visible = useMemo(
+    () => applyFilters(rows, filters, searching ? (hitIds ?? []) : null),
+    [rows, filters, searching, hitIds],
+  );
   const tagsById = useMemo(
     () => new Map((tags.data ?? []).map((tag) => [tag.id, tag])),
     [tags.data],
   );
+  const number = (value: number) => value.toLocaleString(i18n.language);
 
   const title = (() => {
     if (scope.kind === "tag") {
@@ -50,31 +77,72 @@ export function LibraryPage() {
     return t("library.allPapers");
   })();
 
-  // Only rows still in the list count as selected.
-  const selected = rows.filter((row) => checked.has(row.id)).map((row) => row.id);
-  const allChecked = rows.length > 0 && selected.length === rows.length;
+  // Only rows on screen count as selected.
+  const selected = useMemo(
+    () => visible.filter((row) => checked.has(row.id)).map((row) => row.id),
+    [visible, checked],
+  );
+  const allChecked = visible.length > 0 && selected.length === visible.length;
+  const togglePaper = useCallback((paperId: string) => {
+    setChecked((current) => {
+      const next = new Set(current);
+      if (!next.delete(paperId)) next.add(paperId);
+      return next;
+    });
+  }, []);
+  const dragIdsFor = useCallback(
+    (paperId: string) => (checked.has(paperId) ? selected : [paperId]),
+    [checked, selected],
+  );
+
+  function changeQuery(text: string) {
+    setQuery(text);
+    // While searching, rows come best match first unless the user picks a column.
+    setSorting(text.trim() ? [] : DEFAULT_SORT);
+  }
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="flex items-center gap-3 px-4 pt-3 pb-2">
+      <header className="flex flex-wrap items-center gap-3 px-4 pt-3 pb-2">
         <h1 className="text-h2">{title}</h1>
-        <span className="text-meta text-fg-muted">
-          {t("library.paperCount", { count: rows.length })}
+        <span aria-live="polite" className="text-meta text-fg-muted">
+          {visible.length === rows.length
+            ? t("library.paperCount", { count: rows.length })
+            : t("library.showing", { shown: number(visible.length), total: number(rows.length) })}
         </span>
-      </header>
-      <div className="flex min-h-10 flex-wrap items-center gap-2 border-y border-line bg-surface px-4 py-1.5">
-        <label className="flex items-center gap-2 text-meta">
-          <input
-            type="checkbox"
-            className="size-4"
-            aria-label={t("library.selectAll")}
-            checked={allChecked}
-            disabled={rows.length === 0}
-            onChange={() => {
-              setChecked(allChecked ? new Set() : new Set(rows.map((row) => row.id)));
+        <div className="flex-1" />
+        <div className="relative w-72 max-w-full">
+          <Search
+            aria-hidden
+            className="pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 text-fg-muted"
+          />
+          <Input
+            type="search"
+            aria-label={t("library.search")}
+            placeholder={t("library.searchPlaceholder")}
+            className="pl-8"
+            value={query}
+            onChange={(event) => {
+              changeQuery(event.target.value);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") changeQuery("");
             }}
           />
-        </label>
+        </div>
+      </header>
+      <FilterBar filters={filters} onChange={setFilters} tags={tags.data ?? []} />
+      <div className="flex min-h-10 flex-wrap items-center gap-2 border-y border-line bg-surface px-4 py-1">
+        <input
+          type="checkbox"
+          className="size-4"
+          aria-label={t("library.selectAll")}
+          checked={allChecked}
+          disabled={visible.length === 0}
+          onChange={() => {
+            setChecked(allChecked ? new Set() : new Set(visible.map((row) => row.id)));
+          }}
+        />
         {selected.length > 0 && (
           <BulkBar
             paperIds={selected}
@@ -87,115 +155,121 @@ export function LibraryPage() {
         <p className="p-6 text-center text-ui text-fg-muted">
           {scope.kind === "all" ? t("library.emptyLibrary") : t("library.emptyScope")}
         </p>
+      ) : papers.isSuccess && visible.length === 0 ? (
+        <p className="p-6 text-center text-ui text-fg-muted">{t("library.noMatches")}</p>
       ) : (
-        <ul aria-label={t("library.papers")} className="min-h-0 flex-1 overflow-auto">
-          {rows.map((row) => (
-            <PaperItem
-              key={row.id}
-              row={row}
-              tags={tagsById}
-              checked={checked.has(row.id)}
-              selected={row.id === selectedPaperId}
-              dragIds={checked.has(row.id) ? selected : [row.id]}
-              onToggle={() => {
-                setChecked((current) => {
-                  const next = new Set(current);
-                  if (!next.delete(row.id)) next.add(row.id);
-                  return next;
-                });
-              }}
-              onSelect={() => {
-                selectPaper(row.id);
-              }}
-            />
-          ))}
-        </ul>
+        <PaperTable
+          rows={visible}
+          tags={tagsById}
+          checked={checked}
+          selectedId={selectedPaperId}
+          sorting={sorting}
+          onSortingChange={setSorting}
+          onToggle={togglePaper}
+          onSelect={selectPaper}
+          dragIdsFor={dragIdsFor}
+        />
       )}
     </div>
   );
 }
 
-export function ReadingDot({ status }: { status: ReadingStatus }) {
-  const { t } = useTranslation();
-  const color = {
-    unread: "var(--color-status-reading-unread)",
-    reading: "var(--color-status-reading-active)",
-    read: "var(--color-status-reading-done)",
-  }[status];
-  return (
-    <span
-      role="img"
-      aria-label={t(`library.reading.${status}`)}
-      title={t(`library.reading.${status}`)}
-      className={cn("size-2 shrink-0 rounded-full", status === "unread" && "border")}
-      style={status === "unread" ? { borderColor: color } : { backgroundColor: color }}
-    />
-  );
-}
-
-function PaperItem({
-  row,
+function FilterBar({
+  filters,
+  onChange,
   tags,
-  checked,
-  selected,
-  dragIds,
-  onToggle,
-  onSelect,
 }: {
-  row: LibraryPaperRow;
-  tags: Map<string, TagView>;
-  checked: boolean;
-  selected: boolean;
-  dragIds: string[];
-  onToggle: () => void;
-  onSelect: () => void;
+  filters: LibraryFilters;
+  onChange: (filters: LibraryFilters) => void;
+  tags: TagView[];
 }) {
   const { t } = useTranslation();
+  const selectClass = "h-7 rounded-md border border-line bg-raised px-1 text-meta text-fg";
   return (
-    <li
-      draggable
-      onDragStart={(event) => {
-        dragPapers(event, dragIds);
-      }}
-      aria-selected={selected}
-      className={cn(
-        "flex h-row items-center gap-2 border-b border-line px-4 text-ui",
-        selected ? "bg-primary-soft" : "hover:bg-hovered",
-      )}
+    <div
+      role="group"
+      aria-label={t("library.filters")}
+      className="flex flex-wrap items-center gap-2 border-t border-line px-4 py-1.5"
     >
-      <input
-        type="checkbox"
-        className="size-4"
-        aria-label={t("library.selectPaper", { title: row.title })}
-        checked={checked}
-        onChange={onToggle}
-      />
-      <ReadingDot status={row.reading_status} />
-      <button type="button" className="min-w-0 flex-1 truncate text-left" onClick={onSelect}>
-        {row.title}
-      </button>
-      <span className="flex gap-1">
-        {row.tag_ids.map((id) => {
-          const tag = tags.get(id);
-          return tag ? (
-            <span
-              key={id}
-              title={`#${tag.name}`}
-              className="size-2 rounded-full"
-              style={{ backgroundColor: tagColorVar(tag.color) }}
-            />
-          ) : null;
-        })}
-      </span>
-      <span className="w-40 truncate text-meta text-fg-muted">
-        {row.first_author
-          ? row.author_count > 1
-            ? t("search.andOthers", { name: row.first_author })
-            : row.first_author
-          : ""}
-      </span>
-      <span className="w-10 text-right text-meta text-fg-muted tabular-nums">{row.year ?? ""}</span>
-    </li>
+      <label className="flex items-center gap-1 text-meta text-fg-muted">
+        {t("library.yearFrom")}
+        <Input
+          className="h-7 w-16"
+          inputMode="numeric"
+          value={filters.yearFrom ?? ""}
+          onChange={(event) => {
+            onChange({ ...filters, yearFrom: parseYear(event.target.value) });
+          }}
+        />
+      </label>
+      <label className="flex items-center gap-1 text-meta text-fg-muted">
+        {t("library.yearTo")}
+        <Input
+          className="h-7 w-16"
+          inputMode="numeric"
+          value={filters.yearTo ?? ""}
+          onChange={(event) => {
+            onChange({ ...filters, yearTo: parseYear(event.target.value) });
+          }}
+        />
+      </label>
+      <select
+        aria-label={t("library.filterReading")}
+        className={selectClass}
+        value={filters.reading ?? ""}
+        onChange={(event) => {
+          const reading = readingStatuses.find((s) => s === event.target.value) ?? null;
+          onChange({ ...filters, reading });
+        }}
+      >
+        <option value="">{t("library.anyReading")}</option>
+        {readingStatuses.map((status) => (
+          <option key={status} value={status}>
+            {t(`library.reading.${status}`)}
+          </option>
+        ))}
+      </select>
+      <select
+        aria-label={t("library.filterTag")}
+        className={selectClass}
+        value={filters.tagId ?? ""}
+        onChange={(event) => {
+          onChange({ ...filters, tagId: event.target.value || null });
+        }}
+      >
+        <option value="">{t("library.anyTag")}</option>
+        {tags.map((tag) => (
+          <option key={tag.id} value={tag.id}>
+            #{tag.name}
+          </option>
+        ))}
+      </select>
+      <select
+        aria-label={t("library.filterPdf")}
+        className={selectClass}
+        value={filters.pdf}
+        onChange={(event) => {
+          const pdf = (["any", "has", "none"] as const).find((v) => v === event.target.value);
+          onChange({ ...filters, pdf: pdf ?? ("any" satisfies PdfFilter) });
+        }}
+      >
+        <option value="any">{t("library.pdfAny")}</option>
+        <option value="has">{t("library.pdfHas")}</option>
+        <option value="none">{t("library.pdfNone")}</option>
+      </select>
+      {isFiltered(filters) && (
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            onChange(noLibraryFilters);
+          }}
+        >
+          <X aria-hidden />
+          {t("library.clearFilters")}
+        </Button>
+      )}
+    </div>
   );
 }
 

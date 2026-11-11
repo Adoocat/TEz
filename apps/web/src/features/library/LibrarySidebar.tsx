@@ -40,15 +40,10 @@ import {
 } from "./api";
 import { COLLECTION_TYPE, PAPERS_TYPE, carries, dragCollection, droppedPapers } from "./dnd";
 import { useLibraryView } from "./store";
+import { tagColorVar } from "./tagColor";
 
 function sameScope(a: PaperScope, b: PaperScope) {
   return a.kind === b.kind && (a.id ?? null) === (b.id ?? null);
-}
-
-export function tagColorVar(color: string | null): string {
-  return color && (tagColors as readonly string[]).includes(color)
-    ? `var(--color-highlight-${color})`
-    : "var(--color-text-muted)";
 }
 
 export function LibrarySidebar() {

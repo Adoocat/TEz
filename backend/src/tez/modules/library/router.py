@@ -12,9 +12,12 @@ from tez.modules.library.schemas import (
     CollectionView,
     LibraryInfo,
     LibraryPaperRow,
+    PaperDetail,
     PaperIds,
+    PaperPatch,
     PaperSelection,
     ReadingStatusChange,
+    SearchHits,
     SelectionResult,
     TagCreate,
     TagPatch,
@@ -62,6 +65,26 @@ def list_papers(
 @router.patch("/papers/reading-status")
 def set_reading_status(body: ReadingStatusChange, library: LibraryDep) -> ChangeCount:
     return organize.set_reading_status(library.db, body.paper_ids, body.reading_status)
+
+
+@router.get("/papers/search")
+def search_papers(q: str, library: LibraryDep) -> SearchHits:
+    """Metadata full-text search (title, authors, abstract, venue, identifiers, citation key).
+
+    Every word must match, as a word or its beginning; Turkish letters fold ("isik" = "Işık").
+    """
+    return organize.search_papers(library.db, q)
+
+
+@router.get("/papers/{paper_id}")
+def get_paper(paper_id: str, library: LibraryDep) -> PaperDetail:
+    return organize.paper_detail(library.db, paper_id)
+
+
+@router.patch("/papers/{paper_id}")
+def update_paper(paper_id: str, body: PaperPatch, library: LibraryDep) -> PaperDetail:
+    """Change the citation key; it must be unused and BibTeX-safe."""
+    return organize.update_paper(library.db, paper_id, citekey=body.citekey)
 
 
 @router.get("/collections")

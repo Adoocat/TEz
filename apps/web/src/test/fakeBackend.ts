@@ -10,6 +10,7 @@ type JobView = components["schemas"]["JobView"];
 type CollectionView = components["schemas"]["CollectionView"];
 type TagView = components["schemas"]["TagView"];
 type LibraryPaperRow = components["schemas"]["LibraryPaperRow"];
+type PaperDetail = components["schemas"]["PaperDetail"];
 type ReviewView = components["schemas"]["ReviewView"];
 type SearchOverview = components["schemas"]["SearchOverview"];
 type SearchResultRow = components["schemas"]["SearchResultRow"];
@@ -37,6 +38,9 @@ export interface FakeBackend {
   collections: CollectionView[];
   tags: TagView[];
   papers: LibraryPaperRow[];
+  /** What GET /papers/search answers for each query (best first); none when missing. */
+  searchHits: Record<string, string[]>;
+  details: Record<string, PaperDetail>;
   /** What the next POST /pdfs answers, in order; "added" when empty. */
   pdfReplies: (
     | { status: "added" | "duplicate" }
@@ -68,6 +72,8 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     collections: [],
     tags: [],
     papers: [],
+    searchHits: {},
+    details: {},
     emitSource(searchId, update) {
       const data = {
         state: "searching",
@@ -203,6 +209,23 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
               (!tag || p.tag_ids.includes(tag)),
           ),
         );
+      }
+      if (route === "GET /papers/search") {
+        const q = new URL(request.url, "http://test").searchParams.get("q") ?? "";
+        return json({ paper_ids: backend.searchHits[q] ?? [], elapsed_ms: 1.2 });
+      }
+      const paperOf = /^\/papers\/([^/]+)$/.exec(path)?.[1];
+      if (paperOf && paperOf !== "reading-status") {
+        const detail = backend.details[paperOf];
+        if (!detail) return json({ error: { code: "paper.not_found", params: {} } }, 404);
+        if (request.method === "PATCH") {
+          const { citekey } = body as { citekey: string };
+          if (citekey === "taken") {
+            return json({ error: { code: "citekey.taken", params: { citekey } } }, 409);
+          }
+          detail.citekey = citekey;
+        }
+        return json(detail);
       }
       if (route === "PATCH /papers/reading-status") {
         const { paper_ids } = body as { paper_ids: string[] };
@@ -457,6 +480,43 @@ export function libraryPaper(overrides: Partial<LibraryPaperRow> = {}): LibraryP
     collection_ids: [],
     pdf: "none",
     added_at: "2026-11-11T10:00:00+00:00",
+    ...overrides,
+  };
+}
+
+export function paperDetail(overrides: Partial<PaperDetail> = {}): PaperDetail {
+  return {
+    id: "paper-1",
+    title: "Automated code review with LLMs",
+    abstract: "We study how LLMs review code.",
+    year: 2024,
+    venue: "ICSE",
+    venue_type: "conference",
+    volume: null,
+    issue: null,
+    pages: "1-12",
+    language: "en",
+    url: null,
+    oa_url: null,
+    citation_count: 4,
+    reading_status: "unread",
+    citekey: "yilmaz2024automated",
+    retraction_status: "none",
+    added_at: "2026-11-11T10:00:00+00:00",
+    authors: [
+      {
+        display_name: "Ayşe Yılmaz",
+        family: "Yılmaz",
+        given: "Ayşe",
+        orcid: null,
+        affiliation: null,
+      },
+    ],
+    identifiers: { doi: "10.1145/1" },
+    tag_ids: [],
+    collection_ids: [],
+    attachments: [],
+    related: [],
     ...overrides,
   };
 }

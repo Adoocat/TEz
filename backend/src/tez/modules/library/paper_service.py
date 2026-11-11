@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from tez.core.db import utcnow
 from tez.core.errors import ErrorCode, TezError
+from tez.modules.library import citekeys
 from tez.modules.library.models import (
     Collection,
     IdentifierScheme,
@@ -133,8 +134,34 @@ class PaperService:
         now = utcnow()
         for paper in new:
             paper.library_added_at = now
+        self.assign_citekeys(new)
         self._session.flush()
         return len(new), len(papers) - len(new)
+
+    def assign_citekeys(self, papers: Iterable[Paper]) -> None:
+        """Give each paper without a citation key one (`yilmaz2024automated`)."""
+        reserved: set[str] = set()
+        for paper in papers:
+            if paper.citekey:
+                continue
+            first = paper.authors[0].author if paper.authors else None
+            family = (first.family or first.display_name) if first else None
+            key = citekeys.unique_key(
+                self._session, citekeys.base_key(family, paper.year, paper.title), reserved
+            )
+            paper.citekey = key
+            reserved.add(key)
+
+    def backfill_citekeys(self) -> int:
+        """Kept papers from before keys were made (Task 19) get one now."""
+        missing = list(
+            self._session.scalars(
+                select(Paper).where(Paper.library_added_at.is_not(None), Paper.citekey.is_(None))
+            )
+        )
+        self.assign_citekeys(missing)
+        self._session.flush()
+        return len(missing)
 
     def link_versions(self, preprint_id: str, published_id: str) -> None:
         self._repository.add_relation(preprint_id, published_id, RelationKind.VERSION_OF)

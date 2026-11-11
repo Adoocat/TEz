@@ -12,7 +12,7 @@ test("collections, tags and reading status organize the library", async ({ page,
   await openApp(page);
 
   const sidebar = page.getByRole("navigation", { name: "Library" });
-  const papers = page.getByRole("list", { name: "Papers" });
+  const papers = page.getByRole("table", { name: "Papers" });
   await expect(page.getByRole("heading", { level: 1, name: "All papers" })).toBeVisible();
   await expect(papers.getByText(FIRST)).toBeVisible();
 
@@ -29,7 +29,7 @@ test("collections, tags and reading status organize the library", async ({ page,
   await expect(method).toBeVisible();
 
   // Drag a paper onto the sub-collection.
-  await papers.getByRole("listitem").filter({ hasText: FIRST }).dragTo(method);
+  await papers.getByRole("row").filter({ hasText: FIRST }).dragTo(method);
   await method.click();
   await expect(page.getByRole("heading", { level: 1, name: "Yöntem" })).toBeVisible();
   await expect(papers.getByText(FIRST)).toBeVisible();
@@ -63,4 +63,22 @@ test("collections, tags and reading status organize the library", async ({ page,
   await sidebar.getByRole("button", { name: "All papers" }).click();
   await expect(papers.getByText(FIRST)).toBeVisible();
   await expect(papers.getByText(SECOND)).toBeVisible();
+});
+
+test("the library is searched by metadata, Turkish letters folded", async ({ page, request }) => {
+  await importPapers(request, ["Işık Kaynaklarının Kod İncelemesine Etkisi"]);
+  await openApp(page);
+  const papers = page.getByRole("table", { name: "Papers" });
+  await expect(papers.getByText(FIRST).first()).toBeVisible();
+
+  await page.getByRole("searchbox", { name: "Search the library" }).fill("isik kod");
+
+  await expect(papers.getByText("Işık Kaynaklarının Kod İncelemesine Etkisi")).toBeVisible();
+  await expect(papers.getByText(FIRST)).toHaveCount(0);
+  await papers.getByText("Işık Kaynaklarının Kod İncelemesine Etkisi").click();
+  await expect(
+    page.getByRole("complementary", { name: "Inspector" }).getByRole("heading", {
+      name: "Işık Kaynaklarının Kod İncelemesine Etkisi",
+    }),
+  ).toBeVisible();
 });

@@ -9,6 +9,7 @@ export type TagView = components["schemas"]["TagView"];
 export type LibraryPaperRow = components["schemas"]["LibraryPaperRow"];
 export type ReadingStatus = components["schemas"]["ReadingStatus"];
 export type ChangeCount = components["schemas"]["ChangeCount"];
+export type PaperDetail = components["schemas"]["PaperDetail"];
 
 export const readingStatuses: ReadingStatus[] = ["unread", "reading", "read"];
 // Tag colours are design-token names (--color-highlight-<name>), never raw values.
@@ -63,6 +64,45 @@ export function useLibraryPapers(scope: PaperScope) {
           },
         }),
       ),
+  });
+}
+
+/** Metadata full-text search; ids best first. Off for an empty query. */
+export function useLibrarySearch(query: string) {
+  const api = useApi();
+  const q = query.trim();
+  return useQuery({
+    queryKey: ["library", "search", q] as const,
+    enabled: q !== "",
+    placeholderData: (previous) => previous,
+    queryFn: async () => unwrap(await api.GET("/papers/search", { params: { query: { q } } })),
+  });
+}
+
+export function usePaperDetail(paperId: string | null) {
+  const api = useApi();
+  return useQuery({
+    queryKey: ["library", "paper", paperId ?? ""] as const,
+    enabled: paperId !== null,
+    queryFn: async () =>
+      unwrap(
+        await api.GET("/papers/{paper_id}", { params: { path: { paper_id: paperId ?? "" } } }),
+      ),
+  });
+}
+
+export function useUpdateCitekey() {
+  const api = useApi();
+  const invalidate = useInvalidateLibrary();
+  return useMutation({
+    mutationFn: async ({ id, citekey }: { id: string; citekey: string }) =>
+      unwrap(
+        await api.PATCH("/papers/{paper_id}", {
+          params: { path: { paper_id: id } },
+          body: { citekey },
+        }),
+      ),
+    onSuccess: invalidate,
   });
 }
 
