@@ -285,8 +285,8 @@ Aşama 1 bittikten sonra bir akademisyenin (psikolog) geri bildirimiyle kapsam n
 
 | Yol | Ne zaman | Örnekler | Nasıl |
 | --- | --- | --- | --- |
-| API | Açık, belgeli API'si olan ve kullanım koşulları uygun kaynak | Var: OpenAlex, Semantic Scholar, arXiv, Crossref. Aday: PubMed, Europe PMC, DOAJ, ERIC, CORE, DergiPark (OAI-PMH), TR Dizin | Sağlayıcı adaptörü (ADR 0008); her biri için onay, güncel belge kontrolü, ADR ve CLAUDE.md 1. kuraldaki ağ listesinin güncellenmesi |
-| Dosya | API'si olmayan, ücretli veya otomasyonu yasaklayan kaynak | Google Scholar, JSTOR, Scopus, Web of Science, ScienceDirect, EBSCO, ProQuest, PsycINFO, HeinOnline, IEEE Xplore, ACM DL | Dışa aktarılan dosya arama kaydı olarak içe alınır (Görev 15); veritabanı adı, tarih ve sorgu kaydedilir, PRISMA'da kendi kutusuyla sayılır |
+| API | Açık, belgeli API'si olan ve kullanım koşulları uygun kaynak | Var: OpenAlex, Semantic Scholar, arXiv, Crossref. Aday: PubMed, Europe PMC, DOAJ, ERIC, CORE, DergiPark (OAI-PMH) | Sağlayıcı adaptörü (ADR 0008); her biri için onay, güncel belge kontrolü, ADR ve CLAUDE.md 1. kuraldaki ağ listesinin güncellenmesi |
+| Dosya | API'si olmayan, ücretli veya otomasyonu yasaklayan kaynak | Google Scholar, JSTOR, Scopus, Web of Science, ScienceDirect, EBSCO, ProQuest, PsycINFO, HeinOnline, IEEE Xplore, ACM DL, TR Dizin, YÖK Ulusal Tez Merkezi | Dışa aktarılan dosya arama kaydı olarak içe alınır (Görev 15); veritabanı adı, tarih ve sorgu kaydedilir, PRISMA'da kendi kutusuyla sayılır |
 
 Dosya yolu yedek değil, birinci sınıf yoldur. Kazıma (scraping) yok: kullanım koşulları otomasyonu yasaklayan veya bot kontrolü yapan siteye (Google Scholar, JSTOR) bağlanılmaz, CAPTCHA aşılmaz. Koşulları belirsiz kaynak, koşullar netleşene kadar eklenmez.
 
@@ -298,22 +298,19 @@ Dosya yolu yedek değil, birinci sınıf yoldur. Kazıma (scraping) yok: kullan�
 | Veritabanı ön ayarlı içe aktarma: kullanıcı "JSTOR", "Web of Science", "Google Scholar"… seçer; her birinin dışa aktarma biçimi (WoS düz metni, Scopus CSV, tek tek BibTeX) ve tuhaflıkları TEz'de çözülür | 2, başı | Her veritabanından gerçek, küçük, kendi ürettiğimiz örnek dosya |
 | "Bu veritabanından nasıl dışa aktarılır" kısa rehberi (arama ekranında) | 2, başı | Ön ayarlarla birlikte |
 | PRISMA diyagramında "diğer yöntemler" dalı: kartopu ile birlikte gri literatür (tez, rapor, kayıt) | 2 | PRISMA görevi |
-| Yeni API sağlayıcıları, bu sırayla: (1) PubMed + Europe PMC, (2) DOAJ + ERIC + CORE, (3) TR Dizin + DergiPark (DergiPark'ın koşulları açık olduğu için öne alınabilir) | 2'den başlayarak | Her biri ayrı onay + güncel belge kontrolü + ADR + CLAUDE.md 1. kural güncellemesi |
-| TR Dizin: önce arayüzünden alınan BibTeX dosyasıyla içe aktarma denemesi; sonra doğrudan sağlayıcı | 2 (deneme hemen) | Doğrudan sağlayıcı için TR Dizin'in yazılı onayı (aşağıda "Kullanım koşulları") |
+| Yeni API sağlayıcıları, bu sırayla: (1) PubMed + Europe PMC, (2) DOAJ + ERIC + CORE, (3) DergiPark (koşulları açık olduğu için öne alınabilir) | 2'den başlayarak | Her biri ayrı onay + güncel belge kontrolü + ADR + CLAUDE.md 1. kural güncellemesi |
+| TR Dizin: yalnız dosya yolu; arayüzünden alınan BibTeX, ön ayarlı içe aktarmada "TR Dizin" olarak | 2, başı (deneme hemen) | Gerçek bir TR Dizin dışa aktarımıyla deneme |
 | İki değerlendiricili eleme: kararların bir kütüphaneden diğerine aktarılması, "Çakışmalar" sekmesi, Cohen kappa | 2, sonu | Tek kişilik eleme bitmiş olmalı; şema hazır (`reviewer`) |
 | Biçimlendirilmiş kaynakça (CSL): en az APA 7, MLA, Chicago, Vancouver, IEEE; Türkçe ve İngilizce; kapsam seçili / koleksiyon / review'da dahil edilenler; panoya ve dosyaya. Dışa aktarma ekranıyla (tasarım 5.10) birlikte | 2, sonu | Eleme kararları. Arka uçta `citeproc-py` (BSD-2-Clause-Views, uygun); `citeproc-js` AGPL/CPAL olduğu için kullanılmaz |
 | Enstitü tez yazım kılavuzlarına göre özel CSL stilleri | CSL'den sonra, ihtiyaç doğdukça | — |
 | Kalite değerlendirmesi alandan bağımsız: kullanıcının kendi soruları ve ölçeği veya hazır kontrol listesi (Kitchenham, JBI, RoB 2 gibi yanlılık riski araçları) | Kalite değerlendirme görevi geldiğinde | Şema hazır (`quality_question`, `quality_assessment`) |
 | Yayın türlerinde kitap, kitap bölümü ve tez: filtreler ve dışa aktarma | Arama filtreleri ve dışa aktarma ekranıyla | — |
-| YÖK Ulusal Tez Merkezi: deneysel, varsayılanı kapalı kaynak; "şu an hangi tezler yapılıyor" için kayıtlı sorgu uyarılarıyla | 4 | YÖK'ün yazılı onayı; resmi API yok |
+| YÖK Ulusal Tez Merkezi: yalnız dosya yolu; sitenin arama sonuçlarını dosyaya aktarma imkânı varsa ön ayarlı içe aktarmaya eklenir, yoksa kaynak olarak eklenmez. Tezler yine her dosya kaynağından ve PRISMA'nın gri literatür dalından gelebilir | 2, ön ayarlarla | YÖK Tez'in dışa aktarımı olup olmadığı kontrol edilir |
 | Word içinde yazarken atıf eklentisi | Kapsam dışı | Zotero'ya aktarım (Aşama 6) bu yolu karşılar |
 
-### Kullanım koşulları: TR Dizin ve YÖK Tez
+### TR Dizin ve YÖK Tez: yalnız dosya yolu
 
-İkisine de e-postayla sorulur: TR Dizin için `trdizin@tubitak.gov.tr` (TÜBİTAK ULAKBİM), YÖK Ulusal Tez Merkezi için `tezmerkezi@yok.gov.tr`. Sorular: resmi bir API veya veri erişim yolu var mı; kullanıcının başlattığı aramalarla bir masaüstü uygulamasının meta veri (başlık, yazar, özet, yıl, DOI) çekmesine izin veriliyor mu; hız sınırı, kayıt/anahtar ve atıf şartı.
-
-- **Olumlu cevap:** ilgili kaynak, yukarıdaki sıraya göre sağlayıcı olarak eklenir (ADR + onay).
-- **Olumsuz cevap, "böyle bir şey yok" veya cevap yok:** doğrudan sağlayıcı yazılmaz; yalnız dosya yolu. TR Dizin arayüzden alınan BibTeX ile gelir; YÖK Tez'in dışa aktarımı yoksa kaynak eklenmez.
+İkisinin de otomatik erişim için yayımlanmış koşulu yok (YÖK Tez'in API'si hiç yok). Kurumlara sorulmayacak; ilerlenebilir yol seçildi: ikisi de yalnız dosya yolundan gelir. Resmi, belgeli bir API yayımlanırsa API yoluna alınması yeniden değerlendirilir (onay + ADR).
 
 ## Riskler, eksikler ve alternatifler
 
@@ -326,7 +323,7 @@ En büyük risk teknik değil: aracın kendisi tez taramasını geciktirebilir. 
 | Kapsam | 6 aşama tek kişiye çok; tez takvimini zorlar | Kritik yol önce; kartopu Aşama 4'ten 2'ye (her alanda kullanılan tamamlayıcı yöntem, API ile ucuz); grafik ve uyarılar sonra |
 | Paket boyutu | Docling/torch ve OCR modelleri paketi GB'lara çıkarır | Çekirdek uygulama hafif; ağır işleme isteğe bağlı indirilen paket veya harici servis |
 | Veri kaynağı kapsamı | Her alanın jürisi kendi veritabanlarını bekler (Scopus, Web of Science, JSTOR, PubMed, PsycINFO, TR Dizin, Google Scholar…); çoğunun açık API'si yok | İki yol (ADR 0019): açık API'si olan kaynak sağlayıcı olur; diğerlerinin dışa aktarımı ön ayarlı içe aktarmayla arama kaydı olur (görev 15) |
-| Kaynak kullanım koşulları | Google Scholar ve JSTOR otomasyonu yasaklar veya engeller; TR Dizin ve YÖK Tez'in koşulları belirsiz | Kazıma yok; koşulları belirsiz kaynak netleşene kadar eklenmez, eklenirse deneysel ve varsayılanı kapalı |
+| Kaynak kullanım koşulları | Google Scholar ve JSTOR otomasyonu yasaklar veya engeller; TR Dizin ve YÖK Tez'in otomatik erişim koşulu yok | Kazıma yok; koşulları belirsiz kaynak yalnız dosya yolundan gelir |
 | Sorgu eşdeğerliği | Tek sorgu her API'de farklı yorumlanır; raporlama standartları kaynak başına tam sorgu ister | Kaynak başına çevrilmiş sorgu saklanır, gösterilir ve düzenlenebilir |
 | API koşulları | Kota, anahtar ve e-posta (polite pool) kuralları sık değişir | Sağlayıcı ayarları yapılandırılabilir; her sağlayıcı yazılmadan önce güncel belgeleri kontrol edilir |
 | Konum kayması | PDF yeni sürümle değişirse vurgular ve kanıtlar kayar | Anchor'da metin alıntısı + önek/sonek ile yeniden konumlama |

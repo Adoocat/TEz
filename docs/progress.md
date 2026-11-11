@@ -35,6 +35,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 - (ADR 0019) Kapsam her daldan araştırma ve tez olarak netleşti; Aşama 2+ işlerinin aşamalara dağılımı `docs/plan.md` → "Aşama 1 sonrası kararlar" bölümünde.
 - (ADR 0019) Review formunda varsayılan yöntem hâlâ `kitchenham_slr` (`ReviewForm.tsx`); Aşama 2 başında PRISMA 2020 olacak.
 - (ADR 0019) TR Dizin arayüzünden alınan BibTeX dışa aktarımıyla içe aktarma denemesi (Türkçe karakterler, alan adları); küçük bir örnek dosya test verisine eklenmeli.
+- (ADR 0019) YÖK Tez'in arama sonuçlarını dosyaya (RIS/BibTeX/CSV) aktarıp aktarmadığı kontrol edilmeli; aktarıyorsa ön ayarlı içe aktarmaya eklenir.
 - (23) BibTeX yazıcısı her tezi `@phdthesis` yazıyor (`writers.py`); yüksek lisans tezi `@mastersthesis` olmalı (RIS'te ikisi de `THES`). Tez türü (yüksek lisans/doktora) şimdilik saklanmıyor.
 - (23) Planın komut tablosundaki `tez list`, `tez jobs`, `tez backup`, `tez prisma` ve pencere komutları (`tez <dosya>` masaüstünü başlatır) Aşama 6'daki konsol kabuğuyla.
 - (23) Typer'ın gömülü Click'inde "Usage:" ve "Try … for help." sabit yazılı; Türkçe yardımda İngilizce kalıyor.
@@ -115,7 +116,7 @@ Karar ilgili göreve gelindiğinde verilir.
 11. **Kısayol çakışması:** eleme ekranında J/K önceki/sonraki kayıt ve Space "Atla"; design prompt'ta "Atla" `→`. Görev 8'de kısayol haritası netleştirilmeli.
 12. Plan "24 adım" diyor, liste 25 (S1 + 1–23 + 6b) — plan metninde düzeltilecek.
 13. ~~**İki değerlendiricili eleme ve Cohen kappa**~~ — Karar: Aşama 2 sonunda. Önce tek kişilik eleme biter; sonra kararlar kütüphaneler arasında aktarılarak iki hakem, "Çakışmalar" sekmesi ve kappa (ADR 0019).
-14. ~~**Yeni API sağlayıcılarının sırası**~~ — Karar: (1) PubMed + Europe PMC, (2) DOAJ + ERIC + CORE, (3) TR Dizin + DergiPark; DergiPark öne alınabilir. Her biri ayrı onay + ADR; CLAUDE.md 1. kuraldaki liste ancak kaynak eklendiğinde güncellenir (ADR 0019).
-15. **TR Dizin ve YÖK Tez kullanım koşulları** — Karar: e-postayla sorulacak (`trdizin@tubitak.gov.tr`, `tezmerkezi@yok.gov.tr`). Olumsuz, "yok" veya cevapsız kalırsa yalnız dosya yolu. **Durum:** e-postalar gönderilecek, cevap bekleniyor.
+14. ~~**Yeni API sağlayıcılarının sırası**~~ — Karar: (1) PubMed + Europe PMC, (2) DOAJ + ERIC + CORE, (3) DergiPark (öne alınabilir). Her biri ayrı onay + ADR; CLAUDE.md 1. kuraldaki liste ancak kaynak eklendiğinde güncellenir (ADR 0019).
+15. ~~**TR Dizin ve YÖK Tez kullanım koşulları**~~ — Karar: kurumlara sorulmayacak; ikisi de yalnız dosya yolundan. TR Dizin BibTeX ile; YÖK Tez yalnız sitesi dışa aktarım sunuyorsa (ADR 0019).
 16. ~~**`citeproc-py` lisansı**~~ — Karar: BSD-2-Clause-Views (izin verici, MIT ile uyumlu); CSL kaynakçası arka uçta bununla. `citeproc-js` (AGPL/CPAL) kullanılmaz.
 17. ~~**Varsayılan review yöntemi**~~ — Karar: PRISMA 2020; Kitchenham SLR seçenek (ADR 0019).
