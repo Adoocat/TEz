@@ -8,6 +8,8 @@ The frontend takes colors, sizes and spacing from the tokens, never from hard-co
 
 ## Known gaps and conflicts (see `docs/progress.md` → Open questions)
 
-- Only the matrix screen exists in dark theme; dark tokens are a draft derived from it.
+- Only the matrix screen exists in dark theme. The dark tokens derived from it were approved as they are (2026-11-14); other screens use the same tokens.
+- Light theme: the AI violet (`#7c3aed`) and the "revisit" purple (`#9333ea`) are nearly the same color (open question 18).
+- Screening shortcuts: Skip is `→` and also a visible button; the 5.2 mockup's `Space` label is outdated. `J`/`K` move between records.
 - Missing: 4.1 welcome screen and new-review form, all of 4.6 (inbox banner, import preview, `.bib`/`.ris` wizard), component sheet, collapsed shell, empty/loading/offline states, English variants.
 - Mockups contain later-phase features (AI, highlights, card/timeline views, Zotero, sync). Phase 1 implements only what `docs/plan.md` lists; where a mockup contradicts the plan (AGPL license label, CLI daemon socket, multi-worker pool, cloud sync), the plan wins.
