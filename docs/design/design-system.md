@@ -60,7 +60,7 @@ colors:
   status-retracted: '#991b1b'
   status-ai: '#7c3aed'
   status-reading-blue: '#2563eb'
-  status-revisit-purple: '#9333ea'
+  status-revisit-purple: '#c026d3'
 typography:
   headline-lg:
     fontFamily: Inter
@@ -224,7 +224,7 @@ The shape vocabulary communicates precision, software engineering rigor, and str
   - Grey: Unread
   - Blue (`#2563eb`): Currently Reading
   - Green (`#15803d`): Finished / Extracted
-  - Violet (`#9333ea`): Marked for Revisit
+  - Fuchsia (`#c026d3`): Marked for Revisit (kept apart from the AI violet)
 - **Verified Source Chip:** 4px radius chip in `#1e3a5f` with 10% opacity background, dark ink text, featuring the publication year and page number (`[Gök 2023 · s.12]`). Clicking shifts the PDF viewer directly to the source coordinates.
 - **AI Suggested Extraction Cell:** Rendered with a 1px dashed violet border (`#7c3aed`), tinted violet background (5% opacity), accompanied by a leading `✦` glyph and a one-click confirmation tick (`✓`).
 - **Ungrounded Claim Indicator:** Orange squiggly underline (`text-decoration: underline wavy #ea580c 1.5px`) highlighting model outputs that lack an anchor citation in the PDF text.

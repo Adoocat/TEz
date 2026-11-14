@@ -124,6 +124,6 @@ Karar ilgili göreve gelindiğinde verilir.
 15. ~~**TR Dizin ve YÖK Tez kullanım koşulları**~~ — Karar: kurumlara sorulmayacak; ikisi de yalnız dosya yolundan. TR Dizin BibTeX ile; YÖK Tez yalnız sitesi dışa aktarım sunuyorsa (ADR 0019).
 16. ~~**`citeproc-py` lisansı**~~ — Karar: BSD-2-Clause-Views (izin verici, MIT ile uyumlu); CSL kaynakçası arka uçta bununla. `citeproc-js` (AGPL/CPAL) kullanılmaz.
 17. ~~**Varsayılan review yöntemi**~~ — Karar: PRISMA 2020; Kitchenham SLR seçenek (ADR 0019).
-18. **Açık temada iki mor:** YZ (`#7c3aed`) ve "tekrar bakılacak" (`#9333ea`) neredeyse aynı. Koyu temada ayrışıyorlar (mor `#c084fc` / fuşya `#e879f9`). Öneri: açık temada "tekrar bakılacak" da fuşya olsun (`#c026d3`). Görev 32'den (eleme ekranı) önce karar gerekli.
+18. ~~**Açık temada iki mor**~~ — Karar (2026-11-14): açık temada "tekrar bakılacak" fuşya `#c026d3` (eskisi `#9333ea`, YZ moru `#7c3aed` ile karışıyordu); koyu temadaki mor/fuşya ayrımıyla aynı. Tasarım taslakları eski rengi gösteriyor; `tokens.json` geçerli.
 19. **Ön ayar örnek dosyaları (Görev 26):** her veritabanı için gerçek, küçük bir dışa aktarım dosyası gerekiyor (Web of Science, Scopus, JSTOR, EBSCO, ProQuest, PsycINFO, IEEE Xplore, ACM DL, Google Scholar, TR Dizin). Hangilerine kurum erişimi var? Varsayılan: erişilenlerle başla; dosyası olmayanın ön ayarı gizli kalır.
 20. **Kalite değerlendirmesinin aşaması:** taslakta Aşama 2'de (Görev 38), tam metin elemesinden sonra. Varsayılan: Aşama 2.
