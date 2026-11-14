@@ -216,7 +216,7 @@ Aktif tarama projesinin ana sayfası: araştırma soruları, aşama ilerlemesi (
 
 - **Odak modu (varsayılan):** Ekranda bir seferde tek kayıt. Ortada büyük ve okunaklı: başlık (serif), yazarlar, yıl, mekân, özet. Özette kullanıcının tanımladığı anahtar kelimeler vurgulu (dahil etme terimleri yeşil, hariç tutma terimleri kırmızı alt çizgi).
 - **Sağda kriter paneli:** Dahil etme ve hariç tutma kriterleri, her birinin kodu ve numaralı kısayolu (1–9). Hariç seçilince gerekçe zorunlu.
-- **Karar çubuğu (altta, sabit):** Dahil (`I`), Hariç (`E` + gerekçe numarası), Belki (`M`), Atla (`→`), Geri al (`U`), not ekle (`N`). Düğmelerde kısayol harfi görünür. Karar verilince kayıt hafifçe kayarak sonrakine geçer.
+- **Karar çubuğu (altta, sabit):** Dahil (`I`), Hariç (`E` + gerekçe numarası), Belki (`M`), Atla (`→`; tıklanabilir "Atla" düğmesi de var), Geri al (`U`), not ekle (`N`). Düğmelerde kısayol harfi görünür. Elemede Space kullanılmaz; `J`/`K` kayıtlar arasında karar vermeden gezinir. Karar verilince kayıt hafifçe kayarak sonrakine geçer.
 - **Üst çubuk:** Aşama seçici (Başlık-özet / Tam metin), ilerleme çubuğu ("214 / 1.425 · %15"), oturum sayacı ("bu oturumda 48 karar"), filtre (yalnızca "Belki"ler, yalnızca kararsızlar).
 - **Tam metin aşaması:** Sol tarafta PDF okuyucu açılır; kriter paneli ve karar çubuğu aynı kalır. PDF'i yoksa "Tam metne erişilemedi" seçeneği (PRISMA'da ayrı sayılır).
 - **Liste modu (alternatif):** Tablo halinde hızlı tarama; satırda tek tuşla karar; seçilen satırın özeti altta açılır.
@@ -304,7 +304,8 @@ Sol kategori listesi: Genel (dil, tema, yoğunluk), Kütüphane (konum, yedeklem
 | Genel | ? | Kısayol listesi katmanı |
 | Eleme | I · E · M | Dahil · Hariç · Belki |
 | Eleme | 1–9 | Hariç tutma gerekçesi |
-| Eleme | U · N · → | Geri al · Not · Atla |
+| Eleme | U · N · → | Geri al · Not · Atla (düğmesi de var) |
+| Eleme | J · K | Sonraki · önceki kayıt (karar vermeden) |
 | Okuyucu | H · ⇧N | Vurgula · Not ekle |
 | Okuyucu | J · K | Sonraki · önceki sayfa |
 | Liste | ↑ ↓ · Space · Enter | Gezin · Önizle · Aç |

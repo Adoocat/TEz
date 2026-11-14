@@ -315,6 +315,56 @@ Dosya yolu yedek değil, birinci sınıf yoldur. Kazıma (scraping) yok: kullan�
 
 İkisinin de otomatik erişim için yayımlanmış koşulu yok (YÖK Tez'in API'si hiç yok). Kurumlara sorulmayacak; ilerlenebilir yol seçildi: ikisi de yalnız dosya yolundan gelir. Resmi, belgeli bir API yayımlanırsa API yoluna alınması yeniden değerlendirilir (onay + ADR).
 
+## Aşama 2 görevleri (taslak)
+
+Nov 14, 2026 · Taslak; onaydan sonra kesinleşir. Kapsam: "Aşama 1 sonrası kararlar" tablosunda 2. aşamaya konan her şey ve taramanın kritik yolunun ikinci halkası (eleme ve PRISMA). Kartopu, Riskler tablosundaki karara göre Aşama 4'ten buraya alındı.
+
+Numaralar Aşama 1'den devam eder (branch adları çakışmasın diye). Her adım yine tek PR'dır. Sıra kritik yolu izler: önce review ve kaynaklar, sonra eleme, sonra PRISMA ve diğer yöntemler, en sonda çıktılar ve iki değerlendirici.
+
+**Bu aşama için alınan arayüz kararları (Nov 14, 2026):** Koyu tema bugünkü tokenlarla (`docs/design/tokens.json`) olduğu gibi kalır. Elemede "Atla" `→` tuşudur ve karar çubuğunda tıklanabilir bir "Atla" düğmesi de vardır. Space elemede kullanılmaz; `J`/`K` kayıtlar arasında karar vermeden gezinir.
+
+### A. Review temeli
+
+- [ ] **24 · Review oluşturma ve paneli:** varsayılan yöntem PRISMA 2020 (Kitchenham SLR seçenek); oluşturma sihirbazı (tasarım 4.1: başlık, yöntem, araştırma soruları, protokol notu); review paneli (tasarım 5.1: aşama ilerlemesi, her aşamada bekleyen sayı ve "devam et", son aramalar, küçük PRISMA özeti için yer). *Kabul:* yeni review'un yöntemi PRISMA 2020; eski review'lar değişmez; panel sayıları türetilir (servis testi + E2E).
+- [ ] **25 · Eleme kriterleri:** dahil etme / hariç tutma kriterleri; kod (`I1`, `E1`), aşama (başlık-özet, tam metin, ikisi), sıra (ilk dokuzu `1`–`9` kısayolu). Kullanılmış kriter silinmez, arşivlenir. *Kabul:* kullanılmış kriteri silmek `screening.criterion_in_use` döner; sıra değişince kısayol numaraları da değişir.
+
+### B. Kaynaklar: dosya yolu ve yeni API'ler
+
+- [ ] **26 · Ön ayarlı içe aktarma ve dışa aktarma rehberi:** kullanıcı veritabanını seçer: Web of Science düz metin, Scopus CSV, JSTOR / EBSCO / ProQuest / PsycINFO / IEEE Xplore / ACM DL (RIS veya BibTeX), Google Scholar (tek tek BibTeX), TR Dizin (BibTeX), YÖK Tez (yalnız sitesi dışa aktarıyorsa). Her biçimin tuhaflıkları TEz'de çözülür; `search_run.source` veritabanının adıdır. Arama ekranında veritabanı başına kısa "nasıl dışa aktarılır" rehberi (tr/en). *Kabul:* her ön ayar için gerçek, küçük, kendi ürettiğimiz örnek dosyayla test (alanlar, Türkçe karakterler, uyarılar); örnek dosyası olmayan veritabanının ön ayarı, dosya gelene dek gizli.
+- [ ] **27 · Kayıtlı harici arama:** `search_query`'ye harici veritabanı (migration). "Siteyi aç" siteyi kullanıcının tarayıcısında açar ve sorguyu panoya kopyalar. Aynı aramanın yeni içe aktarımı "son içe aktarmadan beri N yeni kayıt" gösterir, eleme kuyruğuna yalnız yeniler girer; her içe aktarma yine ayrı `search_run`. *Kabul:* aynı dosyayı iki kez içe aktarmak 0 yeni verir; bir kayıt eklenmiş dosya 1 yeni verir; PRISMA iki `search_run`'ı da görür.
+- [ ] **28 · Yayın türleri ve tezler:** kitap, kitap bölümü, tez (yüksek lisans / doktora); tez türü saklanır (migration); arama ve kütüphanede yayın türü filtresi; OpenAlex'te `dissertation` filtresi; BibTeX'te `@mastersthesis` / `@phdthesis`, RIS'te `THES`. *Kabul:* tür eşleme tablosu testleri (dört sağlayıcı + içe aktarma); yazıcı–içe aktarıcı gidiş-dönüşünde tez türü korunur.
+- [ ] **29 · PubMed ve Europe PMC sağlayıcıları** (iki PR): her biri için önce onay, güncel API belgesi kontrolü, ADR ve CLAUDE.md 1. kuraldaki ağ listesinin güncellenmesi; sorgu çevirisi (MeSH alanları dahil), hız sınırları, `ok` / `partial` / `error`. *Kabul:* kaydedilmiş gerçek yanıtlarla (cassette) eşleme testleri, ağ olmadan; tekilleştirme PMID ve PMCID'yi tanır.
+
+### C. Eleme
+
+- [ ] **30 · Kısayol altyapısı:** `tinykeys`; bağlam başına tek kısayol haritası (genel, eleme, okuyucu, liste); `?` katmanı ve düğmelerdeki `kbd` ipuçları aynı haritadan üretilir; yazı alanındayken kısayollar susar. *Kabul:* aynı bağlamda çift atama testte kırılır; `?` katmanı tr/en.
+- [ ] **31 · Eleme servisi ve API:** kararlar yalnız eklenir (düzeltme ve geri alma yeni satır, `superseded_by`); hariçte gerekçe zorunlu; başlık-özette dahil / belki olanlar tam metin kuyruğuna geçer; kuyruk sırası kararlı; filtreler (kararsız, belki, dahil, hariç); kaydın güncel durumu türetilir. *Kabul:* zor vakalar tablosu (geri al, düzelt, aşama atlama denemesi, gerekçesiz hariç); 2000 kayıtlık review'da sonraki kayıt sunucuda < 50 ms.
+- [ ] **32 · Başlık-özet eleme ekranı:** tasarım 5.2 odak modu: büyük başlık ve özet, kriter paneli, karar çubuğu `I` · `E` + `1`–`9` · `M` · Atla `→` (tıklanabilir düğmesi de var) · Geri al `U` · Not `N`; `J`/`K` ile gezinme; özette anahtar kelimeler vurgulu (dahil yeşil, hariç kırmızı alt çizgi, Türkçe katlamayla); ilerleme, oturum sayacı, filtre; liste modu (satırda tek tuşla karar). *Kabul:* E2E: 20 kayıt yalnız klavyeyle, aynı 20 kayıt yalnız fareyle (Atla düğmesi dahil) elenir; karardan sonra sonraki kayıt < 100 ms.
+- [ ] **33 · Tam metin eleme:** solda okuyucu (Görev 20); kriter paneli ve karar çubuğu aynı; PDF yoksa "PDF'leri bul" (Görev 17) ve "Tam metne erişilemedi" (PRISMA'da ayrı sayılır). *Kabul:* E2E: PDF'li ve PDF'siz kayıt; "erişilemedi" PRISMA'da kendi kutusunda.
+
+### D. PRISMA ve diğer yöntemler
+
+- [ ] **34 · PRISMA sayıları:** PRISMA 2020 akışının her kutusu `search_run`, `search_result`, `review_record` ve `screening_decision`'dan türetilir (kaynak başına bulunan, tekrar, elenen, erişilemeyen, gerekçe başına hariç, dahil); "diğer yöntemler" dalı (kartopu, web siteleri, kuruluşlar, kayıtlar, tezler); hiçbir sayı saklanmaz. *Kabul:* elle hesaplanmış örnek review'lar tablosu; kutular arası değişmezler (bulunan = tekrar + elenen + …) testi; karar düzeltilince sayılar doğru değişir.
+- [ ] **35 · PRISMA diyagramı:** tasarım 5.7; SVG; kutu etiketleri düzenlenebilir (etiket saklanır, sayı saklanmaz); tr/en; siyah-beyaz baskı teması; SVG ve PNG dışa aktarma; review panelindeki küçük özet aynı veriden. *Kabul:* diyagramdaki her sayı Görev 34'le aynı; dışa aktarılan SVG geçerli ve kendi başına açılır.
+- [ ] **36 · Kartopu:** seçili dahil edilenlerden geri (kaynakça) ve ileri (atıf yapanlar) kartopu, OpenAlex ve Semantic Scholar üzerinden, işçide iş olarak; sonuçlar tekilleştirilir; `review_record.origin` = `citation_backward` / `citation_forward`, kaynak makale `origin_ref`'te; turlar (Wohlin) numaralanır; yeni kayıtlar eleme kuyruğuna girer. *Kabul:* cassette'lerle; review'da zaten olan kayıt yeniden eklenmez; PRISMA'da "diğer yöntemler" dalında tur başına sayılır.
+- [ ] **37 · Gri literatür:** elle kayıt ekleme (tez, rapor, kayıt, web sayfası) ve bir içe aktarmayı "diğer yöntemler" (web sitesi, kuruluş) olarak işaretleme; ikisi de tekilleştirmeden geçer. *Kabul:* elle eklenen tez PRISMA'nın diğer yöntemler dalında doğru kutuda; aynı kaydın veritabanından da gelmesi tekrar sayılır.
+
+### E. Kalite değerlendirmesi
+
+- [ ] **38 · Kalite değerlendirmesi:** `quality_question` ve `quality_assessment` (migration); kullanıcının kendi soruları ve ölçeği veya hazır kontrol listesi şablonu (Kitchenham, JBI, RoB 2 gibi; her şablonun lisansı eklenmeden önce kontrol edilir); alandan bağımsız, isteğe bağlı aşama; tam metinde dahil edilenler için. *Kabul:* özel ölçekli bir soru seti ve bir şablonla uçtan uca test; aşama kapalıyken review paneli onu göstermez.
+
+### F. Çıktılar
+
+- [ ] **39 · Biçimlendirilmiş kaynakça (CSL):** arka uçta `citeproc-py` (BSD-2-Clause-Views); en az APA 7, MLA, Chicago, Vancouver, IEEE; Türkçe ve İngilizce yerel ayar; stiller ve yerel ayarlar pakette, CC BY-SA atfı `docs/licenses.md`'de; kapsam: seçili makaleler, koleksiyon veya review'da dahil edilenler. *Kabul:* her stil için kitap, bölüm, makale, bildiri ve tez örneklerinde beklenen çıktı testleri (tr ve en).
+- [ ] **40 · Dışa aktarma ekranı:** tasarım 5.10; kapsam seçimi; BibTeX / RIS (Görev 23), biçimlendirilmiş kaynakça (panoya ve dosyaya), atıf anahtarı biçimi önizlemesi; yöntem bölümü için arama stratejisi tablosu (kaynak, tarih, birebir sorgu, sonuç sayısı; Markdown ve CSV); "Terminal komutunu kopyala". *Kabul:* E2E: dahil edilenlerin APA 7 kaynakçası panoya alınır; strateji tablosu her `search_run`'ı içerir.
+
+### G. İki değerlendirici
+
+- [ ] **41 · Kararların kütüphaneler arası aktarımı:** herkes kendi kütüphanesinde eler; kararlar `reviewer` adıyla bir dosyaya (JSON, sürümlü şema) dışa aktarılır ve diğer kütüphaneye alınır; kayıtlar tanımlayıcılarla eşlenir, eşlenemeyenler raporlanır; alınan kararlar da yalnız eklenir. *Kabul:* iki geçici kütüphaneyle gidiş-dönüş testi; aynı dosyayı iki kez almak tekrar oluşturmaz.
+- [ ] **42 · Çakışmalar ve Cohen kappa:** "Çakışmalar" sekmesi (iki karar yan yana; uzlaşma kararı yeni satır); aşama başına Cohen kappa ve uyum yüzdesi; PRISMA uzlaşılmış kararlarla sayılır. *Kabul:* kappa elle hesaplanmış örneklerle aynı; uzlaşmadan sonra çakışma listesi boşalır.
+
+Aşama 2'ye bilerek alınmayanlar: DOAJ, ERIC, CORE ve DergiPark sağlayıcıları (PubMed ve Europe PMC'den sonra, sırayla, her biri ayrı onayla); harici aramalar için yenileme hatırlatması ve kayıtlı sorgu uyarıları (Aşama 4); PDF tam metin indeksleme, notlar ve literatür matrisi (Aşama 3); tarayıcı bağlayıcısı (Aşama 6 sonrası, onay + ADR).
+
 ## Riskler, eksikler ve alternatifler
 
 En büyük risk teknik değil: aracın kendisi tez taramasını geciktirebilir. Bu yüzden önce taramanın kritik yolunu (arama → eleme → okuma → matris) uçtan uca çalışır hale getirmeyi, gerisini ihtiyaç doğdukça eklemeyi öneriyorum.
