@@ -1,0 +1,273 @@
+{
+  "$defs": {
+    "CriterionKind": {
+      "enum": ["inclusion", "exclusion"],
+      "title": "CriterionKind",
+      "type": "string"
+    },
+    "Decision": {
+      "enum": ["include", "exclude", "maybe"],
+      "title": "Decision",
+      "type": "string"
+    },
+    "FileAuthor": {
+      "additionalProperties": false,
+      "properties": {
+        "display_name": {
+          "minLength": 1,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "family": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Family"
+        }
+      },
+      "required": ["display_name"],
+      "title": "FileAuthor",
+      "type": "object"
+    },
+    "FileCriterion": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "maxLength": 16,
+          "minLength": 1,
+          "title": "Code",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/CriterionKind"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "stage": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScreeningStage"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": ["code", "kind", "text"],
+      "title": "FileCriterion",
+      "type": "object"
+    },
+    "FileDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "record": {
+          "title": "Record",
+          "type": "string"
+        },
+        "stage": {
+          "$ref": "#/$defs/ScreeningStage"
+        },
+        "decision": {
+          "$ref": "#/$defs/Decision"
+        },
+        "criterion": {
+          "anyOf": [
+            {
+              "maxLength": 16,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Criterion"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "decided_at": {
+          "format": "date-time",
+          "title": "Decided At",
+          "type": "string"
+        }
+      },
+      "required": ["id", "record", "stage", "decision", "decided_at"],
+      "title": "FileDecision",
+      "type": "object"
+    },
+    "FileRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "ref": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Ref",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Year"
+        },
+        "first_author": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FileAuthor"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "venue_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Venue Type"
+        },
+        "identifiers": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Identifiers",
+          "type": "object"
+        }
+      },
+      "required": ["ref", "title"],
+      "title": "FileRecord",
+      "type": "object"
+    },
+    "FileReview": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        }
+      },
+      "required": ["id", "title", "method"],
+      "title": "FileReview",
+      "type": "object"
+    },
+    "ScreeningStage": {
+      "enum": ["title_abstract", "full_text"],
+      "title": "ScreeningStage",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "format": {
+      "const": "tez.screening-decisions",
+      "default": "tez.screening-decisions",
+      "title": "Format",
+      "type": "string"
+    },
+    "version": {
+      "const": 1,
+      "default": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "exported_at": {
+      "format": "date-time",
+      "title": "Exported At",
+      "type": "string"
+    },
+    "app_version": {
+      "title": "App Version",
+      "type": "string"
+    },
+    "reviewer": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Reviewer",
+      "type": "string"
+    },
+    "review": {
+      "$ref": "#/$defs/FileReview"
+    },
+    "criteria": {
+      "items": {
+        "$ref": "#/$defs/FileCriterion"
+      },
+      "title": "Criteria",
+      "type": "array"
+    },
+    "records": {
+      "items": {
+        "$ref": "#/$defs/FileRecord"
+      },
+      "title": "Records",
+      "type": "array"
+    },
+    "decisions": {
+      "items": {
+        "$ref": "#/$defs/FileDecision"
+      },
+      "title": "Decisions",
+      "type": "array"
+    }
+  },
+  "required": ["exported_at", "app_version", "reviewer", "review"],
+  "title": "DecisionFile",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
