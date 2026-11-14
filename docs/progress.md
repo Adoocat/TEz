@@ -29,8 +29,27 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 21 · Kapanış | bitti | `task/21-closing` · #30 | Yedek: SQLite backup API ile tutarlı veritabanı kopyası + `files/` + `snapshots/` + SHA-256'lı manifest, tek zip; işçide iş, Ayarlar › Yedekleme. `tez-backend restore <zip> <klasör>`: yalnızca boş klasöre, her girdi doğrulanır, `..` reddedilir, bozuksa yarım klasör silinir. Kabul testi: geri yüklenen kütüphanede makaleler, atıf anahtarları, koleksiyonlar, arama, arama geçmişi ve PDF baytları aynı. README, `docs/architecture.md`, `docs/licenses.md`; Playwright duman testi (ekranlar, dil kalıcılığı, gerçek işçiyle yedek). Ayrıntı: ADR 0016 |
 | 22 · Tek örnek ve argüman iletimi | bitti | `task/22-single-instance` · #31 | `single-instance` + `deep-link` eklentileri. Argümanlar Rust'ta sınıflandırılır (PDF, .bib/.ris, klasör, `tez://`, yok/desteklenmeyen) ve bir kuyruğa yazılır; pencere yalnızca dürtülür ve kuyruğu kendisi alır, böylece açık ve kapalı uygulamada aynı yol. PDF Gelen kutusuna + okuyucuda açılır; klasördeki PDF'ler tek özet bildirimle; .bib/.ris içe aktarma diyaloğunda (arka uç yoldan okur); kütüphane klasörü yalnız bildirim; `tez://` yalnız gezinir. Windows hata ayıklama derlemesiyle denendi: açıkken ikinci çağrı 150 ms'de çıktı, tek süreç kaldı, PDF eklendi; kapalıyken aynı komut aynı sonucu verdi. Ayrıntı: ADR 0017 |
 | 23 · Başsız CLI çekirdeği | bitti | `task/23-headless-cli` · #32 | `tez search / import / add / export` (Typer). Kütüphane açık bir pencerede kullanılıyorsa onun API'si (`.tez/instance.json`), değilse kilit alınıp doğrudan servisler; iki yol aynı yanıt modellerini döndürür. Çıkış kodları 0/1/2, `--json` (İngilizce alanlar), çıktı hep UTF-8. `--help` ve mesajlar Türkçe/İngilizce (`--lang`, `TEZ_LANG`, sistem dili). Yeni: `modules/export` (BibTeX/RIS, içe aktarıcıyla gidiş-dönüş testi), `GET /export`. Kabul: 16 uçtan uca test iki modda da (gerçek uvicorn sunucusu ve doğrudan) geçiyor. Ayrıntı: ADR 0018 |
+| 24 · Review oluşturma ve paneli | bekliyor | — | A · Varsayılan yöntem PRISMA 2020; sihirbaz (4.1) ve review paneli (5.1) |
+| 25 · Eleme kriterleri | bekliyor | — | A · Kodlar, aşama, `1`–`9` kısayol sırası; kullanılmış kriter arşivlenir |
+| 26 · Ön ayarlı içe aktarma ve dışa aktarma rehberi | bekliyor | — | B · Ön koşul: veritabanı başına örnek dosya (açık soru 19) |
+| 27 · Kayıtlı harici arama | bekliyor | — | B · Migration (`search_query`); "Siteyi aç", "N yeni kayıt" |
+| 28 · Yayın türleri ve tezler | bekliyor | — | B · Migration (tez türü); `@mastersthesis` |
+| 29 · PubMed ve Europe PMC sağlayıcıları | bekliyor | — | B · İki PR; her biri önce onay + ADR + CLAUDE.md 1. kural |
+| 30 · Kısayol altyapısı | bekliyor | — | C · `tinykeys`, tek harita, `?` katmanı |
+| 31 · Eleme servisi ve API | bekliyor | — | C · Yalnız ekleme; hariçte gerekçe zorunlu |
+| 32 · Başlık-özet eleme ekranı | bekliyor | — | C · Tasarım 5.2; Atla `→` + düğme, `J`/`K` gezinme |
+| 33 · Tam metin eleme | bekliyor | — | C · Okuyucu solda; "Tam metne erişilemedi" |
+| 34 · PRISMA sayıları | bekliyor | — | D · Türetilir, saklanmaz; diğer yöntemler dalı |
+| 35 · PRISMA diyagramı | bekliyor | — | D · Tasarım 5.7; SVG/PNG, siyah-beyaz tema |
+| 36 · Kartopu | bekliyor | — | D · Geri ve ileri, OpenAlex + Semantic Scholar; turlar |
+| 37 · Gri literatür | bekliyor | — | D · Elle kayıt; içe aktarmayı "diğer yöntemler" işaretleme |
+| 38 · Kalite değerlendirmesi | bekliyor | — | E · Migration; aşaması açık soru 20 |
+| 39 · Biçimlendirilmiş kaynakça (CSL) | bekliyor | — | F · `citeproc-py`; APA 7, MLA, Chicago, Vancouver, IEEE |
+| 40 · Dışa aktarma ekranı | bekliyor | — | F · Tasarım 5.10; arama stratejisi tablosu |
+| 41 · Kararların kütüphaneler arası aktarımı | bekliyor | — | G · Sürümlü JSON; yalnız ekleme |
+| 42 · Çakışmalar ve Cohen kappa | bekliyor | — | G · Uzlaşma kararı yeni satır |
 
-**Aşama 2:** görevler 24–42 `docs/plan.md` → "Aşama 2 görevleri (taslak)" bölümünde; onaylanınca bu tabloya eklenecek.
+Aşama 2 görevlerinin (24–42) ayrıntısı ve kabul kriterleri: `docs/plan.md` → "Aşama 2 görevleri". Nottaki harf, plandaki grubu gösterir (A review temeli · B kaynaklar · C eleme · D PRISMA ve diğer yöntemler · E kalite · F çıktılar · G iki değerlendirici).
 
 ## Sonraya
 

@@ -315,9 +315,9 @@ Dosya yolu yedek değil, birinci sınıf yoldur. Kazıma (scraping) yok: kullan�
 
 İkisinin de otomatik erişim için yayımlanmış koşulu yok (YÖK Tez'in API'si hiç yok). Kurumlara sorulmayacak; ilerlenebilir yol seçildi: ikisi de yalnız dosya yolundan gelir. Resmi, belgeli bir API yayımlanırsa API yoluna alınması yeniden değerlendirilir (onay + ADR).
 
-## Aşama 2 görevleri (taslak)
+## Aşama 2 görevleri
 
-Nov 14, 2026 · Taslak; onaydan sonra kesinleşir. Kapsam: "Aşama 1 sonrası kararlar" tablosunda 2. aşamaya konan her şey ve taramanın kritik yolunun ikinci halkası (eleme ve PRISMA). Kartopu, Riskler tablosundaki karara göre Aşama 4'ten buraya alındı.
+Nov 14, 2026 · Onaylandı. Kapsam: "Aşama 1 sonrası kararlar" tablosunda 2. aşamaya konan her şey ve taramanın kritik yolunun ikinci halkası (eleme ve PRISMA). Kartopu, Riskler tablosundaki karara göre Aşama 4'ten buraya alındı.
 
 Numaralar Aşama 1'den devam eder (branch adları çakışmasın diye). Her adım yine tek PR'dır. Sıra kritik yolu izler: önce review ve kaynaklar, sonra eleme, sonra PRISMA ve diğer yöntemler, en sonda çıktılar ve iki değerlendirici.
 
