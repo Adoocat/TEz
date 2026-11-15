@@ -4,12 +4,14 @@
 row whose `supersedes_id` points at the decision it replaces.
 """
 
+from datetime import datetime
 from enum import StrEnum
 
 from sqlalchemy import ForeignKey, ForeignKeyConstraint, String, Text, UniqueConstraint
+from sqlalchemy import text as sql_text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from tez.core.db import Base, CreatedMixin, TimestampMixin, enum_type
+from tez.core.db import Base, CreatedMixin, TimestampMixin, UtcDateTime, enum_type
 
 
 class ReviewMethod(StrEnum):
@@ -78,7 +80,12 @@ class ScreeningCriterion(TimestampMixin, Base):
     kind: Mapped[CriterionKind] = mapped_column(enum_type(CriterionKind, "kind"))
     code: Mapped[str] = mapped_column(String(16))  # "E1"
     text: Mapped[str] = mapped_column(Text)
+    # None: both stages.
     stage: Mapped[ScreeningStage | None] = mapped_column(enum_type(ScreeningStage, "stage"))
+    # Order in the review; a stage's first nine active criteria get the 1-9 keys (Task 25).
+    position: Mapped[int] = mapped_column(default=0, server_default=sql_text("0"))
+    # A criterion that decisions use is archived, never deleted.
+    archived_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
 
 
 class ScreeningDecision(CreatedMixin, Base):

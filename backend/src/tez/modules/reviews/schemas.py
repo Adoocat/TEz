@@ -3,7 +3,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
 
-from tez.modules.reviews.models import ReviewMethod, ReviewStatus, ScreeningStage
+from tez.modules.reviews.models import CriterionKind, ReviewMethod, ReviewStatus, ScreeningStage
 
 ResearchQuestion = Annotated[str, StringConstraints(max_length=1000)]
 
@@ -60,3 +60,70 @@ class ReviewOverview(BaseModel):
     review_id: str
     records: int
     stages: list[StageProgress]
+
+
+# "E1", "I2", "E-LANG": stored upper case.
+CriterionCode = Annotated[
+    str, StringConstraints(strip_whitespace=True, to_upper=True, pattern=r"^[A-Za-z0-9._-]{1,16}$")
+]
+CriterionText = Annotated[str, StringConstraints(min_length=1, max_length=2000)]
+
+
+class CriterionCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    kind: CriterionKind
+    # Left out: the next free "I<n>" or "E<n>".
+    code: CriterionCode | None = None
+    text: CriterionText
+    # None: both stages.
+    stage: ScreeningStage | None = None
+
+
+class CriterionUpdate(BaseModel):
+    """Only the fields sent change; `stage: null` means both stages."""
+
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    kind: CriterionKind | None = None
+    code: CriterionCode | None = None
+    text: CriterionText | None = None
+    stage: ScreeningStage | None = None
+    archived: bool | None = None
+
+
+class CriteriaOrder(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    # Every active (not archived) criterion of the review, once, in the new order.
+    criterion_ids: list[str]
+
+
+class CriterionShortcuts(BaseModel):
+    """The 1-9 key a criterion has in each stage's screening; None past the ninth."""
+
+    title_abstract: int | None
+    full_text: int | None
+
+
+class CriterionView(BaseModel):
+    id: str
+    kind: CriterionKind
+    code: str
+    text: str
+    stage: ScreeningStage | None
+    position: int
+    archived: bool
+    # A screening decision cites it: it can be archived, not deleted.
+    used: bool
+    shortcuts: CriterionShortcuts
+
+
+class StageCriterion(BaseModel):
+    """A criterion as one stage's screening shows it, with its key (for Task 31's service)."""
+
+    id: str
+    kind: CriterionKind
+    code: str
+    text: str
+    shortcut: int | None

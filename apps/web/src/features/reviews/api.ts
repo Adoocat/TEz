@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { components } from "@/api/schema";
 import { useApi } from "@/app/backend";
-import { unwrap } from "@/lib/api/query";
+import { unwrap, unwrapEmpty } from "@/lib/api/query";
 
 export type ReviewView = components["schemas"]["ReviewView"];
 export type ReviewCreate = components["schemas"]["ReviewCreate"];
@@ -49,4 +49,82 @@ export function useReviewOverview(reviewId: string | undefined) {
         }),
       ),
   });
+}
+
+// --- screening criteria (Task 25) ---
+
+export type CriterionView = components["schemas"]["CriterionView"];
+export type CriterionCreate = components["schemas"]["CriterionCreate"];
+export type CriterionUpdate = components["schemas"]["CriterionUpdate"];
+export type CriterionKind = components["schemas"]["CriterionKind"];
+export type ScreeningStage = components["schemas"]["ScreeningStage"];
+
+export const criteriaKey = (reviewId: string) => ["reviews", reviewId, "criteria"] as const;
+
+export function useCriteria(reviewId: string) {
+  const api = useApi();
+  return useQuery({
+    queryKey: criteriaKey(reviewId),
+    queryFn: async () =>
+      unwrap(
+        await api.GET("/reviews/{review_id}/criteria", {
+          params: { path: { review_id: reviewId } },
+        }),
+      ),
+  });
+}
+
+function useCriteriaMutation<T>(reviewId: string, mutationFn: (input: T) => Promise<unknown>) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn,
+    onSettled: () => queryClient.invalidateQueries({ queryKey: criteriaKey(reviewId) }),
+  });
+}
+
+export function useAddCriterion(reviewId: string) {
+  const api = useApi();
+  return useCriteriaMutation(reviewId, async (body: CriterionCreate) =>
+    unwrap(
+      await api.POST("/reviews/{review_id}/criteria", {
+        params: { path: { review_id: reviewId } },
+        body,
+      }),
+    ),
+  );
+}
+
+export function useUpdateCriterion(reviewId: string) {
+  const api = useApi();
+  return useCriteriaMutation(reviewId, async ({ id, ...body }: CriterionUpdate & { id: string }) =>
+    unwrap(
+      await api.PATCH("/reviews/{review_id}/criteria/{criterion_id}", {
+        params: { path: { review_id: reviewId, criterion_id: id } },
+        body,
+      }),
+    ),
+  );
+}
+
+export function useDeleteCriterion(reviewId: string) {
+  const api = useApi();
+  return useCriteriaMutation(reviewId, async (criterionId: string) => {
+    unwrapEmpty(
+      await api.DELETE("/reviews/{review_id}/criteria/{criterion_id}", {
+        params: { path: { review_id: reviewId, criterion_id: criterionId } },
+      }),
+    );
+  });
+}
+
+export function useReorderCriteria(reviewId: string) {
+  const api = useApi();
+  return useCriteriaMutation(reviewId, async (criterionIds: string[]) =>
+    unwrap(
+      await api.PUT("/reviews/{review_id}/criteria/order", {
+        params: { path: { review_id: reviewId } },
+        body: { criterion_ids: criterionIds },
+      }),
+    ),
+  );
 }

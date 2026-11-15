@@ -436,6 +436,71 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reviews/{review_id}/criteria": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Criteria
+         * @description Screening criteria: active ones in order (with their 1-9 keys), then archived ones.
+         */
+        get: operations["list_criteria_reviews__review_id__criteria_get"];
+        put?: never;
+        /** Add Criterion */
+        post: operations["add_criterion_reviews__review_id__criteria_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/criteria/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Reorder Criteria
+         * @description Reorder the active criteria; the 1-9 keys follow the new order.
+         */
+        put: operations["reorder_criteria_reviews__review_id__criteria_order_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/criteria/{criterion_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete Criterion
+         * @description Delete an unused criterion; a used one answers screening.criterion_in_use.
+         */
+        delete: operations["delete_criterion_reviews__review_id__criteria__criterion_id__delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update Criterion
+         * @description Edit or (un)archive a criterion. A cited criterion keeps its kind.
+         */
+        patch: operations["update_criterion_reviews__review_id__criteria__criterion_id__patch"];
+        trace?: never;
+    };
     "/searches": {
         parameters: {
             query?: never;
@@ -902,6 +967,67 @@ export interface components {
             is_system: boolean;
             /** Paper Count */
             paper_count: number;
+        };
+        /** CriteriaOrder */
+        CriteriaOrder: {
+            /** Criterion Ids */
+            criterion_ids: string[];
+        };
+        /** CriterionCreate */
+        CriterionCreate: {
+            kind: components["schemas"]["CriterionKind"];
+            /** Code */
+            code?: string | null;
+            /** Text */
+            text: string;
+            stage?: components["schemas"]["ScreeningStage"] | null;
+        };
+        /**
+         * CriterionKind
+         * @enum {string}
+         */
+        CriterionKind: "inclusion" | "exclusion";
+        /**
+         * CriterionShortcuts
+         * @description The 1-9 key a criterion has in each stage's screening; None past the ninth.
+         */
+        CriterionShortcuts: {
+            /** Title Abstract */
+            title_abstract: number | null;
+            /** Full Text */
+            full_text: number | null;
+        };
+        /**
+         * CriterionUpdate
+         * @description Only the fields sent change; `stage: null` means both stages.
+         */
+        CriterionUpdate: {
+            kind?: components["schemas"]["CriterionKind"] | null;
+            /** Code */
+            code?: string | null;
+            /** Text */
+            text?: string | null;
+            stage?: components["schemas"]["ScreeningStage"] | null;
+            /** Archived */
+            archived?: boolean | null;
+        };
+        /** CriterionView */
+        CriterionView: {
+            /** Id */
+            id: string;
+            kind: components["schemas"]["CriterionKind"];
+            /** Code */
+            code: string;
+            /** Text */
+            text: string;
+            stage: components["schemas"]["ScreeningStage"] | null;
+            /** Position */
+            position: number;
+            /** Archived */
+            archived: boolean;
+            /** Used */
+            used: boolean;
+            shortcuts: components["schemas"]["CriterionShortcuts"];
         };
         /** ErrorDetail */
         ErrorDetail: {
@@ -3307,6 +3433,308 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SelectionResult"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_criteria_reviews__review_id__criteria_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CriterionView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_criterion_reviews__review_id__criteria_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CriterionCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CriterionView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    reorder_criteria_reviews__review_id__criteria_order_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CriteriaOrder"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CriterionView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_criterion_reviews__review_id__criteria__criterion_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                criterion_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_criterion_reviews__review_id__criteria__criterion_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                criterion_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CriterionUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CriterionView"];
                 };
             };
             /** @description Missing or invalid token */

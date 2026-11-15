@@ -13,6 +13,7 @@ type LibraryPaperRow = components["schemas"]["LibraryPaperRow"];
 type PaperDetail = components["schemas"]["PaperDetail"];
 type ReviewView = components["schemas"]["ReviewView"];
 type ReviewOverview = components["schemas"]["ReviewOverview"];
+type CriterionView = components["schemas"]["CriterionView"];
 type SearchOverview = components["schemas"]["SearchOverview"];
 type SearchResultRow = components["schemas"]["SearchResultRow"];
 type SourceProgress = components["schemas"]["SourceProgress"];
@@ -27,6 +28,8 @@ export interface FakeBackend {
   reviews: ReviewView[];
   /** What GET /reviews/{id}/overview answers; a review with no records when missing. */
   reviewOverviews: Record<string, ReviewOverview>;
+  /** Each review's screening criteria, in order; shortcuts are recomputed on change. */
+  criteria: Record<string, CriterionView[]>;
   searchOverview: SearchOverview | null;
   searchResults: SearchResultRow[];
   searchHistory: SearchOverview[];
@@ -66,6 +69,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     requests: [],
     reviews: [],
     reviewOverviews: {},
+    criteria: {},
     searchOverview: null,
     searchResults: [],
     searchHistory: [],
@@ -150,6 +154,71 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
         });
         backend.reviews.push(created);
         return json(created, 201);
+      }
+      const criteriaOf = /^\/reviews\/([^/]+)\/criteria(?:\/(.+))?$/.exec(path);
+      if (criteriaOf) {
+        const reviewId = criteriaOf[1] ?? "";
+        const rest = criteriaOf[2];
+        const list = (backend.criteria[reviewId] ??= []);
+        const reply = (status = 200) => json(withShortcuts(list), status);
+        if (rest === undefined && request.method === "GET") return reply();
+        if (rest === undefined && request.method === "POST") {
+          const input = body as {
+            kind: CriterionView["kind"];
+            code?: string | null;
+          } & Partial<CriterionView>;
+          const prefix = input.kind === "inclusion" ? "I" : "E";
+          const code =
+            input.code?.toUpperCase() ??
+            `${prefix}${String(list.filter((c) => c.code.startsWith(prefix)).length + 1)}`;
+          if (list.some((c) => c.code === code)) {
+            return json(
+              { error: { code: "screening.criterion_code_taken", params: { code } } },
+              409,
+            );
+          }
+          const created = criterion({
+            id: `criterion-${String(Date.now())}-${String(list.length)}`,
+            kind: input.kind,
+            code,
+            text: input.text ?? "",
+            stage: input.stage ?? null,
+          });
+          list.push(created);
+          return json(
+            withShortcuts(list).find((c) => c.id === created.id),
+            201,
+          );
+        }
+        if (rest === "order" && request.method === "PUT") {
+          const ids = (body as { criterion_ids: string[] }).criterion_ids;
+          const archived = list.filter((c) => c.archived);
+          const ordered = ids.map((id) => list.find((c) => c.id === id)).filter((c) => !!c);
+          backend.criteria[reviewId] = [...ordered, ...archived];
+          return json(withShortcuts(backend.criteria[reviewId]));
+        }
+        const index = list.findIndex((c) => c.id === rest);
+        const found = list[index];
+        if (!found) {
+          return json({ error: { code: "screening.criterion_not_found", params: {} } }, 404);
+        }
+        if (request.method === "DELETE") {
+          if (found.used) {
+            return json(
+              { error: { code: "screening.criterion_in_use", params: { criterion_id: found.id } } },
+              409,
+            );
+          }
+          list.splice(index, 1);
+          return new Response(null, { status: 204 });
+        }
+        if (request.method === "PATCH") {
+          const changed = { ...found, ...(body as Partial<CriterionView>) };
+          list.splice(index, 1);
+          if (changed.archived) list.push(changed);
+          else list.splice(list.filter((c) => !c.archived).length, 0, changed);
+          return json(withShortcuts(list).find((c) => c.id === found.id));
+        }
       }
       const overviewOf = /^\/reviews\/([^/]+)\/overview$/.exec(path)?.[1];
       if (overviewOf && request.method === "GET") {
@@ -345,6 +414,36 @@ export function review(overrides: Partial<ReviewView> = {}): ReviewView {
     created_at: "2026-11-04T10:00:00+00:00",
     ...overrides,
   };
+}
+
+export function criterion(overrides: Partial<CriterionView> = {}): CriterionView {
+  return {
+    id: "criterion-1",
+    kind: "exclusion",
+    code: "E1",
+    text: "Not about code review",
+    stage: null,
+    position: 0,
+    archived: false,
+    used: false,
+    shortcuts: { title_abstract: null, full_text: null },
+    ...overrides,
+  };
+}
+
+/** The backend's rule: per stage, the first nine active criteria in order get keys 1-9. */
+export function withShortcuts(list: CriterionView[]): CriterionView[] {
+  const keys = { title_abstract: 0, full_text: 0 };
+  return list.map((c, position) => {
+    const shortcuts: CriterionView["shortcuts"] = { title_abstract: null, full_text: null };
+    for (const stage of ["title_abstract", "full_text"] as const) {
+      if (!c.archived && (c.stage === null || c.stage === stage) && keys[stage] < 9) {
+        keys[stage] += 1;
+        shortcuts[stage] = keys[stage];
+      }
+    }
+    return { ...c, position, shortcuts };
+  });
 }
 
 export function reviewOverview(overrides: Partial<ReviewOverview> = {}): ReviewOverview {
