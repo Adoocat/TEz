@@ -45,10 +45,11 @@ MESSAGES: dict[str, dict[Language, str]] = {
         "en": 'The query, e.g. "code review" AND (LLM OR "large language model")',
     },
     "help.search.sources": {
-        "tr": "Virgülle kaynaklar: openalex (oa), semantic_scholar (s2), arxiv, crossref (cr). "
+        "tr": "Virgülle kaynaklar: openalex (oa), semantic_scholar (s2), arxiv, crossref (cr), "
+        "pubmed (pm). "
         "Varsayılan: hepsi.",
         "en": "Comma-separated sources: openalex (oa), semantic_scholar (s2), arxiv, "
-        "crossref (cr). Default: all.",
+        "crossref (cr), pubmed (pm). Default: all.",
     },
     "help.review": {
         "tr": "Review adı ya da kimliği (tek review varsa gerekmez).",

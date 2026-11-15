@@ -153,7 +153,7 @@ describe("the query form", () => {
       expect(backend.requests.find((r) => r.path === "/searches")?.body).toEqual({
         review_id: "review-1",
         query: "llm",
-        sources: ["openalex", "semantic_scholar", "crossref"],
+        sources: ["openalex", "semantic_scholar", "crossref", "pubmed"],
         year_from: 2020,
         year_to: 2024,
         limit: 1000,
@@ -179,7 +179,7 @@ describe("the query form", () => {
     await user.clear(screen.getByRole("textbox", { name: "To" }));
     expect(start).toBeEnabled();
 
-    for (const name of [/^OpenAlex/, /^Semantic Scholar/, /^arXiv/, /^Crossref/]) {
+    for (const name of [/^OpenAlex/, /^Semantic Scholar/, /^arXiv/, /^Crossref/, /^PubMed/]) {
       await user.click(screen.getByRole("button", { name }));
     }
     expect(start).toBeDisabled();

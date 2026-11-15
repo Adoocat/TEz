@@ -23,7 +23,7 @@ TEz, lisansüstü öğrencilerin sistematik literatür taraması yapması için 
                         --başsız komutlar--> açık örneğin API'si (.tez/instance.json) veya kilitle doğrudan DB
 
 Kütüphane klasörü: library.sqlite (WAL, FTS5) · files/ · derived/ · snapshots/ · backups/ · .tez/
-Ağ yalnızca: OpenAlex, Semantic Scholar, arXiv, Crossref, DBLP, Unpaywall; sonra isteğe bağlı GROBID ve LLM
+Ağ yalnızca: OpenAlex, Semantic Scholar, arXiv, Crossref, PubMed (NCBI E-utilities), DBLP, Unpaywall; sonra isteğe bağlı GROBID ve LLM
 ```
 
 Arka uç tek bir ikilidir (`tez-backend`), üç modu vardır: `serve`, `worker`, `cli`. Web modunda `tez serve`, token içeren yerel bir adres yazdırır. `tez` ayrı bir konsol programıdır çünkü Windows'ta pencereli (GUI) programlar terminale çıktı yazamaz.

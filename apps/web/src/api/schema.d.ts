@@ -1143,7 +1143,7 @@ export interface components {
          * IdentifierScheme
          * @enum {string}
          */
-        IdentifierScheme: "doi" | "arxiv" | "s2" | "openalex" | "dblp" | "isbn" | "zotero";
+        IdentifierScheme: "doi" | "arxiv" | "s2" | "openalex" | "dblp" | "isbn" | "zotero" | "pmid" | "pmcid";
         /**
          * ImportFormat
          * @enum {string}

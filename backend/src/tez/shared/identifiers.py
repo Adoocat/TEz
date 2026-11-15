@@ -15,6 +15,8 @@ _ARXIV_SUFFIX = re.compile(r"(?:\.pdf)?$", re.IGNORECASE)
 _ARXIV_VERSION = re.compile(r"v\d+$", re.IGNORECASE)
 _ARXIV = re.compile(r"\d{4}\.\d{4,5}|[a-z-]+(?:\.[a-z]{2})?/\d{7}")
 _ISBN = re.compile(r"\d{9}[\dX]|\d{13}")
+_PMID = re.compile(r"^(?:pmid:\s*)?(\d{1,9})$", re.IGNORECASE)
+_PMCID = re.compile(r"^(?:pmcid:\s*)?(?:pmc)?(\d{1,9})$", re.IGNORECASE)
 
 
 def normalize_doi(value: str) -> str | None:
@@ -33,3 +35,15 @@ def normalize_arxiv(value: str) -> str | None:
 def normalize_isbn(value: str) -> str | None:
     text = re.sub(r"[\s-]", "", value).upper()
     return text if _ISBN.fullmatch(text) else None
+
+
+def normalize_pmid(value: str) -> str | None:
+    """PubMed's id: digits only ("PMID: 123" -> "123")."""
+    match = _PMID.match(value.strip())
+    return match.group(1).lstrip("0") or None if match else None
+
+
+def normalize_pmcid(value: str) -> str | None:
+    """PubMed Central's id, always with its prefix ("4567" or "pmc4567" -> "PMC4567")."""
+    match = _PMCID.match(value.strip())
+    return f"PMC{match.group(1)}" if match else None

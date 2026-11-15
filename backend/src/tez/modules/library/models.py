@@ -56,6 +56,8 @@ class IdentifierScheme(StrEnum):
     DBLP = "dblp"
     ISBN = "isbn"
     ZOTERO = "zotero"
+    PMID = "pmid"
+    PMCID = "pmcid"
 
 
 class RelationKind(StrEnum):

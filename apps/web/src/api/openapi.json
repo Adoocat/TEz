@@ -5389,7 +5389,9 @@
           "openalex",
           "dblp",
           "isbn",
-          "zotero"
+          "zotero",
+          "pmid",
+          "pmcid"
         ],
         "title": "IdentifierScheme"
       },

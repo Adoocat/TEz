@@ -30,6 +30,11 @@ class Token:
 
 
 _OPERANDS = (Kind.TERM, Kind.PHRASE)
+# PubMed field tags: [MeSH], [MeSH Terms], [tiab], [au], [Title/Abstract].
+_FIELD_TAG_SPACED = re.compile(r"\[[A-Za-z:/ ]+\]")
+# Not whitespace to the scanner (a no-break space would be).
+_HELD_SPACE = "\u2063"
+_FIELD_TAG = re.compile(r"\[[A-Za-z:/\u2063]+\]")
 _OPERATORS = {"AND": Kind.AND, "OR": Kind.OR, "NOT": Kind.NOT}
 _TOKEN = re.compile(r'"(?P<phrase>[^"]*)"?|(?P<open>\()|(?P<close>\))|(?P<word>[^\s()"]+)')
 
@@ -198,6 +203,23 @@ def to_arxiv(query: str) -> str:
             case _:
                 parts.append(_plain(token))
     return _join(parts)
+
+
+def to_pubmed(query: str) -> str:
+    """PubMed takes AND/OR/NOT, quotes and parentheses as they are. A field tag the user wrote
+    after a term or phrase stays attached to it: `"Neoplasms"[MeSH Terms]`, `asthma [tiab]`."""
+    # Spaces inside a tag would split it into two words: hold them until the end.
+    held = _FIELD_TAG_SPACED.sub(lambda m: m.group(0).replace(" ", _HELD_SPACE), query)
+    parts: list[str] = []
+    for token in parse(held):
+        text = _plain(token)
+        if token.kind is Kind.TERM and _FIELD_TAG.fullmatch(text) and parts:
+            if parts[-1] == "AND" and len(parts) > 1:
+                parts.pop()  # the AND the parser put between a term and its tag
+            parts[-1] += text
+        else:
+            parts.append(text)
+    return _join(parts).replace(_HELD_SPACE, " ")
 
 
 def to_keywords(query: str) -> str:
