@@ -9,6 +9,8 @@ export type SearchOverview = components["schemas"]["SearchOverview"];
 export type SearchResultRow = components["schemas"]["SearchResultRow"];
 export type SourceProgress = components["schemas"]["SourceProgress"];
 export type RunView = components["schemas"]["RunView"];
+export type ExternalSearchView = components["schemas"]["ExternalSearchView"];
+export type ExternalSearchCreate = components["schemas"]["ExternalSearchCreate"];
 
 // DBLP is postponed: dblp.org answers API clients with a bot check (ADR 0008).
 export const sourceNames = ["openalex", "semantic_scholar", "arxiv", "crossref"] as const;
@@ -16,6 +18,7 @@ export type SourceName = (typeof sourceNames)[number];
 
 export const searchKeys = {
   history: (reviewId: string) => ["searches", "history", reviewId] as const,
+  external: (reviewId: string) => ["searches", "external", reviewId] as const,
   overview: (searchId: string) => ["searches", searchId, "overview"] as const,
   results: (searchId: string) => ["searches", searchId, "results"] as const,
 };
@@ -96,5 +99,25 @@ export function useAddToLibrary(searchId: string | null) {
     mutationFn: async (paperIds: string[]) =>
       unwrap(await api.POST("/library/papers", { body: { paper_ids: paperIds } })),
     onSuccess: () => invalidate(searchId ?? ""),
+  });
+}
+
+/** Saved searches of databases without an open API (Task 27). */
+export function useExternalSearches(reviewId: string) {
+  const api = useApi();
+  return useQuery({
+    queryKey: searchKeys.external(reviewId),
+    queryFn: async () =>
+      unwrap(await api.GET("/searches/external", { params: { query: { review_id: reviewId } } })),
+  });
+}
+
+export function useSaveExternalSearch(reviewId: string) {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (body: ExternalSearchCreate) =>
+      unwrap(await api.POST("/searches/external", { body })),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: searchKeys.external(reviewId) }),
   });
 }

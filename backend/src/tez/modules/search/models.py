@@ -47,6 +47,9 @@ class SearchQuery(TimestampMixin, Base):
     review_id: Mapped[str] = mapped_column(ForeignKey("review.id", ondelete="CASCADE"), index=True)
     name: Mapped[str] = mapped_column(Text)
     query_text: Mapped[str] = mapped_column(Text)
+    # A saved search of a database without an open API (Task 27): its name, as in
+    # `search_run.source`. Its runs are imports of the exported results. None: API sources.
+    external_source: Mapped[str | None] = mapped_column(String(64))
     filters_json: Mapped[dict[str, Any] | None] = mapped_column(JSON)
     alert_enabled: Mapped[bool] = mapped_column(default=False)
     alert_last_run_at: Mapped[datetime | None] = mapped_column(UtcDateTime)

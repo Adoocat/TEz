@@ -8,6 +8,7 @@ type ImportOutcome = components["schemas"]["ImportOutcome"];
 type ImportPreview = components["schemas"]["ImportPreview"];
 type JobView = components["schemas"]["JobView"];
 type CollectionView = components["schemas"]["CollectionView"];
+type ExternalSearchView = components["schemas"]["ExternalSearchView"];
 type TagView = components["schemas"]["TagView"];
 type LibraryPaperRow = components["schemas"]["LibraryPaperRow"];
 type PaperDetail = components["schemas"]["PaperDetail"];
@@ -33,6 +34,8 @@ export interface FakeBackend {
   searchOverview: SearchOverview | null;
   searchResults: SearchResultRow[];
   searchHistory: SearchOverview[];
+  /** Saved searches of databases without an API (Task 27). */
+  externalSearches: ExternalSearchView[];
   /** Push a source update to the search's open event stream. */
   emitSource: (searchId: string, update: Partial<SourceProgress> & { source: string }) => void;
   /** End the search's event stream, as the backend does when all sources have answered. */
@@ -73,6 +76,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     searchOverview: null,
     searchResults: [],
     searchHistory: [],
+    externalSearches: [],
     importPreview: importPreview(),
     importPreviewError: null,
     importOutcome: importOutcome(),
@@ -231,6 +235,24 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
         return json({ search_id: "search-1", sources }, 202);
       }
       if (route === "GET /searches") return json(backend.searchHistory);
+      if (route === "GET /searches/external") return json(backend.externalSearches);
+      if (route === "POST /searches/external") {
+        const { review_id, source, query, name } = body as {
+          review_id: string;
+          source: string;
+          query: string;
+          name?: string | null;
+        };
+        const saved = externalSearch({
+          id: `external-${String(backend.externalSearches.length + 1)}`,
+          review_id,
+          source,
+          query,
+          name: name ?? query,
+        });
+        backend.externalSearches.push(saved);
+        return json(saved, 201);
+      }
       if (route === "POST /imports/preview") {
         return backend.importPreviewError
           ? json({ error: backend.importPreviewError }, 422)
@@ -547,6 +569,21 @@ export function job(overrides: Partial<JobView> = {}): JobView {
     error: null,
     created_at: "2026-11-04T10:00:00.000000+00:00",
     updated_at: "2026-11-04T10:00:01.000000+00:00",
+    ...overrides,
+  };
+}
+
+export function externalSearch(overrides: Partial<ExternalSearchView> = {}): ExternalSearchView {
+  return {
+    id: "external-1",
+    review_id: "review-1",
+    name: "Scopus main query",
+    source: "Scopus",
+    query: 'TITLE-ABS-KEY("code review")',
+    created_at: "2026-10-01T09:00:00Z",
+    imports: 0,
+    last_searched_at: null,
+    last_retrieved: null,
     ...overrides,
   };
 }

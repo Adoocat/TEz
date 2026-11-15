@@ -525,6 +525,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/searches/external": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List External Searches
+         * @description The review's saved searches of databases without an open API (Task 27).
+         */
+        get: operations["list_external_searches_searches_external_get"];
+        put?: never;
+        /**
+         * Save External Search
+         * @description Save a database and the query run on its site; import its exports against it.
+         */
+        post: operations["save_external_search_searches_external_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/searches/{search_id}/events": {
         parameters: {
             query?: never;
@@ -599,6 +623,8 @@ export interface paths {
         /**
          * Preview Import
          * @description Read a BibTeX or RIS file and say what importing it would do. Writes nothing.
+         *
+         *     With `saved_search_id`, it also says how many records are new since the last import.
          */
         post: operations["preview_import_imports_preview_post"];
         delete?: never;
@@ -1062,6 +1088,47 @@ export interface components {
             /** Content */
             content: string;
         };
+        /**
+         * ExternalSearchCreate
+         * @description A search the user runs on a database's own site, kept so it can be run again.
+         */
+        ExternalSearchCreate: {
+            /** Review Id */
+            review_id: string;
+            /**
+             * Source
+             * @example Scopus
+             */
+            source: string;
+            /** Query */
+            query: string;
+            /** Name */
+            name?: string | null;
+        };
+        /** ExternalSearchView */
+        ExternalSearchView: {
+            /** Id */
+            id: string;
+            /** Review Id */
+            review_id: string;
+            /** Name */
+            name: string;
+            /** Source */
+            source: string;
+            /** Query */
+            query: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Imports */
+            imports: number;
+            /** Last Searched At */
+            last_searched_at: string | null;
+            /** Last Retrieved */
+            last_retrieved: number | null;
+        };
         /** Health */
         Health: {
             /**
@@ -1077,19 +1144,6 @@ export interface components {
          * @enum {string}
          */
         IdentifierScheme: "doi" | "arxiv" | "s2" | "openalex" | "dblp" | "isbn" | "zotero";
-        /**
-         * ImportFile
-         * @description The file to read: its bytes (from a browser) or its path on this computer (from the
-         *     desktop app's "open with" and the terminal). Exactly one of the two.
-         */
-        ImportFile: {
-            /** File Name */
-            file_name: string;
-            /** Content Base64 */
-            content_base64?: string | null;
-            /** Path */
-            path?: string | null;
-        };
         /**
          * ImportFormat
          * @enum {string}
@@ -1108,13 +1162,18 @@ export interface components {
         /**
          * ImportLog
          * @description Log the import as a search run: the systematic record of a database search.
+         *
+         *     Either a saved external search (Task 27), which gives the database and the query, or
+         *     the database and, optionally, the query.
          */
         ImportLog: {
+            /** Saved Search Id */
+            saved_search_id?: string | null;
             /**
              * Source
-             * @example IEEE Xplore
+             * @example Scopus
              */
-            source: string;
+            source?: string | null;
             /** Searched At */
             searched_at?: string | null;
             /** Query */
@@ -1137,6 +1196,7 @@ export interface components {
             added_to_review: number;
             /** Added To Library */
             added_to_library: number;
+            since_last?: components["schemas"]["SinceLastImport"] | null;
         };
         /** ImportPreview */
         ImportPreview: {
@@ -1161,6 +1221,18 @@ export interface components {
             };
             /** Sample */
             sample: components["schemas"]["PreviewRecord"][];
+            since_last?: components["schemas"]["SinceLastImport"] | null;
+        };
+        /** ImportPreviewRequest */
+        ImportPreviewRequest: {
+            /** File Name */
+            file_name: string;
+            /** Content Base64 */
+            content_base64?: string | null;
+            /** Path */
+            path?: string | null;
+            /** Saved Search Id */
+            saved_search_id?: string | null;
         };
         /** ImportRequest */
         ImportRequest: {
@@ -1683,6 +1755,19 @@ export interface components {
             theme?: ("light" | "dark" | "system") | null;
             /** Sources Email */
             sources_email?: string | null;
+        };
+        /**
+         * SinceLastImport
+         * @description How a new import of a saved external search compares with its earlier imports.
+         */
+        SinceLastImport: {
+            /**
+             * Last Searched At
+             * Format: date-time
+             */
+            last_searched_at: string;
+            /** New */
+            new: number;
         };
         /** SourceProgress */
         SourceProgress: {
@@ -3893,6 +3978,124 @@ export interface operations {
             };
         };
     };
+    list_external_searches_searches_external_get: {
+        parameters: {
+            query: {
+                review_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalSearchView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    save_external_search_searches_external_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExternalSearchCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalSearchView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     search_events_searches__search_id__events_get: {
         parameters: {
             query?: never;
@@ -4076,7 +4279,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ImportFile"];
+                "application/json": components["schemas"]["ImportPreviewRequest"];
             };
         };
         responses: {

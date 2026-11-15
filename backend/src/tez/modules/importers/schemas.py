@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from tez.modules.importers.parsing import ImportFormat, IssueCode, RecordWarning
 from tez.modules.library.models import VenueType
 from tez.modules.search.models import InitiatedVia, MatchMethod
+from tez.modules.search.schemas import SinceLastImport
 
 # Base64 of a 30 MB export; IEEE Xplore caps an export at 2000 records, far below this.
 MAX_CONTENT_LENGTH = 40_000_000
@@ -30,15 +31,33 @@ class ImportFile(BaseModel):
         return self
 
 
+class ImportPreviewRequest(ImportFile):
+    # A saved external search (Task 27): the preview compares the file with its imports.
+    saved_search_id: str | None = None
+
+
 class ImportLog(BaseModel):
-    """Log the import as a search run: the systematic record of a database search."""
+    """Log the import as a search run: the systematic record of a database search.
+
+    Either a saved external search (Task 27), which gives the database and the query, or
+    the database and, optionally, the query.
+    """
 
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
-    source: str = Field(min_length=1, max_length=64, examples=["IEEE Xplore"])
+    saved_search_id: str | None = None
+    source: str | None = Field(default=None, min_length=1, max_length=64, examples=["Scopus"])
     # The day the search ran at the source; today if not given.
     searched_at: date | None = None
     query: str | None = Field(default=None, max_length=4000)
+
+    @model_validator(mode="after")
+    def _one_search(self) -> Self:
+        if self.saved_search_id is None and self.source is None:
+            raise ValueError("give the source, or a saved search")
+        if self.saved_search_id is not None and (self.source or self.query):
+            raise ValueError("a saved search gives the source and the query")
+        return self
 
 
 class ImportRequest(ImportFile):
@@ -95,6 +114,8 @@ class ImportPreview(BaseModel):
     repeated: int
     warnings: dict[RecordWarning, int]
     sample: list[PreviewRecord]
+    # With a saved external search that was imported before.
+    since_last: SinceLastImport | None = None
 
 
 class ImportOutcome(BaseModel):
@@ -106,3 +127,5 @@ class ImportOutcome(BaseModel):
     search_id: str | None
     added_to_review: int
     added_to_library: int
+    # With a saved external search that was imported before.
+    since_last: SinceLastImport | None = None

@@ -387,6 +387,8 @@ class ImportRun:
     total_reported: int
     skipped: int
     query: str | None = None
+    # The saved external search this import is a run of (Task 27).
+    query_id: str | None = None
     initiated_via: InitiatedVia = InitiatedVia.GUI
 
 
@@ -426,6 +428,7 @@ def store_imported(
                 initiated_via=run.initiated_via,
                 status=RunStatus.PARTIAL if error else RunStatus.OK,
                 results=results,
+                query_id=run.query_id,
                 translated_query=run.query,
                 total_reported=run.total_reported,
                 error=_error_text(error),

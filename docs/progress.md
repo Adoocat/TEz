@@ -32,7 +32,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 24 · Review oluşturma ve paneli | bitti | `task/24-review-panel` · #37 | A · Yeni review'un varsayılanı PRISMA 2020 (eskiler değişmez). Üç adımlı sihirbaz (başlık ve yöntem, araştırma soruları, protokol notu; her adımdan oluşturulabilir). `/review` paneli: sorular, aşama kartları (bekleyen, karar verilen, dahil/hariç/belki, "Devam et"), son 5 arama, PRISMA özeti için yer. Sayılar `GET /reviews/{id}/overview` ile her okumada türetilir; başlık-özette dahil/belki olanlar tam metne geçer |
 | 25 · Eleme kriterleri | bitti | `task/25-screening-criteria` · #38 | A · `/reviews/{id}/criteria` CRUD + `PUT …/criteria/order`; kod verilmezse türüne göre sıradaki `I<n>`/`E<n>`, kod review'da tekil (`screening.criterion_code_taken`). Aşama boşsa iki aşama. Her aşamada etkin kriterlerin ilk dokuzu sırayla `1`–`9`; sıra değişince numaralar da değişir. Kararda geçen kriter silinmez (`screening.criterion_in_use`), arşivlenir ve kısayolunu bırakır; türü de değişmez. Görev 31 için `reviews.service.criteria_for_stage`. Review panelinde kriter düzenleyici. Migration 0008 (`position`, `archived_at`) |
 | 26 · Ön ayarlı içe aktarma ve dışa aktarma rehberi | bekliyor | — | B · Ön koşul: veritabanı başına örnek dosya (açık soru 19) |
-| 27 · Kayıtlı harici arama | bekliyor | — | B · Migration (`search_query`); "Siteyi aç", "N yeni kayıt" |
+| 27 · Kayıtlı harici arama | bitti | `task/27-external-search` · #39 | B · `search_query.external_source` (migration 0009); `GET/POST /searches/external` (aynı veritabanı + sorgu tek kayıt). İçe aktarma `log.saved_search_id` ile kayıtlı aramanın yeni bir `search_run`'ı olur; önizleme ve sonuç "son içe aktarmadan beri N yeni kayıt" der, review'a yalnız yeniler girer. Arama ekranında "Harici veritabanları" sekmesi: kaydet, "Siteyi aç" (tarayıcıda açar, sorguyu panoya kopyalar), "Sorguyu kopyala", "Yeni dışa aktarımı içe aktar". Durdurulan B oturumunun yarım işi üzerine kuruldu |
 | 28 · Yayın türleri ve tezler | bekliyor | — | B · Migration (tez türü); `@mastersthesis` |
 | 29 · PubMed ve Europe PMC sağlayıcıları | bekliyor | — | B · İki PR; her biri önce onay + ADR + CLAUDE.md 1. kural |
 | 30 · Kısayol altyapısı | bekliyor | — | C · `tinykeys`, tek harita, `?` katmanı |
@@ -53,6 +53,7 @@ Aşama 2 görevlerinin (24–42) ayrıntısı ve kabul kriterleri: `docs/plan.md
 
 ## Sonraya
 
+- (27) "Siteyi aç" adresleri yalnız IEEE Xplore, ACM DL, Scopus ve Web of Science için var (`features/imports/databases.ts`); Görev 26'nın ön ayarları gelince her veritabanının adresi oraya eklenmeli.
 - (25) Eleme ekranı (Görev 31–33) kriterleri `reviews.service.criteria_for_stage(db, review_id, stage)` ile okumalı; kısayol numarası (`shortcut`) oradan gelir, ön yüzde yeniden hesaplanmaz.
 - (25) Kriterler oluşturma sihirbazında yok; review oluşturulduktan sonra panelden ekleniyor. İstenirse sihirbaza dördüncü adım olarak eklenebilir.
 - (25) Kriter sırası yukarı/aşağı düğmeleriyle değişiyor; sürükle-bırak yok.

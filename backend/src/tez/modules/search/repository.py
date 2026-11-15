@@ -33,9 +33,15 @@ class SearchRepository:
         name: str,
         query_text: str,
         filters_json: dict[str, Any] | None = None,
+        *,
+        external_source: str | None = None,
     ) -> SearchQuery:
         query = SearchQuery(
-            review_id=review_id, name=name, query_text=query_text, filters_json=filters_json
+            review_id=review_id,
+            name=name,
+            query_text=query_text,
+            filters_json=filters_json,
+            external_source=external_source,
         )
         self.session.add(query)
         self.session.flush()
@@ -51,11 +57,44 @@ class SearchRepository:
         return self.add_query(review_id, query_text, query_text, filters_json)
 
     def queries(self, review_id: str) -> list[SearchQuery]:
+        """The review's queries for the API sources."""
         return list(
             self.session.scalars(
                 select(SearchQuery)
-                .where(SearchQuery.review_id == review_id)
+                .where(SearchQuery.review_id == review_id, SearchQuery.external_source.is_(None))
                 .order_by(SearchQuery.created_at, SearchQuery.id)
+            )
+        )
+
+    def external_queries(self, review_id: str) -> list[SearchQuery]:
+        """The review's saved searches of databases without an open API (Task 27)."""
+        return list(
+            self.session.scalars(
+                select(SearchQuery)
+                .where(SearchQuery.review_id == review_id, SearchQuery.external_source.is_not(None))
+                .order_by(SearchQuery.created_at, SearchQuery.id)
+            )
+        )
+
+    def get_query(self, query_id: str) -> SearchQuery | None:
+        return self.session.get(SearchQuery, query_id)
+
+    def runs_of_query(self, query_id: str) -> list[SearchRun]:
+        return list(
+            self.session.scalars(
+                select(SearchRun)
+                .where(SearchRun.query_id == query_id)
+                .order_by(SearchRun.executed_at, SearchRun.id)
+            )
+        )
+
+    def paper_ids_of_query(self, query_id: str) -> set[str]:
+        """Every paper any run of the query found."""
+        return set(
+            self.session.scalars(
+                select(SearchResult.paper_id)
+                .join(SearchRun, SearchResult.run_id == SearchRun.id)
+                .where(SearchRun.query_id == query_id)
             )
         )
 

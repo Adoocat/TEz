@@ -32,6 +32,7 @@ from tez.modules.importers.schemas import (
 from tez.modules.library.models import IdentifierScheme
 from tez.modules.library.paper_service import PaperService
 from tez.modules.reviews import service as reviews_service
+from tez.modules.search.external import EarlierImports
 from tez.modules.search.models import InitiatedVia
 from tez.modules.search.service import ImportRun, PreviewMatch, preview_matches, store_imported
 
@@ -133,9 +134,12 @@ def _preview_record(entry: ParsedEntry, match: PreviewMatch) -> PreviewRecord:
     )
 
 
-def preview(db: Database, file_name: str, data: bytes) -> ImportPreview:
+def preview(
+    db: Database, file_name: str, data: bytes, saved_search_id: str | None = None
+) -> ImportPreview:
     """What importing the file would do. Writes nothing."""
     parsed, _ = parse_file(file_name, data)
+    earlier = EarlierImports(db, saved_search_id) if saved_search_id is not None else None
     matches = preview_matches(db, parsed.records)
     statuses = Counter(_status(match) for match in matches)
     warnings = Counter(w for entry in parsed.entries for w in entry.warnings)
@@ -153,6 +157,9 @@ def preview(db: Database, file_name: str, data: bytes) -> ImportPreview:
             _preview_record(entry, match)
             for entry, match in zip(parsed.entries[:SAMPLE_SIZE], matches, strict=False)
         ],
+        since_last=earlier.compare([m.paper_id for m in matches if m.repeats is None])
+        if earlier
+        else None,
     )
 
 
@@ -191,16 +198,23 @@ def import_bytes(
         raise TezError(ErrorCode.REVIEW_NOT_FOUND, {"review_id": request.review_id}, status=404)
 
     run = None
+    earlier = None
     if request.log is not None and request.review_id is not None:
+        log = request.log
+        source, query, query_id = log.source or "", log.query or None, None
+        if log.saved_search_id is not None:
+            earlier = EarlierImports(db, log.saved_search_id, request.review_id)
+            source, query, query_id = earlier.source, earlier.query, log.saved_search_id
         run = ImportRun(
             review_id=request.review_id,
-            source=request.log.source,
+            source=source,
             executed_at=_executed_at(request),
             file_name=request.file_name,
             raw_text=text,
             total_reported=parsed.total,
             skipped=parsed.total - len(parsed.entries),
-            query=request.log.query or None,
+            query=query,
+            query_id=query_id,
             initiated_via=initiated_via,
         )
     stored = store_imported(db, library_path, parsed.records, run)
@@ -232,4 +246,5 @@ def import_bytes(
         search_id=stored.search_id,
         added_to_review=added_to_review,
         added_to_library=added_to_library,
+        since_last=earlier.compare(stored.paper_ids) if earlier else None,
     )
