@@ -7,6 +7,7 @@ import { createHashRouter, Navigate, RouterProvider } from "react-router";
 import { JobsPage } from "@/features/jobs/JobsPage";
 import { LibraryPage } from "@/features/library/LibraryPage";
 import { ReaderPage } from "@/features/reader/ReaderPage";
+import { ReviewPanel } from "@/features/reviews/ReviewPanel";
 import { SearchPage } from "@/features/search/SearchPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
 import { createI18n } from "@/i18n";
@@ -30,6 +31,7 @@ function createRouter() {
           path: `/${section}`,
           element: <ComingSoon section={section} />,
         })),
+        { path: "/review", element: <ReviewPanel /> },
         { path: "/library", element: <LibraryPage /> },
         { path: "/reader/:attachmentId?", element: <ReaderPage /> },
         { path: "/search", element: <SearchPage /> },

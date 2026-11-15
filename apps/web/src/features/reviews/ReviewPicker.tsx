@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 
 import { useReviews } from "./api";
-import { ReviewForm } from "./ReviewForm";
+import { ReviewWizard } from "./ReviewWizard";
 import { useActiveReview, useActiveReviewStore } from "./store";
 
 export function ReviewPicker() {
@@ -45,10 +45,10 @@ export function ReviewPicker() {
           <Dialog.Overlay className="fixed inset-0 bg-fg/30" />
           <Dialog.Content
             aria-describedby={undefined}
-            className="fixed top-1/4 left-1/2 w-96 max-w-[90vw] -translate-x-1/2 space-y-3 rounded-lg border border-line bg-raised p-4 shadow-popover"
+            className="fixed top-1/4 left-1/2 w-lg max-w-[90vw] -translate-x-1/2 space-y-3 rounded-lg border border-line bg-raised p-4 shadow-popover"
           >
             <Dialog.Title className="text-h3">{t("reviews.new")}</Dialog.Title>
-            <ReviewForm
+            <ReviewWizard
               onCreated={() => {
                 setDialogOpen(false);
               }}

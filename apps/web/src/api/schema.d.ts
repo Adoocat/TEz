@@ -379,6 +379,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reviews/{review_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Review */
+        get: operations["get_review_reviews__review_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Overview
+         * @description The review panel's counts per screening stage, derived on every read.
+         */
+        get: operations["get_overview_reviews__review_id__overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/reviews/{review_id}/records": {
         parameters: {
             query?: never;
@@ -1308,13 +1345,30 @@ export interface components {
         ReviewCreate: {
             /** Title */
             title: string;
+            /** @default prisma2020 */
             method: components["schemas"]["ReviewMethod"];
+            /** Research Questions */
+            research_questions?: string[];
+            /** Protocol */
+            protocol?: string | null;
         };
         /**
          * ReviewMethod
          * @enum {string}
          */
         ReviewMethod: "prisma2020" | "kitchenham_slr";
+        /**
+         * ReviewOverview
+         * @description The review panel's numbers (design 5.1). Derived on every read, never stored.
+         */
+        ReviewOverview: {
+            /** Review Id */
+            review_id: string;
+            /** Records */
+            records: number;
+            /** Stages */
+            stages: components["schemas"]["StageProgress"][];
+        };
         /**
          * ReviewStatus
          * @enum {string}
@@ -1328,6 +1382,10 @@ export interface components {
             title: string;
             method: components["schemas"]["ReviewMethod"];
             status: components["schemas"]["ReviewStatus"];
+            /** Research Questions */
+            research_questions: string[];
+            /** Protocol */
+            protocol: string | null;
             /**
              * Created At
              * Format: date-time
@@ -1357,6 +1415,11 @@ export interface components {
             retrieved_count: number;
             error: components["schemas"]["ErrorDetail"] | null;
         };
+        /**
+         * ScreeningStage
+         * @enum {string}
+         */
+        ScreeningStage: "title_abstract" | "full_text";
         /** SearchHits */
         SearchHits: {
             /** Paper Ids */
@@ -1514,6 +1577,25 @@ export interface components {
          * @enum {string}
          */
         SourceState: "waiting" | "searching" | "rate_limited" | "done" | "partial" | "failed";
+        /**
+         * StageProgress
+         * @description Where one screening stage stands, derived from the decisions in force.
+         */
+        StageProgress: {
+            stage: components["schemas"]["ScreeningStage"];
+            /** Eligible */
+            eligible: number;
+            /** Decided */
+            decided: number;
+            /** Pending */
+            pending: number;
+            /** Included */
+            included: number;
+            /** Excluded */
+            excluded: number;
+            /** Maybe */
+            maybe: number;
+        };
         /** TagCreate */
         TagCreate: {
             /** Name */
@@ -3047,6 +3129,122 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ReviewView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_review_reviews__review_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_overview_reviews__review_id__overview_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewOverview"];
                 };
             };
             /** @description Missing or invalid token */

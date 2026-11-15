@@ -3,6 +3,7 @@
 import {
   BookOpen,
   FileCheck2,
+  LayoutDashboard,
   Library,
   ListChecks,
   Moon,
@@ -39,10 +40,20 @@ import { useLayoutStore } from "./uiStore";
 interface NavItem {
   to: string;
   icon: LucideIcon;
-  label: "search" | "library" | "screening" | "reader" | "notes" | "matrix" | "jobs" | "settings";
+  label:
+    | "review"
+    | "search"
+    | "library"
+    | "screening"
+    | "reader"
+    | "notes"
+    | "matrix"
+    | "jobs"
+    | "settings";
 }
 
 const mainNav: NavItem[] = [
+  { to: "/review", icon: LayoutDashboard, label: "review" },
   { to: "/search", icon: Search, label: "search" },
   { to: "/library", icon: Library, label: "library" },
   { to: "/screening", icon: FileCheck2, label: "screening" },

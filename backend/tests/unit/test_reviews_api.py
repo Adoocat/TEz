@@ -59,7 +59,6 @@ def test_reviews_can_be_created_and_listed(client: TestClient) -> None:
     [
         {"title": "  ", "method": "prisma2020"},
         {"title": "x", "method": "vibes"},
-        {"title": "x"},
         {"title": "x", "method": "prisma2020", "extra": 1},
     ],
 )
