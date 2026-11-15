@@ -313,14 +313,16 @@
       "semantic_scholar": "Semantic Scholar",
       "arxiv": "arXiv",
       "crossref": "Crossref",
-      "pubmed": "PubMed"
+      "pubmed": "PubMed",
+      "europepmc": "Europe PMC"
     },
     "sourceShort": {
       "openalex": "OA",
       "semantic_scholar": "S2",
       "arxiv": "arXiv",
       "crossref": "CR",
-      "pubmed": "PM"
+      "pubmed": "PM",
+      "europepmc": "EPMC"
     },
     "state": {
       "waiting": "bekliyor",

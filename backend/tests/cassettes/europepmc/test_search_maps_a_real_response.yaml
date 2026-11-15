@@ -1,0 +1,266 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - www.ebi.ac.uk
+    method: GET
+    uri: https://www.ebi.ac.uk/europepmc/webservices/rest/search?cursorMark=%2A&format=json&pageSize=3&query=%28MESH%3A%22Anxiety+Disorders%22+AND+adolescent+NOT+review%29+AND+PUB_YEAR%3A%5B2020+TO+2024%5D&resultType=core
+  response:
+    body:
+      string: "{\"version\":\"6.9\",\"hitCount\":20,\"nextCursorMark\":\"AoIIP5xoCCg1MDc0NjgzMg==\",\"nextPageUrl\":\"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%28MESH%3A%22Anxiety+Disorders%22+AND+adolescent+NOT+review%29+AND+PUB_YEAR%3A%5B2020+TO+2024%5D&cursorMark=AoIIP5xoCCg1MDc0NjgzMg%3D%3D&resultType=core&pageSize=3&format=json\",\"request\":{\"queryString\":\"(MESH:\\\"Anxiety
+        Disorders\\\" AND adolescent NOT review) AND PUB_YEAR:[2020 TO 2024]\",\"resultType\":\"core\",\"cursorMark\":\"*\",\"pageSize\":3,\"sort\":\"\",\"synonym\":false},\"resultList\":{\"result\":[{\"id\":\"39348004\",\"source\":\"MED\",\"pmid\":\"39348004\",\"pmcid\":\"PMC12884584\",\"fullTextIdList\":{\"fullTextId\":[\"PMC12884584\"]},\"doi\":\"10.1007/s00213-024-06693-8\",\"title\":\"BNST
+        CRF receptor type 1 modulates mechanical hypersensitivity induced by adolescent
+        alcohol exposure in adult female mice.\",\"authorString\":\"Bertagna NB, Holmgren
+        EB, Engi SA, Ha L, Cruz FC, Albrechet-Souza L, Wills TA.\",\"authorList\":{\"author\":[{\"fullName\":\"Bertagna
+        NB\",\"lastName\":\"Bertagna\",\"firstName\":\"Natalia B\",\"initials\":\"NB\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Cell Biology & Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, 533 Bolivar Street, New Orleans, LA, 70112, USA.\"},{\"affiliation\":\"Department
+        of Pharmacology, Federal University of S\xE3o Paulo, S\xE3o Paulo, SP, Brazil.\"}]}},{\"fullName\":\"Holmgren
+        EB\",\"lastName\":\"Holmgren\",\"firstName\":\"Eleanor B\",\"initials\":\"EB\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Cell Biology & Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, 533 Bolivar Street, New Orleans, LA, 70112, USA.\"},{\"affiliation\":\"Department
+        of Pharmacology, School of Medicine, Vanderbilt University, Nashville, TN,
+        USA.\"}]}},{\"fullName\":\"Engi SA\",\"lastName\":\"Engi\",\"firstName\":\"Sheila
+        A\",\"initials\":\"SA\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Cell Biology & Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, 533 Bolivar Street, New Orleans, LA, 70112, USA.\"},{\"affiliation\":\"Alcohol
+        & Drug Center of Excellence, School of Medicine, Louisiana State University
+        Health Sciences Center, New Orleans, LA, USA.\"}]}},{\"fullName\":\"Ha L\",\"lastName\":\"Ha\",\"firstName\":\"Linh\",\"initials\":\"L\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Cell Biology & Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, 533 Bolivar Street, New Orleans, LA, 70112, USA.\"}]}},{\"fullName\":\"Cruz
+        FC\",\"lastName\":\"Cruz\",\"firstName\":\"Fabio C\",\"initials\":\"FC\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Pharmacology, Federal University of S\xE3o Paulo, S\xE3o Paulo, SP, Brazil.\"}]}},{\"fullName\":\"Albrechet-Souza
+        L\",\"lastName\":\"Albrechet-Souza\",\"firstName\":\"Lucas\",\"initials\":\"L\",\"authorId\":{\"type\":\"ORCID\",\"value\":\"0000-0002-8445-9657\"},\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Cell Biology & Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, 533 Bolivar Street, New Orleans, LA, 70112, USA. ldesou@lsuhsc.edu.\"},{\"affiliation\":\"Alcohol
+        & Drug Center of Excellence, School of Medicine, Louisiana State University
+        Health Sciences Center, New Orleans, LA, USA. ldesou@lsuhsc.edu.\"}]}},{\"fullName\":\"Wills
+        TA\",\"lastName\":\"Wills\",\"firstName\":\"Tiffany A\",\"initials\":\"TA\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Cell Biology & Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, 533 Bolivar Street, New Orleans, LA, 70112, USA.\"},{\"affiliation\":\"Alcohol
+        & Drug Center of Excellence, School of Medicine, Louisiana State University
+        Health Sciences Center, New Orleans, LA, USA.\"},{\"affiliation\":\"Neuroscience
+        Center of Excellence, School of Medicine, Louisiana State University Health
+        Sciences Center, New Orleans, LA, USA.\"}]}}]},\"authorIdList\":{\"authorId\":[{\"type\":\"ORCID\",\"value\":\"0000-0002-8445-9657\"},{\"type\":\"ORCID\",\"value\":\"0000-0003-1930-9676\"}]},\"dataLinksTagsList\":{\"dataLinkstag\":[\"supporting_data\"]},\"journalInfo\":{\"issue\":\"12\",\"volume\":\"241\",\"journalIssueId\":3854803,\"dateOfPublication\":\"2024
+        Dec\",\"monthOfPublication\":12,\"yearOfPublication\":2024,\"journal\":{\"medlineAbbreviation\":\"Psychopharmacology
+        (Berl)\",\"title\":\"Psychopharmacology\",\"essn\":\"1432-2072\",\"issn\":\"0033-3158\",\"nlmid\":\"7608025\",\"isoabbreviation\":\"Psychopharmacology
+        (Berl)\"},\"printPublicationDate\":\"2024-12-01\"},\"pubYear\":\"2024\",\"pageInfo\":\"2513-2523\",\"abstractText\":\"<h4>Rationale</h4>Alcohol
+        exposure during adolescence has been linked to long-lasting behavioral consequences,
+        contributing to the development of alcohol use disorder. Negative affect and
+        chronic pain during alcohol withdrawal are critical factors influencing problematic
+        alcohol use and relapse. Our previous research demonstrated that adolescent
+        intermittent ethanol (AIE) vapor exposure elicits sex-specific negative affect-like
+        behavior in adult mice following stress exposure. Additionally, AIE induces
+        persistent mechanical hypersensitivity, which is accompanied by increased
+        activation of corticotropin-releasing factor receptor type 1 (CRFR1) neurons
+        in the dorsolateral bed nucleus of the stria terminalis (dlBNST).<h4>Objectives</h4>This
+        study extends previous work by investigating plasma corticosterone levels
+        and CRFR1 protein expression in the dlBNST following restraint stress exposure
+        in adult mice with an AIE history. We also aim to explore the role of dlBNST
+        CRFR1 signaling in mediating negative affect-like behavior and mechanical
+        hypersensitivity.<h4>Results</h4>Female mice exhibited elevated plasma corticosterone
+        levels compared to males following restraint stress. Moreover, females with
+        AIE history showed higher expression of CRFR1 protein in the dlBNST compared
+        to air controls. Antagonism of CRFR1 in the dlBNST blocked AIE-induced mechanical
+        hypersensitivity in adult females but did not affect stress-induced negative
+        affect-like behavior. In alcohol-na\xEFve females, intra-dlBNST administration
+        of a CRFR1 agonist induced mechanical hypersensitivity.<h4>Conclusions</h4>These
+        findings provide new insights into the neurobiological mechanisms underlying
+        stress-induced negative affect and pain-related behavior, both influenced
+        by a history of adolescent alcohol exposure. The results suggest that CRFR1
+        antagonists warrant further investigation for their potential in addressing
+        alcohol-related chronic pain.\",\"affiliation\":\"Department of Cell Biology
+        & Anatomy, School of Medicine, Louisiana State University Health Sciences
+        Center, 533 Bolivar Street, New Orleans, LA, 70112, USA.\",\"publicationStatus\":\"ppublish\",\"language\":\"eng\",\"pubModel\":\"Print-Electronic\",\"pubTypeList\":{\"pubType\":[\"research-article\",\"Journal
+        Article\"]},\"grantsList\":{\"grant\":[{\"agency\":\"NIAAA NIH HHS\",\"acronym\":\"AA\",\"grantId\":\"AA028011\",\"orderIn\":0},{\"agency\":\"National
+        Institute on Alcohol Abuse and Alcoholism\",\"grantId\":\"AA028011\",\"orderIn\":0},{\"agency\":\"NIAAA
+        NIH HHS\",\"acronym\":\"AA\",\"grantId\":\"R01 AA028011\",\"orderIn\":0},{\"agency\":\"Funda\xE7\xE3o
+        de Amparo \xE0 Pesquisa do Estado de S\xE3o Paulo\",\"grantId\":\"2018/15505-4\",\"orderIn\":0},{\"agency\":\"Funda\xE7\xE3o
+        de Amparo \xE0 Pesquisa do Estado de S\xE3o Paulo\",\"grantId\":\"2021/13317-9\",\"orderIn\":0}]},\"meshHeadingList\":{\"meshHeading\":[{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Septal
+        Nuclei\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"DE\",\"qualifierName\":\"drug
+        effects\"},{\"majorTopic_YN\":\"N\",\"abbreviation\":\"ME\",\"qualifierName\":\"metabolism\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Animals\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Mice,
+        Inbred C57BL\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Mice\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Hyperalgesia\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"ME\",\"qualifierName\":\"metabolism\"}]}},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Ethanol\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"AD\",\"qualifierName\":\"administration
+        & dosage\"},{\"majorTopic_YN\":\"N\",\"abbreviation\":\"PD\",\"qualifierName\":\"pharmacology\"}]}},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Corticosterone\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"BL\",\"qualifierName\":\"blood\"}]}},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Receptors,
+        Corticotropin-Releasing Hormone\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"AI\",\"qualifierName\":\"antagonists
+        & inhibitors\"},{\"majorTopic_YN\":\"N\",\"abbreviation\":\"ME\",\"qualifierName\":\"metabolism\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Restraint,
+        Physical\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Stress, Psychological\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"ME\",\"qualifierName\":\"metabolism\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Female\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Male\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"CRF
+        Receptor, Type 1\"}]},\"keywordList\":{\"keyword\":[\"Alcohol\",\"Pain\",\"Adolescent\",\"Corticotropin-releasing
+        Factor\",\"Negative Affect\",\"Bed Nucleus Of The Stria Terminalis\",\"Mechanical
+        Hypersensitivity\",\"Corticotropin-releasing Factor Receptor Type 1\"]},\"chemicalList\":{\"chemical\":[{\"name\":\"Receptors,
+        Corticotropin-Releasing Hormone\",\"registryNumber\":\"0\"},{\"name\":\"Corticosterone\",\"registryNumber\":\"W980KJ009P\"},{\"name\":\"Ethanol\",\"registryNumber\":\"3K9958V90M\"},{\"name\":\"CRF
+        Receptor, Type 1\",\"registryNumber\":\"5CLY6W2H1M\"}]},\"subsetList\":{\"subset\":[{\"code\":\"IM\",\"name\":\"Index
+        Medicus\"}]},\"fullTextUrlList\":{\"fullTextUrl\":[{\"availability\":\"Subscription
+        required\",\"availabilityCode\":\"S\",\"documentStyle\":\"doi\",\"site\":\"DOI\",\"url\":\"https://doi.org/10.1007/s00213-024-06693-8\"},{\"availability\":\"Free\",\"availabilityCode\":\"F\",\"documentStyle\":\"html\",\"site\":\"Europe_PMC\",\"url\":\"https://europepmc.org/articles/PMC12884584\"},{\"availability\":\"Free\",\"availabilityCode\":\"F\",\"documentStyle\":\"pdf\",\"site\":\"Europe_PMC\",\"url\":\"https://europepmc.org/articles/PMC12884584?pdf=render\"},{\"availability\":\"Free\",\"availabilityCode\":\"F\",\"documentStyle\":\"doi\",\"site\":\"DOI\",\"url\":\"https://doi.org/10.1007/s00213-024-06693-8\"}]},\"isOpenAccess\":\"N\",\"inEPMC\":\"Y\",\"inPMC\":\"Y\",\"citedByCount\":9,\"hasReferences\":\"Y\",\"hasTextMinedTerms\":\"Y\",\"hasDbCrossReferences\":\"N\",\"hasPDF\":\"Y\",\"hasBook\":\"N\",\"hasSuppl\":\"N\",\"hasLabsLinks\":\"N\",\"hasData\":\"Y\",\"authMan\":\"Y\",\"epmcAuthMan\":\"N\",\"nihAuthMan\":\"Y\",\"manuscriptId\":\"NIHMS2137142\",\"hasTMAccessionNumbers\":\"Y\",\"tmAccessionTypeList\":{\"accessionType\":[\"gen\",\"uniprot\"]},\"dateOfCompletion\":\"2024-11-16\",\"dateOfCreation\":\"2024-09-30\",\"dateOfRevision\":\"2026-02-11\",\"electronicPublicationDate\":\"2024-09-30\",\"firstPublicationDate\":\"2024-09-30\",\"firstIndexDate\":\"2024-09-30\",\"fullTextReceivedDate\":\"2026-02-14\",\"hasEvaluations\":\"N\"},{\"id\":\"38206283\",\"source\":\"MED\",\"pmid\":\"38206283\",\"pmcid\":\"PMC10784637\",\"fullTextIdList\":{\"fullTextId\":[\"PMC10784637\"]},\"doi\":\"10.1111/acer.15228\",\"title\":\"Long-lasting
+        mechanical hypersensitivity and CRF receptor type-1 neuron activation in the
+        BNST following adolescent ethanol exposure.\",\"authorString\":\"Bertagna
+        NB, Wilson L, Bailey CK, Cruz FC, Albrechet-Souza L, Wills TA.\",\"authorList\":{\"author\":[{\"fullName\":\"Bertagna
+        NB\",\"lastName\":\"Bertagna\",\"firstName\":\"Natalia B\",\"initials\":\"NB\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Cell Biology and Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, New\_Orleans, Louisiana, USA.\"},{\"affiliation\":\"Department
+        of Pharmacology, Federal University of S\xE3o Paulo, S\xE3o Paulo, Brazil.\"}]}},{\"fullName\":\"Wilson
+        L\",\"lastName\":\"Wilson\",\"firstName\":\"Lisa\",\"initials\":\"L\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Cell Biology and Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, New\_Orleans, Louisiana, USA.\"},{\"affiliation\":\"Alcohol
+        and Drug Center of Excellence, School of Medicine, Louisiana State University
+        Health Sciences Center, New\_Orleans, Louisiana, USA.\"}]}},{\"fullName\":\"Bailey
+        CK\",\"lastName\":\"Bailey\",\"firstName\":\"Connor K\",\"initials\":\"CK\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Cell Biology and Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, New\_Orleans, Louisiana, USA.\"}]}},{\"fullName\":\"Cruz
+        FC\",\"lastName\":\"Cruz\",\"firstName\":\"Fabio C\",\"initials\":\"FC\",\"authorId\":{\"type\":\"ORCID\",\"value\":\"0000-0003-3765-7148\"},\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Pharmacology, Federal University of S\xE3o Paulo, S\xE3o Paulo, Brazil.\"}]}},{\"fullName\":\"Albrechet-Souza
+        L\",\"lastName\":\"Albrechet-Souza\",\"firstName\":\"Lucas\",\"initials\":\"L\",\"authorId\":{\"type\":\"ORCID\",\"value\":\"0000-0002-8445-9657\"},\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Cell Biology and Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, New\_Orleans, Louisiana, USA.\"},{\"affiliation\":\"Alcohol
+        and Drug Center of Excellence, School of Medicine, Louisiana State University
+        Health Sciences Center, New\_Orleans, Louisiana, USA.\"}]}},{\"fullName\":\"Wills
+        TA\",\"lastName\":\"Wills\",\"firstName\":\"Tiffany A\",\"initials\":\"TA\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Cell Biology and Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, New\_Orleans, Louisiana, USA.\"},{\"affiliation\":\"Alcohol
+        and Drug Center of Excellence, School of Medicine, Louisiana State University
+        Health Sciences Center, New\_Orleans, Louisiana, USA.\"},{\"affiliation\":\"Neuroscience
+        Center of Excellence, School of Medicine, Louisiana State University Health
+        Sciences Center, New\_Orleans, Louisiana, USA.\"}]}}]},\"authorIdList\":{\"authorId\":[{\"type\":\"ORCID\",\"value\":\"0000-0002-8445-9657\"},{\"type\":\"ORCID\",\"value\":\"0000-0003-1930-9676\"},{\"type\":\"ORCID\",\"value\":\"0000-0003-3765-7148\"}]},\"dataLinksTagsList\":{\"dataLinkstag\":[\"supporting_data\"]},\"journalInfo\":{\"issue\":\"1\",\"volume\":\"48\",\"journalIssueId\":3695356,\"dateOfPublication\":\"2024
+        Jan\",\"monthOfPublication\":1,\"yearOfPublication\":2024,\"journal\":{\"medlineAbbreviation\":\"Alcohol
+        Clin Exp Res (Hoboken)\",\"title\":\"Alcohol, clinical & experimental research\",\"essn\":\"2993-7175\",\"issn\":\"2993-7175\",\"nlmid\":\"9918609780906676\",\"isoabbreviation\":\"Alcohol
+        Clin Exp Res (Hoboken)\"},\"printPublicationDate\":\"2024-01-01\"},\"pubYear\":\"2024\",\"pageInfo\":\"48-57\",\"abstractText\":\"<h4>Background</h4>Adolescent
+        alcohol use can produce long-lasting alterations in brain function, potentially
+        leading to adverse health outcomes in adulthood. Emerging evidence suggests
+        that chronic alcohol use can increase pain sensitivity or exacerbate existing
+        pain conditions, but the potential neural mechanisms underlying these effects
+        require further investigation. Here, we evaluate the impact of chronic ethanol
+        vapor on mechanical sensitivity over the course of acute and protracted withdrawal
+        in adolescent and adult male and female mice, and its potential association
+        with alterations in corticotropin-releasing factor (CRF) signaling within
+        the bed nucleus of the stria terminalis (BNST).<h4>Methods</h4>Adolescent
+        and adult male and female mice underwent intermittent ethanol vapor exposure
+        on 4 days/week for 2\u2009weeks. Mechanical thresholds were evaluated 5\u2009h
+        and 7, 14, 21, and 28\u2009d after cessation of ethanol exposure using the
+        von Frey test. For mice with a history of adolescent ethanol exposure, brains
+        were collected for in\_situ RNAscope processing after the final test. Messenger
+        RNA expression of c-Fos, Crfr1, and Crf in the BNST subregions was examined.<h4>Results</h4>Exposure
+        to intermittent ethanol vapor induced persistent mechanical hypersensitivity
+        during withdrawal in both adolescent and adult mice. Notably, the effect was
+        more transient in mice exposed to ethanol during adulthood, resolving by day
+        28 after ethanol exposure. Furthermore, both male and female mice with a history
+        of adolescent ethanol exposure exhibited increased activation of CRF receptor
+        type 1 (CRFR1) neurons within the dorsolateral BNST.<h4>Conclusions</h4>Our
+        results support the conclusion that intermittent ethanol exposure can induce
+        mechanical hypersensitivity, potentially through the activation of BNST CRFR1
+        neurons. These findings provide a basis for future studies aimed at evaluating
+        specific subpopulations of BNST neurons and their contribution to pain in
+        individuals with a history of alcohol use.\",\"affiliation\":\"Department
+        of Cell Biology and Anatomy, School of Medicine, Louisiana State University
+        Health Sciences Center, New\_Orleans, Louisiana, USA.\",\"publicationStatus\":\"ppublish\",\"language\":\"eng\",\"pubModel\":\"Print-Electronic\",\"pubTypeList\":{\"pubType\":[\"research-article\",\"Journal
+        Article\"]},\"grantsList\":{\"grant\":[{\"agency\":\"NIAAA NIH HHS\",\"acronym\":\"AA\",\"grantId\":\"R01
+        AA028011\",\"orderIn\":0},{\"agency\":\"NIAAA NIH HHS\",\"acronym\":\"AA\",\"grantId\":\"AA028011\",\"orderIn\":0},{\"agency\":\"Funda\xE7\xE3o
+        de Amparo \xE0 Pesquisa do Estado de S\xE3o Paulo\",\"grantId\":\"2021/13317\u20109\",\"orderIn\":0},{\"agency\":\"NIAAA
+        NIH HHS\",\"acronym\":\"AA\",\"grantId\":\"U01 AA028709\",\"orderIn\":0},{\"agency\":\"Funda\xE7\xE3o
+        de Amparo \xE0 Pesquisa do Estado de S\xE3o Paulo\",\"grantId\":\"2018/15505\u20104\",\"orderIn\":0},{\"agency\":\"National
+        Institute on Alcohol Abuse and Alcoholism\",\"grantId\":\"AA028709\",\"orderIn\":0},{\"agency\":\"National
+        Institute on Alcohol Abuse and Alcoholism\",\"grantId\":\"AA028011\",\"orderIn\":0},{\"agency\":\"NIAAA
+        NIH HHS\",\"acronym\":\"AA\",\"grantId\":\"AA028709\",\"orderIn\":0}]},\"keywordList\":{\"keyword\":[\"Alcohol\",\"Adolescent\",\"Corticotropin-releasing
+        Factor\",\"Bed Nucleus Of The Stria Terminalis\",\"Mechanical Hypersensitivity\"]},\"subsetList\":{\"subset\":[{\"code\":\"IM\",\"name\":\"Index
+        Medicus\"}]},\"fullTextUrlList\":{\"fullTextUrl\":[{\"availability\":\"Subscription
+        required\",\"availabilityCode\":\"S\",\"documentStyle\":\"doi\",\"site\":\"DOI\",\"url\":\"https://doi.org/10.1111/acer.15228\"},{\"availability\":\"Free\",\"availabilityCode\":\"F\",\"documentStyle\":\"html\",\"site\":\"Europe_PMC\",\"url\":\"https://europepmc.org/articles/PMC10784637\"},{\"availability\":\"Free\",\"availabilityCode\":\"F\",\"documentStyle\":\"pdf\",\"site\":\"Europe_PMC\",\"url\":\"https://europepmc.org/articles/PMC10784637?pdf=render\"},{\"availability\":\"Free\",\"availabilityCode\":\"F\",\"documentStyle\":\"doi\",\"site\":\"DOI\",\"url\":\"https://doi.org/10.1111/acer.15228\"}]},\"isOpenAccess\":\"N\",\"inEPMC\":\"Y\",\"inPMC\":\"Y\",\"citedByCount\":12,\"hasReferences\":\"Y\",\"hasTextMinedTerms\":\"Y\",\"hasDbCrossReferences\":\"N\",\"hasPDF\":\"Y\",\"hasBook\":\"N\",\"hasSuppl\":\"N\",\"hasLabsLinks\":\"N\",\"hasData\":\"Y\",\"authMan\":\"Y\",\"epmcAuthMan\":\"N\",\"nihAuthMan\":\"Y\",\"manuscriptId\":\"NIHMS1945212\",\"hasTMAccessionNumbers\":\"Y\",\"tmAccessionTypeList\":{\"accessionType\":[\"doi\"]},\"dateOfCreation\":\"2024-01-11\",\"dateOfRevision\":\"2025-01-04\",\"electronicPublicationDate\":\"2023-11-24\",\"firstPublicationDate\":\"2023-11-24\",\"firstIndexDate\":\"2024-01-12\",\"fullTextReceivedDate\":\"2025-02-05\",\"embargoDate\":\"2025-01-01\",\"hasEvaluations\":\"N\"},{\"id\":\"38805040\",\"source\":\"MED\",\"pmid\":\"38805040\",\"pmcid\":\"PMC11442498\",\"fullTextIdList\":{\"fullTextId\":[\"PMC11442498\"]},\"doi\":\"10.1007/s00213-024-06616-7\",\"title\":\"Corticosterone
+        after early adolescent stress prevents social avoidance, aversive behavior,
+        and morphine-conditioned place preference in adulthood.\",\"authorString\":\"Vanderhoof
+        SO, Vincent CJ, Beaver JN, Latsko MS, Aguilar-Alvarez R, Jasnow AM.\",\"authorList\":{\"author\":[{\"fullName\":\"Vanderhoof
+        SO\",\"lastName\":\"Vanderhoof\",\"firstName\":\"Samantha O\",\"initials\":\"SO\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychological Sciences, Brain Health Research Institute, Kent State University,
+        Kent, USA.\"}]}},{\"fullName\":\"Vincent CJ\",\"lastName\":\"Vincent\",\"firstName\":\"Carly
+        J\",\"initials\":\"CJ\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Pharmacology, Physiology, and Neuroscience, University of South Carolina
+        School of Medicine, Columbia, USA.\"}]}},{\"fullName\":\"Beaver JN\",\"lastName\":\"Beaver\",\"firstName\":\"Jasmin
+        N\",\"initials\":\"JN\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychological Sciences, Brain Health Research Institute, Kent State University,
+        Kent, USA.\"}]}},{\"fullName\":\"Latsko MS\",\"lastName\":\"Latsko\",\"firstName\":\"Maeson
+        S\",\"initials\":\"MS\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychological Sciences, Brain Health Research Institute, Kent State University,
+        Kent, USA.\"}]}},{\"fullName\":\"Aguilar-Alvarez R\",\"lastName\":\"Aguilar-Alvarez\",\"firstName\":\"Ricardo\",\"initials\":\"R\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Pharmacology, Physiology, and Neuroscience, University of South Carolina
+        School of Medicine, Columbia, USA.\"}]}},{\"fullName\":\"Jasnow AM\",\"lastName\":\"Jasnow\",\"firstName\":\"Aaron
+        M\",\"initials\":\"AM\",\"authorId\":{\"type\":\"ORCID\",\"value\":\"0000-0002-4015-4202\"},\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Pharmacology, Physiology, and Neuroscience, University of South Carolina
+        School of Medicine, Columbia, USA. aaron.jasnow@uscmed.sc.edu.\"}]}}]},\"authorIdList\":{\"authorId\":[{\"type\":\"ORCID\",\"value\":\"0000-0002-4015-4202\"},{\"type\":\"ORCID\",\"value\":\"0009-0001-1572-8446\"}]},\"journalInfo\":{\"issue\":\"10\",\"volume\":\"241\",\"journalIssueId\":3832992,\"dateOfPublication\":\"2024
+        Oct\",\"monthOfPublication\":10,\"yearOfPublication\":2024,\"journal\":{\"medlineAbbreviation\":\"Psychopharmacology
+        (Berl)\",\"title\":\"Psychopharmacology\",\"essn\":\"1432-2072\",\"issn\":\"0033-3158\",\"nlmid\":\"7608025\",\"isoabbreviation\":\"Psychopharmacology
+        (Berl)\"},\"printPublicationDate\":\"2024-10-01\"},\"pubYear\":\"2024\",\"pageInfo\":\"2045-2059\",\"abstractText\":\"<h4>Rationale</h4>Stress
+        during childhood or adolescence increases vulnerability to psychiatric disorders
+        in adults. In adult rodents, the delayed effects of stress can increase anxiety-like
+        behavior. These effects, however, can be prevented with post-stress administration
+        of corticosterone (CORT). The effectiveness of CORT in preventing adolescent
+        stress-induced emotional behavior alterations in adulthood has yet to be investigated.<h4>Objectives</h4>Here,
+        we investigated the interactions between early adolescent stress and exogenous
+        corticosterone on adult social, aversive, and drug-seeking behavior in mice,
+        which are translationally related to symptoms associated with psychiatric
+        and substance abuse disorders.<h4>Methods and results</h4>A single administration
+        of CORT in drinking water (400ug/mL) for 24\_h after social defeat or context
+        fear conditioning prevents defeat-induced social avoidance, alters fear processing,
+        prevents adolescent stress-induced anhedonia, and prevents stress-potentiated
+        morphine place preference in adulthood. Exogenous CORT did not immediately
+        prevent stress-induced potentiation of morphine conditioned-place preference
+        in adolescents but did so in adult mice. However, when administered to adolescent
+        mice, CORT also prevented the incubation of morphine-conditioned place preference
+        into adulthood. Lastly, exogenous CORT administration blunted endogenous corticosterone
+        but was unrelated to freezing behavior during a fear test.<h4>Conclusions</h4>This
+        is the first demonstration of adolescent post-stress CORT promoting socio-emotional
+        resilience and preventing drug-seeking behavior. Our data suggest elevated
+        corticosterone after a stress experience promotes resilience for at least
+        40 days across the developmental transition from adolescence to adulthood
+        and is effective for socio-emotional and drug-seeking behavior. These results
+        are critical for understanding how adolescent stress impacts emotional and
+        drug-seeking behavior into adulthood.\",\"affiliation\":\"Department of Psychological
+        Sciences, Brain Health Research Institute, Kent State University, Kent, USA.\",\"publicationStatus\":\"ppublish\",\"language\":\"eng\",\"pubModel\":\"Print-Electronic\",\"pubTypeList\":{\"pubType\":[\"research-article\",\"Journal
+        Article\"]},\"grantsList\":{\"grant\":[{\"agency\":\"NIMH NIH HHS\",\"acronym\":\"MH\",\"grantId\":\"R01
+        MH131808\",\"orderIn\":0},{\"agency\":\"University of South Carolina\",\"orderIn\":0}]},\"meshHeadingList\":{\"meshHeading\":[{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Animals\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Mice,
+        Inbred C57BL\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Mice\"},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Morphine\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"AD\",\"qualifierName\":\"administration
+        & dosage\"},{\"majorTopic_YN\":\"N\",\"abbreviation\":\"PD\",\"qualifierName\":\"pharmacology\"}]}},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Corticosterone\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"AD\",\"qualifierName\":\"administration
+        & dosage\"},{\"majorTopic_YN\":\"N\",\"abbreviation\":\"PD\",\"qualifierName\":\"pharmacology\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Behavior,
+        Animal\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"DE\",\"qualifierName\":\"drug
+        effects\"}]}},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Stress, Psychological\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Social
+        Behavior\"},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Fear\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"DE\",\"qualifierName\":\"drug
+        effects\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Avoidance Learning\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"DE\",\"qualifierName\":\"drug
+        effects\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Conditioning,
+        Classical\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"DE\",\"qualifierName\":\"drug
+        effects\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Age Factors\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Male\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Drug-Seeking
+        Behavior\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"DE\",\"qualifierName\":\"drug
+        effects\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Anhedonia\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"DE\",\"qualifierName\":\"drug
+        effects\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Conditioning,
+        Psychological\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"DE\",\"qualifierName\":\"drug
+        effects\"}]}}]},\"keywordList\":{\"keyword\":[\"Fear Conditioning\",\"Social
+        Defeat\",\"Drug-seeking\",\"Foot-shock Stress\"]},\"chemicalList\":{\"chemical\":[{\"name\":\"Corticosterone\",\"registryNumber\":\"W980KJ009P\"},{\"name\":\"Morphine\",\"registryNumber\":\"76I7G6D29C\"}]},\"subsetList\":{\"subset\":[{\"code\":\"IM\",\"name\":\"Index
+        Medicus\"}]},\"fullTextUrlList\":{\"fullTextUrl\":[{\"availability\":\"Open
+        access\",\"availabilityCode\":\"OA\",\"documentStyle\":\"doi\",\"site\":\"Unpaywall\",\"url\":\"https://doi.org/10.1007/s00213-024-06616-7\"},{\"availability\":\"Subscription
+        required\",\"availabilityCode\":\"S\",\"documentStyle\":\"doi\",\"site\":\"DOI\",\"url\":\"https://doi.org/10.1007/s00213-024-06616-7\"},{\"availability\":\"Open
+        access\",\"availabilityCode\":\"OA\",\"documentStyle\":\"html\",\"site\":\"Europe_PMC\",\"url\":\"https://europepmc.org/articles/PMC11442498\"},{\"availability\":\"Open
+        access\",\"availabilityCode\":\"OA\",\"documentStyle\":\"pdf\",\"site\":\"Europe_PMC\",\"url\":\"https://europepmc.org/articles/PMC11442498?pdf=render\"}]},\"isOpenAccess\":\"Y\",\"inEPMC\":\"Y\",\"inPMC\":\"Y\",\"citedByCount\":4,\"hasReferences\":\"Y\",\"hasTextMinedTerms\":\"Y\",\"hasDbCrossReferences\":\"N\",\"hasPDF\":\"Y\",\"hasBook\":\"N\",\"hasSuppl\":\"N\",\"hasLabsLinks\":\"N\",\"hasData\":\"N\",\"license\":\"cc
+        by\",\"authMan\":\"N\",\"epmcAuthMan\":\"N\",\"nihAuthMan\":\"N\",\"hasTMAccessionNumbers\":\"N\",\"dateOfCompletion\":\"2024-09-30\",\"dateOfCreation\":\"2024-05-28\",\"dateOfRevision\":\"2025-02-15\",\"electronicPublicationDate\":\"2024-05-28\",\"firstPublicationDate\":\"2024-05-28\",\"firstIndexDate\":\"2024-05-28\",\"fullTextReceivedDate\":\"2025-02-05\",\"hasEvaluations\":\"N\"}]}}"
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '27760'
+      content-type:
+      - application/json;charset=UTF-8
+      date:
+      - Sun, 15 Nov 2026 14:27:09 GMT
+      set-cookie:
+      - JSESSIONID=F30E96956E71169ACB622653CEBEA619; Path=/europepmc/webservices/rest;
+        Secure; HttpOnly
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      vary:
+      - origin,access-control-request-method,access-control-request-headers,accept-encoding
+    status:
+      code: 200
+      message: ''
+version: 1

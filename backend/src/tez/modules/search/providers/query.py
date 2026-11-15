@@ -35,6 +35,8 @@ _FIELD_TAG_SPACED = re.compile(r"\[[A-Za-z:/ ]+\]")
 # Not whitespace to the scanner (a no-break space would be).
 _HELD_SPACE = "\u2063"
 _FIELD_TAG = re.compile(r"\[[A-Za-z:/\u2063]+\]")
+# A tag written against its term: `asthma[tiab]`.
+_GLUED_TAG = re.compile(r"(.+?)\[([A-Za-z:/\u2063]+)\]")
 _OPERATORS = {"AND": Kind.AND, "OR": Kind.OR, "NOT": Kind.NOT}
 _TOKEN = re.compile(r'"(?P<phrase>[^"]*)"?|(?P<open>\()|(?P<close>\))|(?P<word>[^\s()"]+)')
 
@@ -205,21 +207,55 @@ def to_arxiv(query: str) -> str:
     return _join(parts)
 
 
-def to_pubmed(query: str) -> str:
-    """PubMed takes AND/OR/NOT, quotes and parentheses as they are. A field tag the user wrote
-    after a term or phrase stays attached to it: `"Neoplasms"[MeSH Terms]`, `asthma [tiab]`."""
+def _tagged(query: str) -> list[tuple[str, str | None]]:
+    """The query's parts, each with the PubMed field tag written after it (`[MeSH]`), if any."""
     # Spaces inside a tag would split it into two words: hold them until the end.
     held = _FIELD_TAG_SPACED.sub(lambda m: m.group(0).replace(" ", _HELD_SPACE), query)
-    parts: list[str] = []
+    parts: list[tuple[str, str | None]] = []
     for token in parse(held):
         text = _plain(token)
         if token.kind is Kind.TERM and _FIELD_TAG.fullmatch(text) and parts:
-            if parts[-1] == "AND" and len(parts) > 1:
+            if parts[-1][0] == "AND" and len(parts) > 1:
                 parts.pop()  # the AND the parser put between a term and its tag
-            parts[-1] += text
+            parts[-1] = (parts[-1][0], text[1:-1].replace(_HELD_SPACE, " "))
+        elif token.kind is Kind.TERM and (glued := _GLUED_TAG.fullmatch(text)):
+            parts.append((glued.group(1), glued.group(2).replace(_HELD_SPACE, " ")))
         else:
-            parts.append(text)
-    return _join(parts).replace(_HELD_SPACE, " ")
+            parts.append((text, None))
+    return parts
+
+
+def to_pubmed(query: str) -> str:
+    """PubMed takes AND/OR/NOT, quotes and parentheses as they are. A field tag the user wrote
+    after a term or phrase stays attached to it: `"Neoplasms"[MeSH Terms]`, `asthma [tiab]`."""
+    return _join([f"{text}[{tag}]" if tag else text for text, tag in _tagged(query)])
+
+
+# PubMed tags Europe PMC has a field for; any other tag is dropped and its term searched as is.
+_EUROPEPMC_FIELDS = {
+    "mesh": "MESH",
+    "mh": "MESH",
+    "mesh terms": "MESH",
+    "majr": "MESH",
+    "ti": "TITLE",
+    "title": "TITLE",
+    "tiab": "TITLE_ABS",
+    "title/abstract": "TITLE_ABS",
+    "au": "AUTH",
+    "author": "AUTH",
+    "ta": "JOURNAL",
+    "journal": "JOURNAL",
+}
+
+
+def to_europepmc(query: str) -> str:
+    """Europe PMC takes AND/OR/NOT, quotes and parentheses, and fields as `FIELD:term`: a
+    PubMed tag becomes its field (`"Neoplasms"[MeSH]` → `MESH:"Neoplasms"`)."""
+    parts: list[str] = []
+    for text, tag in _tagged(query):
+        field = _EUROPEPMC_FIELDS.get(tag.lower()) if tag else None
+        parts.append(f"{field}:{text}" if field else text)
+    return _join(parts)
 
 
 def to_keywords(query: str) -> str:

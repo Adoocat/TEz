@@ -46,6 +46,7 @@ _SOURCE_ALIASES = {
     "semanticscholar": "semantic_scholar",
     "cr": "crossref",
     "pm": "pubmed",
+    "epmc": "europepmc",
 }
 
 

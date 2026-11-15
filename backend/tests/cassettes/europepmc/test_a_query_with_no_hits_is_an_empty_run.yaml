@@ -1,0 +1,40 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - www.ebi.ac.uk
+    method: GET
+    uri: https://www.ebi.ac.uk/europepmc/webservices/rest/search?cursorMark=%2A&format=json&pageSize=3&query=%22zqxjvbnmtezyok%22+AND+%22kwpzrtyunfound%22&resultType=core
+  response:
+    body:
+      string: '{"version":"6.9","hitCount":0,"request":{"queryString":"\"zqxjvbnmtezyok\"
+        AND \"kwpzrtyunfound\"","resultType":"core","cursorMark":"*","pageSize":3,"sort":"","synonym":false},"resultList":{"result":[]}}'
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '203'
+      content-type:
+      - application/json;charset=UTF-8
+      date:
+      - Sun, 15 Nov 2026 14:27:10 GMT
+      set-cookie:
+      - JSESSIONID=EDD3F3E19E91A47382DC1A5BC36BBB4A; Path=/europepmc/webservices/rest;
+        Secure; HttpOnly
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      vary:
+      - origin,access-control-request-method,access-control-request-headers,accept-encoding
+    status:
+      code: 200
+      message: ''
+version: 1
