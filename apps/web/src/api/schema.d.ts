@@ -1326,6 +1326,7 @@ export interface components {
             /** Venue */
             venue: string | null;
             venue_type: components["schemas"]["VenueType"] | null;
+            thesis_type: components["schemas"]["ThesisType"] | null;
             /** Doi */
             doi: string | null;
             /** Citekey */
@@ -1380,6 +1381,7 @@ export interface components {
             /** Venue */
             venue: string | null;
             venue_type: components["schemas"]["VenueType"] | null;
+            thesis_type: components["schemas"]["ThesisType"] | null;
             /** Volume */
             volume: string | null;
             /** Issue */
@@ -1671,6 +1673,7 @@ export interface components {
             /** Venue */
             venue: string | null;
             venue_type: components["schemas"]["VenueType"] | null;
+            thesis_type: components["schemas"]["ThesisType"] | null;
             /** Abstract */
             abstract: string | null;
             /** Citation Count */
@@ -1711,6 +1714,11 @@ export interface components {
              * @default 1000
              */
             limit: number;
+            /**
+             * Theses Only
+             * @default false
+             */
+            theses_only: boolean;
             /** @default gui */
             initiated_via: components["schemas"]["InitiatedVia"];
         };
@@ -1837,6 +1845,12 @@ export interface components {
          * @enum {string}
          */
         TextStatus: "pending" | "ok" | "needs_ocr" | "failed";
+        /**
+         * ThesisType
+         * @description The degree a thesis is for (Task 28); None when the source does not say.
+         * @enum {string}
+         */
+        ThesisType: "masters" | "doctoral";
         /**
          * VenueType
          * @enum {string}

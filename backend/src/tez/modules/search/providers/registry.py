@@ -16,6 +16,9 @@ from tez.shared.http import HttpClient
 
 logger = logging.getLogger(__name__)
 
+# Sources that can be asked for theses only (Task 28).
+THESIS_FILTER_SOURCES = (OpenAlexProvider.name, CrossrefProvider.name)
+
 SOURCE_NAMES = (
     OpenAlexProvider.name,
     SemanticScholarProvider.name,

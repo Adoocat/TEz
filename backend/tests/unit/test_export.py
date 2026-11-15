@@ -86,6 +86,7 @@ def test_bibtex_escapes_latex_and_keeps_case_and_names() -> None:
             year=2024,
             venue="TSE",
             venue_type=VenueType.JOURNAL,
+            thesis_type=None,
             volume=None,
             issue=None,
             pages="1\N{EN DASH}10",

@@ -120,6 +120,24 @@ describe("the review a search belongs to", () => {
 });
 
 describe("the query form", () => {
+  it("asks only the sources that can filter when theses only are wanted", async () => {
+    const user = userEvent.setup();
+    const backend = withReview();
+    open(backend);
+
+    await user.type(await screen.findByRole("textbox", { name: "Search query" }), "öğretmen");
+    await user.click(screen.getByRole("checkbox", { name: "Theses only" }));
+    expect(screen.getByText(/Only OpenAlex and Crossref can be asked for theses/)).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Search" }));
+
+    await waitFor(() => {
+      expect(backend.requests.find((r) => r.path === "/searches")?.body).toMatchObject({
+        sources: ["openalex", "crossref"],
+        theses_only: true,
+      });
+    });
+  });
+
   it("sends the query, the chosen sources and the years", async () => {
     const user = userEvent.setup();
     const backend = withReview();
@@ -139,6 +157,7 @@ describe("the query form", () => {
         year_from: 2020,
         year_to: 2024,
         limit: 1000,
+        theses_only: false,
         initiated_via: "gui",
       });
     });

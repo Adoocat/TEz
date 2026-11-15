@@ -13,10 +13,12 @@ import { useOpenStore } from "@/features/open/store";
 import { ReviewWizard } from "@/features/reviews/ReviewWizard";
 import { useActiveReview } from "@/features/reviews/store";
 import { useReviews } from "@/features/reviews/api";
+import { publicationTypes, type PublicationType } from "@/features/library/publicationType";
 import { ApiError } from "@/lib/api/query";
 
 import {
   sourceNames,
+  thesisFilterSources,
   useAddToLibrary,
   useAddToReview,
   useSearchOverview,
@@ -25,13 +27,7 @@ import {
   type SearchResultRow,
   type SourceName,
 } from "./api";
-import {
-  availableOptions,
-  filterRows,
-  noFilters,
-  type ResultFilters,
-  type VenueType,
-} from "./filters";
+import { availableOptions, filterRows, noFilters, type ResultFilters } from "./filters";
 import { ResultList } from "./ResultList";
 import { ExternalSearches } from "./ExternalSearches";
 import { SearchHistory } from "./SearchHistory";
@@ -152,6 +148,7 @@ function Results({
   const [yearFrom, setYearFrom] = useState("");
   const [yearTo, setYearTo] = useState("");
   const [enabled, setEnabled] = useState<ReadonlySet<SourceName>>(new Set(sourceNames));
+  const [thesesOnly, setThesesOnly] = useState(false);
   const [filters, setFilters] = useState<ResultFilters>(noFilters);
   const [checked, setChecked] = useState<ReadonlySet<string>>(new Set());
 
@@ -166,7 +163,10 @@ function Results({
     const to = parseYear(yearTo);
     return from !== null && to !== null && from > to;
   })();
-  const canStart = query.trim() !== "" && enabled.size > 0 && !running && !yearsInvalid;
+  const asked = sourceNames.filter(
+    (source) => enabled.has(source) && (!thesesOnly || thesisFilterSources.includes(source)),
+  );
+  const canStart = query.trim() !== "" && asked.length > 0 && !running && !yearsInvalid;
 
   function submit(event?: SyntheticEvent) {
     event?.preventDefault();
@@ -175,10 +175,11 @@ function Results({
       {
         review_id: reviewId,
         query: query.trim(),
-        sources: sourceNames.filter((source) => enabled.has(source)),
+        sources: asked,
         year_from: parseYear(yearFrom),
         year_to: parseYear(yearTo),
         limit: RESULT_LIMIT,
+        theses_only: thesesOnly,
         initiated_via: "gui",
       },
       {
@@ -253,6 +254,17 @@ function Results({
               }}
             />
           </label>
+          <label className="flex items-center gap-1 text-meta text-fg-muted">
+            <input
+              type="checkbox"
+              className="size-4"
+              checked={thesesOnly}
+              onChange={(event) => {
+                setThesesOnly(event.target.checked);
+              }}
+            />
+            {t("search.thesesOnly")}
+          </label>
           <div className="flex-1" />
           <Button type="submit" variant="primary" disabled={!canStart}>
             <Play aria-hidden />
@@ -273,6 +285,7 @@ function Results({
             })}
           </p>
         )}
+        {thesesOnly && <p className="text-meta text-fg-muted">{t("search.thesesOnlyHint")}</p>}
         <SourceProblems runs={runs} />
         {runs.length > 0 && (
           <details className="text-meta">
@@ -357,7 +370,7 @@ function ResultFilterBar({
 }: {
   filters: ResultFilters;
   onChange: (filters: ResultFilters) => void;
-  venueTypes: VenueType[];
+  venueTypes: PublicationType[];
   languages: string[];
 }) {
   const { t } = useTranslation();
@@ -369,7 +382,10 @@ function ResultFilterBar({
         className={selectClass}
         value={filters.venueType ?? ""}
         onChange={(event) => {
-          onChange({ ...filters, venueType: (event.target.value || null) as VenueType | null });
+          onChange({
+            ...filters,
+            venueType: publicationTypes.find((type) => type === event.target.value) ?? null,
+          });
         }}
       >
         <option value="">{t("search.allTypes")}</option>

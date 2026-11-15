@@ -5962,6 +5962,16 @@
               }
             ]
           },
+          "thesis_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ThesisType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "doi": {
             "anyOf": [
               {
@@ -6045,6 +6055,7 @@
           "year",
           "venue",
           "venue_type",
+          "thesis_type",
           "doi",
           "citekey",
           "citation_count",
@@ -6159,6 +6170,16 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/VenueType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "thesis_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ThesisType"
               },
               {
                 "type": "null"
@@ -6325,6 +6346,7 @@
           "year",
           "venue",
           "venue_type",
+          "thesis_type",
           "volume",
           "issue",
           "pages",
@@ -7150,6 +7172,16 @@
               }
             ]
           },
+          "thesis_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ThesisType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "abstract": {
             "anyOf": [
               {
@@ -7256,6 +7288,7 @@
           "year",
           "venue",
           "venue_type",
+          "thesis_type",
           "abstract",
           "citation_count",
           "doi",
@@ -7318,6 +7351,11 @@
             "minimum": 1.0,
             "title": "Limit",
             "default": 1000
+          },
+          "theses_only": {
+            "type": "boolean",
+            "title": "Theses Only",
+            "default": false
           },
           "initiated_via": {
             "$ref": "#/components/schemas/InitiatedVia",
@@ -7706,6 +7744,15 @@
           "failed"
         ],
         "title": "TextStatus"
+      },
+      "ThesisType": {
+        "type": "string",
+        "enum": [
+          "masters",
+          "doctoral"
+        ],
+        "title": "ThesisType",
+        "description": "The degree a thesis is for (Task 28); None when the source does not say."
       },
       "VenueType": {
         "type": "string",

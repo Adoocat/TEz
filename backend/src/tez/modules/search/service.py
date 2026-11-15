@@ -78,6 +78,7 @@ def _paper_fields(record: NormalizedRecord) -> dict[str, Any]:
         "year": record.year,
         "venue": record.venue,
         "venue_type": record.venue_type,
+        "thesis_type": record.thesis_type,
         "volume": record.volume,
         "issue": record.issue,
         "pages": record.pages,
@@ -287,7 +288,9 @@ async def _ask(
 def _prepare(
     db: Database, review_id: str, request: SearchRequest, search_id: str, via: InitiatedVia
 ) -> tuple[_Plan, PaperIndex]:
-    filters = {"year_from": request.year_from, "year_to": request.year_to}
+    filters: dict[str, Any] = {"year_from": request.year_from, "year_to": request.year_to}
+    if request.theses_only:
+        filters["theses_only"] = True
     with db.write_session() as session:
         query = SearchRepository(session).find_or_add_query(review_id, request.query, filters)
         plan = _Plan(search_id, review_id, query.id, via)

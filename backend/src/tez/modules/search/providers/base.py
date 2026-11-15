@@ -40,6 +40,7 @@ class SearchRequest:
     year_from: int | None = None
     year_to: int | None = None
     limit: int = DEFAULT_LIMIT
+    theses_only: bool = False
 
 
 @dataclass(frozen=True)

@@ -33,7 +33,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 25 · Eleme kriterleri | bitti | `task/25-screening-criteria` · #38 | A · `/reviews/{id}/criteria` CRUD + `PUT …/criteria/order`; kod verilmezse türüne göre sıradaki `I<n>`/`E<n>`, kod review'da tekil (`screening.criterion_code_taken`). Aşama boşsa iki aşama. Her aşamada etkin kriterlerin ilk dokuzu sırayla `1`–`9`; sıra değişince numaralar da değişir. Kararda geçen kriter silinmez (`screening.criterion_in_use`), arşivlenir ve kısayolunu bırakır; türü de değişmez. Görev 31 için `reviews.service.criteria_for_stage`. Review panelinde kriter düzenleyici. Migration 0008 (`position`, `archived_at`) |
 | 26 · Ön ayarlı içe aktarma ve dışa aktarma rehberi | bekliyor | — | B · Ön koşul: veritabanı başına örnek dosya (açık soru 19) |
 | 27 · Kayıtlı harici arama | bitti | `task/27-external-search` · #39 | B · `search_query.external_source` (migration 0009); `GET/POST /searches/external` (aynı veritabanı + sorgu tek kayıt). İçe aktarma `log.saved_search_id` ile kayıtlı aramanın yeni bir `search_run`'ı olur; önizleme ve sonuç "son içe aktarmadan beri N yeni kayıt" der, review'a yalnız yeniler girer. Arama ekranında "Harici veritabanları" sekmesi: kaydet, "Siteyi aç" (tarayıcıda açar, sorguyu panoya kopyalar), "Sorguyu kopyala", "Yeni dışa aktarımı içe aktar". Durdurulan B oturumunun yarım işi üzerine kuruldu |
-| 28 · Yayın türleri ve tezler | bekliyor | — | B · Migration (tez türü); `@mastersthesis` |
+| 28 · Yayın türleri ve tezler | bitti | `task/28-publication-types` · #40 | B · `paper.thesis_type` (yüksek lisans / doktora; migration 0010). Derece BibTeX (`@mastersthesis`, `@phdthesis`, BibLaTeX `@thesis` + `type`) ve RIS (`THES` + `M3`) içe aktarmada okunur, dışa aktarmada yazılır; serbest metinden ("Doktora Tezi", "MSc thesis"…) `library/thesis.py` okur. Dört sağlayıcı ve iki biçim için tür eşleme tabloları testte. "Yalnız tezler" araması OpenAlex ve Crossref'e `type:dissertation` filtresiyle gider (diğerleri `search.filter_unsupported`). Kütüphanede ve arama sonuçlarında yayın türü filtresi (tez, yüksek lisans tezi, doktora tezi dahil); denetçide tür etiketi |
 | 29 · PubMed ve Europe PMC sağlayıcıları | bekliyor | — | B · İki PR; her biri önce onay + ADR + CLAUDE.md 1. kural |
 | 30 · Kısayol altyapısı | bekliyor | — | C · `tinykeys`, tek harita, `?` katmanı |
 | 31 · Eleme servisi ve API | bekliyor | — | C · Yalnız ekleme; hariçte gerekçe zorunlu |
@@ -53,6 +53,7 @@ Aşama 2 görevlerinin (24–42) ayrıntısı ve kabul kriterleri: `docs/plan.md
 
 ## Sonraya
 
+- (28) OpenAlex ve Crossref tezin derecesini vermiyor (Crossref'in `degree` alanı `select`'e eklenmedi; güncel belgeyle doğrulanınca eklenebilir); Semantic Scholar'da tez türü yok. Bu kaynaklardan gelen tezlerin derecesi boş kalır, kullanıcı düzenleyemiyor.
 - (27) "Siteyi aç" adresleri yalnız IEEE Xplore, ACM DL, Scopus ve Web of Science için var (`features/imports/databases.ts`); Görev 26'nın ön ayarları gelince her veritabanının adresi oraya eklenmeli.
 - (25) Eleme ekranı (Görev 31–33) kriterleri `reviews.service.criteria_for_stage(db, review_id, stage)` ile okumalı; kısayol numarası (`shortcut`) oradan gelir, ön yüzde yeniden hesaplanmaz.
 - (25) Kriterler oluşturma sihirbazında yok; review oluşturulduktan sonra panelden ekleniyor. İstenirse sihirbaza dördüncü adım olarak eklenebilir.
