@@ -10,6 +10,7 @@ import { useSearchHistory, type SearchOverview } from "@/features/search/api";
 import { useSearchView } from "@/features/search/store";
 
 import { useReviewOverview, useReviews, type ReviewView, type StageProgress } from "./api";
+import { CriteriaPanel } from "./CriteriaPanel";
 import { ReviewWizard } from "./ReviewWizard";
 import { useActiveReview } from "./store";
 
@@ -70,6 +71,8 @@ function Panel({ review }: { review: ReviewView }) {
           </ol>
         )}
       </section>
+
+      <CriteriaPanel reviewId={review.id} />
 
       <section aria-labelledby="review-stages" className="space-y-2">
         <h2 id="review-stages" className="text-h3">

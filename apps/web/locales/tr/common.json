@@ -185,7 +185,11 @@
     "citekey.invalid": "Atıf anahtarında yalnızca harf, rakam ve _ : . - + / olabilir.",
     "backup.damaged": "Yedek bozuk ({{entry}}); hiçbir şey geri yüklenmedi.",
     "backup.unsupported": "Bu yedek TEz'in daha yeni bir sürümüyle yapılmış.",
-    "import.file_not_found": "Dosya bulunamadı: {{path}}"
+    "import.file_not_found": "Dosya bulunamadı: {{path}}",
+    "screening.criterion_not_found": "Bu kriter artık yok.",
+    "screening.criterion_in_use": "Eleme kararları bu kritere dayanıyor: silmek yerine arşivleyin.",
+    "screening.criterion_code_taken": "{{code}} kodu bu review'da zaten kullanılıyor.",
+    "screening.criteria_order_mismatch": "Kriterler bu arada değişti; yenileyip yeniden deneyin."
   },
   "reviews": {
     "active": "Etkin review",
@@ -247,6 +251,46 @@
       "unique": "{{n}} tekil",
       "prisma": "PRISMA özeti",
       "prismaSoon": "Diyagram hazır olduğunda PRISMA 2020 akış özeti burada görünecek."
+    },
+    "criteria": {
+      "title": "Eleme kriterleri",
+      "hint": "Her aşamada ilk dokuz kriter bu sırayla 1–9 tuşlarını alır. Bir kararda kullanılmış kriter silinmez, arşivlenir.",
+      "empty": "Henüz kriter yok.",
+      "keyColumn": {
+        "title_abstract": "B/Ö",
+        "full_text": "TM"
+      },
+      "code": "Kod",
+      "codeAuto": "otomatik",
+      "text": "Kriter",
+      "textPlaceholder": "örn. Kod incelemeyle ilgili değil",
+      "stage": "Aşama",
+      "kind": "Tür",
+      "actions": "Eylemler",
+      "kinds": {
+        "inclusion": "Dahil etme",
+        "exclusion": "Hariç tutma"
+      },
+      "stages": {
+        "both": "İki aşama",
+        "title_abstract": "Başlık-özet",
+        "full_text": "Tam metin"
+      },
+      "add": "Kriter ekle",
+      "edit": "Düzenle",
+      "editLabel": "{{code}} kriterini düzenle",
+      "save": "Kaydet",
+      "cancel": "Vazgeç",
+      "moveUp": "{{code}} kriterini yukarı taşı",
+      "moveDown": "{{code}} kriterini aşağı taşı",
+      "archive": "Arşivle",
+      "archiveLabel": "{{code}} kriterini arşivle",
+      "archiveHint": "Kararlar buna dayandığı için saklanır ama artık önerilmez.",
+      "delete": "Sil",
+      "deleteLabel": "{{code}} kriterini sil",
+      "restore": "Geri getir",
+      "restoreLabel": "{{code}} kriterini geri getir",
+      "archivedTag": "arşivde"
     }
   },
   "search": {

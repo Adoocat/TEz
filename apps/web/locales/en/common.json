@@ -185,7 +185,11 @@
     "citekey.invalid": "A citation key may hold only letters, digits and _ : . - + /.",
     "backup.damaged": "The backup is damaged ({{entry}}); nothing was restored.",
     "backup.unsupported": "This backup was made by a newer version of TEz.",
-    "import.file_not_found": "File not found: {{path}}"
+    "import.file_not_found": "File not found: {{path}}",
+    "screening.criterion_not_found": "This criterion no longer exists.",
+    "screening.criterion_in_use": "Screening decisions cite this criterion: archive it instead.",
+    "screening.criterion_code_taken": "The code {{code}} is already used in this review.",
+    "screening.criteria_order_mismatch": "The criteria changed meanwhile; reload and try again."
   },
   "reviews": {
     "active": "Active review",
@@ -247,6 +251,46 @@
       "unique": "{{n}} unique",
       "prisma": "PRISMA summary",
       "prismaSoon": "The PRISMA 2020 flow summary will appear here once the diagram is ready."
+    },
+    "criteria": {
+      "title": "Screening criteria",
+      "hint": "In each stage the first nine criteria get the keys 1-9, in this order. A criterion used in a decision is archived, not deleted.",
+      "empty": "No criteria yet.",
+      "keyColumn": {
+        "title_abstract": "T/A",
+        "full_text": "FT"
+      },
+      "code": "Code",
+      "codeAuto": "auto",
+      "text": "Criterion",
+      "textPlaceholder": "e.g. Not about code review",
+      "stage": "Stage",
+      "kind": "Kind",
+      "actions": "Actions",
+      "kinds": {
+        "inclusion": "Inclusion",
+        "exclusion": "Exclusion"
+      },
+      "stages": {
+        "both": "Both stages",
+        "title_abstract": "Title-abstract",
+        "full_text": "Full text"
+      },
+      "add": "Add criterion",
+      "edit": "Edit",
+      "editLabel": "Edit {{code}}",
+      "save": "Save",
+      "cancel": "Cancel",
+      "moveUp": "Move {{code}} up",
+      "moveDown": "Move {{code}} down",
+      "archive": "Archive",
+      "archiveLabel": "Archive {{code}}",
+      "archiveHint": "Decisions cite it, so it is kept but no longer offered.",
+      "delete": "Delete",
+      "deleteLabel": "Delete {{code}}",
+      "restore": "Restore",
+      "restoreLabel": "Restore {{code}}",
+      "archivedTag": "archived"
     }
   },
   "search": {

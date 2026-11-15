@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session, aliased
 
 from tez.core.errors import ErrorCode, TezError
@@ -71,21 +71,62 @@ class ReviewsRepository:
         text: str,
         stage: ScreeningStage | None = None,
     ) -> ScreeningCriterion:
+        """Add a criterion after the review's others."""
+        last = self.session.scalar(
+            select(func.max(ScreeningCriterion.position)).where(
+                ScreeningCriterion.review_id == review_id
+            )
+        )
         criterion = ScreeningCriterion(
-            review_id=review_id, kind=kind, code=code, text=text, stage=stage
+            review_id=review_id,
+            kind=kind,
+            code=code,
+            text=text,
+            stage=stage,
+            position=0 if last is None else last + 1,
         )
         self.session.add(criterion)
         self.session.flush()
         return criterion
 
     def criteria(self, review_id: str) -> list[ScreeningCriterion]:
+        """Active criteria in their order, then archived ones."""
         return list(
             self.session.scalars(
                 select(ScreeningCriterion)
                 .where(ScreeningCriterion.review_id == review_id)
-                .order_by(ScreeningCriterion.code)
+                .order_by(
+                    ScreeningCriterion.archived_at.is_not(None),
+                    ScreeningCriterion.position,
+                    ScreeningCriterion.code,
+                )
             )
         )
+
+    def get_criterion(self, review_id: str, criterion_id: str) -> ScreeningCriterion | None:
+        criterion = self.session.get(ScreeningCriterion, criterion_id)
+        return criterion if criterion is not None and criterion.review_id == review_id else None
+
+    def code_taken(self, review_id: str, code: str, *, other_than: str | None = None) -> bool:
+        query = select(ScreeningCriterion.id).where(
+            ScreeningCriterion.review_id == review_id, ScreeningCriterion.code == code
+        )
+        if other_than is not None:
+            query = query.where(ScreeningCriterion.id != other_than)
+        return self.session.scalar(query.limit(1)) is not None
+
+    def used_criterion_ids(self, review_id: str) -> set[str]:
+        """Criteria any decision cites, superseded ones included (the rows stay forever)."""
+        cited = self.session.scalars(
+            select(ScreeningDecision.criterion_id)
+            .where(ScreeningDecision.review_id == review_id)
+            .distinct()
+        )
+        return {criterion_id for criterion_id in cited if criterion_id is not None}
+
+    def delete_criterion(self, criterion: ScreeningCriterion) -> None:
+        self.session.delete(criterion)
+        self.session.flush()
 
     def decide(
         self,
