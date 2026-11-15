@@ -1,0 +1,240 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - www.ebi.ac.uk
+    method: GET
+    uri: https://www.ebi.ac.uk/europepmc/webservices/rest/search?cursorMark=%2A&format=json&pageSize=2&query=depression+AND+adolescents&resultType=core
+  response:
+    body:
+      string: "{\"version\":\"6.9\",\"hitCount\":174134,\"nextCursorMark\":\"AoIIQU1AoCg1NTE3OTg3Mg==\",\"nextPageUrl\":\"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=depression+AND+adolescents&cursorMark=AoIIQU1AoCg1NTE3OTg3Mg%3D%3D&resultType=core&pageSize=2&format=json\",\"request\":{\"queryString\":\"depression
+        AND adolescents\",\"resultType\":\"core\",\"cursorMark\":\"*\",\"pageSize\":2,\"sort\":\"\",\"synonym\":false},\"resultList\":{\"result\":[{\"id\":\"42404717\",\"source\":\"MED\",\"pmid\":\"42404717\",\"pmcid\":\"PMC13328425\",\"fullTextIdList\":{\"fullTextId\":[\"PMC13328425\"]},\"doi\":\"10.3389/fpsyt.2026.1844684\",\"title\":\"Multi-modal
+        deep learning model for bipolar depression adolescents with verbal auditory
+        hallucinations.\",\"authorString\":\"Bolatijiang Q, Zou S, Zhang C, Wang C,
+        Zhang J.\",\"authorList\":{\"author\":[{\"fullName\":\"Bolatijiang Q\",\"lastName\":\"Bolatijiang\",\"firstName\":\"Qinnaer\",\"initials\":\"Q\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Graduate
+        School, Xinjiang Medical University, \xDCr\xFCmqi, Xinjiang,\_China.\"}]}},{\"fullName\":\"Zou
+        S\",\"lastName\":\"Zou\",\"firstName\":\"Shaohong\",\"initials\":\"S\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Clinical Psychology, People's Hospital of Xinjiang Uygur Autonomous Region,
+        Urumqi, Xinjiang,\_China.\"}]}},{\"fullName\":\"Zhang C\",\"lastName\":\"Zhang\",\"firstName\":\"Cheng\",\"initials\":\"C\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Clinical Psychology, People's Hospital of Xinjiang Uygur Autonomous Region,
+        Urumqi, Xinjiang,\_China.\"}]}},{\"fullName\":\"Wang C\",\"lastName\":\"Wang\",\"firstName\":\"Chengji\",\"initials\":\"C\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Clinical Psychology, People's Hospital of Xinjiang Uygur Autonomous Region,
+        Urumqi, Xinjiang,\_China.\"}]}},{\"fullName\":\"Zhang J\",\"lastName\":\"Zhang\",\"firstName\":\"Jianliang\",\"initials\":\"J\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Radiology, People's Hospital of Xinjiang Uygur Autonomous Region, Urumqi,
+        Xinjiang,\_China.\"}]}}]},\"dataLinksTagsList\":{\"dataLinkstag\":[\"supporting_data\"]},\"journalInfo\":{\"volume\":\"17\",\"journalIssueId\":4112086,\"dateOfPublication\":\"2026
+        \",\"monthOfPublication\":0,\"yearOfPublication\":2026,\"journal\":{\"medlineAbbreviation\":\"Front
+        Psychiatry\",\"title\":\"Frontiers in psychiatry\",\"essn\":\"1664-0640\",\"issn\":\"1664-0640\",\"isoabbreviation\":\"Front
+        Psychiatry\",\"nlmid\":\"101545006\"},\"printPublicationDate\":\"2026-01-01\"},\"pubYear\":\"2026\",\"pageInfo\":\"1844684\",\"abstractText\":\"<h4>Objective</h4>To
+        develop a multimodal deep learning-based classification model for adolescent
+        bipolar depression (ABD) with verbal auditory hallucinations (AVHs).<h4>Methods</h4>A
+        retrospective analysis was conducted on 47 untreated ABD patients within 30
+        days, between January 2024 and August 2025. Comprehensive clinical data were
+        collected, including sex, age, age at onset, years of education, and the presence
+        of suicidal or self-harming behaviors. Based on the PANSS P3 score and the
+        presence of AVHs, patients were divided into a hallucination group (P3 score
+        > 3, n = 24) and a non-hallucination group (P3 score \u2264 3, n = 23). All
+        participants underwent 1H-MRS scanning of the ventromedial prefrontal cortex
+        (vmPFC). A multimodal deep learning model was constructed using MRS-derived
+        features in combination with clinical parameters.<h4>Results</h4>The model
+        achieved an optimal classification accuracy of 71.43% on the fixed test set,
+        as obtained by the second-fold model. This best-performing model demonstrated
+        balanced and stable classification performance for both positive and negative
+        samples, with precision, recall, and F1-score all reaching 0.75.<h4>Conclusion</h4>This
+        study proposes a novel multimodal Transformer-based framework and evaluates
+        its effectiveness in classifying ABD patients experiencing depressive episodes
+        with AVHs. The results suggest that the advanced model architecture, incorporating
+        mechanisms such as bidirectional cross-attention and an Ensemble of Experts
+        classifier, can effectively integrate heterogeneous data and achieve a test
+        accuracy of 71.43% on a small dataset, indicating preliminary technical feasibility.\",\"affiliation\":\"Graduate
+        School, Xinjiang Medical University, \xDCr\xFCmqi, Xinjiang,\_China.\",\"publicationStatus\":\"epublish\",\"language\":\"eng\",\"pubModel\":\"Electronic-eCollection\",\"pubTypeList\":{\"pubType\":[\"research-article\",\"Journal
+        Article\"]},\"keywordList\":{\"keyword\":[\"Adolescent\",\"Bipolar Depression\",\"magnetic
+        resonance spectroscopy\",\"Deep Learning\",\"Verbal Auditory Hallucinations\"]},\"fullTextUrlList\":{\"fullTextUrl\":[{\"availability\":\"Subscription
+        required\",\"availabilityCode\":\"S\",\"documentStyle\":\"doi\",\"site\":\"DOI\",\"url\":\"https://doi.org/10.3389/fpsyt.2026.1844684\"},{\"availability\":\"Open
+        access\",\"availabilityCode\":\"OA\",\"documentStyle\":\"html\",\"site\":\"Europe_PMC\",\"url\":\"https://europepmc.org/articles/PMC13328425\"},{\"availability\":\"Open
+        access\",\"availabilityCode\":\"OA\",\"documentStyle\":\"pdf\",\"site\":\"Europe_PMC\",\"url\":\"https://europepmc.org/articles/PMC13328425?pdf=render\"}]},\"isOpenAccess\":\"Y\",\"inEPMC\":\"Y\",\"inPMC\":\"Y\",\"citedByCount\":0,\"hasReferences\":\"Y\",\"hasTextMinedTerms\":\"Y\",\"hasDbCrossReferences\":\"N\",\"hasPDF\":\"Y\",\"hasBook\":\"N\",\"hasSuppl\":\"N\",\"hasLabsLinks\":\"N\",\"hasData\":\"Y\",\"license\":\"cc
+        by\",\"authMan\":\"N\",\"epmcAuthMan\":\"N\",\"nihAuthMan\":\"N\",\"hasTMAccessionNumbers\":\"Y\",\"tmAccessionTypeList\":{\"accessionType\":[\"doi\"]},\"dateOfCompletion\":\"2026-07-06\",\"dateOfCreation\":\"2026-07-06\",\"dateOfRevision\":\"2026-08-13\",\"electronicPublicationDate\":\"2026-06-19\",\"firstPublicationDate\":\"2026-06-19\",\"firstIndexDate\":\"2026-07-06\",\"fullTextReceivedDate\":\"2026-09-03\",\"hasEvaluations\":\"N\"},{\"id\":\"41872786\",\"source\":\"MED\",\"pmid\":\"41872786\",\"pmcid\":\"PMC13134209\",\"fullTextIdList\":{\"fullTextId\":[\"PMC13134209\"]},\"doi\":\"10.1186/s12888-026-07987-1\",\"title\":\"The
+        role of childhood abuse on health risk behavior in depression adolescents:
+        a latent profile analysis.\",\"authorString\":\"Gao-Yue R, Jia-Yuan Z, Ren-Kai,
+        Hui Z.\",\"authorList\":{\"author\":[{\"fullName\":\"Gao-Yue R\",\"lastName\":\"Gao-Yue\",\"firstName\":\"Ren\",\"initials\":\"R\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychological Nursing and Key Laboratory of Basic Research and Health Management
+        on Chronic Diseases in Heilongjiang Province, Harbin Medical University, No.39
+        Xinyang Street, Daqing, Heilongjiang Province, China.\"},{\"affiliation\":\"Cardiovascular
+        Medicine, The First Affiliated Hospital of Xi'an Jiaotong University, ShanXi,
+        710049, China.\"}]}},{\"fullName\":\"Jia-Yuan Z\",\"lastName\":\"Jia-Yuan\",\"firstName\":\"Zhang\",\"initials\":\"Z\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychological Nursing and Key Laboratory of Basic Research and Health Management
+        on Chronic Diseases in Heilongjiang Province, Harbin Medical University, No.39
+        Xinyang Street, Daqing, Heilongjiang Province, China.\"}]}},{\"fullName\":\"Ren-Kai\",\"lastName\":\"Ren-Kai\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Children and Adolescents, Daqing Third People's Hospital, Harbin Daqing,
+        163712, China.\"}]}},{\"fullName\":\"Hui Z\",\"lastName\":\"Hui\",\"firstName\":\"Zhang\",\"initials\":\"Z\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychological Nursing and Key Laboratory of Basic Research and Health Management
+        on Chronic Diseases in Heilongjiang Province, Harbin Medical University, No.39
+        Xinyang Street, Daqing, Heilongjiang Province, China. 82323627@qq.com.\"}]}}]},\"dataLinksTagsList\":{\"dataLinkstag\":[\"supporting_data\"]},\"journalInfo\":{\"issue\":\"1\",\"volume\":\"26\",\"journalIssueId\":4143183,\"dateOfPublication\":\"2026
+        Mar\",\"monthOfPublication\":3,\"yearOfPublication\":2026,\"journal\":{\"medlineAbbreviation\":\"BMC
+        Psychiatry\",\"title\":\"BMC psychiatry\",\"essn\":\"1471-244X\",\"issn\":\"1471-244X\",\"isoabbreviation\":\"BMC
+        Psychiatry\",\"nlmid\":\"100968559\"},\"printPublicationDate\":\"2026-03-01\"},\"pubYear\":\"2026\",\"pageInfo\":\"358\",\"abstractText\":\"AIMS:
+        This study aims to analyze the clustering characteristics of health risk behaviors
+        in adolescents with depression, and explore the mechanism of psychological
+        resilience and depression in childhood abuse and different health risk behavior
+        clusters. METHODS: From July 2021 to September 2022, 413 depression adolescents
+        were collected by convenience sampling method and reported their health risk
+        behavior, childhood abuse, psychological resilience and depression by questionnaires.
+        Mplus7.4 was used for latent profile analysis to identify the potential categories
+        of health risk behaviors of adolescents with depression, and SPSS26.0 was
+        used to analyze the chain mediating effect of resilience and depression between
+        childhood abuse and different health risk behavior clusters. RESULTS: The
+        latent profile analysis identified two potential categories of health risk
+        behaviors in adolescents with depression: high risk behavior clusters and
+        unhealthy lifestyle clusters. Resilience and depression played a chain mediating
+        role between childhood abuse and high risk behavior clusters and resilience
+        played an independent mediating role between childhood abuse and unhealthy
+        lifestyle clusters. CONCLUSIONS: There are two potential categories of health
+        risk behaviors in adolescents with depression and attention should be paid
+        to the high risk behavior clusters and focus on the role of resilience in
+        relieving the negative effect of childhood abuse and depression on risk behaviors.
+        CLINICAL TRIAL NUMBER: Not applicable.\",\"affiliation\":\"Department of Psychological
+        Nursing and Key Laboratory of Basic Research and Health Management on Chronic
+        Diseases in Heilongjiang Province, Harbin Medical University, No.39 Xinyang
+        Street, Daqing, Heilongjiang Province, China.\",\"publicationStatus\":\"epublish\",\"language\":\"eng\",\"pubModel\":\"Electronic\",\"pubTypeList\":{\"pubType\":[\"research-article\",\"Journal
+        Article\"]},\"meshHeadingList\":{\"meshHeading\":[{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Humans\"},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Adolescent
+        Behavior\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"PX\",\"qualifierName\":\"psychology\"}]}},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Depression\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"PX\",\"qualifierName\":\"psychology\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Life
+        Style\"},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Depressive Disorder\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"PX\",\"qualifierName\":\"psychology\"}]}},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Child
+        Abuse\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"PX\",\"qualifierName\":\"psychology\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Adolescent\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Female\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Male\"},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Resilience,
+        Psychological\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Surveys and
+        Questionnaires\"},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Health Risk
+        Behaviors\"}]},\"keywordList\":{\"keyword\":[\"Depression\",\"Adolescents\",\"Childhood
+        Abuse\",\"Latent Profile Analysis\",\"Health Risk Behavior\"]},\"subsetList\":{\"subset\":[{\"code\":\"IM\",\"name\":\"Index
+        Medicus\"}]},\"fullTextUrlList\":{\"fullTextUrl\":[{\"availability\":\"Subscription
+        required\",\"availabilityCode\":\"S\",\"documentStyle\":\"doi\",\"site\":\"DOI\",\"url\":\"https://doi.org/10.1186/s12888-026-07987-1\"},{\"availability\":\"Open
+        access\",\"availabilityCode\":\"OA\",\"documentStyle\":\"html\",\"site\":\"Europe_PMC\",\"url\":\"https://europepmc.org/articles/PMC13134209\"},{\"availability\":\"Open
+        access\",\"availabilityCode\":\"OA\",\"documentStyle\":\"pdf\",\"site\":\"Europe_PMC\",\"url\":\"https://europepmc.org/articles/PMC13134209?pdf=render\"}]},\"isOpenAccess\":\"Y\",\"inEPMC\":\"Y\",\"inPMC\":\"Y\",\"citedByCount\":0,\"hasReferences\":\"Y\",\"hasTextMinedTerms\":\"Y\",\"hasDbCrossReferences\":\"N\",\"hasPDF\":\"Y\",\"hasBook\":\"N\",\"hasSuppl\":\"N\",\"hasLabsLinks\":\"N\",\"hasData\":\"Y\",\"license\":\"cc
+        by-nc-nd\",\"authMan\":\"N\",\"epmcAuthMan\":\"N\",\"nihAuthMan\":\"N\",\"hasTMAccessionNumbers\":\"Y\",\"tmAccessionTypeList\":{\"accessionType\":[\"doi\"]},\"dateOfCompletion\":\"2026-06-27\",\"dateOfCreation\":\"2026-03-24\",\"dateOfRevision\":\"2026-08-13\",\"electronicPublicationDate\":\"2026-03-24\",\"firstPublicationDate\":\"2026-03-24\",\"firstIndexDate\":\"2026-03-24\",\"fullTextReceivedDate\":\"2026-05-20\",\"hasEvaluations\":\"N\"}]}}"
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '12353'
+      content-type:
+      - application/json;charset=UTF-8
+      date:
+      - Sun, 15 Nov 2026 14:27:09 GMT
+      set-cookie:
+      - JSESSIONID=12B9212A74ABCBF05830E93E59581CC3; Path=/europepmc/webservices/rest;
+        Secure; HttpOnly
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      vary:
+      - origin,access-control-request-method,access-control-request-headers,accept-encoding
+    status:
+      code: 200
+      message: ''
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - www.ebi.ac.uk
+    method: GET
+    uri: https://www.ebi.ac.uk/europepmc/webservices/rest/search?cursorMark=AoIIQU1AoCg1NTE3OTg3Mg%3D%3D&format=json&pageSize=1&query=depression+AND+adolescents&resultType=core
+  response:
+    body:
+      string: "{\"version\":\"6.9\",\"hitCount\":174134,\"nextCursorMark\":\"AoIIQTbWKig1NDQzODg4MQ==\",\"nextPageUrl\":\"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=depression+AND+adolescents&cursorMark=AoIIQTbWKig1NDQzODg4MQ%3D%3D&resultType=core&pageSize=1&format=json\",\"request\":{\"queryString\":\"depression
+        AND adolescents\",\"resultType\":\"core\",\"cursorMark\":\"AoIIQU1AoCg1NTE3OTg3Mg==\",\"pageSize\":1,\"sort\":\"\",\"synonym\":false},\"resultList\":{\"result\":[{\"id\":\"41380346\",\"source\":\"MED\",\"pmid\":\"41380346\",\"doi\":\"10.1016/j.jpsychires.2025.11.038\",\"title\":\"Hemodynamic
+        changes in anxious depression adolescents during a verbal fluency task: A
+        fNIRS study.\",\"authorString\":\"Sun J, Liu X, Lin S, Niu K, Li B, Chu S,
+        Zhou D, Zhang M.\",\"authorList\":{\"author\":[{\"fullName\":\"Sun J\",\"lastName\":\"Sun\",\"firstName\":\"Jianzhou\",\"initials\":\"J\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychiatry, The Second People's Hospital of Zhoushan, Zhoushan, 316100,
+        Zhejiang, China.\"}]}},{\"fullName\":\"Liu X\",\"lastName\":\"Liu\",\"firstName\":\"Xiaoli\",\"initials\":\"X\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychiatry, Affiliated Kangning Hospital of Ningbo University (Ningbo Kangning
+        Hospital), Ningbo, 315201, Zhejiang, China.\"}]}},{\"fullName\":\"Lin S\",\"lastName\":\"Lin\",\"firstName\":\"Shan\",\"initials\":\"S\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychiatry, The Second People's Hospital of Zhoushan, Zhoushan, 316100,
+        Zhejiang, China.\"}]}},{\"fullName\":\"Niu K\",\"lastName\":\"Niu\",\"firstName\":\"Kai\",\"initials\":\"K\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychiatry, The Second People's Hospital of Zhoushan, Zhoushan, 316100,
+        Zhejiang, China.\"}]}},{\"fullName\":\"Li B\",\"lastName\":\"Li\",\"firstName\":\"Bo\",\"initials\":\"B\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychiatry, The Second People's Hospital of Zhoushan, Zhoushan, 316100,
+        Zhejiang, China.\"}]}},{\"fullName\":\"Chu S\",\"lastName\":\"Chu\",\"firstName\":\"Shuai\",\"initials\":\"S\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychiatry, The Second People's Hospital of Zhoushan, Zhoushan, 316100,
+        Zhejiang, China.\"}]}},{\"fullName\":\"Zhou D\",\"lastName\":\"Zhou\",\"firstName\":\"Dongsheng\",\"initials\":\"D\",\"authorId\":{\"type\":\"ORCID\",\"value\":\"0009-0002-9326-4242\"},\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychiatry, Affiliated Kangning Hospital of Ningbo University (Ningbo Kangning
+        Hospital), Ningbo, 315201, Zhejiang, China. Electronic address: wyzhouds@sina.com.\"}]}},{\"fullName\":\"Zhang
+        M\",\"lastName\":\"Zhang\",\"firstName\":\"Mingjun\",\"initials\":\"M\",\"authorAffiliationDetailsList\":{\"authorAffiliation\":[{\"affiliation\":\"Department
+        of Psychiatry, The Second People's Hospital of Zhoushan, Zhoushan, 316100,
+        Zhejiang, China. Electronic address: lczxwsy@126.com.\"}]}}]},\"authorIdList\":{\"authorId\":[{\"type\":\"ORCID\",\"value\":\"0009-0002-9326-4242\"}]},\"journalInfo\":{\"volume\":\"193\",\"journalIssueId\":4082238,\"dateOfPublication\":\"2026
+        Feb\",\"monthOfPublication\":2,\"yearOfPublication\":2026,\"journal\":{\"medlineAbbreviation\":\"J
+        Psychiatr Res\",\"title\":\"Journal of psychiatric research\",\"essn\":\"1879-1379\",\"issn\":\"0022-3956\",\"nlmid\":\"0376331\",\"isoabbreviation\":\"J
+        Psychiatr Res\"},\"printPublicationDate\":\"2026-02-01\"},\"pubYear\":\"2026\",\"pageInfo\":\"405-413\",\"abstractText\":\"<h4>Objective</h4>Compared
+        to depression, adolescents with anxious depression more severe impairments
+        across multiple domains. This study illustrates differences in brain activity
+        patterns among depressed adolescents with varying levels of anxiety.<h4>Method</h4>A
+        total of 196 adolescents with depression were recruited, including 67 in the
+        low anxious depression group (LAD), 87 in the moderate anxious depression
+        group (MAD), and 42 in the high anxious depression group (HAD). We utilized
+        functional near-infrared spectroscopy (fNIRS) to monitor oxyhemoglobin (Oxy-Hb)
+        changes in participants' brains while they performed the verbal fluency task
+        (VFT).<h4>Results</h4>High anxious depression adolescents exhibited significantly
+        lower Oxy-Hb activation in Brodmann Areas 10 (BA 10) (F\_=\_7.073, pFDR\_=\_0.001)
+        and 46 (BA 46) (F\_=\_11.668, pFDR < 0.001) compared to those with low anxious
+        depression. During the VFT, the HAM-A score was negatively correlated with
+        Oxy-Hb levels in BA 10 (r\_=\_-0.234, pFDR\_=\_0.006) and BA 46 (r\_=\_-0.320,
+        pFDR < 0.001). In the initiation phase, the activation level of the LAD in
+        BA 10 was higher than that of the HAD (pFDR < 0.020), and in BA 46, it was
+        higher than both the HAD (pFDR < 0.001) and MAD (pFDR\_=\_0.015). In the maintenance
+        phase, LAD activation in BA 10 was higher than HAD (pFDR\_=\_0.019) and MAD
+        (pFDR\_=\_0.001), while BA 46 activation was higher than HAD (pFDR\_=\_0.027).<h4>Conclusions</h4>The
+        study revealed that adolescents with high anxious depression had significantly
+        lower Oxy-Hb levels in the PFC (specifically BA 10 and BA 46) compared to
+        those with low anxious depression, providing neurophysiological evidence for
+        the negative impact of anxiety on attention control. The results may aid in
+        distinguish adolescents with varying anxiety levels and offer potential personalized
+        intervention targets for non-invasive brain stimulation (NIBS).\",\"affiliation\":\"Department
+        of Psychiatry, The Second People's Hospital of Zhoushan, Zhoushan, 316100,
+        Zhejiang, China.\",\"publicationStatus\":\"ppublish\",\"language\":\"eng\",\"pubModel\":\"Print-Electronic\",\"pubTypeList\":{\"pubType\":[\"Research
+        Support, Non-U.S. Gov't\",\"Journal Article\"]},\"grantsList\":{\"grant\":[{\"agency\":\"Natural
+        Science Foundation of Ningbo Municipality\",\"grantId\":\"2024J036\",\"orderIn\":0},{\"agency\":\"Ministry
+        of Education of the People&apos;s Republic of China\",\"grantId\":\"25YJCZH167\",\"orderIn\":0},{\"agency\":\"Natural
+        Science Foundation of Zhejiang Province\",\"grantId\":\"LQN25H090013\",\"orderIn\":0},{\"agency\":\"Science
+        and Technology Department of Zhejiang Province\",\"grantId\":\"2024KY1774\",\"orderIn\":0},{\"agency\":\"Science
+        and Technology Program of Zhejiang Province\",\"grantId\":\"2026ZL0786\",\"orderIn\":0},{\"agency\":\"Ningbo
+        Municipal Bureau of Science and Technology\",\"grantId\":\"2024Y18\",\"orderIn\":0}]},\"meshHeadingList\":{\"meshHeading\":[{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Humans\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Oxyhemoglobins\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"ME\",\"qualifierName\":\"metabolism\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Spectroscopy,
+        Near-Infrared\"},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Depression\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"PP\",\"qualifierName\":\"physiopathology\"}]}},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Anxiety\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"DG\",\"qualifierName\":\"diagnostic
+        imaging\"},{\"majorTopic_YN\":\"N\",\"abbreviation\":\"PP\",\"qualifierName\":\"physiopathology\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Adolescent\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Female\"},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Male\"},{\"majorTopic_YN\":\"Y\",\"descriptorName\":\"Hemodynamics\",\"meshQualifierList\":{\"meshQualifier\":[{\"majorTopic_YN\":\"N\",\"abbreviation\":\"PH\",\"qualifierName\":\"physiology\"}]}},{\"majorTopic_YN\":\"N\",\"descriptorName\":\"Functional
+        Neuroimaging\"}]},\"keywordList\":{\"keyword\":[\"Adolescents\",\"Fnirs\",\"Verbal
+        Fluency Task\",\"Anxious Depression\"]},\"chemicalList\":{\"chemical\":[{\"name\":\"Oxyhemoglobins\",\"registryNumber\":\"0\"}]},\"subsetList\":{\"subset\":[{\"code\":\"IM\",\"name\":\"Index
+        Medicus\"}]},\"fullTextUrlList\":{\"fullTextUrl\":[{\"availability\":\"Subscription
+        required\",\"availabilityCode\":\"S\",\"documentStyle\":\"doi\",\"site\":\"DOI\",\"url\":\"https://doi.org/10.1016/j.jpsychires.2025.11.038\"}]},\"isOpenAccess\":\"N\",\"inEPMC\":\"N\",\"inPMC\":\"N\",\"citedByCount\":0,\"hasReferences\":\"Y\",\"hasTextMinedTerms\":\"Y\",\"hasDbCrossReferences\":\"N\",\"hasPDF\":\"N\",\"hasBook\":\"N\",\"hasSuppl\":\"N\",\"hasLabsLinks\":\"N\",\"hasData\":\"N\",\"license\":\"cc
+        by\",\"authMan\":\"N\",\"epmcAuthMan\":\"N\",\"nihAuthMan\":\"N\",\"hasTMAccessionNumbers\":\"N\",\"dateOfCompletion\":\"2026-01-02\",\"dateOfCreation\":\"2025-12-11\",\"dateOfRevision\":\"2026-08-04\",\"electronicPublicationDate\":\"2025-11-29\",\"firstPublicationDate\":\"2025-11-29\",\"firstIndexDate\":\"2025-12-12\",\"hasEvaluations\":\"N\"}]}}"
+    headers:
+      connection:
+      - keep-alive
+      content-length:
+      - '8310'
+      content-type:
+      - application/json;charset=UTF-8
+      date:
+      - Sun, 15 Nov 2026 14:27:09 GMT
+      set-cookie:
+      - JSESSIONID=B535A1D77BA274A0488486F2C30E5591; Path=/europepmc/webservices/rest;
+        Secure; HttpOnly
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      vary:
+      - origin,access-control-request-method,access-control-request-headers,accept-encoding
+    status:
+      code: 200
+      message: ''
+version: 1

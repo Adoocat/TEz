@@ -46,10 +46,10 @@ MESSAGES: dict[str, dict[Language, str]] = {
     },
     "help.search.sources": {
         "tr": "Virgülle kaynaklar: openalex (oa), semantic_scholar (s2), arxiv, crossref (cr), "
-        "pubmed (pm). "
+        "pubmed (pm), europepmc (epmc). "
         "Varsayılan: hepsi.",
         "en": "Comma-separated sources: openalex (oa), semantic_scholar (s2), arxiv, "
-        "crossref (cr), pubmed (pm). Default: all.",
+        "crossref (cr), pubmed (pm), europepmc (epmc). Default: all.",
     },
     "help.review": {
         "tr": "Review adı ya da kimliği (tek review varsa gerekmez).",
