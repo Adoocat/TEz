@@ -22,7 +22,13 @@ from tez.modules.library.models import IdentifierScheme as Scheme
 from tez.modules.library.models import VenueType
 from tez.modules.search.models import MatchMethod
 from tez.modules.search.schemas import NormalizedRecord, RecordAuthor
-from tez.shared.identifiers import normalize_arxiv, normalize_doi, normalize_isbn
+from tez.shared.identifiers import (
+    normalize_arxiv,
+    normalize_doi,
+    normalize_isbn,
+    normalize_pmcid,
+    normalize_pmid,
+)
 from tez.shared.text import fold
 
 # Below this, titles are not the same paper; rapidfuzz scores are 0 to 100.
@@ -36,7 +42,16 @@ _ARXIV_DOI_PREFIX = "10.48550/arxiv."
 _PUBLISHED_TYPES = frozenset(set(VenueType) - {VenueType.PREPRINT, VenueType.OTHER})
 # Digits and Roman numerals: "Part 1" and "Part 2" differ by one letter but are two papers.
 _NUMERAL = re.compile(r"\d+|[ivxlc]+")
-_ID_SCHEMES = (Scheme.ARXIV, Scheme.S2, Scheme.OPENALEX, Scheme.DBLP, Scheme.ISBN, Scheme.ZOTERO)
+_ID_SCHEMES = (
+    Scheme.ARXIV,
+    Scheme.PMID,
+    Scheme.PMCID,
+    Scheme.S2,
+    Scheme.OPENALEX,
+    Scheme.DBLP,
+    Scheme.ISBN,
+    Scheme.ZOTERO,
+)
 
 
 @dataclass(frozen=True)
@@ -68,6 +83,10 @@ def normalize_identifier(scheme: Scheme, value: str) -> str | None:
             return normalize_arxiv(value)
         case Scheme.ISBN:
             return normalize_isbn(value)
+        case Scheme.PMID:
+            return normalize_pmid(value)
+        case Scheme.PMCID:
+            return normalize_pmcid(value)
         case _:
             return value.strip() or None
 

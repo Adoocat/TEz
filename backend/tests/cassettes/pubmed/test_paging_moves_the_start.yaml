@@ -1,0 +1,708 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - eutils.ncbi.nlm.nih.gov
+    method: GET
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmax=2&retmode=json&retstart=0&sort=relevance&term=depression+AND+adolescents&tool=TEz
+  response:
+    body:
+      string: '{"header":{"type":"esearch","version":"0.3"},"esearchresult":{"count":"114769","retmax":"2","retstart":"0","idlist":["34569066","38490591"],"translationset":[{"from":"depression","to":"\"depressed\"[All
+        Fields] OR \"depression\"[MeSH Terms] OR \"depression\"[All Fields] OR \"depressions\"[All
+        Fields] OR \"depression''s\"[All Fields] OR \"depressive disorder\"[MeSH Terms]
+        OR (\"depressive\"[All Fields] AND \"disorder\"[All Fields]) OR \"depressive
+        disorder\"[All Fields] OR \"depressivity\"[All Fields] OR \"depressive\"[All
+        Fields] OR \"depressively\"[All Fields] OR \"depressiveness\"[All Fields]
+        OR \"depressives\"[All Fields]"},{"from":"adolescents","to":"\"adolescences\"[All
+        Fields] OR \"adolescency\"[All Fields] OR \"adolescent\"[MeSH Terms] OR \"adolescent\"[All
+        Fields] OR \"adolescence\"[All Fields] OR \"adolescents\"[All Fields] OR \"adolescent''s\"[All
+        Fields]"}],"querytranslation":"(\"depressed\"[All Fields] OR \"depression\"[MeSH
+        Terms] OR \"depression\"[All Fields] OR \"depressions\"[All Fields] OR \"depression
+        s\"[All Fields] OR \"depressive disorder\"[MeSH Terms] OR (\"depressive\"[All
+        Fields] AND \"disorder\"[All Fields]) OR \"depressive disorder\"[All Fields]
+        OR \"depressivity\"[All Fields] OR \"depressive\"[All Fields] OR \"depressively\"[All
+        Fields] OR \"depressiveness\"[All Fields] OR \"depressives\"[All Fields])
+        AND (\"adolescences\"[All Fields] OR \"adolescency\"[All Fields] OR \"adolescent\"[MeSH
+        Terms] OR \"adolescent\"[All Fields] OR \"adolescence\"[All Fields] OR \"adolescents\"[All
+        Fields] OR \"adolescent s\"[All Fields])"}}
+
+        '
+    headers:
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - X-RateLimit-Limit,X-RateLimit-Remaining
+      alt-svc:
+      - clear
+      cache-control:
+      - private
+      content-length:
+      - '1571'
+      content-security-policy:
+      - upgrade-insecure-requests
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Sun, 15 Nov 2026 14:10:54 GMT
+      ncbi-phid:
+      - 1D32D4B8F5A882C50000358C4164488E.1.1.m_1
+      ncbi-sid:
+      - 3F30D53BD2A32616_0F1ASID
+      referrer-policy:
+      - origin-when-cross-origin
+      server:
+      - Finatra
+      set-cookie:
+      - ncbi_sid=3F30D53BD2A32616_0F1ASID; domain=.nih.gov; path=/; expires=Mon, 15
+        Nov 2027 14:10:54 GMT
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      via:
+      - 1.1 google
+      x-ratelimit-limit:
+      - '3'
+      x-ratelimit-remaining:
+      - '2'
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - eutils.ncbi.nlm.nih.gov
+    method: GET
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=34569066%2C38490591&retmode=xml&tool=TEz
+  response:
+    body:
+      string: '<?xml version="1.0" ?>
+
+        <!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January
+        2025//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_250101.dtd">
+
+        <PubmedArticleSet>
+
+        <PubmedArticle><MedlineCitation Status="MEDLINE" Owner="NLM" IndexingMethod="Automated"><PMID
+        Version="1">34569066</PMID><DateCompleted><Year>2022</Year><Month>04</Month><Day>19</Day></DateCompleted><DateRevised><Year>2026</Year><Month>01</Month><Day>27</Day></DateRevised><Article
+        PubModel="Print-Electronic"><Journal><ISSN IssnType="Print">0144-6657</ISSN><JournalIssue
+        CitedMedium="Internet"><Volume>61</Volume><Issue>2</Issue><PubDate><Year>2022</Year><Month>Jun</Month></PubDate></JournalIssue><Title>The
+        British journal of clinical psychology</Title><ISOAbbreviation>Br J Clin Psychol</ISOAbbreviation></Journal><ArticleTitle>Global
+        prevalence of depression and elevated depressive symptoms among adolescents:
+        A systematic review and meta-analysis.</ArticleTitle><Pagination><StartPage>287</StartPage><EndPage>305</EndPage><MedlinePgn>287-305</MedlinePgn></Pagination><ELocationID
+        EIdType="doi" ValidYN="Y">10.1111/bjc.12333</ELocationID><Abstract><AbstractText
+        Label="OBJECTIVE" NlmCategory="OBJECTIVE">Adolescence is a formative and turbulent
+        phase where physiological, psychosocial, and cognitive changes leave adolescents
+        vulnerable to psychological disorders. Given the lack of reviews that consolidate
+        and compare worldwide prevalence of depression among adolescents, this review
+        aims to examine the global prevalence of major depressive disorders, dysthymia,
+        and elevated depressive symptoms among adolescents.</AbstractText><AbstractText
+        Label="METHODS" NlmCategory="METHODS">A systematic review and meta-analysis
+        was conducted. Six databases were searched for studies published from 2001
+        to December 2020. Seventy-two studies were included. Subgroup analysis were
+        performed for year of publication, geographical region, gender, and assessment
+        tools used.</AbstractText><AbstractText Label="RESULTS" NlmCategory="RESULTS">The
+        global point prevalence rate of elevated self-reported depressive symptoms
+        from 2001 to 2020 was 34% (95% CI: 0.30-0.38). Point prevalence for major
+        depressive disorder (MDD) and dysthymia was 8% (95% CI: 0.02-0.13) and 4%
+        (95% CI: 0.01-0.07), respectively. The pooled one-year prevalence and lifetime
+        prevalence for MDD were 8% (95% CI: 0.05-0.12) and 19% (95% CI: 0.12-0.26).
+        Point prevalence of elevated depressive symptoms among adolescents increased
+        from 24% (95% CI: 0.19-0.28) between 2001 and 2010 to 37% (95% CI: 0.32-0.42)
+        between 2011 and 2020. The Middle East, Africa, and Asia have the highest
+        prevalence of elevated depressive symptoms, and female adolescents were reported
+        to have a higher prevalence of elevated depressive symptoms than male adolescents.</AbstractText><AbstractText
+        Label="CONCLUSION" NlmCategory="CONCLUSIONS">Besides targeting those with
+        existing clinical depression, research and policies should also focus on educational
+        and supportive mitigation efforts to curb depressive symptoms among adolescents
+        before escalation. The findings encourage future research to develop more
+        gender-specific and culturally relevant intervention programmes.</AbstractText><AbstractText
+        Label="PRACTITIONER POINTS" NlmCategory="CONCLUSIONS">34% of adolescents globally,
+        aged 10-19&#x2009;years, are at risk of developing clinical depression, which
+        exceeds the reported estimates of individuals aged 18 to 25&#x2009;years.
+        Practitioners are highly encouraged to prioritize depression screening and
+        intervention implementation for individuals in this age group. Female adolescents
+        and adolescents from Middle East, Africa, and Asia have the highest risk of
+        developing depression. This urges practitioners and researchers to develop
+        more gender-specific and culturally relevant intervention programmes.</AbstractText><CopyrightInformation>&#xa9;
+        2021 The British Psychological Society.</CopyrightInformation></Abstract><AuthorList
+        CompleteYN="Y"><Author ValidYN="Y"><LastName>Shorey</LastName><ForeName>Shefaly</ForeName><Initials>S</Initials><Identifier
+        Source="ORCID">0000-0001-5583-2814</Identifier><AffiliationInfo><Affiliation>Alice
+        Lee Centre for Nursing Studies, Yong Loo Lin School of Medicine, National
+        University of Singapore, Singapore.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Ng</LastName><ForeName>Esperanza Debby</ForeName><Initials>ED</Initials><AffiliationInfo><Affiliation>Alice
+        Lee Centre for Nursing Studies, Yong Loo Lin School of Medicine, National
+        University of Singapore, Singapore.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Wong</LastName><ForeName>Celine H J</ForeName><Initials>CHJ</Initials><AffiliationInfo><Affiliation>Department
+        of Psychological Medicine, National University Hospital, Singapore.</Affiliation></AffiliationInfo></Author></AuthorList><Language>eng</Language><PublicationTypeList><PublicationType
+        UI="D016428">Journal Article</PublicationType><PublicationType UI="D017418">Meta-Analysis</PublicationType><PublicationType
+        UI="D000078182">Systematic Review</PublicationType></PublicationTypeList><ArticleDate
+        DateType="Electronic"><Year>2021</Year><Month>09</Month><Day>26</Day></ArticleDate></Article><MedlineJournalInfo><Country>England</Country><MedlineTA>Br
+        J Clin Psychol</MedlineTA><NlmUniqueID>8105533</NlmUniqueID><ISSNLinking>0144-6657</ISSNLinking></MedlineJournalInfo><CitationSubset>IM</CitationSubset><MeshHeadingList><MeshHeading><DescriptorName
+        UI="D000293" MajorTopicYN="N">Adolescent</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D003863" MajorTopicYN="Y">Depression</DescriptorName><QualifierName UI="Q000175"
+        MajorTopicYN="N">diagnosis</QualifierName><QualifierName UI="Q000453" MajorTopicYN="N">epidemiology</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D003865" MajorTopicYN="Y">Major Depressive Disorder</DescriptorName><QualifierName
+        UI="Q000453" MajorTopicYN="N">epidemiology</QualifierName><QualifierName UI="Q000523"
+        MajorTopicYN="N">psychology</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D005260" MajorTopicYN="N">Female</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D006801" MajorTopicYN="N">Humans</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D008297" MajorTopicYN="N">Male</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D015995" MajorTopicYN="N">Prevalence</DescriptorName></MeshHeading></MeshHeadingList><KeywordList
+        Owner="NOTNLM"><Keyword MajorTopicYN="N">adolescent</Keyword><Keyword MajorTopicYN="N">depression</Keyword><Keyword
+        MajorTopicYN="N">depressive symptoms</Keyword><Keyword MajorTopicYN="N">prevalence</Keyword><Keyword
+        MajorTopicYN="N">review</Keyword></KeywordList></MedlineCitation><PubmedData><History><PubMedPubDate
+        PubStatus="revised"><Year>2021</Year><Month>8</Month><Day>2</Day></PubMedPubDate><PubMedPubDate
+        PubStatus="received"><Year>2021</Year><Month>1</Month><Day>1</Day></PubMedPubDate><PubMedPubDate
+        PubStatus="pubmed"><Year>2021</Year><Month>9</Month><Day>28</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="medline"><Year>2022</Year><Month>4</Month><Day>20</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="entrez"><Year>2021</Year><Month>9</Month><Day>27</Day><Hour>6</Hour><Minute>33</Minute></PubMedPubDate></History><PublicationStatus>ppublish</PublicationStatus><ArticleIdList><ArticleId
+        IdType="pubmed">34569066</ArticleId><ArticleId IdType="doi">10.1111/bjc.12333</ArticleId></ArticleIdList><ReferenceList><Title>References</Title><Reference><Citation>Andrade,
+        L., Caraveo-anduaga, J. J., Berglund, P., Bijl, R. V., Graaf, R. D., Vollebergh,
+        W., &#x2026; Wittchen, H.-U. (2003). The epidemiology of major depressive
+        episodes: results from the International Consortium of Psychiatric Epidemiology
+        (ICPE) Surveys. International Journal of Methods in Psychiatric Research,
+        12, 3-21. https://doi.org/10.1002/mpr.138</Citation></Reference><Reference><Citation>Arnove,
+        R. F. (2013). Comparative education: The dialectic of the global and the local.
+        Washington, DC: Rowman &amp; Littlefield.</Citation></Reference><Reference><Citation>American
+        Psychiatric Association (2013). Diagnostic and statistical manual of mental
+        disorders, 5th edn. Washington, DC: American Psychiatric Association</Citation></Reference><Reference><Citation>Avenevoli,
+        S. P., Swendsen, J. P., He, J.-P.-M.-S., Burstein, M. P., &amp; Merikangas,
+        K. R. P. (2015). Major depression in the national comorbidity survey-adolescent
+        supplement: prevalence, correlates, and treatment. Journal of the American
+        Academy of Child and Adolescent Psychiatry, 54, 37-44.e32. https://doi.org/10.1016/j.jaac.2014.10.010</Citation></Reference><Reference><Citation>Baxter,
+        A. J., Patton, G., Scott, K. M., Degenhardt, L., &amp; Whiteford, H. A. (2013).
+        Global epidemiology of mental disorders: what are we missing? PLoS One, 8,
+        e65514. https://doi.org/10.1371/journal.pone.0065514</Citation></Reference><Reference><Citation>Bernaras,
+        E., Jaureguizar, J., &amp; Garaigordobil, M. (2019). Child and adolescent
+        depression: a review of theories, evaluation instruments, prevention programs,
+        and treatments. Frontiers in Psychology, 10, 543. https://doi.org/10.3389/fpsyg.2019.00543</Citation></Reference><Reference><Citation>Brooks,
+        T. L., Harris, S. K., Thrall, J. S., &amp; Woods, E. R. (2002). Association
+        of adolescent risk behaviors with mental health symptoms in high school students.
+        Journal of Adolescent Health, 31, 240-246. https://doi.org/10.1016/S1054-139X(02)00385-3</Citation></Reference><Reference><Citation>Chentsova-Dutton,
+        Y. E., Ryder, A. G., &amp; Tsai, J. (2014). Understanding depression across
+        cultural contexts.</Citation></Reference><Reference><Citation>Chiao, J. Y.,
+        &amp; Blizinsky, K. D. (2010). Culture-gene coevolution of individualism-collectivism
+        and the serotonin transporter gene. Proceedings of the Royal Society. B, Biological
+        Sciences, 277, 529-537. https://doi.org/10.1098/rspb.2009.1650</Citation></Reference><Reference><Citation>Clayborne,
+        Z. M., Varin, M., &amp; Colman, I. (2019). Systematic review and meta-analysis:
+        Adolescent depression and long-term psychosocial outcomes. Journal of the
+        American Academy of Child and Adolescent Psychiatry, 58, 72-79. https://doi.org/10.1016/j.jaac.2018.07.896</Citation></Reference><Reference><Citation>Costello,
+        J. E., Erkanli, A., &amp; Angold, A. (2006). Is there an epidemic of child
+        or adolescent depression? Journal of Child Psychology and Psychiatry, 47,
+        1263-1271. https://doi.org/10.1111/j.1469-7610.2006.01682.x</Citation></Reference><Reference><Citation>Cuttilan,
+        A. N., Sayampanathan, A. A., &amp; Ho, R.-C.-M. (2016). Mental health issues
+        amongst medical students in Asia: a systematic review [2000-2015]. Annals
+        of Translational Medicine, 4, 72. https://doi.org/10.3978/j.issn.2305-5839.2016.02.07</Citation></Reference><Reference><Citation>Dachew,
+        B. A., Bifftu, B. B., Tiruneh, B. T., Anlay, D. Z., &amp; Wassie, M. A. (2019).
+        Prevalence of mental distress and associated factors among university students
+        in Ethiopia: a meta-analysis. Journal of Mental Health, 1-8. https://doi.org/10.1080/09638237.2019.1630717</Citation></Reference><Reference><Citation>Fatiregun,
+        A. A., &amp; Kumapayi, T. E. (2013). Prevalence and correlates of depressive
+        symptoms among in-school adolescents in a rural district in southwest Nigeria.
+        Journal of Adolescence, 37, 197-203. https://doi.org/10.1016/j.adolescence.2013.12.003</Citation></Reference><Reference><Citation>Fergusson,
+        D. M., Boden, J. M., &amp; Horwood, L. J. (2007). Recurrence of major depression
+        in adolescence and early adulthood, and later mental health, educational and
+        economic outcomes. British Journal of Psychiatry, 191, 335-342. https://doi.org/10.1192/bjp.bp.107.036079</Citation></Reference><Reference><Citation>Ferrari,
+        A. J., Charlson, F. J., Norman, R. E., Flaxman, A. D., Patten, S. B., Vos,
+        T., &amp; Whiteford, H. A. (2013). The epidemiological modelling of major
+        depressive disorder: application for the Global Burden of Disease Study 2010.
+        PLoS One, 8, e69637. https://doi.org/10.1371/journal.pone.0069637</Citation></Reference><Reference><Citation>Ferrari,
+        A. J., Charlson, F. J., Norman, R. E., Patten, S. B., Freedman, G., Murray,
+        C. J. L., &#x2026; Whiteford, H. A. (2013). Burden of depressive disorders
+        by country, sex, age, and year: findings from the global burden of disease
+        study 2010. PLoS Medicine, 10, e1001547. https://doi.org/10.1371/journal.pmed.1001547</Citation></Reference><Reference><Citation>Gilmore,
+        K., &amp; Meersand, P. (2019). Normal child and adolescent development: A
+        psychodynamic primer (p. 59). Washington, DC: American Psychiatric Publishing.</Citation></Reference><Reference><Citation>Gollan,
+        J., Raffety, B., Gortner, E., &amp; Dobson, K. (2005). Course profiles of
+        early- and adult-onset depression. Journal of Affective Disorders, 86, 81-86.
+        https://doi.org/10.1016/j.jad.2004.12.009</Citation></Reference><Reference><Citation>Han,
+        B., &amp; Eskin, E. (2011). Random-effects model aimed at discovering associations
+        in meta-analysis of genome-wide association studies. American Journal of Human
+        Genetics, 88, 586-598. https://doi.org/10.1016/j.ajhg.2011.04.014</Citation></Reference><Reference><Citation>Hankin,
+        B. L., &amp; Abramson, L. Y. (2001). Development of gender differences in
+        depression: an elaborated cognitive vulnerability-transactional stress theory.
+        Psychological Bulletin, 127, 773-796. https://doi.org/10.1037/0033-2909.127.6.773</Citation></Reference><Reference><Citation>Higgins,
+        J. P. T., Thompson, S. G., Deeks, J. J., &amp; Altman, D. G. (2003). Measuring
+        inconsistency in meta-analyses. BMJ, 327, 557-560. https://doi.org/10.1136/bmj.327.7414.557</Citation></Reference><Reference><Citation>Ibrahim,
+        A. K., Kelly, S. J., Adams, C. E., &amp; Glazebrook, C. (2012). A systematic
+        review of studies of depression prevalence in university students. Journal
+        of Psychiatric Research, 47, 391-400. https://doi.org/10.1016/j.jpsychires.2012.11.015</Citation></Reference><Reference><Citation>James,
+        S. L., Abate, D., Abate, K. H., Abay, S. M., Abbafati, C., Abbasi, N., &amp;
+        Murray, C. J. L. (2018). Global, regional, and national incidence, prevalence,
+        and years lived with disability for 354 diseases and injuries for 195 countries
+        and territories 2017: a systematic analysis for the Global Burden of Disease
+        Study 2017. The Lancet, 392, 1789-1858. https://doi.org/10.1016/S0140-6736(18)32279-7</Citation></Reference><Reference><Citation>Keenan-Miller,
+        D. M. A., Hammen, C. L. P. D., &amp; Brennan, P. A. P. D. (2007). Health outcomes
+        related to early adolescent depression. Journal of Adolescent Health, 41,
+        256-262. https://doi.org/10.1016/j.jadohealth.2007.03.015</Citation></Reference><Reference><Citation>Kessler,
+        R. C., Angermeyer, M., Anthony, J. C., De Graaf, R., Demyttenaere, K., Gasquet,
+        I., &amp; &#xdc;stun, T. B. (2007). Lifetime prevalence and age-of-onset distributions
+        of mental disorders in the World Health Organization''s World Mental Health
+        Survey Initiative. World Psychiatry, 6, 168-176.</Citation></Reference><Reference><Citation>Kessler,
+        R. C., &amp; Bromet, E. J. (2013). The epidemiology of depression across cultures.
+        Annual Review of Public Health, 34(1), 119-138. https://doi.org/10.1146/annurev-publhealth-031912-114409</Citation></Reference><Reference><Citation>Lambert,
+        S. D., Clover, K., Pallant, J. F., Britton, B., King, M. T., Mitchell, A.
+        J., &amp; Carter, G. (2015). Making sense of variations in prevalence estimates
+        of depression in cancer: A Co-calibration of commonly used depression scales
+        using rasch analysis. Journal of the National Comprehensive Cancer Network,
+        13, 1203-1211. https://doi.org/10.6004/jnccn.2015.0149</Citation></Reference><Reference><Citation>Latiff,
+        A. L., Tajik, E., Ibrahim, N., Abubakar, A. S., &amp; Ali, S. S. B. (2016).
+        Depression and its associated factors among secondary school students in Malaysia.
+        Southeast Asian Journal of Tropical Medicine and Public Health, 47, 131-141.</Citation></Reference><Reference><Citation>Lewinsohn,
+        P. M., Rohde, P., &amp; Seeley, J. R. (1998). Major depressive disorder in
+        older adolescents: Prevalence, risk factors, and clinical implications. Clinical
+        Psychology Review, 18, 765-794. https://doi.org/10.1016/S0272-7358(98)00010-5</Citation></Reference><Reference><Citation>Liberati,
+        A., Altman, D. G., Tetzlaff, J., Mulrow, C., G&#xf8;tzsche, P. C., Ioannidis,
+        J. P. A., &#x2026; Moher, D. (2009). The PRISMA statement for reporting systematic
+        reviews and meta-analyses of studies that evaluate health care interventions:
+        explanation and elaboration. PLoS Med, 6, e1000100. https://doi.org/10.1371/journal.pmed.1000100</Citation></Reference><Reference><Citation>Lin,
+        H. C., Tang, T. C., Yen, J. Y., Ko, C. H., Huang, C. F., Liu, S. C., &amp;
+        Yen, C. F. (2008). Depression and its association with self-esteem, family,
+        peer and school factors in a population of 9586 adolescents in southern Taiwan.
+        Psychiatry and Clinical Neurosciences, 62, 412-420. https://doi.org/10.1111/j.1440-1819.2008.01820.x</Citation></Reference><Reference><Citation>Liu,
+        Q., He, H., Yang, J., Feng, X., Zhao, F., &amp; Lyu, J. (2020). Changes in
+        the global burden of depression from 1990 to 2017: Findings from the Global
+        Burden of Disease study. Journal of Psychiatric Research, 126, 134-140. https://doi.org/10.1016/j.jpsychires.2019.08.002</Citation></Reference><Reference><Citation>Liu,
+        Y.-H., Chen, L., Su, Y.-A., Fang, Y.-R., Srisurapanont, M., Hong, J. P., &#x2026;
+        Si, T.-M. (2015). Is early-onset in major depression a predictor of specific
+        clinical features with more impaired social function? Chinese Medical Journal,
+        128, 811-815. https://doi.org/10.4103/0366-6999.152654</Citation></Reference><Reference><Citation>Magklara,
+        K., Bellos, S., Niakas, D., Stylianidis, S., Kolaitis, G., Mavreas, V., &amp;
+        Skapinakis, P. (2015). Depression in late adolescence: a cross-sectional study
+        in senior high schools in Greece. BMC Psychiatry, 15(1), 199. https://doi.org/10.1186/s12888-015-0584-9</Citation></Reference><Reference><Citation>Mullen,
+        S. (2018). Major depressive disorder in children and adolescents. The Mental
+        Health Clinician, 8, 275-283. https://doi.org/10.9740/mhc.2018.11.275</Citation></Reference><Reference><Citation>Munn,
+        Z., Moola, S., Lisy, K., Riitano, D., &amp; Tufanaru, C. (2015). Methodological
+        guidance for systematic reviews of observational epidemiological studies reporting
+        prevalence and cumulative incidence data. International Journal of evidence-based
+        Healthcare, 13, 147-153. https://doi.org/10.1097/XEB.0000000000000054</Citation></Reference><Reference><Citation>Nalugya-Sserunjogi,
+        J., Rukundo, G. Z., Ovuga, E., Kiwuwa, S. M., Musisi, S., &amp; Nakimuli-Mpungu,
+        E. (2016). Prevalence and factors associated with depression symptoms among
+        school-going adolescents in Central Uganda. Child and Adolescent Psychiatry
+        and Mental Health, 10(1), 39. https://doi.org/10.1186/s13034-016-0133-4</Citation></Reference><Reference><Citation>National
+        Institute of Mental Health (2017). What is prevalence?. Retrieved from https://www.nimh.nih.gov/health/statistics/what-is-prevalence</Citation></Reference><Reference><Citation>National
+        Institute of Mental Health (2019). Major depression. Retrieved from https://www.nimh.nih.gov/health/statistics/major-depression</Citation></Reference><Reference><Citation>Nguyen
+        Thi Khanh, H., Nguyen Thanh, L., Pham Quoc, T., Pham Viet, C., Duong Minh,
+        D., &amp; Le Thi Kim, A. (2020). Suicidal behaviors and depression &#x201c;among
+        adolescents in Hanoi, Vietnam: A multilevel analysis of data from the Youth
+        Risk Behavior Survey 2019. Health Psychology Open, 7, 205510292095471. https://doi.org/10.1177/2055102920954711</Citation></Reference><Reference><Citation>Nihalani,
+        N., Simionescu, M. &amp; Dunlop, B. (2009). Depression: phenomenology, epidemiology,
+        and pathophysiology. In: T. L. Schwartz &amp; T. Peterson (eds), Depression,
+        Treatment and Strategies Management, 1-21. Boca Raton, FL: CRC Press.</Citation></Reference><Reference><Citation>Nobile,
+        M., Cataldo, G. M., Marino, C., &amp; Molteni, M. (2003). Diagnosis and treatment
+        of dysthymia in children and adolescents. CNS Drugs, 17, 927-946.</Citation></Reference><Reference><Citation>Nolen-Hoeksema,
+        S., &amp; Girgus, J. S. (1994). The emergence of gender differences in depression
+        during adolescence. Psychological Bulletin, 115, 424-443. https://doi.org/10.1037/0033-2909.115.3.424</Citation></Reference><Reference><Citation>Ormel,
+        J., Raven, D., van Oort, F., Hartman, C. A., Reijneveld, S. A., Veenstra,
+        R., &#x2026; Oldehinkel, A. J. (2015). Mental health in Dutch adolescents:
+        a TRAILS report on prevalence, severity, age of onset, continuity and co-morbidity
+        of DSM disorders. Psychological Medicine, 45, 345-360. https://doi.org/10.1017/S0033291714001469</Citation></Reference><Reference><Citation>Pacheco,
+        J. P., Giacomin, H. T., Tam, W. W., Ribeiro, T. B., Arab, C., Bezerra, I.
+        M., &amp; Pinasco, G. C. (2017). Mental health problems among medical students
+        in Brazil: a systematic review and meta-analysis. Revista Brasileira De Psiquiatria,
+        39, 369-378. https://doi.org/10.1590/1516-4446-2017-2223</Citation></Reference><Reference><Citation>Polanczyk,
+        G. V., Salum, G. A., Sugaya, L. S., Caye, A., &amp; Rohde, L. A. (2015). Annual
+        Research Review: A meta-analysis of the worldwide prevalence of mental disorders
+        in children and adolescents. Journal of Child Psychology and Psychiatry, 56,
+        345-365. https://doi.org/10.1111/jcpp.12381</Citation></Reference><Reference><Citation>Ritchie,
+        H., &amp; Roser, M. (2018). Mental health. Retrieved from https://ourworldindata.org/mental-health</Citation></Reference><Reference><Citation>Shaikh,
+        B., Doke, P., &amp; Gothankar, J. (2018). Depression, anxiety, stress, and
+        stressors among rural adolescents studying in Pune and a rural block of Nanded
+        district of Maharashtra. India. Indian Journal of Public Health, 62, 311-314.
+        https://doi.org/10.4103/ijph.IJPH_174_17</Citation></Reference><Reference><Citation>Stein,
+        Z. (1981). Why is it useful to measure incidence and prevalence? International
+        Journal of Mental Health, 10, 14-22. http://www.jstor.org.libproxy1.nus.edu.sg/stable/41344226</Citation></Reference><Reference><Citation>Stewart,
+        S. M., Kennard, B. D., Lee, P. W. H., Hughes, C. W., Mayes, T. L., Emslie,
+        G. J., &amp; Lewinsohn, P. M. (2004). A cross-cultural investigation of cognitions
+        and depressive symptoms in adolescents. Journal of Abnormal Psychology, 113,
+        248-257. https://doi.org/10.1037/0021-843X.113.2.248</Citation></Reference><Reference><Citation>Sund,
+        A. M., Larsson, B., &amp; Wichstr&#xf8;m, L. (2011). Prevalence and characteristics
+        of depressive disorders in early adolescents in central Norway. Child and
+        Adolescent Psychiatry and Mental Health, 5(1), 28. https://doi.org/10.1186/1753-2000-5-28</Citation></Reference><Reference><Citation>Tam,
+        W., Lo, K., &amp; Pacheco, J. (2019). Prevalence of depressive symptoms among
+        medical students: overview of systematic reviews. Medical Education, 53, 345-354.
+        https://doi.org/10.1111/medu.13770</Citation></Reference><Reference><Citation>Twenge,
+        J. M., Cooper, A. B., Joiner, T. E., Duffy, M. E., &amp; Binau, S. G. (2019).
+        Age, period, and cohort trends in mood disorder indicators and suicide-related
+        outcomes in a nationally representative dataset, 2005-2017. Journal of Abnormal
+        Psychology, 128, 185-199. https://doi.org/10.1037/abn0000410</Citation></Reference><Reference><Citation>Vaughan,
+        C. A., &amp; Halpern, C. T. (2010). Gender differences in depressive symptoms
+        during adolescence: the contributions of weight-related concerns and behaviors.
+        Journal of Research on Adolescence, 20, 389-419. https://doi.org/10.1111/j.1532-7795.2010.00646.x</Citation></Reference><Reference><Citation>Vos,
+        T., Allen, C., Arora, M., Barber, R. M., Bhutta, Z. A., Brown, A., &#x2026;
+        Murray, C. J. L. (2016). Global, regional, and national incidence, prevalence,
+        and years lived with disability for 310 diseases and injuries, 1990-2015:
+        a systematic analysis for the Global Burden of Disease Study 2015. The Lancet,
+        388, 1545-1602. https://doi.org/10.1016/S0140-6736(16)31678-6</Citation></Reference><Reference><Citation>Weeks,
+        A., Swerissen, H., &amp; Belfrage, J. (2007). Issues, challenges, and solutions
+        in translating study instruments. Evaluation Review, 31(2), 153-165. https://doi.org/10.1177/0193841X06294184</Citation></Reference><Reference><Citation>Weissman,
+        M. M., Wolk, S., Goldstein, R. B., Moreau, D., Adams, P., Greenwald, S., &#x2026;
+        Wickramaratne, P. (1999). Depressed adolescents grown up. JAMA : the Journal
+        of the American Medical Association, 281, 1707-1713. https://doi.org/10.1001/jama.281.18.1707</Citation></Reference><Reference><Citation>Wickersham,
+        A., Sugg, H. V. R., Epstein, S., Stewart, R., Ford, T., &amp; Downs, J. (2021).
+        Systematic review and meta-analysis: the association between child and adolescent
+        depression and later educational attainment. Journal of the American Academy
+        of Child and Adolescent Psychiatry, 60, 105-118. https://doi.org/10.1016/j.jaac.2020.10.008</Citation></Reference><Reference><Citation>Williamson,
+        D. E., Birmaher, B., Frank, E., Anderson, B. P., Matty, M. K., &amp; Kupfer,
+        D. J. (1998). Nature of life events and difficulties in depressed adolescents.
+        Journal of the American Academy of Child and Adolescent Psychiatry, 37, 1049-1057.
+        https://doi.org/10.1097/00004583-199810000-00015</Citation></Reference><Reference><Citation>World
+        Health Organisation (2018). Adolescent mental health. Retrieved from https://www.who.int/news-room/fact-sheets/detail/adolescent-mental-health</Citation></Reference><Reference><Citation>World
+        Health Organisation (2019). Adolescent health and development. Retrieved from
+        http://www.searo.who.int/entity/child_adolescent/topics/adolescent_health/en/</Citation></Reference><Reference><Citation>Yuen,
+        W. W. Y., Liu, L. L., &amp; Tse, S. (2019). Adolescent mental health problems
+        in Hong Kong: A critical review on prevalence, psychosocial correlates, and
+        prevention. Journal of Adolescent Health, 64, S73-S85. https://doi.org/10.1016/j.jadohealth.2018.10.005</Citation></Reference><Reference><Citation>Zarafshan,
+        H., Mohammadi, M.-R., &amp; Salmanian, M. (2015). Prevalence of anxiety disorders
+        among children and adolescents in Iran: a systematic review. Iranian Journal
+        of Psychiatry, 10(1), 1-7.</Citation></Reference><Reference><Citation>Zisook,
+        S., John Rush, A., Albala, A., Alpert, J., Balasubramani, G. K., Fava, M.,
+        &#x2026; Wisniewski, S. (2004). Factors that differentiate early vs. later
+        onset of major depression disorder. Psychiatry Research, 129, 127-140. https://doi.org/10.1016/j.psychres.2004.07.004</Citation></Reference></ReferenceList></PubmedData></PubmedArticle><PubmedArticle><MedlineCitation
+        Status="MEDLINE" Owner="NLM" IndexingMethod="Curated"><PMID Version="1">38490591</PMID><DateCompleted><Year>2024</Year><Month>08</Month><Day>07</Day></DateCompleted><DateRevised><Year>2026</Year><Month>01</Month><Day>27</Day></DateRevised><Article
+        PubModel="Print-Electronic"><Journal><ISSN IssnType="Electronic">1573-2517</ISSN><JournalIssue
+        CitedMedium="Internet"><Volume>354</Volume><PubDate><Year>2024</Year><Month>Jun</Month><Day>01</Day></PubDate></JournalIssue><Title>Journal
+        of affective disorders</Title><ISOAbbreviation>J Affect Disord</ISOAbbreviation></Journal><ArticleTitle>Global
+        burden of depression or depressive symptoms in children and adolescents: A
+        systematic review and meta-analysis.</ArticleTitle><Pagination><StartPage>553</StartPage><EndPage>562</EndPage><MedlinePgn>553-562</MedlinePgn></Pagination><ELocationID
+        EIdType="doi" ValidYN="Y">10.1016/j.jad.2024.03.074</ELocationID><ELocationID
+        EIdType="pii" ValidYN="Y">S0165-0327(24)00489-0</ELocationID><Abstract><AbstractText
+        Label="BACKGROUND">Depression is the leading cause of health-related disability.
+        A proportion of depression cases begin in childhood and increase dramatically
+        during adolescence. This systematic review and meta-analysis aimed to estimate
+        the global prevalence of depression or depressive symptoms in children and
+        adolescents and explore the temporal and regional distribution of depression
+        or depressive symptoms.</AbstractText><AbstractText Label="METHODS">This systematic
+        review and meta-analysis identified peer-reviewed literature published through
+        April 8, 2023, using the MEDLINE, Embase and APA PsycINFO databases, supplemented
+        by reverse reference searches. Observational studies published in English
+        and based on validated instruments with prevalence data on depression or depressive
+        symptoms in children and adolescents aged &#x2264;18&#xa0;years were eligible.
+        Random-effects meta-analysis and meta-regression analysis were performed using
+        R software.</AbstractText><AbstractText Label="RESULTS">This systematic review
+        and meta-analysis included a total of 96 studies (29 countries, 528,293 participants)
+        published between 1989 and 2022. The pooled prevalence of mild-to-severe,
+        moderate-to-severe, and major depression were 21.3&#xa0;% (95%CI, 16.7&#xa0;%-26.7&#xa0;%),
+        18.9&#xa0;% (95%CI, 14.6&#xa0;%-24.2&#xa0;%), and 3.7&#xa0;% (95%CI, 2.7&#xa0;%-5.1&#xa0;%)
+        respectively. Meta-regression analysis showed that from 1989 to 2022, the
+        prevalence of mild-to-severe and moderate-to-severe depression increased over
+        time (P&#xa0;=&#xa0;0.002, P&#xa0;=&#xa0;0.034, respectively), but the prevalence
+        of major depression did not change significantly (P&#xa0;=&#xa0;0.636).</AbstractText><AbstractText
+        Label="LIMITATIONS">Only English articles were included. There was significant
+        heterogeneity across the included studies. The studies included were mostly
+        based on self-report scales to assess depressive symptoms.</AbstractText><AbstractText
+        Label="CONCLUSION">In this systematic review, about one in five children and
+        adolescents globally suffered from depression or had depressive symptoms,
+        and this proportion was increasing over time.</AbstractText><CopyrightInformation>Copyright
+        &#xa9; 2024 Elsevier B.V. All rights reserved.</CopyrightInformation></Abstract><AuthorList
+        CompleteYN="Y"><Author ValidYN="Y"><LastName>Lu</LastName><ForeName>Bingqing</ForeName><Initials>B</Initials><AffiliationInfo><Affiliation>Hospital
+        of Chengdu University of Traditional Chinese Medicine, Chengdu 610075, China.
+        Electronic address: lubingqing2018@163.com.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Lin</LastName><ForeName>Lixia</ForeName><Initials>L</Initials><AffiliationInfo><Affiliation>School
+        of Physical Education and Health, Hubei University of Chinese Medicine, Wuhan
+        430065, China.</Affiliation></AffiliationInfo></Author><Author ValidYN="Y"><LastName>Su</LastName><ForeName>Xiaojuan</ForeName><Initials>X</Initials><AffiliationInfo><Affiliation>Chengdu
+        University of Traditional Chinese Medicine, Chengdu 610075, China.</Affiliation></AffiliationInfo></Author></AuthorList><Language>eng</Language><PublicationTypeList><PublicationType
+        UI="D017418">Meta-Analysis</PublicationType><PublicationType UI="D000078182">Systematic
+        Review</PublicationType><PublicationType UI="D016428">Journal Article</PublicationType></PublicationTypeList><ArticleDate
+        DateType="Electronic"><Year>2024</Year><Month>03</Month><Day>14</Day></ArticleDate></Article><MedlineJournalInfo><Country>Netherlands</Country><MedlineTA>J
+        Affect Disord</MedlineTA><NlmUniqueID>7906073</NlmUniqueID><ISSNLinking>0165-0327</ISSNLinking></MedlineJournalInfo><MeshHeadingList><MeshHeading><DescriptorName
+        UI="D006801" MajorTopicYN="N">Humans</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D002648" MajorTopicYN="N">Child</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000293" MajorTopicYN="N">Adolescent</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D003863" MajorTopicYN="Y">Depression</DescriptorName><QualifierName UI="Q000453"
+        MajorTopicYN="N">epidemiology</QualifierName><QualifierName UI="Q000523" MajorTopicYN="N">psychology</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D015995" MajorTopicYN="N">Prevalence</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D014943" MajorTopicYN="N">Global Health</DescriptorName><QualifierName
+        UI="Q000706" MajorTopicYN="N">statistics &amp; numerical data</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D008297" MajorTopicYN="N">Male</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D005260" MajorTopicYN="N">Female</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D003865" MajorTopicYN="N">Major Depressive Disorder</DescriptorName><QualifierName
+        UI="Q000453" MajorTopicYN="N">epidemiology</QualifierName><QualifierName UI="Q000523"
+        MajorTopicYN="N">psychology</QualifierName></MeshHeading></MeshHeadingList><KeywordList
+        Owner="NOTNLM"><Keyword MajorTopicYN="N">Adolescents</Keyword><Keyword MajorTopicYN="N">Children</Keyword><Keyword
+        MajorTopicYN="N">Depression</Keyword><Keyword MajorTopicYN="N">Meta-analysis</Keyword><Keyword
+        MajorTopicYN="N">Systematic review</Keyword></KeywordList><CoiStatement>Declaration
+        of competing interest The authors declare that they have no conflict of interest.</CoiStatement></MedlineCitation><PubmedData><History><PubMedPubDate
+        PubStatus="received"><Year>2023</Year><Month>12</Month><Day>24</Day></PubMedPubDate><PubMedPubDate
+        PubStatus="revised"><Year>2024</Year><Month>3</Month><Day>6</Day></PubMedPubDate><PubMedPubDate
+        PubStatus="accepted"><Year>2024</Year><Month>3</Month><Day>10</Day></PubMedPubDate><PubMedPubDate
+        PubStatus="medline"><Year>2024</Year><Month>4</Month><Day>15</Day><Hour>6</Hour><Minute>43</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="pubmed"><Year>2024</Year><Month>3</Month><Day>16</Day><Hour>5</Hour><Minute>42</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="entrez"><Year>2024</Year><Month>3</Month><Day>15</Day><Hour>20</Hour><Minute>33</Minute></PubMedPubDate></History><PublicationStatus>ppublish</PublicationStatus><ArticleIdList><ArticleId
+        IdType="pubmed">38490591</ArticleId><ArticleId IdType="doi">10.1016/j.jad.2024.03.074</ArticleId><ArticleId
+        IdType="pii">S0165-0327(24)00489-0</ArticleId></ArticleIdList></PubmedData></PubmedArticle></PubmedArticleSet>'
+    headers:
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - X-RateLimit-Limit,X-RateLimit-Remaining
+      alt-svc:
+      - clear
+      cache-control:
+      - private
+      content-length:
+      - '34274'
+      content-security-policy:
+      - upgrade-insecure-requests
+      content-type:
+      - text/xml; charset=UTF-8
+      date:
+      - Sun, 15 Nov 2026 14:10:54 GMT
+      ncbi-phid:
+      - 1D32D4B8F5A882C50000488C42AC2461.1.1.m_6
+      ncbi-sid:
+      - 3F30D53BD2A32616_0F1ASID
+      referrer-policy:
+      - origin-when-cross-origin
+      server:
+      - Finatra
+      set-cookie:
+      - ncbi_sid=3F30D53BD2A32616_0F1ASID; domain=.nih.gov; path=/; expires=Mon, 15
+        Nov 2027 14:10:55 GMT
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      via:
+      - 1.1 google
+      x-ratelimit-limit:
+      - '3'
+      x-ratelimit-remaining:
+      - '1'
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - eutils.ncbi.nlm.nih.gov
+    method: GET
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmax=1&retmode=json&retstart=2&sort=relevance&term=depression+AND+adolescents&tool=TEz
+  response:
+    body:
+      string: '{"header":{"type":"esearch","version":"0.3"},"esearchresult":{"count":"114769","retmax":"1","retstart":"2","idlist":["11126856"],"translationset":[{"from":"depression","to":"\"depressed\"[All
+        Fields] OR \"depression\"[MeSH Terms] OR \"depression\"[All Fields] OR \"depressions\"[All
+        Fields] OR \"depression''s\"[All Fields] OR \"depressive disorder\"[MeSH Terms]
+        OR (\"depressive\"[All Fields] AND \"disorder\"[All Fields]) OR \"depressive
+        disorder\"[All Fields] OR \"depressivity\"[All Fields] OR \"depressive\"[All
+        Fields] OR \"depressively\"[All Fields] OR \"depressiveness\"[All Fields]
+        OR \"depressives\"[All Fields]"},{"from":"adolescents","to":"\"adolescences\"[All
+        Fields] OR \"adolescency\"[All Fields] OR \"adolescent\"[MeSH Terms] OR \"adolescent\"[All
+        Fields] OR \"adolescence\"[All Fields] OR \"adolescents\"[All Fields] OR \"adolescent''s\"[All
+        Fields]"}],"querytranslation":"(\"depressed\"[All Fields] OR \"depression\"[MeSH
+        Terms] OR \"depression\"[All Fields] OR \"depressions\"[All Fields] OR \"depression
+        s\"[All Fields] OR \"depressive disorder\"[MeSH Terms] OR (\"depressive\"[All
+        Fields] AND \"disorder\"[All Fields]) OR \"depressive disorder\"[All Fields]
+        OR \"depressivity\"[All Fields] OR \"depressive\"[All Fields] OR \"depressively\"[All
+        Fields] OR \"depressiveness\"[All Fields] OR \"depressives\"[All Fields])
+        AND (\"adolescences\"[All Fields] OR \"adolescency\"[All Fields] OR \"adolescent\"[MeSH
+        Terms] OR \"adolescent\"[All Fields] OR \"adolescence\"[All Fields] OR \"adolescents\"[All
+        Fields] OR \"adolescent s\"[All Fields])"}}
+
+        '
+    headers:
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - X-RateLimit-Limit,X-RateLimit-Remaining
+      alt-svc:
+      - clear
+      cache-control:
+      - private
+      content-length:
+      - '1560'
+      content-security-policy:
+      - upgrade-insecure-requests
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Sun, 15 Nov 2026 14:10:55 GMT
+      ncbi-phid:
+      - 1D32D4B8F5A882C500003C8C437D0A31.1.1.m_1
+      ncbi-sid:
+      - 3F30D53BD2A32616_0F1ASID
+      referrer-policy:
+      - origin-when-cross-origin
+      server:
+      - Finatra
+      set-cookie:
+      - ncbi_sid=3F30D53BD2A32616_0F1ASID; domain=.nih.gov; path=/; expires=Mon, 15
+        Nov 2027 14:10:55 GMT
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      via:
+      - 1.1 google
+      x-ratelimit-limit:
+      - '3'
+      x-ratelimit-remaining:
+      - '1'
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - eutils.ncbi.nlm.nih.gov
+    method: GET
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=11126856&retmode=xml&tool=TEz
+  response:
+    body:
+      string: '<?xml version="1.0" ?>
+
+        <!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January
+        2025//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_250101.dtd">
+
+        <PubmedArticleSet>
+
+        <PubmedArticle><MedlineCitation Status="MEDLINE" Owner="NLM" IndexingMethod="Manual"><PMID
+        Version="1">11126856</PMID><DateCompleted><Year>2001</Year><Month>01</Month><Day>11</Day></DateCompleted><DateRevised><Year>2026</Year><Month>01</Month><Day>28</Day></DateRevised><Article
+        PubModel="Print"><Journal><ISSN IssnType="Print">0002-838X</ISSN><JournalIssue
+        CitedMedium="Print"><Volume>62</Volume><Issue>10</Issue><PubDate><Year>2000</Year><Month>Nov</Month><Day>15</Day></PubDate></JournalIssue><Title>American
+        family physician</Title><ISOAbbreviation>Am Fam Physician</ISOAbbreviation></Journal><ArticleTitle>Depression
+        in children and adolescents.</ArticleTitle><Pagination><StartPage>2297</StartPage><EndPage>2312</EndPage><MedlinePgn>2297-308,
+        2311-2</MedlinePgn></Pagination><Abstract><AbstractText>Depression among children
+        and adolescents is common but frequently unrecognized. It affects 2 percent
+        of prepubertal children and 5 to 8 percent of adolescents. The clinical spectrum
+        of the disease can range from simple sadness to a major depressive or bipolar
+        disorder. Risk factors include a family history of depression and poor school
+        performance. Evaluation should include a complete medical assessment to rule
+        out underlying medical causes. A structured clinical interview and various
+        rating scales such as the Pediatric Symptom Checklist are helpful in determining
+        whether a child or adolescent is depressed. Evidence-based treatment guidelines
+        from the literature are limited. Psychotherapy appears to be useful in most
+        children and adolescents with mild to moderate depression. Tricyclic antidepressants
+        and selective serotonin reuptake inhibitors are medical therapies that have
+        been studied on a limited basis. The latter agents are better tolerated but
+        not necessarily more efficacious. Because the risk of school failure and suicide
+        is quite high in depressed children and adolescents, prompt referral or close
+        collaboration with a mental health professional is often necessary.</AbstractText></Abstract><AuthorList
+        CompleteYN="Y"><Author ValidYN="Y"><LastName>Son</LastName><ForeName>S E</ForeName><Initials>SE</Initials><AffiliationInfo><Affiliation>University
+        of Washington, Spokane, USA.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Kirchner</LastName><ForeName>J T</ForeName><Initials>JT</Initials></Author></AuthorList><Language>eng</Language><PublicationTypeList><PublicationType
+        UI="D016428">Journal Article</PublicationType><PublicationType UI="D013485">Research
+        Support, Non-U.S. Gov''t</PublicationType><PublicationType UI="D016454">Review</PublicationType></PublicationTypeList></Article><MedlineJournalInfo><Country>United
+        States</Country><MedlineTA>Am Fam Physician</MedlineTA><NlmUniqueID>1272646</NlmUniqueID><ISSNLinking>0002-838X</ISSNLinking></MedlineJournalInfo><ChemicalList><Chemical><RegistryNumber>0</RegistryNumber><NameOfSubstance
+        UI="D000928">Antidepressive Agents</NameOfSubstance></Chemical><Chemical><RegistryNumber>0</RegistryNumber><NameOfSubstance
+        UI="D000929">Antidepressive Agents, Tricyclic</NameOfSubstance></Chemical><Chemical><RegistryNumber>0</RegistryNumber><NameOfSubstance
+        UI="D017367">Selective Serotonin Reuptake Inhibitors</NameOfSubstance></Chemical></ChemicalList><CitationSubset>IM</CitationSubset><MeshHeadingList><MeshHeading><DescriptorName
+        UI="D000293" MajorTopicYN="N">Adolescent</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000928" MajorTopicYN="N">Antidepressive Agents</DescriptorName><QualifierName
+        UI="Q000008" MajorTopicYN="N">administration &amp; dosage</QualifierName><QualifierName
+        UI="Q000627" MajorTopicYN="Y">therapeutic use</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000929" MajorTopicYN="N">Antidepressive Agents, Tricyclic</DescriptorName><QualifierName
+        UI="Q000627" MajorTopicYN="N">therapeutic use</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D002648" MajorTopicYN="N">Child</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D003863" MajorTopicYN="Y">Depression</DescriptorName><QualifierName UI="Q000175"
+        MajorTopicYN="N">diagnosis</QualifierName><QualifierName UI="Q000188" MajorTopicYN="N">drug
+        therapy</QualifierName><QualifierName UI="Q000453" MajorTopicYN="N">epidemiology</QualifierName><QualifierName
+        UI="Q000209" MajorTopicYN="N">etiology</QualifierName><QualifierName UI="Q000523"
+        MajorTopicYN="N">psychology</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D003866" MajorTopicYN="Y">Depressive Disorder</DescriptorName><QualifierName
+        UI="Q000175" MajorTopicYN="N">diagnosis</QualifierName><QualifierName UI="Q000188"
+        MajorTopicYN="N">drug therapy</QualifierName><QualifierName UI="Q000453" MajorTopicYN="N">epidemiology</QualifierName><QualifierName
+        UI="Q000209" MajorTopicYN="N">etiology</QualifierName><QualifierName UI="Q000523"
+        MajorTopicYN="N">psychology</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D003937" MajorTopicYN="N">Diagnosis, Differential</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D005260" MajorTopicYN="N">Female</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D006801" MajorTopicYN="N">Humans</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D008297" MajorTopicYN="N">Male</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D010353" MajorTopicYN="N">Patient Education as Topic</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000297" MajorTopicYN="Y">Psychology, Adolescent</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D002666" MajorTopicYN="Y">Psychology, Child</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D012017" MajorTopicYN="N">Referral and Consultation</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D012307" MajorTopicYN="N">Risk Factors</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D017367" MajorTopicYN="N">Selective Serotonin Reuptake Inhibitors</DescriptorName><QualifierName
+        UI="Q000627" MajorTopicYN="N">therapeutic use</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D013664" MajorTopicYN="N">Teaching Materials</DescriptorName></MeshHeading></MeshHeadingList><NumberOfReferences>30</NumberOfReferences></MedlineCitation><PubmedData><History><PubMedPubDate
+        PubStatus="pubmed"><Year>2000</Year><Month>12</Month><Day>29</Day><Hour>11</Hour><Minute>0</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="medline"><Year>2001</Year><Month>2</Month><Day>28</Day><Hour>10</Hour><Minute>1</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="entrez"><Year>2000</Year><Month>12</Month><Day>29</Day><Hour>11</Hour><Minute>0</Minute></PubMedPubDate></History><PublicationStatus>ppublish</PublicationStatus><ArticleIdList><ArticleId
+        IdType="pubmed">11126856</ArticleId></ArticleIdList></PubmedData></PubmedArticle></PubmedArticleSet>'
+    headers:
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - X-RateLimit-Limit,X-RateLimit-Remaining
+      alt-svc:
+      - clear
+      cache-control:
+      - private
+      content-length:
+      - '7019'
+      content-security-policy:
+      - upgrade-insecure-requests
+      content-type:
+      - text/xml; charset=UTF-8
+      date:
+      - Sun, 15 Nov 2026 14:10:56 GMT
+      ncbi-phid:
+      - 1D32D4B8F5A882C500004C8C44B08EE6.1.1.m_6
+      ncbi-sid:
+      - 3F30D53BD2A32616_0F1ASID
+      referrer-policy:
+      - origin-when-cross-origin
+      server:
+      - Finatra
+      set-cookie:
+      - ncbi_sid=3F30D53BD2A32616_0F1ASID; domain=.nih.gov; path=/; expires=Mon, 15
+        Nov 2027 14:10:56 GMT
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      via:
+      - 1.1 google
+      x-ratelimit-limit:
+      - '3'
+      x-ratelimit-remaining:
+      - '1'
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

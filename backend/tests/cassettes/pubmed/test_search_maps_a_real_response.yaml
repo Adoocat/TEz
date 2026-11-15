@@ -1,0 +1,373 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - eutils.ncbi.nlm.nih.gov
+    method: GET
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?datetype=pdat&db=pubmed&maxdate=2024&mindate=2020&retmax=3&retmode=json&retstart=0&sort=relevance&term=%22Anxiety+Disorders%22%5BMeSH%5D+AND+adolescent+NOT+review&tool=TEz
+  response:
+    body:
+      string: '{"header":{"type":"esearch","version":"0.3"},"esearchresult":{"count":"3129","retmax":"3","retstart":"0","idlist":["38387131","34860682","38569151"],"translationset":[{"from":"adolescent","to":"\"adolescences\"[All
+        Fields] OR \"adolescency\"[All Fields] OR \"adolescent\"[MeSH Terms] OR \"adolescent\"[All
+        Fields] OR \"adolescence\"[All Fields] OR \"adolescents\"[All Fields] OR \"adolescent''s\"[All
+        Fields]"},{"from":"review","to":"\"review\"[Publication Type] OR \"review
+        literature as topic\"[MeSH Terms] OR \"review\"[All Fields]"}],"querytranslation":"((\"Anxiety
+        Disorders\"[MeSH Terms] AND (\"adolescences\"[All Fields] OR \"adolescency\"[All
+        Fields] OR \"adolescent\"[MeSH Terms] OR \"adolescent\"[All Fields] OR \"adolescence\"[All
+        Fields] OR \"adolescents\"[All Fields] OR \"adolescent s\"[All Fields])) NOT
+        (\"review\"[Publication Type] OR \"review literature as topic\"[MeSH Terms]
+        OR \"review\"[All Fields])) AND 2020/01/01:2024/12/31[Date - Publication]"}}
+
+        '
+    headers:
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - X-RateLimit-Limit,X-RateLimit-Remaining
+      alt-svc:
+      - clear
+      cache-control:
+      - private
+      content-length:
+      - '971'
+      content-security-policy:
+      - upgrade-insecure-requests
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Sun, 15 Nov 2026 14:11:28 GMT
+      ncbi-phid:
+      - 1D337183DCCFAC8500004196BB6C6A03.1.1.m_1
+      ncbi-sid:
+      - CAB889EB2D120FAD_77EESID
+      referrer-policy:
+      - origin-when-cross-origin
+      server:
+      - Finatra
+      set-cookie:
+      - ncbi_sid=CAB889EB2D120FAD_77EESID; domain=.nih.gov; path=/; expires=Mon, 15
+        Nov 2027 14:11:29 GMT
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      via:
+      - 1.1 google
+      x-ratelimit-limit:
+      - '3'
+      x-ratelimit-remaining:
+      - '2'
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - eutils.ncbi.nlm.nih.gov
+    method: GET
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=38387131%2C34860682%2C38569151&retmode=xml&tool=TEz
+  response:
+    body:
+      string: '<?xml version="1.0" ?>
+
+        <!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January
+        2025//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_250101.dtd">
+
+        <PubmedArticleSet>
+
+        <PubmedArticle><MedlineCitation Status="MEDLINE" Owner="NLM" IndexingMethod="Automated"><PMID
+        Version="1">38387131</PMID><DateCompleted><Year>2024</Year><Month>03</Month><Day>19</Day></DateCompleted><DateRevised><Year>2024</Year><Month>06</Month><Day>24</Day></DateRevised><Article
+        PubModel="Print-Electronic"><Journal><ISSN IssnType="Electronic">1873-6327</ISSN><JournalIssue
+        CitedMedium="Internet"><Volume>153</Volume><PubDate><Year>2024</Year><Month>Jun</Month></PubDate></JournalIssue><Title>Addictive
+        behaviors</Title><ISOAbbreviation>Addict Behav</ISOAbbreviation></Journal><ArticleTitle>Problematic
+        social media use in childhood and adolescence.</ArticleTitle><Pagination><StartPage>107980</StartPage><MedlinePgn>107980</MedlinePgn></Pagination><ELocationID
+        EIdType="doi" ValidYN="Y">10.1016/j.addbeh.2024.107980</ELocationID><ELocationID
+        EIdType="pii" ValidYN="Y">S0306-4603(24)00029-7</ELocationID><Abstract><AbstractText>At
+        the time of writing, about 4.59 billion people use social media with many
+        adolescents using their social media accounts across a myriad of applications
+        and platforms. According to recent statistics, in 2022 individuals spent an
+        average of 151 minutes on social media each day, illustrating the global relevance
+        of social media (Dixon, 2022a,b). One of the pressing questions, internationally,
+        is whether social media use is harmful and/or addictive. This question is
+        of particular importance because many teenagers - and younger adolescents
+        - spend considerable time on these platforms, which have increasingly become
+        an integral part of their lives. Moreover, considering lifespan development,
+        adolescents may be particularly vulnerable to specific features and advertisements
+        shown to them on social media platforms. Growing prevalence of poor mental
+        health in young people has led to recent recommendations in the United States
+        to routinely screen for anxiety in 8-18 year olds, and for depression and
+        suicide risk for adolescents between 12-18 years of age (US Preventive Services
+        Task Force et al., 2022 a,b) - the conditions often accompanying problematic
+        social media use. The present work not only provides insights into the current
+        state of the literature but provides also recommendations.</AbstractText><CopyrightInformation>Copyright
+        &#xa9; 2024 The Author(s). Published by Elsevier Ltd.. All rights reserved.</CopyrightInformation></Abstract><AuthorList
+        CompleteYN="Y"><Author ValidYN="Y"><LastName>Montag</LastName><ForeName>Christian</ForeName><Initials>C</Initials><AffiliationInfo><Affiliation>Department
+        of Molecular Psychology, Institute of Psychology and Education, Ulm University,
+        Ulm, Germany. Electronic address: mail@christianmontag.de.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Demetrovics</LastName><ForeName>Zsolt</ForeName><Initials>Z</Initials><AffiliationInfo><Affiliation>Institute
+        of Psychology, ELTE E&#xf6;tv&#xf6;s Lor&#xe1;nd University, Budapest, Hungary;
+        Centre of Excellence in Responsible Gaming, University of Gibraltar, Gibraltar.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Elhai</LastName><ForeName>Jon D</ForeName><Initials>JD</Initials><AffiliationInfo><Affiliation>Department
+        of Psychology, University of Toledo, Toledo, OH, United States; Department
+        of Psychiatry, University of Toledo, Toledo, OH, United States.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Grant</LastName><ForeName>Don</ForeName><Initials>D</Initials><AffiliationInfo><Affiliation>Center
+        for Research and Innovation, Newport Healthcare, United States.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Koning</LastName><ForeName>Ina</ForeName><Initials>I</Initials><AffiliationInfo><Affiliation>Faculty
+        of Behavioural and Movement Sciences, Clinical Child and Family Studies, Vrije
+        Universiteit Amsterdam, the Netherlands.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Rumpf</LastName><ForeName>Hans-J&#xfc;rgen</ForeName><Initials>HJ</Initials><AffiliationInfo><Affiliation>Department
+        of Psychiatry and Psychotherapy, University of L&#xfc;beck, L&#xfc;beck, Germany.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>M Spada</LastName><ForeName>Marcantonio</ForeName><Initials>M</Initials><AffiliationInfo><Affiliation>School
+        of Applied Sciences, London South Bank University, London, UK.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Throuvala</LastName><ForeName>Melina</ForeName><Initials>M</Initials><AffiliationInfo><Affiliation>International
+        Gaming Research Unit, Department of Psychology, Nottingham Trent University,
+        Nottingham, UK; Inclusion West Midlands Gambling Harms Clinic, Stafford, UK;
+        Leicestershire Partnership NHS Trust, Paediatric Psychology, Child and Adolescent
+        Mental Health Services, Leicester, UK.</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>van den Eijnden</LastName><ForeName>Regina</ForeName><Initials>R</Initials><AffiliationInfo><Affiliation>Department
+        of Interdisciplinary Social Science, Utrecht University, Utrecht, the Netherlands.</Affiliation></AffiliationInfo></Author></AuthorList><Language>eng</Language><PublicationTypeList><PublicationType
+        UI="D016428">Journal Article</PublicationType></PublicationTypeList><ArticleDate
+        DateType="Electronic"><Year>2024</Year><Month>02</Month><Day>08</Day></ArticleDate></Article><MedlineJournalInfo><Country>England</Country><MedlineTA>Addict
+        Behav</MedlineTA><NlmUniqueID>7603486</NlmUniqueID><ISSNLinking>0306-4603</ISSNLinking></MedlineJournalInfo><CitationSubset>IM</CitationSubset><MeshHeadingList><MeshHeading><DescriptorName
+        UI="D006801" MajorTopicYN="N">Humans</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000293" MajorTopicYN="N">Adolescent</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D014481" MajorTopicYN="N" Type="Geographic">United States</DescriptorName><QualifierName
+        UI="Q000453" MajorTopicYN="N">epidemiology</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D061108" MajorTopicYN="Y">Social Media</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D001007" MajorTopicYN="N">Anxiety</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D016739" MajorTopicYN="Y">Behavior, Addictive</DescriptorName><QualifierName
+        UI="Q000453" MajorTopicYN="N">epidemiology</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D001008" MajorTopicYN="N">Anxiety Disorders</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D008603" MajorTopicYN="N">Mental Health</DescriptorName></MeshHeading></MeshHeadingList><KeywordList
+        Owner="NOTNLM"><Keyword MajorTopicYN="N">Adolescents</Keyword><Keyword MajorTopicYN="N">Children</Keyword><Keyword
+        MajorTopicYN="N">Problematic social media use</Keyword><Keyword MajorTopicYN="N">Social
+        media</Keyword><Keyword MajorTopicYN="N">Social media addiction</Keyword></KeywordList><CoiStatement>Declaration
+        of competing interest The authors declare that they have no known competing
+        financial interests or personal relationships that could have appeared to
+        influence the work reported in this paper.</CoiStatement></MedlineCitation><PubmedData><History><PubMedPubDate
+        PubStatus="received"><Year>2023</Year><Month>11</Month><Day>25</Day></PubMedPubDate><PubMedPubDate
+        PubStatus="revised"><Year>2024</Year><Month>1</Month><Day>23</Day></PubMedPubDate><PubMedPubDate
+        PubStatus="accepted"><Year>2024</Year><Month>2</Month><Day>5</Day></PubMedPubDate><PubMedPubDate
+        PubStatus="medline"><Year>2024</Year><Month>3</Month><Day>19</Day><Hour>6</Hour><Minute>44</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="pubmed"><Year>2024</Year><Month>2</Month><Day>23</Day><Hour>0</Hour><Minute>43</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="entrez"><Year>2024</Year><Month>2</Month><Day>22</Day><Hour>18</Hour><Minute>2</Minute></PubMedPubDate></History><PublicationStatus>ppublish</PublicationStatus><ArticleIdList><ArticleId
+        IdType="pubmed">38387131</ArticleId><ArticleId IdType="doi">10.1016/j.addbeh.2024.107980</ArticleId><ArticleId
+        IdType="pii">S0306-4603(24)00029-7</ArticleId></ArticleIdList></PubmedData></PubmedArticle><PubmedArticle><MedlineCitation
+        Status="MEDLINE" Owner="NLM" IndexingMethod="Automated"><PMID Version="1">34860682</PMID><DateCompleted><Year>2022</Year><Month>04</Month><Day>27</Day></DateCompleted><DateRevised><Year>2022</Year><Month>04</Month><Day>27</Day></DateRevised><Article
+        PubModel="Print-Electronic"><Journal><ISSN IssnType="Print">1105-2333</ISSN><JournalIssue
+        CitedMedium="Internet"><Volume>33</Volume><Issue>1</Issue><PubDate><Year>2022</Year><Month>Mar</Month><Day>28</Day></PubDate></JournalIssue><Title>Psychiatrike
+        = Psychiatriki</Title><ISOAbbreviation>Psychiatriki</ISOAbbreviation></Journal><ArticleTitle>The
+        effects of parental divorce on children.</ArticleTitle><Pagination><StartPage>81</StartPage><EndPage>82</EndPage><MedlinePgn>81-82</MedlinePgn></Pagination><ELocationID
+        EIdType="doi" ValidYN="Y">10.22365/jpsych.2021.040</ELocationID><Abstract><AbstractText>Family
+        is very important for development of children. Divorce is a life event with
+        a high level of stress for the entire family. Children are dependent on parents
+        and disadvantaged during divorce because it is out of their control.1 Herein,
+        we present our observations about children whose parents separated or divorced
+        to increase the awareness of physicians about the negative effects of divorce.
+        Individuals affected by parental divorce have a higher risk of developing
+        a variety of mental health conditions including emotional and behavioral disorders,
+        poor school performance, depression, anxiety, suicidal ideation, suicide attempt,
+        distress, smoking and substance abuse.2,3 Externalizing problems in girls
+        precede and predict later parental divorce. Post-divorce problems in children
+        vary by raters, and may depend on the time lapse since divorce.4 Lansford
+        et al 5 noted that early parental divorce/separation is more negatively related
+        to trajectories of internalizing and externalizing problems than is later
+        divorce/separation, whereas later divorce/separation is more negatively related
+        to grades. In another study, divorce in parents was significantly associated
+        with higher alcohol use disorder, higher cigarette dependence and higher water
+        pipe dependence in adolescents.6 In the study of Tullius et al 7 the levels
+        of both internalizing and externalizing problems were significantly higher
+        in the period after parental divorce, but not in the period before divorce,
+        with a persistent and increasing effect over the follow-up periods compared
+        to adolescents not experiencing divorce. Zeratsion et al 8 reported that parental
+        divorce in late adolescence does not lead to mental health problems, as has
+        been shown before, while such problems may prevail among young adolescents.
+        This does not mean that parental divorce creates less problems in late adolescence
+        than before but these youths might have developed adjustment abilities against
+        health effects as divorce have turned to be more common. In our clinical practice,
+        we have also observed various emotional, behavioral, psychosomatic, and conversion
+        disorders in children, particularly in preadolescents and adolescents, before
+        and/or after a separation or divorce of parents. Children often lack information
+        and skills to overcome the challenges that the divorce carries. Conflicting
+        relationships between parents make up the biggest obstacle that makes it difficult
+        for a child to successfully deal with changes in the family. Even though parents
+        deal with heavy feelings, it is desirable to put them the child and his interests
+        in the first place. In order to stabilize the family system, 2 to 4 years
+        are usually needed.1 Physicians can assist families by providing support and
+        advice, and advocating for children within systems that serve separating families.
+        Physicians can provide information so that individuals who work with such
+        children recognize, and are sensitive to, their individual needs, and provide
+        supportive and nurturing experiences for the children in schools, camps and
+        sporting activities. These efforts will promote better mental health outcomes
+        for children affected by their parents'' separation.9 The most important way
+        to minimize emotional harm to children involved in a separation and divorce
+        is to ensure that children maintain a close and secure relationship with both
+        parents, unless there is spousal or child abuse or neglect, or parental substance
+        abuse.9 Age-appropriate explanation and counseling for the child and advice
+        and guidance for the parents, as well as recommendation of reading material,
+        may help reduce the potential negative effects of divorce. Often, referral
+        to professionals with expertise in the social, emotional, and legal aspects
+        of the separation and its aftermath may be helpful for these families.10 An
+        example of paragraph from a reading material for parents is as follows: The
+        most comprehensive centre of man''s worldly life, and its mainspring, and
+        a paradise, refuge, and fortress of worldly happiness, is the life of the
+        family. Everyone''s home is a small world for him/her. And the life and happiness
+        of his/her home and family are possible through genuine, earnest, and loyal
+        respect and true, tender, and self-sacrificing compassion. This true respect
+        and genuine kindness may be achieved with the idea of the members of the family
+        having an everlasting companionship and friendship and togetherness, and their
+        parental, filial, brotherly, and friendly relations continuing for all eternity
+        in a limitless life, and their believing this.11 In conclusion, we would like
+        emphasize that various psychosocial, psychosomatic and conversion disorders
+        may be seen in children affected by parental divorce. Physicians interested
+        in child health can notice parents'' separation problems during evaluation
+        of children. Referral to professionals with expertise in separation may be
+        helpful for conflicting parents.</AbstractText></Abstract><AuthorList CompleteYN="Y"><Author
+        ValidYN="Y"><LastName>&#xc7;aksen</LastName><ForeName>H&#xfc;seyin</ForeName><Initials>H</Initials><AffiliationInfo><Affiliation>Divisions
+        of Pediatric Neurology and Genetics and Behavioral-Developmental Pediatrics,
+        Department of Pediatrics, Necmettin Erbakan University, Meram Medical Faculty,
+        Meram, Konya, Turkey.</Affiliation></AffiliationInfo></Author></AuthorList><Language>eng</Language><PublicationTypeList><PublicationType
+        UI="D016428">Journal Article</PublicationType></PublicationTypeList><ArticleDate
+        DateType="Electronic"><Year>2021</Year><Month>11</Month><Day>26</Day></ArticleDate></Article><MedlineJournalInfo><Country>Greece</Country><MedlineTA>Psychiatriki</MedlineTA><NlmUniqueID>101534363</NlmUniqueID><ISSNLinking>1105-2333</ISSNLinking></MedlineJournalInfo><CitationSubset>IM</CitationSubset><MeshHeadingList><MeshHeading><DescriptorName
+        UI="D000293" MajorTopicYN="N">Adolescent</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D001008" MajorTopicYN="N">Anxiety Disorders</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D002648" MajorTopicYN="N">Child</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D004243" MajorTopicYN="Y">Divorce</DescriptorName><QualifierName UI="Q000523"
+        MajorTopicYN="N">psychology</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D005260" MajorTopicYN="N">Female</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D006801" MajorTopicYN="N">Humans</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D008297" MajorTopicYN="N">Male</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D010290" MajorTopicYN="Y">Parents</DescriptorName><QualifierName UI="Q000523"
+        MajorTopicYN="N">psychology</QualifierName></MeshHeading></MeshHeadingList></MedlineCitation><PubmedData><History><PubMedPubDate
+        PubStatus="pubmed"><Year>2021</Year><Month>12</Month><Day>4</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="medline"><Year>2022</Year><Month>4</Month><Day>28</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="entrez"><Year>2021</Year><Month>12</Month><Day>3</Day><Hour>17</Hour><Minute>21</Minute></PubMedPubDate></History><PublicationStatus>ppublish</PublicationStatus><ArticleIdList><ArticleId
+        IdType="pubmed">34860682</ArticleId><ArticleId IdType="doi">10.22365/jpsych.2021.040</ArticleId></ArticleIdList></PubmedData></PubmedArticle><PubmedArticle><MedlineCitation
+        Status="MEDLINE" Owner="NLM" IndexingMethod="Curated"><PMID Version="1">38569151</PMID><DateCompleted><Year>2024</Year><Month>04</Month><Day>05</Day></DateCompleted><DateRevised><Year>2024</Year><Month>04</Month><Day>17</Day></DateRevised><Article
+        PubModel="Print"><Journal><ISSN IssnType="Print">0032-7034</ISSN><JournalIssue
+        CitedMedium="Print"><Volume>73</Volume><Issue>2</Issue><PubDate><Year>2024</Year><Month>Feb</Month></PubDate></JournalIssue><Title>Praxis
+        der Kinderpsychologie und Kinderpsychiatrie</Title><ISOAbbreviation>Prax Kinderpsychol
+        Kinderpsychiatr</ISOAbbreviation></Journal><ArticleTitle>[Not Available].</ArticleTitle><Pagination><StartPage>114</StartPage><EndPage>129</EndPage><MedlinePgn>114-129</MedlinePgn></Pagination><ELocationID
+        EIdType="doi" ValidYN="Y">10.13109/prkk.2024.73.2.114</ELocationID><Abstract><AbstractText>Development
+        and Evaluation of an Information Brochure on Anxiety and Anxiety Disorders
+        for Adolescents Low mental health literacy and fear of being stigmatized are
+        two main barriers that detain adolescents fromseeking professional help. An
+        information brochure about anxiety disorders for adolescents was developed.
+        To make a first statement about the quality of the brochure, 19 experts, consisting
+        of (child and adolescents) psychotherapists, psychiatrists, and psychologists,
+        rated a first version of the brochure regarding content validity and age-appropriatness.
+        To evaluate the efficacy in knowledge and the acceptance of the brochure,
+        a revised version was evaluated by N = 174 adolscents (106 female-, 66 male-
+        and two non-binary) between 14 and 17 years of age (M = 16.56 years.; SD =
+        0.57).The experts'' approval of all content items totals a mean average of
+        95.2 % (range: 84.2-100 %). In the adolescent sample, the intervention increased
+        knowledge about anxiety disorders (d = 1.04) and improved attitudes about
+        coping strategies (d = 0.99). Results of the experts'' rating showed that
+        content validity of the brochure can be assumed.The revised brochure seems
+        to be a useful and effective tool to inform adolescents about anxiety disorders.</AbstractText></Abstract><AuthorList
+        CompleteYN="Y"><Author ValidYN="Y"><LastName>Bleich</LastName><ForeName>Chiara</ForeName><Initials>C</Initials></Author><Author
+        ValidYN="Y"><LastName>Kachel</LastName><ForeName>Lukas</ForeName><Initials>L</Initials></Author><Author
+        ValidYN="Y"><LastName>Milde</LastName><ForeName>Christopher</ForeName><Initials>C</Initials></Author><Author
+        ValidYN="Y"><LastName>In-Albon</LastName><ForeName>Tina</ForeName><Initials>T</Initials></Author></AuthorList><Language>ger</Language><PublicationTypeList><PublicationType
+        UI="D004740">English Abstract</PublicationType><PublicationType UI="D016428">Journal
+        Article</PublicationType></PublicationTypeList><VernacularTitle>Originalarbeiten
+        / Original Articles. Entwicklung und Evaluation einer Aufkl&#xe4;rungsbrosch&#xfc;re
+        zu &#xc4;ngsten und Angstst&#xf6;rungen f&#xfc;r Jugendliche.</VernacularTitle></Article><MedlineJournalInfo><Country>Germany</Country><MedlineTA>Prax
+        Kinderpsychol Kinderpsychiatr</MedlineTA><NlmUniqueID>0404246</NlmUniqueID><ISSNLinking>0032-7034</ISSNLinking></MedlineJournalInfo><CitationSubset>IM</CitationSubset><MeshHeadingList><MeshHeading><DescriptorName
+        UI="D000293" MajorTopicYN="N">Adolescent</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D005260" MajorTopicYN="N">Female</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D006801" MajorTopicYN="N">Humans</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D008297" MajorTopicYN="N">Male</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D001007" MajorTopicYN="N">Anxiety</DescriptorName><QualifierName UI="Q000523"
+        MajorTopicYN="N">psychology</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D001008" MajorTopicYN="Y">Anxiety Disorders</DescriptorName><QualifierName
+        UI="Q000175" MajorTopicYN="N">diagnosis</QualifierName><QualifierName UI="Q000628"
+        MajorTopicYN="N">therapy</QualifierName><QualifierName UI="Q000523" MajorTopicYN="N">psychology</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D004522" MajorTopicYN="N">Educational Status</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D005239" MajorTopicYN="N">Fear</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D010174" MajorTopicYN="Y">Pamphlets</DescriptorName></MeshHeading></MeshHeadingList><OtherAbstract
+        Type="Publisher" Language="ger"><AbstractText>Zusammenfassung Geringe psychische
+        Gesundheitskompetenz und Angst vor Stigmatisierung sind fur Jugendliche Barrieren
+        zur Aufnahme einer Psychotherapie. Eine Informationsbroschure zu Angststorungen
+        &#x201e;Alles, was du uber Angst wissen solltest und wie du sie uberwinden
+        kannst&#x201c; wurde entwickelt und von 19 Expert:innen (Kinder- und Jugendlichenpsychotherapeut:innen,
+        Psycholog:innen, Psychiater:innen) bewertet. Eine uberarbeitete Version wurde
+        anschliesend von 174 Jugendlichen (14- 17 Jahre; 106 weiblich, 66 mannlich,
+        2 divers) gelesen und bezuglich Einstellungs- und Wissensveranderung untersucht.
+        Die Ruckmeldungen der Expert:innen waren uberwiegend positiv. Die Jugendlichen
+        konnten durch das Lesen der Broschure ihr Wissen zu Angststorungen signifikant
+        steigern, p &lt; .001, d = 1.05 und ihre Einstellung zu Bewaltigungsstrategien
+        verbessern, p &lt; .001, d = 0.99. Die Broschure kann dazu beitragen,Wissen
+        zu vermitteln und Barrieren zu reduzieren.</AbstractText></OtherAbstract><KeywordList
+        Owner="NOTNLM"><Keyword MajorTopicYN="N">Angststorungen - Jugendliche - Informationsbroschure
+        - psychischeGesundheitskompetenz - Mental health literacy</Keyword><Keyword
+        MajorTopicYN="N">anxiety disorders in adolescents - information brochure -
+        prevention -mental health literacy</Keyword></KeywordList></MedlineCitation><PubmedData><History><PubMedPubDate
+        PubStatus="medline"><Year>2024</Year><Month>4</Month><Day>5</Day><Hour>6</Hour><Minute>44</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="pubmed"><Year>2024</Year><Month>4</Month><Day>3</Day><Hour>18</Hour><Minute>44</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="entrez"><Year>2024</Year><Month>4</Month><Day>3</Day><Hour>16</Hour><Minute>23</Minute></PubMedPubDate></History><PublicationStatus>ppublish</PublicationStatus><ArticleIdList><ArticleId
+        IdType="pubmed">38569151</ArticleId><ArticleId IdType="doi">10.13109/prkk.2024.73.2.114</ArticleId></ArticleIdList></PubmedData></PubmedArticle></PubmedArticleSet>'
+    headers:
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - X-RateLimit-Limit,X-RateLimit-Remaining
+      alt-svc:
+      - clear
+      cache-control:
+      - private
+      content-length:
+      - '23166'
+      content-security-policy:
+      - upgrade-insecure-requests
+      content-type:
+      - text/xml; charset=UTF-8
+      date:
+      - Sun, 15 Nov 2026 14:11:28 GMT
+      ncbi-phid:
+      - 1D32D4B8F5A882C50000588C756028E2.1.1.m_6
+      ncbi-sid:
+      - CAB889EB2D120FAD_77EESID
+      referrer-policy:
+      - origin-when-cross-origin
+      server:
+      - Finatra
+      set-cookie:
+      - ncbi_sid=CAB889EB2D120FAD_77EESID; domain=.nih.gov; path=/; expires=Mon, 15
+        Nov 2027 14:11:29 GMT
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      via:
+      - 1.1 google
+      x-ratelimit-limit:
+      - '3'
+      x-ratelimit-remaining:
+      - '1'
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

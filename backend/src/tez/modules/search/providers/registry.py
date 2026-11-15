@@ -10,6 +10,7 @@ from tez.modules.search.providers.arxiv import ArxivProvider
 from tez.modules.search.providers.base import SearchProvider
 from tez.modules.search.providers.crossref import CrossrefProvider
 from tez.modules.search.providers.openalex import OpenAlexProvider
+from tez.modules.search.providers.pubmed import PubMedProvider
 from tez.modules.search.providers.semantic_scholar import SemanticScholarProvider
 from tez.modules.settings.secrets import SecretName, SecretStore, SecretStoreUnavailable
 from tez.shared.http import HttpClient
@@ -24,6 +25,7 @@ SOURCE_NAMES = (
     SemanticScholarProvider.name,
     ArxivProvider.name,
     CrossrefProvider.name,
+    PubMedProvider.name,
 )
 
 
@@ -72,6 +74,8 @@ def _build(name: str, http: HttpClient, access: SourceAccess) -> SearchProvider:
         return ArxivProvider(http)
     if name == CrossrefProvider.name:
         return CrossrefProvider(http, email=access.email)
+    if name == PubMedProvider.name:
+        return PubMedProvider(http, email=access.email)
     raise ValueError(f"unknown source: {name}")
 
 

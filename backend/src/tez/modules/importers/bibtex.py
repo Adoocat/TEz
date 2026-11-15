@@ -115,6 +115,10 @@ def _identifiers(fields: dict[str, Any]) -> dict[IdentifierScheme, str]:
         found[IdentifierScheme.DOI] = doi
     if arxiv := _arxiv_id(fields):
         found[IdentifierScheme.ARXIV] = arxiv
+    if pmid := _text(fields.get("pmid")):
+        found[IdentifierScheme.PMID] = pmid
+    if pmcid := _text(fields.get("pmcid")):
+        found[IdentifierScheme.PMCID] = pmcid
     if isbn := _text(fields.get("isbn")):
         found[IdentifierScheme.ISBN] = isbn.split(",")[0]
     return found

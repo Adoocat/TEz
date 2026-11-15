@@ -1,0 +1,67 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - eutils.ncbi.nlm.nih.gov
+    method: GET
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmax=3&retmode=json&retstart=0&sort=relevance&term=%22zqxjvbnmtezyok%22+AND+%22kwpzrtyunfound%22&tool=TEz
+  response:
+    body:
+      string: '{"header":{"type":"esearch","version":"0.3"},"esearchresult":{"count":"0","retmax":"0","retstart":"0","idlist":[],"translationset":[],"querytranslation":"\"zqxjvbnmtezyok\"
+        AND \"kwpzrtyunfound\"","warninglist":{"phrasesignored":[],"quotedphrasesnotfound":["\"zqxjvbnmtezyok\"","\"kwpzrtyunfound\""],"outputmessages":["No
+        items found."]}}}
+
+        '
+    headers:
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - X-RateLimit-Limit,X-RateLimit-Remaining
+      alt-svc:
+      - clear
+      cache-control:
+      - private
+      content-length:
+      - '340'
+      content-security-policy:
+      - upgrade-insecure-requests
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Sun, 15 Nov 2026 14:10:56 GMT
+      ncbi-phid:
+      - 1D32D4B8F5A882C50000338C458A9726.1.1.m_1
+      ncbi-sid:
+      - BAF53C138F2B0FE1_748DSID
+      referrer-policy:
+      - origin-when-cross-origin
+      server:
+      - Finatra
+      set-cookie:
+      - ncbi_sid=BAF53C138F2B0FE1_748DSID; domain=.nih.gov; path=/; expires=Mon, 15
+        Nov 2027 14:10:56 GMT
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      via:
+      - 1.1 google
+      x-ratelimit-limit:
+      - '3'
+      x-ratelimit-remaining:
+      - '1'
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

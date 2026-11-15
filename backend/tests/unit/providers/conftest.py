@@ -19,7 +19,7 @@ def vcr_config() -> dict[str, Any]:
     return {
         # Whatever a recording ran with, keys and e-mail addresses stay out of the repo.
         "filter_headers": ["authorization", "x-api-key", "user-agent", "cookie", "set-cookie"],
-        "filter_query_parameters": ["api_key", "mailto"],
+        "filter_query_parameters": ["api_key", "mailto", "email"],
         "decode_compressed_response": True,
     }
 
