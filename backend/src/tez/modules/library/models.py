@@ -29,6 +29,13 @@ class VenueType(StrEnum):
     OTHER = "other"
 
 
+class ThesisType(StrEnum):
+    """The degree a thesis is for (Task 28); None when the source does not say."""
+
+    MASTERS = "masters"
+    DOCTORAL = "doctoral"
+
+
 class ReadingStatus(StrEnum):
     UNREAD = "unread"
     READING = "reading"
@@ -68,6 +75,8 @@ class Paper(TimestampMixin, Base):
     year: Mapped[int | None] = mapped_column(Integer, index=True)
     venue: Mapped[str | None] = mapped_column(Text)
     venue_type: Mapped[VenueType | None] = mapped_column(enum_type(VenueType, "venue_type"))
+    # Only for venue_type THESIS.
+    thesis_type: Mapped[ThesisType | None] = mapped_column(enum_type(ThesisType, "thesis_type"))
     volume: Mapped[str | None] = mapped_column(String(32))
     issue: Mapped[str | None] = mapped_column(String(32))
     pages: Mapped[str | None] = mapped_column(String(32))

@@ -23,7 +23,7 @@ from pydantic import (
 )
 
 from tez.core.errors import ErrorDetail
-from tez.modules.library.models import IdentifierScheme, VenueType
+from tez.modules.library.models import IdentifierScheme, ThesisType, VenueType
 from tez.modules.search.models import InitiatedVia, MatchMethod, RunStatus
 from tez.shared.text import normalize_title
 
@@ -87,6 +87,7 @@ class NormalizedRecord(BaseModel):
     abstract: Text = None
     venue: Text = None
     venue_type: VenueType | None = None
+    thesis_type: ThesisType | None = None
     volume: ShortText = None
     issue: ShortText = None
     pages: ShortText = None
@@ -169,6 +170,8 @@ class SearchStart(BaseModel):
     year_from: int | None = None
     year_to: int | None = None
     limit: int = Field(default=1000, ge=1, le=MAX_RESULTS_PER_SOURCE)
+    # Only theses (Task 28): sent to the sources that can filter by type.
+    theses_only: bool = False
     # `tez search` says "cli", so the record shows where the search was started (plan).
     initiated_via: InitiatedVia = InitiatedVia.GUI
 
@@ -240,6 +243,7 @@ class SearchResultRow(BaseModel):
     year: int | None
     venue: str | None
     venue_type: VenueType | None
+    thesis_type: ThesisType | None
     abstract: str | None
     citation_count: int | None
     doi: str | None

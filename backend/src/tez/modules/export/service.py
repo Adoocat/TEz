@@ -36,6 +36,7 @@ def _paper(card: PaperCard, key: str) -> ExportPaper:
         year=paper.year,
         venue=paper.venue,
         venue_type=paper.venue_type,
+        thesis_type=paper.thesis_type,
         volume=paper.volume,
         issue=paper.issue,
         pages=paper.pages,

@@ -20,7 +20,8 @@ from tez.modules.importers.parsing import (
     ParsedFile,
     parse_year,
 )
-from tez.modules.library.models import IdentifierScheme, VenueType
+from tez.modules.library.models import IdentifierScheme, ThesisType, VenueType
+from tez.modules.library.thesis import thesis_type_from_text
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +41,11 @@ _TYPES = {
     "unpublished": VenueType.OTHER,
     "misc": VenueType.OTHER,
     "online": VenueType.OTHER,
+}
+_THESIS_TYPES: dict[str, ThesisType | None] = {
+    "mastersthesis": ThesisType.MASTERS,
+    "phdthesis": ThesisType.DOCTORAL,
+    "thesis": None,
 }
 _VENUE_FIELDS = ("journal", "journaltitle", "booktitle", "school", "institution", "publisher")
 _DASHES = re.compile(r"\s*[-" + "\N{EN DASH}\N{EM DASH}" + r"]+\s*")
@@ -83,6 +89,14 @@ def _venue_type(entry: Entry, fields: dict[str, Any]) -> VenueType:
         if not journal or journal.lower().startswith("arxiv"):
             return VenueType.PREPRINT
     return _TYPES.get(entry.entry_type.lower(), VenueType.OTHER)
+
+
+def _thesis_type(entry: Entry, fields: dict[str, Any]) -> ThesisType | None:
+    """@mastersthesis / @phdthesis, or BibLaTeX's @thesis with a `type` field."""
+    kind = entry.entry_type.lower()
+    if kind not in _THESIS_TYPES:
+        return None
+    return _THESIS_TYPES[kind] or thesis_type_from_text(_text(fields.get("type")))
 
 
 def _arxiv_id(fields: dict[str, Any]) -> str | None:
@@ -129,6 +143,7 @@ def _record_fields(entry: Entry) -> dict[str, Any]:
         "abstract": _text(raw.get("abstract")),
         "venue": venue,
         "venue_type": _venue_type(entry, raw),
+        "thesis_type": _thesis_type(entry, raw),
         "volume": _text(raw.get("volume")),
         "issue": _text(raw.get("number")) or _text(raw.get("issue")),
         "pages": _pages(raw),

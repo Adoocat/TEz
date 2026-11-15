@@ -97,6 +97,12 @@ def map_work(item: dict[str, Any]) -> NormalizedRecord:
     )
 
 
+def work_filter(request: SearchRequest) -> str | None:
+    """The `filter` parameter: dates, and dissertations only when asked (Task 28)."""
+    parts = [_date_filter(request), "type:dissertation" if request.theses_only else None]
+    return ",".join(part for part in parts if part) or None
+
+
 def _date_filter(request: SearchRequest) -> str | None:
     parts: list[str] = []
     if request.year_from is not None:
@@ -133,8 +139,8 @@ class CrossrefProvider(PagedProvider):
             "order": "desc",
             "select": _FIELDS,
         }
-        if dates := _date_filter(request):
-            params["filter"] = dates
+        if work_filter_ := work_filter(request):
+            params["filter"] = work_filter_
         if self._email is not None:
             params["mailto"] = self._email
         response = await self._http.get(self._policy, _URL, params=params, on_wait=on_wait)

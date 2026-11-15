@@ -190,7 +190,8 @@
     "screening.criterion_in_use": "Screening decisions cite this criterion: archive it instead.",
     "screening.criterion_code_taken": "The code {{code}} is already used in this review.",
     "screening.criteria_order_mismatch": "The criteria changed meanwhile; reload and try again.",
-    "external_search.not_found": "This saved search no longer exists."
+    "external_search.not_found": "This saved search no longer exists.",
+    "search.filter_unsupported": "These sources cannot filter by publication type."
   },
   "reviews": {
     "active": "Active review",
@@ -356,7 +357,9 @@
       "chapter": "Chapter",
       "thesis": "Thesis",
       "report": "Report",
-      "other": "Other"
+      "other": "Other",
+      "thesis_masters": "Master's thesis",
+      "thesis_doctoral": "Doctoral thesis"
     },
     "filterLanguage": "Language",
     "allLanguages": "All languages",
@@ -415,7 +418,9 @@
       "copyQuery": "Copy query",
       "importNew": "Import new export",
       "copied": "Query copied. Paste it on the site."
-    }
+    },
+    "thesesOnly": "Theses only",
+    "thesesOnlyHint": "Only OpenAlex and Crossref can be asked for theses; the other sources sit this search out."
   },
   "imports": {
     "open": "Import file",
@@ -591,7 +596,9 @@
     "pages_other": "{{count}} pages",
     "megabytes": "{{size}} MB",
     "openPdf": "Open PDF",
-    "openNamed": "Open {{name}}"
+    "openNamed": "Open {{name}}",
+    "filterType": "Publication type",
+    "anyType": "Any type"
   },
   "reader": {
     "title": "Reader",

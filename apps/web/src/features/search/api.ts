@@ -14,6 +14,8 @@ export type ExternalSearchCreate = components["schemas"]["ExternalSearchCreate"]
 
 // DBLP is postponed: dblp.org answers API clients with a bot check (ADR 0008).
 export const sourceNames = ["openalex", "semantic_scholar", "arxiv", "crossref"] as const;
+// The sources a theses-only search can ask (Task 28); the backend refuses the others.
+export const thesisFilterSources: readonly string[] = ["openalex", "crossref"];
 export type SourceName = (typeof sourceNames)[number];
 
 export const searchKeys = {

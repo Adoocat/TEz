@@ -143,8 +143,8 @@ class OpenAlexProvider(PagedProvider):
             "cursor": cursor or "*",
             "select": _FIELDS,
         }
-        if years := _year_filter(request):
-            params["filter"] = years
+        if work_filter_ := work_filter(request):
+            params["filter"] = work_filter_
         response = await self._http.get(self._policy, _URL, params=params, on_wait=on_wait)
         body = self.json_object(response)
         if "results" not in body:
@@ -159,6 +159,12 @@ class OpenAlexProvider(PagedProvider):
 
     def map_item(self, item: Any) -> NormalizedRecord:
         return map_work(item)
+
+
+def work_filter(request: SearchRequest) -> str | None:
+    """The `filter` parameter: years, and dissertations only when asked (Task 28)."""
+    parts = [_year_filter(request), "type:dissertation" if request.theses_only else None]
+    return ",".join(part for part in parts if part) or None
 
 
 def _year_filter(request: SearchRequest) -> str | None:

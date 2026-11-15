@@ -20,6 +20,7 @@ from tez.modules.importers.parsing import (
     parse_year,
 )
 from tez.modules.library.models import IdentifierScheme, VenueType
+from tez.modules.library.thesis import thesis_type_from_text
 
 logger = logging.getLogger(__name__)
 
@@ -101,6 +102,10 @@ def _record_fields(record: dict[str, Any]) -> dict[str, Any]:
         "abstract": _first(record, "abstract", "notes_abstract"),
         "venue": _first(record, *_VENUE_TAGS),
         "venue_type": _TYPES.get(kind, VenueType.OTHER),
+        # M3, "type of work": the degree of a thesis.
+        "thesis_type": thesis_type_from_text(_first(record, "type_of_work"))
+        if kind == "THES"
+        else None,
         "volume": _first(record, "volume"),
         "issue": _first(record, "number"),
         "pages": join_pages(_first(record, "start_page"), _first(record, "end_page")),

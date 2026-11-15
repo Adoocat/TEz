@@ -27,6 +27,7 @@ import {
   type LibraryFilters,
   type PdfFilter,
 } from "./filters";
+import { publicationTypes } from "./publicationType";
 import { PaperTable } from "./PaperTable";
 import { useLibraryView } from "./store";
 
@@ -241,6 +242,22 @@ function FilterBar({
         {tags.map((tag) => (
           <option key={tag.id} value={tag.id}>
             #{tag.name}
+          </option>
+        ))}
+      </select>
+      <select
+        aria-label={t("library.filterType")}
+        className={selectClass}
+        value={filters.type ?? ""}
+        onChange={(event) => {
+          const type = publicationTypes.find((value) => value === event.target.value) ?? null;
+          onChange({ ...filters, type });
+        }}
+      >
+        <option value="">{t("library.anyType")}</option>
+        {publicationTypes.map((type) => (
+          <option key={type} value={type}>
+            {t(`search.venueTypes.${type}`)}
           </option>
         ))}
       </select>

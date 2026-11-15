@@ -190,7 +190,8 @@
     "screening.criterion_in_use": "Eleme kararları bu kritere dayanıyor: silmek yerine arşivleyin.",
     "screening.criterion_code_taken": "{{code}} kodu bu review'da zaten kullanılıyor.",
     "screening.criteria_order_mismatch": "Kriterler bu arada değişti; yenileyip yeniden deneyin.",
-    "external_search.not_found": "Bu kayıtlı arama artık yok."
+    "external_search.not_found": "Bu kayıtlı arama artık yok.",
+    "search.filter_unsupported": "Bu kaynaklar yayın türüne göre süzemiyor."
   },
   "reviews": {
     "active": "Etkin review",
@@ -356,7 +357,9 @@
       "chapter": "Bölüm",
       "thesis": "Tez",
       "report": "Rapor",
-      "other": "Diğer"
+      "other": "Diğer",
+      "thesis_masters": "Yüksek lisans tezi",
+      "thesis_doctoral": "Doktora tezi"
     },
     "filterLanguage": "Dil",
     "allLanguages": "Tüm diller",
@@ -415,7 +418,9 @@
       "copyQuery": "Sorguyu kopyala",
       "importNew": "Yeni dışa aktarımı içe aktar",
       "copied": "Sorgu kopyalandı. Sitede yapıştırın."
-    }
+    },
+    "thesesOnly": "Yalnız tezler",
+    "thesesOnlyHint": "Tezlere göre yalnız OpenAlex ve Crossref sorulabilir; diğer kaynaklar bu aramada sorulmaz."
   },
   "imports": {
     "open": "Dosyadan içe aktar",
@@ -591,7 +596,9 @@
     "pages_other": "{{count}} sayfa",
     "megabytes": "{{size}} MB",
     "openPdf": "PDF'i aç",
-    "openNamed": "{{name}} aç"
+    "openNamed": "{{name}} aç",
+    "filterType": "Yayın türü",
+    "anyType": "Her tür"
   },
   "reader": {
     "title": "Okuyucu",

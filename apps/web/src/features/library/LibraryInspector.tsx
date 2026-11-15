@@ -22,6 +22,7 @@ import {
   type PaperDetail,
 } from "./api";
 import { PdfIcon } from "./PaperTable";
+import { publicationTypeOf } from "./publicationType";
 import { useLibraryView } from "./store";
 import { tagColorVar } from "./tagColor";
 
@@ -44,6 +45,8 @@ function PaperInspector({ paper }: { paper: PaperDetail }) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>("abstract");
   const authors = paper.authors.map((a) => a.display_name).join(", ");
+  const type = publicationTypeOf(paper);
+  const typeLabel = type && t(`search.venueTypes.${type}`);
   const published = paper.related.find((r) => r.relation === "published_version");
   const navigate = useNavigate();
   // A readable file first; a broken one can still be tried.
@@ -68,6 +71,7 @@ function PaperInspector({ paper }: { paper: PaperDetail }) {
         {authors && <p className="text-meta">{authors}</p>}
         <p className="text-meta text-fg-muted">
           {[
+            typeLabel,
             paper.venue,
             paper.year,
             paper.volume && `${paper.volume}(${paper.issue ?? ""})`,

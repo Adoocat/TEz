@@ -22,6 +22,7 @@ from tez.modules.library.models import (
     RelationKind,
     SmartCollection,
     Tag,
+    ThesisType,
     VenueType,
 )
 from tez.shared.text import fold, normalize_title
@@ -52,6 +53,7 @@ class LibraryRepository:
         year: int | None = None,
         venue: str | None = None,
         venue_type: VenueType | None = None,
+        thesis_type: ThesisType | None = None,
         volume: str | None = None,
         issue: str | None = None,
         pages: str | None = None,
@@ -68,6 +70,7 @@ class LibraryRepository:
             year=year,
             venue=venue,
             venue_type=venue_type,
+            thesis_type=thesis_type,
             volume=volume,
             issue=issue,
             pages=pages,

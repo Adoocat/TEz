@@ -23,7 +23,17 @@ from tez.modules.library.repository import AuthorInput, LibraryRepository
 
 # The system collection new files land in until the user files them (plan, "Gelen kutusu").
 INBOX = "inbox"
-_FILLABLE = ("abstract", "year", "venue", "venue_type", "volume", "issue", "pages", "language")
+_FILLABLE = (
+    "abstract",
+    "year",
+    "venue",
+    "venue_type",
+    "thesis_type",
+    "volume",
+    "issue",
+    "pages",
+    "language",
+)
 _FILLABLE_LINKS = ("url", "oa_url")
 
 

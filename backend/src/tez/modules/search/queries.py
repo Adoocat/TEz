@@ -86,6 +86,7 @@ def _result_row(
         year=paper.year,
         venue=paper.venue,
         venue_type=paper.venue_type,
+        thesis_type=paper.thesis_type,
         abstract=paper.abstract,
         citation_count=paper.citation_count,
         doi=card.identifiers.get(IdentifierScheme.DOI),

@@ -14,6 +14,7 @@ from tez.modules.search.live import LiveSearch, SearchRegistry
 from tez.modules.search.providers.base import SearchRequest
 from tez.modules.search.providers.registry import (
     SOURCE_NAMES,
+    THESIS_FILTER_SOURCES,
     ProviderFactory,
     read_access,
 )
@@ -51,6 +52,8 @@ async def start_search(
     unknown = [s for s in body.sources if s not in SOURCE_NAMES]
     if unknown:
         raise TezError(ErrorCode.SOURCE_UNKNOWN, {"sources": unknown}, status=422)
+    if body.theses_only and (unable := [s for s in body.sources if s not in THESIS_FILTER_SOURCES]):
+        raise TezError(ErrorCode.SEARCH_FILTER_UNSUPPORTED, {"sources": unable}, status=422)
     if not await run_in_threadpool(reviews_service.review_exists, library.db, body.review_id):
         raise TezError(ErrorCode.REVIEW_NOT_FOUND, {"review_id": body.review_id}, status=404)
 
@@ -62,7 +65,11 @@ async def start_search(
     search_id = new_id()
     live = LiveSearch(search_id)
     search_request = SearchRequest(
-        query=body.query, year_from=body.year_from, year_to=body.year_to, limit=body.limit
+        query=body.query,
+        year_from=body.year_from,
+        year_to=body.year_to,
+        limit=body.limit,
+        theses_only=body.theses_only,
     )
 
     async def work() -> None:

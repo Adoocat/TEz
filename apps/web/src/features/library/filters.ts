@@ -2,6 +2,7 @@
 // loaded rows: a library holds a few thousand papers, so this is instant. Text search is the
 // backend's (FTS); its hits arrive as ids and narrow the rows like any other filter.
 import type { LibraryPaperRow, ReadingStatus } from "./api";
+import { hasPublicationType, type PublicationType } from "./publicationType";
 
 export type PdfFilter = "any" | "has" | "none";
 
@@ -11,6 +12,7 @@ export interface LibraryFilters {
   reading: ReadingStatus | null;
   tagId: string | null;
   pdf: PdfFilter;
+  type: PublicationType | null;
 }
 
 export const noLibraryFilters: LibraryFilters = {
@@ -19,6 +21,7 @@ export const noLibraryFilters: LibraryFilters = {
   reading: null,
   tagId: null,
   pdf: "any",
+  type: null,
 };
 
 export function isFiltered(filters: LibraryFilters): boolean {
@@ -27,7 +30,8 @@ export function isFiltered(filters: LibraryFilters): boolean {
     filters.yearTo !== null ||
     filters.reading !== null ||
     filters.tagId !== null ||
-    filters.pdf !== "any"
+    filters.pdf !== "any" ||
+    filters.type !== null
   );
 }
 
@@ -45,7 +49,8 @@ export function applyFilters(
     (filters.yearTo === null || (row.year !== null && row.year <= filters.yearTo)) &&
     (filters.reading === null || row.reading_status === filters.reading) &&
     (filters.tagId === null || row.tag_ids.includes(filters.tagId)) &&
-    (filters.pdf === "any" || (filters.pdf === "has") === (row.pdf !== "none"));
+    (filters.pdf === "any" || (filters.pdf === "has") === (row.pdf !== "none")) &&
+    (filters.type === null || hasPublicationType(row, filters.type));
   if (hits === null) return rows.filter(keep);
   const byId = new Map(rows.map((row) => [row.id, row]));
   return hits.flatMap((id) => {

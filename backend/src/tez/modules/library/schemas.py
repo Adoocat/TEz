@@ -4,7 +4,13 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 from tez.modules.files.schemas import AttachmentView
-from tez.modules.library.models import IdentifierScheme, ReadingStatus, RetractionStatus, VenueType
+from tez.modules.library.models import (
+    IdentifierScheme,
+    ReadingStatus,
+    RetractionStatus,
+    ThesisType,
+    VenueType,
+)
 
 InstanceKind = Literal["app", "cli"]
 
@@ -129,6 +135,7 @@ class LibraryPaperRow(BaseModel):
     year: int | None
     venue: str | None
     venue_type: VenueType | None
+    thesis_type: ThesisType | None
     doi: str | None
     citekey: str | None
     citation_count: int | None
@@ -170,6 +177,7 @@ class PaperDetail(BaseModel):
     year: int | None
     venue: str | None
     venue_type: VenueType | None
+    thesis_type: ThesisType | None
     volume: str | None
     issue: str | None
     pages: str | None

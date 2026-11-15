@@ -9,7 +9,7 @@ import re
 from collections.abc import Iterable
 from dataclasses import dataclass
 
-from tez.modules.library.models import VenueType
+from tez.modules.library.models import ThesisType, VenueType
 
 # Page ranges: a hyphen, an en dash or an em dash, with any spaces around.
 _DASHES = re.compile(r"\s*[-" + "\N{EN DASH}\N{EM DASH}" + r"]+\s*")
@@ -43,6 +43,7 @@ class ExportPaper:
     year: int | None
     venue: str | None
     venue_type: VenueType | None
+    thesis_type: ThesisType | None
     volume: str | None
     issue: str | None
     pages: str | None
@@ -80,8 +81,18 @@ _BIB_TYPES: dict[VenueType | None, tuple[str, str | None]] = {
 }
 
 
+_BIB_THESIS_TYPES = {
+    ThesisType.MASTERS: "mastersthesis",
+    ThesisType.DOCTORAL: "phdthesis",
+    None: "thesis",  # BibLaTeX; the degree is not known
+}
+_RIS_THESIS_TYPES = {ThesisType.MASTERS: "Master's thesis", ThesisType.DOCTORAL: "Doctoral thesis"}
+
+
 def bibtex_entry(paper: ExportPaper) -> str:
     entry_type, venue_field = _BIB_TYPES[paper.venue_type]
+    if paper.venue_type is VenueType.THESIS:
+        entry_type = _BIB_THESIS_TYPES[paper.thesis_type]
     fields: list[tuple[str, str]] = [("title", "{" + _latex(paper.title) + "}")]
     if paper.authors:
         fields.append(("author", " and ".join(_bib_author(a) for a in paper.authors)))
@@ -143,6 +154,8 @@ def ris_entry(paper: ExportPaper) -> str:
         lines.append(_ris_line("AU", name))
     if paper.year is not None:
         lines.append(_ris_line("PY", str(paper.year)))
+    if paper.venue_type is VenueType.THESIS and paper.thesis_type is not None:
+        lines.append(_ris_line("M3", _RIS_THESIS_TYPES[paper.thesis_type]))
     if paper.venue:
         lines.append(
             _ris_line("JO" if paper.venue_type is VenueType.JOURNAL else "T2", paper.venue)
