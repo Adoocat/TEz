@@ -191,7 +191,8 @@
     "screening.criterion_code_taken": "The code {{code}} is already used in this review.",
     "screening.criteria_order_mismatch": "The criteria changed meanwhile; reload and try again.",
     "external_search.not_found": "This saved search no longer exists.",
-    "search.filter_unsupported": "These sources cannot filter by publication type."
+    "search.filter_unsupported": "These sources cannot filter by publication type.",
+    "import.preset_unavailable": "This database preset is not available yet."
   },
   "reviews": {
     "active": "Active review",
@@ -421,7 +422,21 @@
       "openSite": "Open site",
       "copyQuery": "Copy query",
       "importNew": "Import new export",
-      "copied": "Query copied. Paste it on the site."
+      "copied": "Query copied. Paste it on the site.",
+      "howToExport": "How to export:",
+      "guides": {
+        "wos": "Tick the records (or choose a range, up to 1,000 at a time) → Export → \"RIS (other reference software)\" → Record content: \"Full Record\" → Export. Plain text export comes when its preset is tested.",
+        "scopus": "Select all → Export → RIS → tick citation information and abstract → Export. CSV export comes when its preset is tested.",
+        "jstor": "Tick the results → Export citations → RIS.",
+        "ebsco": "Add the results to the folder → open the folder → Export → \"Direct Export in RIS Format\".",
+        "proquest": "Tick the results → \"…\" or Save → RIS → Continue.",
+        "psycinfo": "Export from the platform your library uses (EBSCO, ProQuest or Ovid) in RIS format.",
+        "ieee": "Select the results → Export → Citations → Format: RIS, Include: \"Citation & Abstract\" → Export.",
+        "acm": "Tick the results → Export citations → BibTeX → Download.",
+        "scholar": "Settings → Bibliography manager → \"Show links to import citations into BibTeX\". Then use \"Import into BibTeX\" under each result: one record per file.",
+        "trdizin": "Use the site's export (\"Dışa aktar\") on the results and choose BibTeX.",
+        "yoktez": "The site has no export file as far as we know; add theses by hand for now."
+      }
     },
     "thesesOnly": "Theses only",
     "thesesOnlyHint": "Only OpenAlex and Crossref can be asked for theses; the other sources sit this search out."

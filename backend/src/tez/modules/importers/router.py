@@ -2,12 +2,13 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from tez.modules.importers import service
+from tez.modules.importers import presets, service
 from tez.modules.importers.schemas import (
     ImportOutcome,
     ImportPreview,
     ImportPreviewRequest,
     ImportRequest,
+    PresetView,
 )
 from tez.modules.library.router import get_library
 from tez.modules.library.service import Library
@@ -15,6 +16,14 @@ from tez.modules.library.service import Library
 router = APIRouter(prefix="/imports", tags=["imports"])
 
 LibraryDep = Annotated[Library, Depends(get_library)]
+
+
+@router.get("/presets")
+def list_presets() -> list[PresetView]:
+    """The database presets on offer: only those verified with a real export (Task 26)."""
+    return [
+        PresetView(key=p.key, name=p.name, formats=list(p.formats)) for p in presets.available()
+    ]
 
 
 @router.post("/preview")

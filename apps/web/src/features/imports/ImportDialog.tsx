@@ -16,6 +16,7 @@ import { cn } from "@/lib/cn";
 import { useExternalSearches } from "@/features/search/api";
 
 import {
+  usePresets,
   usePreviewImport,
   useRunImport,
   type ImportFile,
@@ -23,7 +24,7 @@ import {
   type ImportPreview,
   type PreviewRecord,
 } from "./api";
-import { knownDatabases } from "./databases";
+import { defaultDatabase, knownDatabases } from "./databases";
 
 const ACCEPT = ".bib,.bibtex,.ris,.txt";
 const OTHER = "other";
@@ -111,6 +112,8 @@ function ImportWizard({
   const preview = usePreviewImport();
   const run = useRunImport(reviewId);
   const savedSearches = useExternalSearches(reviewId);
+  // A tested preset for the database (Task 26) names the source and handles its quirks.
+  const presets = usePresets();
   // "" when the import is not a run of a saved external search.
   const [savedSearch, setSavedSearch] = useState(initialSavedSearch ?? "");
   // A file given by path is read by the backend, which can reach this computer's disk.
@@ -119,7 +122,7 @@ function ImportWizard({
   );
   const [readFailed, setReadFailed] = useState(false);
   const [logRun, setLogRun] = useState(true);
-  const [database, setDatabase] = useState<string>(knownDatabases[0]);
+  const [database, setDatabase] = useState<string>(defaultDatabase);
   const [otherDatabase, setOtherDatabase] = useState("");
   const [searchedAt, setSearchedAt] = useState(today);
   const [query, setQuery] = useState("");
@@ -153,6 +156,11 @@ function ImportWizard({
     !run.isPending &&
     !run.isSuccess;
 
+  function presetOrSource() {
+    const preset = presets.data?.find((candidate) => candidate.name === source);
+    return preset ? { preset: preset.key } : { source };
+  }
+
   function submit(event: SyntheticEvent) {
     event.preventDefault();
     if (!canImport) return;
@@ -163,7 +171,11 @@ function ImportWizard({
         ? null
         : savedSearch
           ? { saved_search_id: savedSearch, searched_at: searchedAt || null }
-          : { source, searched_at: searchedAt || null, query: query.trim() || null },
+          : {
+              ...presetOrSource(),
+              searched_at: searchedAt || null,
+              query: query.trim() || null,
+            },
       add_to_review: toReview,
       add_to_library: toLibrary,
       initiated_via: "gui",

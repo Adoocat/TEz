@@ -6,6 +6,7 @@ import type { BackendState, Platform } from "@/lib/platform";
 type AppSettings = components["schemas"]["AppSettings"];
 type ImportOutcome = components["schemas"]["ImportOutcome"];
 type ImportPreview = components["schemas"]["ImportPreview"];
+type PresetView = components["schemas"]["PresetView"];
 type JobView = components["schemas"]["JobView"];
 type CollectionView = components["schemas"]["CollectionView"];
 type ExternalSearchView = components["schemas"]["ExternalSearchView"];
@@ -40,6 +41,8 @@ export interface FakeBackend {
   emitSource: (searchId: string, update: Partial<SourceProgress> & { source: string }) => void;
   /** End the search's event stream, as the backend does when all sources have answered. */
   finishSearch: (searchId: string) => void;
+  /** Database presets verified with a real export (Task 26). */
+  presets: PresetView[];
   importPreview: ImportPreview;
   /** When set, the preview fails with this error instead. */
   importPreviewError: { code: string; params: Record<string, unknown> } | null;
@@ -77,6 +80,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     searchResults: [],
     searchHistory: [],
     externalSearches: [],
+    presets: [],
     importPreview: importPreview(),
     importPreviewError: null,
     importOutcome: importOutcome(),
@@ -253,6 +257,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
         backend.externalSearches.push(saved);
         return json(saved, 201);
       }
+      if (route === "GET /imports/presets") return json(backend.presets);
       if (route === "POST /imports/preview") {
         return backend.importPreviewError
           ? json({ error: backend.importPreviewError }, 422)

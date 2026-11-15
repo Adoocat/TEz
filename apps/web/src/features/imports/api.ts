@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { components } from "@/api/schema";
 import { useApi } from "@/app/backend";
@@ -13,6 +13,18 @@ export type ImportPreview = components["schemas"]["ImportPreview"];
 export type ImportOutcome = components["schemas"]["ImportOutcome"];
 export type ImportIssueView = components["schemas"]["ImportIssueView"];
 export type PreviewRecord = components["schemas"]["PreviewRecord"];
+
+export type PresetView = components["schemas"]["PresetView"];
+
+/** Database presets verified with a real export (Task 26); none until samples arrive. */
+export function usePresets() {
+  const api = useApi();
+  return useQuery({
+    queryKey: ["imports", "presets"],
+    staleTime: Infinity,
+    queryFn: async () => unwrap(await api.GET("/imports/presets")),
+  });
+}
 
 export function usePreviewImport() {
   const api = useApi();

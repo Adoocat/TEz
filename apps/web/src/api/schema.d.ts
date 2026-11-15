@@ -611,6 +611,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/imports/presets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Presets
+         * @description The database presets on offer: only those verified with a real export (Task 26).
+         */
+        get: operations["list_presets_imports_presets_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/imports/preview": {
         parameters: {
             query?: never;
@@ -1169,6 +1189,8 @@ export interface components {
         ImportLog: {
             /** Saved Search Id */
             saved_search_id?: string | null;
+            /** Preset */
+            preset?: string | null;
             /**
              * Source
              * @example Scopus
@@ -1466,6 +1488,15 @@ export interface components {
             paths: string[];
             /** Paper Id */
             paper_id?: string | null;
+        };
+        /** PresetView */
+        PresetView: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /** Formats */
+            formats: components["schemas"]["ImportFormat"][];
         };
         /** PreviewRecord */
         PreviewRecord: {
@@ -4244,6 +4275,62 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchResultRow"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_presets_imports_presets_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PresetView"][];
                 };
             };
             /** @description Missing or invalid token */

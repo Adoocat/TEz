@@ -47,6 +47,32 @@ function lastRequest(backend: FakeBackend, path: string) {
 }
 
 describe("saved external searches", () => {
+  it("shows how to export from the chosen database", async () => {
+    const { user } = setUp();
+    await openTab(user);
+
+    expect(await screen.findByText(/RIS \(other reference software\)/)).toBeInTheDocument();
+    await user.selectOptions(screen.getByLabelText("Database"), "Google Scholar");
+    expect(screen.getByText(/Import into BibTeX/)).toBeInTheDocument();
+  });
+
+  it("logs an import under a tested database preset", async () => {
+    const { backend, user } = setUp();
+    backend.presets = [{ key: "jstor", name: "JSTOR", formats: ["ris"] }];
+    await user.click(await screen.findByRole("button", { name: "Import file" }));
+    const dialog = await screen.findByRole("dialog", { name: "Import exported results" });
+    await user.upload(
+      within(dialog).getByLabelText("Choose file"),
+      new File([RIS], "jstor.ris", { type: "application/x-research-info-systems" }),
+    );
+    await user.selectOptions(await within(dialog).findByLabelText("Database"), "JSTOR");
+    await user.click(within(dialog).getByRole("button", { name: /^Import \d/ }));
+
+    await within(dialog).findByRole("status");
+    expect(lastRequest(backend, "/imports").log).toMatchObject({ preset: "jstor" });
+    expect(lastRequest(backend, "/imports").log).not.toHaveProperty("source");
+  });
+
   it("saves a database and its query, and lists it", async () => {
     const { backend, user } = setUp();
     await openTab(user);

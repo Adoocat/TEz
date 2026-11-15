@@ -16,6 +16,7 @@ from pathlib import Path, PurePath
 
 from tez.core.db import Database, utcnow
 from tez.core.errors import ErrorCode, TezError
+from tez.modules.importers import presets
 from tez.modules.importers.bibtex import parse_bibtex
 from tez.modules.importers.parsing import EntryIssue, ImportFormat, ParsedEntry, ParsedFile
 from tez.modules.importers.ris import parse_ris
@@ -202,6 +203,8 @@ def import_bytes(
     if request.log is not None and request.review_id is not None:
         log = request.log
         source, query, query_id = log.source or "", log.query or None, None
+        if log.preset is not None:
+            source = presets.get_available(log.preset).name
         if log.saved_search_id is not None:
             earlier = EarlierImports(db, log.saved_search_id, request.review_id)
             source, query, query_id = earlier.source, earlier.query, log.saved_search_id
