@@ -12,7 +12,8 @@
     "notes": "Notes",
     "matrix": "Matrix",
     "jobs": "Jobs",
-    "settings": "Settings"
+    "settings": "Settings",
+    "review": "Review"
   },
   "shell": {
     "toggleSidebar": "Toggle sidebar",
@@ -197,7 +198,56 @@
       "kitchenham_slr": "Kitchenham SLR"
     },
     "create": "Create review",
-    "createFailed": "The review could not be created."
+    "createFailed": "The review could not be created.",
+    "methodHint": {
+      "prisma2020": "Reporting guideline for systematic reviews in any field: records, screening and a flow diagram.",
+      "kitchenham_slr": "Guidelines for systematic literature reviews in software engineering."
+    },
+    "questionLabel": "Research question {{n}}",
+    "questionCode": "RQ{{n}}",
+    "addQuestion": "Add question",
+    "removeQuestion": "Remove research question {{n}}",
+    "protocolLabel": "Protocol note",
+    "protocolPlaceholder": "e.g. registration, databases planned, date range, language limits",
+    "wizard": {
+      "steps": "Steps",
+      "step": {
+        "basics": "Title & method",
+        "questions": "Research questions",
+        "protocol": "Protocol"
+      },
+      "questionsHint": "Optional. One question per line; you can add up to 20.",
+      "back": "Back",
+      "next": "Next"
+    },
+    "panel": {
+      "title": "Review",
+      "none": "There is no review yet. A review holds your searches, screening decisions and PRISMA counts.",
+      "questions": "Research questions",
+      "noQuestions": "No research questions yet.",
+      "stages": "Stages",
+      "stage": {
+        "search": "Search",
+        "title_abstract": "Title-abstract screening",
+        "full_text": "Full-text screening"
+      },
+      "records_one": "{{n}} record in the review",
+      "records_other": "{{n}} records in the review",
+      "toSearch": "Go to search",
+      "pending_one": "{{n}} waiting",
+      "pending_other": "{{n}} waiting",
+      "decided": "{{decided}} / {{eligible}} decided",
+      "included": "{{n}} included",
+      "excluded": "{{n}} excluded",
+      "maybe": "{{n}} maybe",
+      "continue": "Continue",
+      "continueStage": "Continue {{stage}}",
+      "overviewFailed": "The stage counts could not be loaded.",
+      "searches": "Recent searches",
+      "unique": "{{n}} unique",
+      "prisma": "PRISMA summary",
+      "prismaSoon": "The PRISMA 2020 flow summary will appear here once the diagram is ready."
+    }
   },
   "search": {
     "title": "Systematic search",

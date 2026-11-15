@@ -12,7 +12,8 @@
     "notes": "Notlar",
     "matrix": "Matris",
     "jobs": "İşler",
-    "settings": "Ayarlar"
+    "settings": "Ayarlar",
+    "review": "Review"
   },
   "shell": {
     "toggleSidebar": "Kenar çubuğunu aç/kapat",
@@ -197,7 +198,56 @@
       "kitchenham_slr": "Kitchenham SLR"
     },
     "create": "Review oluştur",
-    "createFailed": "Review oluşturulamadı."
+    "createFailed": "Review oluşturulamadı.",
+    "methodHint": {
+      "prisma2020": "Her alanda sistematik derlemeler için raporlama kılavuzu: kayıtlar, eleme ve akış diyagramı.",
+      "kitchenham_slr": "Yazılım mühendisliğinde sistematik literatür taraması kılavuzu."
+    },
+    "questionLabel": "Araştırma sorusu {{n}}",
+    "questionCode": "RQ{{n}}",
+    "addQuestion": "Soru ekle",
+    "removeQuestion": "{{n}}. araştırma sorusunu kaldır",
+    "protocolLabel": "Protokol notu",
+    "protocolPlaceholder": "örn. kayıt, planlanan veritabanları, tarih aralığı, dil sınırları",
+    "wizard": {
+      "steps": "Adımlar",
+      "step": {
+        "basics": "Başlık ve yöntem",
+        "questions": "Araştırma soruları",
+        "protocol": "Protokol"
+      },
+      "questionsHint": "İsteğe bağlı. Her satıra bir soru; en çok 20 soru eklenebilir.",
+      "back": "Geri",
+      "next": "İleri"
+    },
+    "panel": {
+      "title": "Review",
+      "none": "Henüz review yok. Review, aramalarınızı, eleme kararlarınızı ve PRISMA sayılarını bir arada tutar.",
+      "questions": "Araştırma soruları",
+      "noQuestions": "Henüz araştırma sorusu yok.",
+      "stages": "Aşamalar",
+      "stage": {
+        "search": "Arama",
+        "title_abstract": "Başlık-özet eleme",
+        "full_text": "Tam metin eleme"
+      },
+      "records_one": "Review'da {{n}} kayıt",
+      "records_other": "Review'da {{n}} kayıt",
+      "toSearch": "Aramaya git",
+      "pending_one": "{{n}} bekliyor",
+      "pending_other": "{{n}} bekliyor",
+      "decided": "{{decided}} / {{eligible}} karar verildi",
+      "included": "{{n}} dahil",
+      "excluded": "{{n}} hariç",
+      "maybe": "{{n}} belki",
+      "continue": "Devam et",
+      "continueStage": "{{stage}}: devam et",
+      "overviewFailed": "Aşama sayıları yüklenemedi.",
+      "searches": "Son aramalar",
+      "unique": "{{n}} tekil",
+      "prisma": "PRISMA özeti",
+      "prismaSoon": "Diyagram hazır olduğunda PRISMA 2020 akış özeti burada görünecek."
+    }
   },
   "search": {
     "title": "Sistematik arama",

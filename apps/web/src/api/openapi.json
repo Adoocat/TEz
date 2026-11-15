@@ -2033,6 +2033,161 @@
         ]
       }
     },
+    "/reviews/{review_id}": {
+      "get": {
+        "tags": [
+          "reviews"
+        ],
+        "summary": "Get Review",
+        "operationId": "get_review_reviews__review_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{review_id}/overview": {
+      "get": {
+        "tags": [
+          "reviews"
+        ],
+        "summary": "Get Overview",
+        "description": "The review panel's counts per screening stage, derived on every read.",
+        "operationId": "get_overview_reviews__review_id__overview_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewOverview"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/reviews/{review_id}/records": {
       "post": {
         "tags": [
@@ -5655,14 +5810,35 @@
             "title": "Title"
           },
           "method": {
-            "$ref": "#/components/schemas/ReviewMethod"
+            "$ref": "#/components/schemas/ReviewMethod",
+            "default": "prisma2020"
+          },
+          "research_questions": {
+            "items": {
+              "type": "string",
+              "maxLength": 1000
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Research Questions"
+          },
+          "protocol": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 20000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Protocol"
           }
         },
         "additionalProperties": false,
         "type": "object",
         "required": [
-          "title",
-          "method"
+          "title"
         ],
         "title": "ReviewCreate"
       },
@@ -5673,6 +5849,33 @@
           "kitchenham_slr"
         ],
         "title": "ReviewMethod"
+      },
+      "ReviewOverview": {
+        "properties": {
+          "review_id": {
+            "type": "string",
+            "title": "Review Id"
+          },
+          "records": {
+            "type": "integer",
+            "title": "Records"
+          },
+          "stages": {
+            "items": {
+              "$ref": "#/components/schemas/StageProgress"
+            },
+            "type": "array",
+            "title": "Stages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "review_id",
+          "records",
+          "stages"
+        ],
+        "title": "ReviewOverview",
+        "description": "The review panel's numbers (design 5.1). Derived on every read, never stored."
       },
       "ReviewStatus": {
         "type": "string",
@@ -5698,6 +5901,24 @@
           "status": {
             "$ref": "#/components/schemas/ReviewStatus"
           },
+          "research_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Research Questions"
+          },
+          "protocol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Protocol"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -5710,6 +5931,8 @@
           "title",
           "method",
           "status",
+          "research_questions",
+          "protocol",
           "created_at"
         ],
         "title": "ReviewView"
@@ -5785,6 +6008,14 @@
           "error"
         ],
         "title": "RunView"
+      },
+      "ScreeningStage": {
+        "type": "string",
+        "enum": [
+          "title_abstract",
+          "full_text"
+        ],
+        "title": "ScreeningStage"
       },
       "SearchHits": {
         "properties": {
@@ -6335,6 +6566,49 @@
           "failed"
         ],
         "title": "SourceState"
+      },
+      "StageProgress": {
+        "properties": {
+          "stage": {
+            "$ref": "#/components/schemas/ScreeningStage"
+          },
+          "eligible": {
+            "type": "integer",
+            "title": "Eligible"
+          },
+          "decided": {
+            "type": "integer",
+            "title": "Decided"
+          },
+          "pending": {
+            "type": "integer",
+            "title": "Pending"
+          },
+          "included": {
+            "type": "integer",
+            "title": "Included"
+          },
+          "excluded": {
+            "type": "integer",
+            "title": "Excluded"
+          },
+          "maybe": {
+            "type": "integer",
+            "title": "Maybe"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "eligible",
+          "decided",
+          "pending",
+          "included",
+          "excluded",
+          "maybe"
+        ],
+        "title": "StageProgress",
+        "description": "Where one screening stage stands, derived from the decisions in force."
       },
       "TagCreate": {
         "properties": {

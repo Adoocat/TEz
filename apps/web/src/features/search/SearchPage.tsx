@@ -10,7 +10,7 @@ import { Segmented } from "@/components/ui/segmented";
 import { useFindOpenAccess } from "@/features/files/api";
 import { ImportDialog } from "@/features/imports/ImportDialog";
 import { useOpenStore } from "@/features/open/store";
-import { ReviewForm } from "@/features/reviews/ReviewForm";
+import { ReviewWizard } from "@/features/reviews/ReviewWizard";
 import { useActiveReview } from "@/features/reviews/store";
 import { useReviews } from "@/features/reviews/api";
 import { ApiError } from "@/lib/api/query";
@@ -63,7 +63,7 @@ export function SearchPage() {
       <div className="mx-auto max-w-md space-y-4 p-6">
         <h1 className="text-h1">{t("search.title")}</h1>
         <p className="text-ui text-fg-muted">{t("search.needReview")}</p>
-        <ReviewForm />
+        <ReviewWizard />
       </div>
     );
   }

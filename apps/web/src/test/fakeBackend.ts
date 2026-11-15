@@ -12,6 +12,7 @@ type TagView = components["schemas"]["TagView"];
 type LibraryPaperRow = components["schemas"]["LibraryPaperRow"];
 type PaperDetail = components["schemas"]["PaperDetail"];
 type ReviewView = components["schemas"]["ReviewView"];
+type ReviewOverview = components["schemas"]["ReviewOverview"];
 type SearchOverview = components["schemas"]["SearchOverview"];
 type SearchResultRow = components["schemas"]["SearchResultRow"];
 type SourceProgress = components["schemas"]["SourceProgress"];
@@ -24,6 +25,8 @@ export interface FakeBackend {
   /** Push a job update to every open /jobs/events stream. */
   emitJob: (job: JobView) => void;
   reviews: ReviewView[];
+  /** What GET /reviews/{id}/overview answers; a review with no records when missing. */
+  reviewOverviews: Record<string, ReviewOverview>;
   searchOverview: SearchOverview | null;
   searchResults: SearchResultRow[];
   searchHistory: SearchOverview[];
@@ -62,6 +65,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     secrets: new Map(),
     requests: [],
     reviews: [],
+    reviewOverviews: {},
     searchOverview: null,
     searchResults: [],
     searchHistory: [],
@@ -141,10 +145,17 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
       if (route === "POST /reviews") {
         const created = review({
           id: `review-${String(backend.reviews.length + 1)}`,
+          method: "prisma2020",
           ...(body as Partial<ReviewView>),
         });
         backend.reviews.push(created);
         return json(created, 201);
+      }
+      const overviewOf = /^\/reviews\/([^/]+)\/overview$/.exec(path)?.[1];
+      if (overviewOf && request.method === "GET") {
+        return json(
+          backend.reviewOverviews[overviewOf] ?? reviewOverview({ review_id: overviewOf }),
+        );
       }
       if (route === "POST /searches") {
         const { sources } = body as { sources: string[] };
@@ -329,7 +340,22 @@ export function review(overrides: Partial<ReviewView> = {}): ReviewView {
     title: "LLM Code Review SLR",
     method: "kitchenham_slr",
     status: "active",
+    research_questions: [],
+    protocol: null,
     created_at: "2026-11-04T10:00:00+00:00",
+    ...overrides,
+  };
+}
+
+export function reviewOverview(overrides: Partial<ReviewOverview> = {}): ReviewOverview {
+  const empty = { eligible: 0, decided: 0, pending: 0, included: 0, excluded: 0, maybe: 0 };
+  return {
+    review_id: "review-1",
+    records: 0,
+    stages: [
+      { stage: "title_abstract", ...empty },
+      { stage: "full_text", ...empty },
+    ],
     ...overrides,
   };
 }
