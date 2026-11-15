@@ -5,20 +5,20 @@ import { useApi } from "@/app/backend";
 import { searchKeys } from "@/features/search/api";
 import { unwrap } from "@/lib/api/query";
 
-export type ImportFile = components["schemas"]["ImportFile"];
+// The file part of a preview or import request (the backend has no endpoint taking it alone).
+export type ImportFile = Pick<ImportPreviewRequest, "file_name" | "content_base64" | "path">;
+export type ImportPreviewRequest = components["schemas"]["ImportPreviewRequest"];
 export type ImportRequest = components["schemas"]["ImportRequest"];
 export type ImportPreview = components["schemas"]["ImportPreview"];
 export type ImportOutcome = components["schemas"]["ImportOutcome"];
 export type ImportIssueView = components["schemas"]["ImportIssueView"];
 export type PreviewRecord = components["schemas"]["PreviewRecord"];
 
-// Databases whose exports people import most; anything else is typed in.
-export const knownDatabases = ["IEEE Xplore", "ACM DL", "Scopus", "Web of Science"] as const;
-
 export function usePreviewImport() {
   const api = useApi();
   return useMutation({
-    mutationFn: async (body: ImportFile) => unwrap(await api.POST("/imports/preview", { body })),
+    mutationFn: async (body: ImportPreviewRequest) =>
+      unwrap(await api.POST("/imports/preview", { body })),
   });
 }
 
@@ -27,6 +27,10 @@ export function useRunImport(reviewId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (body: ImportRequest) => unwrap(await api.POST("/imports", { body })),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: searchKeys.history(reviewId) }),
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: searchKeys.history(reviewId) }),
+        queryClient.invalidateQueries({ queryKey: searchKeys.external(reviewId) }),
+      ]),
   });
 }

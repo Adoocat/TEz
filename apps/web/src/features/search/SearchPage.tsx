@@ -33,12 +33,13 @@ import {
   type VenueType,
 } from "./filters";
 import { ResultList } from "./ResultList";
+import { ExternalSearches } from "./ExternalSearches";
 import { SearchHistory } from "./SearchHistory";
 import { SourceChips, SourceProblems } from "./SourceChips";
 import { useSearchView } from "./store";
 import { useSearchProgress } from "./useSearchProgress";
 
-type Tab = "results" | "history";
+type Tab = "results" | "history" | "external";
 
 // Per source. Systematic searches want breadth; the backend allows up to 5000.
 const RESULT_LIMIT = 1000;
@@ -91,6 +92,7 @@ export function SearchPage() {
             options={[
               { value: "results", label: t("search.results") },
               { value: "history", label: t("search.historyTab") },
+              { value: "external", label: t("search.external.tab") },
             ]}
           />
         </div>
@@ -110,6 +112,14 @@ export function SearchPage() {
       />
       {tab === "results" ? (
         <Results reviewId={review.id} searchId={activeSearchId} onStarted={openSearch} />
+      ) : tab === "external" ? (
+        <ExternalSearches
+          reviewId={review.id}
+          onShowResults={(searchId) => {
+            openSearch(searchId);
+            setTab("results");
+          }}
+        />
       ) : (
         <SearchHistory
           reviewId={review.id}

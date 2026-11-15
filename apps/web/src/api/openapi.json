@@ -2867,6 +2867,163 @@
         }
       }
     },
+    "/searches/external": {
+      "get": {
+        "tags": [
+          "search"
+        ],
+        "summary": "List External Searches",
+        "description": "The review's saved searches of databases without an open API (Task 27).",
+        "operationId": "list_external_searches_searches_external_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalSearchView"
+                  },
+                  "title": "Response List External Searches Searches External Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "search"
+        ],
+        "summary": "Save External Search",
+        "description": "Save a database and the query run on its site; import its exports against it.",
+        "operationId": "save_external_search_searches_external_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalSearchCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalSearchView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/searches/{search_id}/events": {
       "get": {
         "tags": [
@@ -3129,13 +3286,13 @@
           "imports"
         ],
         "summary": "Preview Import",
-        "description": "Read a BibTeX or RIS file and say what importing it would do. Writes nothing.",
+        "description": "Read a BibTeX or RIS file and say what importing it would do. Writes nothing.\n\nWith `saved_search_id`, it also says how many records are new since the last import.",
         "operationId": "preview_import_imports_preview_post",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ImportFile"
+                "$ref": "#/components/schemas/ImportPreviewRequest"
               }
             }
           },
@@ -5091,6 +5248,119 @@
         ],
         "title": "ExportResult"
       },
+      "ExternalSearchCreate": {
+        "properties": {
+          "review_id": {
+            "type": "string",
+            "title": "Review Id"
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Source",
+            "examples": [
+              "Scopus"
+            ]
+          },
+          "query": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Query"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "review_id",
+          "source",
+          "query"
+        ],
+        "title": "ExternalSearchCreate",
+        "description": "A search the user runs on a database's own site, kept so it can be run again."
+      },
+      "ExternalSearchView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "review_id": {
+            "type": "string",
+            "title": "Review Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "query": {
+            "type": "string",
+            "title": "Query"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "imports": {
+            "type": "integer",
+            "title": "Imports"
+          },
+          "last_searched_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Searched At"
+          },
+          "last_retrieved": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Retrieved"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "review_id",
+          "name",
+          "source",
+          "query",
+          "created_at",
+          "imports",
+          "last_searched_at",
+          "last_retrieved"
+        ],
+        "title": "ExternalSearchView"
+      },
       "Health": {
         "properties": {
           "status": {
@@ -5122,49 +5392,6 @@
           "zotero"
         ],
         "title": "IdentifierScheme"
-      },
-      "ImportFile": {
-        "properties": {
-          "file_name": {
-            "type": "string",
-            "maxLength": 255,
-            "minLength": 1,
-            "title": "File Name"
-          },
-          "content_base64": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 40000000,
-                "minLength": 1
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Content Base64"
-          },
-          "path": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 4096,
-                "minLength": 1
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Path"
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "required": [
-          "file_name"
-        ],
-        "title": "ImportFile",
-        "description": "The file to read: its bytes (from a browser) or its path on this computer (from the\ndesktop app's \"open with\" and the terminal). Exactly one of the two."
       },
       "ImportFormat": {
         "type": "string",
@@ -5224,13 +5451,31 @@
       },
       "ImportLog": {
         "properties": {
+          "saved_search_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved Search Id"
+          },
           "source": {
-            "type": "string",
-            "maxLength": 64,
-            "minLength": 1,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Source",
             "examples": [
-              "IEEE Xplore"
+              "Scopus"
             ]
           },
           "searched_at": {
@@ -5260,11 +5505,8 @@
         },
         "additionalProperties": false,
         "type": "object",
-        "required": [
-          "source"
-        ],
         "title": "ImportLog",
-        "description": "Log the import as a search run: the systematic record of a database search."
+        "description": "Log the import as a search run: the systematic record of a database search.\n\nEither a saved external search (Task 27), which gives the database and the query, or\nthe database and, optionally, the query."
       },
       "ImportOutcome": {
         "properties": {
@@ -5308,6 +5550,16 @@
           "added_to_library": {
             "type": "integer",
             "title": "Added To Library"
+          },
+          "since_last": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SinceLastImport"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -5375,6 +5627,16 @@
             },
             "type": "array",
             "title": "Sample"
+          },
+          "since_last": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SinceLastImport"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -5391,6 +5653,59 @@
           "sample"
         ],
         "title": "ImportPreview"
+      },
+      "ImportPreviewRequest": {
+        "properties": {
+          "file_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "File Name"
+          },
+          "content_base64": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40000000,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content Base64"
+          },
+          "path": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4096,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Path"
+          },
+          "saved_search_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved Search Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "file_name"
+        ],
+        "title": "ImportPreviewRequest"
       },
       "ImportRequest": {
         "properties": {
@@ -7148,6 +7463,26 @@
         "type": "object",
         "title": "SettingsPatch",
         "description": "Only the fields present are changed; null resets a field to its default."
+      },
+      "SinceLastImport": {
+        "properties": {
+          "last_searched_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last Searched At"
+          },
+          "new": {
+            "type": "integer",
+            "title": "New"
+          }
+        },
+        "type": "object",
+        "required": [
+          "last_searched_at",
+          "new"
+        ],
+        "title": "SinceLastImport",
+        "description": "How a new import of a saved external search compares with its earlier imports."
       },
       "SourceProgress": {
         "properties": {

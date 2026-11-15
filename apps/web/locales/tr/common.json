@@ -189,7 +189,8 @@
     "screening.criterion_not_found": "Bu kriter artık yok.",
     "screening.criterion_in_use": "Eleme kararları bu kritere dayanıyor: silmek yerine arşivleyin.",
     "screening.criterion_code_taken": "{{code}} kodu bu review'da zaten kullanılıyor.",
-    "screening.criteria_order_mismatch": "Kriterler bu arada değişti; yenileyip yeniden deneyin."
+    "screening.criteria_order_mismatch": "Kriterler bu arada değişti; yenileyip yeniden deneyin.",
+    "external_search.not_found": "Bu kayıtlı arama artık yok."
   },
   "reviews": {
     "active": "Etkin review",
@@ -398,7 +399,23 @@
       "imported": "İçe aktarıldı: {{file}}"
     },
     "findPdfs": "PDF'leri bul ({{count}})",
-    "pdfsQueued": "{{queued}} indirme kuyruğa alındı · {{have}} tanesinin PDF'i zaten var · {{none}} tanesinde DOI, arXiv kimliği veya bağlantı yok"
+    "pdfsQueued": "{{queued}} indirme kuyruğa alındı · {{have}} tanesinin PDF'i zaten var · {{none}} tanesinde DOI, arXiv kimliği veya bağlantı yok",
+    "external": {
+      "tab": "Harici veritabanları",
+      "intro": "Açık API'si olmayan veritabanları (Scopus, Web of Science, TR Dizin…): sitelerinde çalıştırdığınız sorguyu kaydedin, sonra her dışa aktarımı ona bağlı içe aktarın. Her içe aktarma ayrı bir arama kaydıdır; elemeye yalnız son içe aktarmadan beri yeni olan kayıtlar girer.",
+      "query": "Sitede çalıştırılan sorgu",
+      "save": "Aramayı kaydet",
+      "saveFailed": "Arama kaydedilemedi.",
+      "empty": "Henüz kayıtlı harici arama yok.",
+      "listLabel": "Kayıtlı harici aramalar",
+      "notImported": "Henüz içe aktarılmadı",
+      "imported_one": "{{count}} içe aktarma · son arama {{date}} · {{records}} kayıt",
+      "imported_other": "{{count}} içe aktarma · son arama {{date}} · {{records}} kayıt",
+      "openSite": "Siteyi aç",
+      "copyQuery": "Sorguyu kopyala",
+      "importNew": "Yeni dışa aktarımı içe aktar",
+      "copied": "Sorgu kopyalandı. Sitede yapıştırın."
+    }
   },
   "imports": {
     "open": "Dosyadan içe aktar",
@@ -460,7 +477,11 @@
     "cancel": "Vazgeç",
     "close": "Kapat",
     "showResults": "Sonuçları göster",
-    "done": "{{imported}} kayıt içe aktarıldı: {{newPapers}} yeni makale, {{toReview}} kayıt review'a eklendi."
+    "done": "{{imported}} kayıt içe aktarıldı: {{newPapers}} yeni makale, {{toReview}} kayıt review'a eklendi.",
+    "savedSearch": "Kayıtlı harici arama",
+    "noSavedSearch": "Yok (veritabanını girin)",
+    "sinceLast_one": "Son içe aktarmadan ({{date}}) beri {{n}} yeni kayıt",
+    "sinceLast_other": "Son içe aktarmadan ({{date}}) beri {{n}} yeni kayıt"
   },
   "files": {
     "dropToAdd": "Kütüphaneye eklemek için PDF'leri bırakın",

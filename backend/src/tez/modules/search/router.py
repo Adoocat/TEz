@@ -9,7 +9,7 @@ from tez.core.errors import ErrorCode, TezError
 from tez.modules.library.router import get_library
 from tez.modules.library.service import Library
 from tez.modules.reviews import service as reviews_service
-from tez.modules.search import queries
+from tez.modules.search import external, queries
 from tez.modules.search.live import LiveSearch, SearchRegistry
 from tez.modules.search.providers.base import SearchRequest
 from tez.modules.search.providers.registry import (
@@ -18,6 +18,8 @@ from tez.modules.search.providers.registry import (
     read_access,
 )
 from tez.modules.search.schemas import (
+    ExternalSearchCreate,
+    ExternalSearchView,
     SearchOverview,
     SearchResultRow,
     SearchStart,
@@ -103,6 +105,19 @@ def get_live_search(search_id: str, registry: RegistryDep) -> LiveSearch:
 def list_searches(review_id: str, library: LibraryDep) -> list[SearchOverview]:
     """The review's search history, newest first."""
     return queries.history(library.db, review_id)
+
+
+# Before `/{search_id}`, which would take "external" for an id.
+@router.get("/external")
+def list_external_searches(review_id: str, library: LibraryDep) -> list[ExternalSearchView]:
+    """The review's saved searches of databases without an open API (Task 27)."""
+    return external.list_saved(library.db, review_id)
+
+
+@router.post("/external", status_code=201)
+def save_external_search(body: ExternalSearchCreate, library: LibraryDep) -> ExternalSearchView:
+    """Save a database and the query run on its site; import its exports against it."""
+    return external.save(library.db, body)
 
 
 # `responses` puts SourceProgress in the OpenAPI schema, so the client knows the event's shape.

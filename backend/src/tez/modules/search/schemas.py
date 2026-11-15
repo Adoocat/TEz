@@ -251,3 +251,41 @@ class SearchResultRow(BaseModel):
     in_library: bool
     in_review: bool
     sources: list[ResultSource]
+
+
+# --- saved external searches (Task 27) -------------------------------------------------
+
+
+class ExternalSearchCreate(BaseModel):
+    """A search the user runs on a database's own site, kept so it can be run again."""
+
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    review_id: str
+    # The database's name, as its imports log it in `search_run.source`.
+    source: str = Field(min_length=1, max_length=64, examples=["Scopus"])
+    query: str = Field(min_length=1, max_length=4000)
+    # Defaults to the query.
+    name: str | None = Field(default=None, max_length=200)
+
+
+class ExternalSearchView(BaseModel):
+    id: str
+    review_id: str
+    name: str
+    source: str
+    query: str
+    created_at: datetime
+    # Derived from its runs: every import of the search is one run.
+    imports: int
+    # The day the search last ran at the source, and what that import held.
+    last_searched_at: datetime | None
+    last_retrieved: int | None
+
+
+class SinceLastImport(BaseModel):
+    """How a new import of a saved external search compares with its earlier imports."""
+
+    last_searched_at: datetime
+    # Papers no earlier import of the search found.
+    new: int

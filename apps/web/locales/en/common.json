@@ -189,7 +189,8 @@
     "screening.criterion_not_found": "This criterion no longer exists.",
     "screening.criterion_in_use": "Screening decisions cite this criterion: archive it instead.",
     "screening.criterion_code_taken": "The code {{code}} is already used in this review.",
-    "screening.criteria_order_mismatch": "The criteria changed meanwhile; reload and try again."
+    "screening.criteria_order_mismatch": "The criteria changed meanwhile; reload and try again.",
+    "external_search.not_found": "This saved search no longer exists."
   },
   "reviews": {
     "active": "Active review",
@@ -398,7 +399,23 @@
       "imported": "Imported: {{file}}"
     },
     "findPdfs": "Find PDFs ({{count}})",
-    "pdfsQueued": "{{queued}} downloads queued · {{have}} already have a PDF · {{none}} have no DOI, arXiv id or link"
+    "pdfsQueued": "{{queued}} downloads queued · {{have}} already have a PDF · {{none}} have no DOI, arXiv id or link",
+    "external": {
+      "tab": "External databases",
+      "intro": "Databases without an open API (Scopus, Web of Science, TR Dizin…): save the query you run on their site, then import each export against it. Every import is its own search run; only records new since the last import enter screening.",
+      "query": "Query run on the site",
+      "save": "Save search",
+      "saveFailed": "The search could not be saved.",
+      "empty": "No saved external search yet.",
+      "listLabel": "Saved external searches",
+      "notImported": "Not imported yet",
+      "imported_one": "{{count}} import · last searched {{date}} · {{records}} records",
+      "imported_other": "{{count}} imports · last searched {{date}} · {{records}} records",
+      "openSite": "Open site",
+      "copyQuery": "Copy query",
+      "importNew": "Import new export",
+      "copied": "Query copied. Paste it on the site."
+    }
   },
   "imports": {
     "open": "Import file",
@@ -460,7 +477,11 @@
     "cancel": "Cancel",
     "close": "Close",
     "showResults": "Show results",
-    "done": "{{imported}} records imported: {{newPapers}} new papers, {{toReview}} added to the review."
+    "done": "{{imported}} records imported: {{newPapers}} new papers, {{toReview}} added to the review.",
+    "savedSearch": "Saved external search",
+    "noSavedSearch": "None (enter the database)",
+    "sinceLast_one": "{{n}} new record since the last import ({{date}})",
+    "sinceLast_other": "{{n}} new records since the last import ({{date}})"
   },
   "files": {
     "dropToAdd": "Drop PDFs to add them to the library",

@@ -13,8 +13,9 @@ import { ApiError } from "@/lib/api/query";
 import { fileToBase64 } from "@/lib/base64";
 import { cn } from "@/lib/cn";
 
+import { useExternalSearches } from "@/features/search/api";
+
 import {
-  knownDatabases,
   usePreviewImport,
   useRunImport,
   type ImportFile,
@@ -22,6 +23,7 @@ import {
   type ImportPreview,
   type PreviewRecord,
 } from "./api";
+import { knownDatabases } from "./databases";
 
 const ACCEPT = ".bib,.bibtex,.ris,.txt";
 const OTHER = "other";
@@ -44,6 +46,7 @@ export function ImportDialog({
   onOpenChange,
   onShowResults,
   initialPath = null,
+  savedSearchId = null,
 }: {
   reviewId: string;
   open: boolean;
@@ -51,6 +54,8 @@ export function ImportDialog({
   onShowResults: (searchId: string) => void;
   /** A file on this computer to start with: `tez refs.bib`, "Open with TEz" (Task 22). */
   initialPath?: string | null;
+  /** A saved external search this file is a new export of (Task 27). */
+  savedSearchId?: string | null;
 }) {
   const { t } = useTranslation();
   return (
@@ -69,6 +74,7 @@ export function ImportDialog({
             <ImportWizard
               reviewId={reviewId}
               initialPath={initialPath}
+              initialSavedSearch={savedSearchId}
               onClose={() => {
                 onOpenChange(false);
               }}
@@ -91,17 +97,22 @@ function fromPath(path: string): ImportFile {
 function ImportWizard({
   reviewId,
   initialPath,
+  initialSavedSearch,
   onClose,
   onShowResults,
 }: {
   reviewId: string;
   initialPath: string | null;
+  initialSavedSearch: string | null;
   onClose: () => void;
   onShowResults: (searchId: string) => void;
 }) {
   const { t } = useTranslation();
   const preview = usePreviewImport();
   const run = useRunImport(reviewId);
+  const savedSearches = useExternalSearches(reviewId);
+  // "" when the import is not a run of a saved external search.
+  const [savedSearch, setSavedSearch] = useState(initialSavedSearch ?? "");
   // A file given by path is read by the backend, which can reach this computer's disk.
   const [file, setFile] = useState<ImportFile | null>(() =>
     initialPath ? fromPath(initialPath) : null,
@@ -116,17 +127,16 @@ function ImportWizard({
   const [toLibrary, setToLibrary] = useState(false);
 
   const { mutate: startPreview } = preview;
+  // A saved search changes the comparison with earlier imports: preview again.
   useEffect(() => {
-    if (initialPath) startPreview(fromPath(initialPath));
-  }, [initialPath, startPreview]);
+    if (file) startPreview(savedSearch ? { ...file, saved_search_id: savedSearch } : file);
+  }, [file, savedSearch, startPreview]);
 
   async function choose(chosen: File) {
     setReadFailed(false);
     run.reset();
     try {
-      const body = { file_name: chosen.name, content_base64: await fileToBase64(chosen) };
-      setFile(body);
-      preview.mutate(body);
+      setFile({ file_name: chosen.name, content_base64: await fileToBase64(chosen) });
     } catch {
       setReadFailed(true);
     }
@@ -139,7 +149,7 @@ function ImportWizard({
     preview.isSuccess &&
     preview.data.readable > 0 &&
     hasTarget &&
-    (!logRun || source !== "") &&
+    (!logRun || savedSearch !== "" || source !== "") &&
     !run.isPending &&
     !run.isSuccess;
 
@@ -149,7 +159,11 @@ function ImportWizard({
     run.mutate({
       ...file,
       review_id: reviewId,
-      log: logRun ? { source, searched_at: searchedAt || null, query: query.trim() || null } : null,
+      log: !logRun
+        ? null
+        : savedSearch
+          ? { saved_search_id: savedSearch, searched_at: searchedAt || null }
+          : { source, searched_at: searchedAt || null, query: query.trim() || null },
       add_to_review: toReview,
       add_to_library: toLibrary,
       initiated_via: "gui",
@@ -189,35 +203,70 @@ function ImportWizard({
             </label>
             {logRun && (
               <div className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2 pl-6">
-                <span className="text-meta text-fg-muted">{t("imports.database")}</span>
-                <div className="flex gap-2">
-                  <select
-                    aria-label={t("imports.database")}
-                    className="h-8 rounded-md border border-line-strong bg-raised px-2 text-ui text-fg"
-                    value={database}
-                    onChange={(event) => {
-                      setDatabase(event.target.value);
-                    }}
-                  >
-                    {knownDatabases.map((name) => (
-                      <option key={name} value={name}>
-                        {name}
-                      </option>
-                    ))}
-                    <option value={OTHER}>{t("imports.otherDatabase")}</option>
-                  </select>
-                  {database === OTHER && (
-                    <Input
-                      aria-label={t("imports.otherDatabaseName")}
-                      placeholder={t("imports.otherDatabaseName")}
-                      maxLength={64}
-                      value={otherDatabase}
+                {savedSearches.data && savedSearches.data.length > 0 && (
+                  <label className="contents">
+                    <span className="text-meta text-fg-muted">{t("imports.savedSearch")}</span>
+                    <select
+                      className="h-8 rounded-md border border-line-strong bg-raised px-2 text-ui text-fg"
+                      value={savedSearch}
                       onChange={(event) => {
-                        setOtherDatabase(event.target.value);
+                        setSavedSearch(event.target.value);
                       }}
-                    />
-                  )}
-                </div>
+                    >
+                      <option value="">{t("imports.noSavedSearch")}</option>
+                      {savedSearches.data.map((saved) => (
+                        <option key={saved.id} value={saved.id}>
+                          {saved.source} · {saved.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+                {!savedSearch && (
+                  <>
+                    <span className="text-meta text-fg-muted">{t("imports.database")}</span>
+                    <div className="flex gap-2">
+                      <select
+                        aria-label={t("imports.database")}
+                        className="h-8 rounded-md border border-line-strong bg-raised px-2 text-ui text-fg"
+                        value={database}
+                        onChange={(event) => {
+                          setDatabase(event.target.value);
+                        }}
+                      >
+                        {knownDatabases.map((name) => (
+                          <option key={name} value={name}>
+                            {name}
+                          </option>
+                        ))}
+                        <option value={OTHER}>{t("imports.otherDatabase")}</option>
+                      </select>
+                      {database === OTHER && (
+                        <Input
+                          aria-label={t("imports.otherDatabaseName")}
+                          placeholder={t("imports.otherDatabaseName")}
+                          maxLength={64}
+                          value={otherDatabase}
+                          onChange={(event) => {
+                            setOtherDatabase(event.target.value);
+                          }}
+                        />
+                      )}
+                    </div>
+                    <label className="contents">
+                      <span className="text-meta text-fg-muted">{t("imports.query")}</span>
+                      <Input
+                        className="font-mono"
+                        placeholder={t("imports.queryPlaceholder")}
+                        maxLength={4000}
+                        value={query}
+                        onChange={(event) => {
+                          setQuery(event.target.value);
+                        }}
+                      />
+                    </label>
+                  </>
+                )}
                 <label className="contents">
                   <span className="text-meta text-fg-muted">{t("imports.searchedAt")}</span>
                   <Input
@@ -226,18 +275,6 @@ function ImportWizard({
                     value={searchedAt}
                     onChange={(event) => {
                       setSearchedAt(event.target.value);
-                    }}
-                  />
-                </label>
-                <label className="contents">
-                  <span className="text-meta text-fg-muted">{t("imports.query")}</span>
-                  <Input
-                    className="font-mono"
-                    placeholder={t("imports.queryPlaceholder")}
-                    maxLength={4000}
-                    value={query}
-                    onChange={(event) => {
-                      setQuery(event.target.value);
                     }}
                   />
                 </label>
@@ -281,6 +318,12 @@ function ImportWizard({
               newPapers: run.data.new_papers,
               toReview: run.data.added_to_review,
             })}
+            {run.data.since_last && (
+              <>
+                {" "}
+                <SinceLast since={run.data.since_last} />
+              </>
+            )}
           </p>
         )}
       </div>
@@ -396,6 +439,11 @@ function PreviewSummary({ preview }: { preview: ImportPreview }) {
           repeated: number(preview.repeated),
         })}
       </p>
+      {preview.since_last && (
+        <p className="text-ui font-medium">
+          <SinceLast since={preview.since_last} />
+        </p>
+      )}
       {preview.issues.length > 0 && <IssueList issues={preview.issues} />}
       {warnings.length > 0 && (
         <p className="text-meta text-warning">
@@ -407,6 +455,19 @@ function PreviewSummary({ preview }: { preview: ImportPreview }) {
       {preview.sample.length > 0 && <SampleTable records={preview.sample} />}
     </section>
   );
+}
+
+/** How many records of a saved search's new export no earlier import found (Task 27). */
+function SinceLast({ since }: { since: NonNullable<ImportPreview["since_last"]> }) {
+  const { t, i18n } = useTranslation();
+  return t("imports.sinceLast", {
+    count: since.new,
+    n: since.new.toLocaleString(i18n.language),
+    date: new Date(since.last_searched_at).toLocaleDateString(i18n.language, {
+      dateStyle: "medium",
+      timeZone: "UTC",
+    }),
+  });
 }
 
 function IssueList({ issues }: { issues: ImportIssueView[] }) {
