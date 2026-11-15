@@ -46,6 +46,8 @@ class ImportLog(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
     saved_search_id: str | None = None
+    # A database preset (Task 26): names the source and handles its export's quirks.
+    preset: str | None = Field(default=None, max_length=32)
     source: str | None = Field(default=None, min_length=1, max_length=64, examples=["Scopus"])
     # The day the search ran at the source; today if not given.
     searched_at: date | None = None
@@ -53,8 +55,10 @@ class ImportLog(BaseModel):
 
     @model_validator(mode="after")
     def _one_search(self) -> Self:
-        if self.saved_search_id is None and self.source is None:
-            raise ValueError("give the source, or a saved search")
+        if self.saved_search_id is None and self.source is None and self.preset is None:
+            raise ValueError("give the source, a preset or a saved search")
+        if self.preset is not None and (self.source or self.saved_search_id):
+            raise ValueError("a preset names the source")
         if self.saved_search_id is not None and (self.source or self.query):
             raise ValueError("a saved search gives the source and the query")
         return self
@@ -129,3 +133,9 @@ class ImportOutcome(BaseModel):
     added_to_library: int
     # With a saved external search that was imported before.
     since_last: SinceLastImport | None = None
+
+
+class PresetView(BaseModel):
+    key: str
+    name: str
+    formats: list[ImportFormat]

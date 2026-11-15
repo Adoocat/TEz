@@ -8,7 +8,12 @@ import { useTranslation } from "react-i18next";
 import { useBackend } from "@/app/backend";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { databaseSite, knownDatabases } from "@/features/imports/databases";
+import {
+  databaseNamed,
+  databaseSite,
+  defaultDatabase,
+  knownDatabases,
+} from "@/features/imports/databases";
 import { ImportDialog } from "@/features/imports/ImportDialog";
 
 import { useExternalSearches, useSaveExternalSearch, type ExternalSearchView } from "./api";
@@ -65,10 +70,11 @@ export function ExternalSearches({
 function SaveForm({ reviewId }: { reviewId: string }) {
   const { t } = useTranslation();
   const save = useSaveExternalSearch(reviewId);
-  const [database, setDatabase] = useState<string>(knownDatabases[0]);
+  const [database, setDatabase] = useState<string>(defaultDatabase);
   const [otherDatabase, setOtherDatabase] = useState("");
   const [query, setQuery] = useState("");
   const source = database === OTHER ? otherDatabase.trim() : database;
+  const guide = databaseNamed(source);
 
   function submit(event: SyntheticEvent) {
     event.preventDefault();
@@ -132,6 +138,12 @@ function SaveForm({ reviewId }: { reviewId: string }) {
       <Button type="submit" disabled={!source || !query.trim() || save.isPending}>
         {t("search.external.save")}
       </Button>
+      {guide && (
+        <p className="basis-full text-meta text-fg-muted">
+          <span className="font-medium text-fg">{t("search.external.howToExport")}</span>{" "}
+          {t(`search.external.guides.${guide.key}`)}
+        </p>
+      )}
       {save.isError && (
         <p role="alert" className="basis-full text-meta text-danger">
           {t("search.external.saveFailed")}

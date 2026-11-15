@@ -191,7 +191,8 @@
     "screening.criterion_code_taken": "{{code}} kodu bu review'da zaten kullanılıyor.",
     "screening.criteria_order_mismatch": "Kriterler bu arada değişti; yenileyip yeniden deneyin.",
     "external_search.not_found": "Bu kayıtlı arama artık yok.",
-    "search.filter_unsupported": "Bu kaynaklar yayın türüne göre süzemiyor."
+    "search.filter_unsupported": "Bu kaynaklar yayın türüne göre süzemiyor.",
+    "import.preset_unavailable": "Bu veritabanı ön ayarı henüz kullanılamıyor."
   },
   "reviews": {
     "active": "Etkin review",
@@ -421,7 +422,21 @@
       "openSite": "Siteyi aç",
       "copyQuery": "Sorguyu kopyala",
       "importNew": "Yeni dışa aktarımı içe aktar",
-      "copied": "Sorgu kopyalandı. Sitede yapıştırın."
+      "copied": "Sorgu kopyalandı. Sitede yapıştırın.",
+      "howToExport": "Nasıl dışa aktarılır:",
+      "guides": {
+        "wos": "Kayıtları işaretleyin (veya aralık seçin, bir seferde en çok 1.000) → Export → \"RIS (other reference software)\" → Record content: \"Full Record\" → Export. Düz metin dışa aktarımı ön ayarı test edilince gelecek.",
+        "scopus": "Tümünü seçin → Export → RIS → atıf bilgileri ve özeti işaretleyin → Export. CSV dışa aktarımı ön ayarı test edilince gelecek.",
+        "jstor": "Sonuçları işaretleyin → Export citations → RIS.",
+        "ebsco": "Sonuçları klasöre ekleyin → klasörü açın → Export → \"Direct Export in RIS Format\".",
+        "proquest": "Sonuçları işaretleyin → \"…\" ya da Save → RIS → Continue.",
+        "psycinfo": "Kütüphanenizin kullandığı platformdan (EBSCO, ProQuest ya da Ovid) RIS biçiminde dışa aktarın.",
+        "ieee": "Sonuçları seçin → Export → Citations → Format: RIS, Include: \"Citation & Abstract\" → Export.",
+        "acm": "Sonuçları işaretleyin → Export citations → BibTeX → Download.",
+        "scholar": "Ayarlar → Kaynakça yöneticisi → \"BibTeX'e aktarma bağlantılarını göster\". Sonra her sonucun altındaki \"BibTeX'e aktar\": her dosyada bir kayıt.",
+        "trdizin": "Sonuçlarda sitenin \"Dışa aktar\" seçeneğini kullanıp BibTeX'i seçin.",
+        "yoktez": "Bildiğimiz kadarıyla sitenin dışa aktarma dosyası yok; tezleri şimdilik elle ekleyin."
+      }
     },
     "thesesOnly": "Yalnız tezler",
     "thesesOnlyHint": "Tezlere göre yalnız OpenAlex ve Crossref sorulabilir; diğer kaynaklar bu aramada sorulmaz."

@@ -3280,6 +3280,77 @@
         }
       }
     },
+    "/imports/presets": {
+      "get": {
+        "tags": [
+          "imports"
+        ],
+        "summary": "List Presets",
+        "description": "The database presets on offer: only those verified with a real export (Task 26).",
+        "operationId": "list_presets_imports_presets_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PresetView"
+                  },
+                  "type": "array",
+                  "title": "Response List Presets Imports Presets Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/imports/preview": {
       "post": {
         "tags": [
@@ -5464,6 +5535,18 @@
             ],
             "title": "Saved Search Id"
           },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset"
+          },
           "source": {
             "anyOf": [
               {
@@ -6542,6 +6625,32 @@
         ],
         "title": "PdfPaths",
         "description": "Files on this computer: the desktop app's drops, `tez <file.pdf>`, the CLI."
+      },
+      "PresetView": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "formats": {
+            "items": {
+              "$ref": "#/components/schemas/ImportFormat"
+            },
+            "type": "array",
+            "title": "Formats"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "name",
+          "formats"
+        ],
+        "title": "PresetView"
       },
       "PreviewRecord": {
         "properties": {
