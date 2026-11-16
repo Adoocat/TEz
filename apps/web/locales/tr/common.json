@@ -433,9 +433,9 @@
         "psycinfo": "Kütüphanenizin kullandığı platformdan (EBSCO, ProQuest ya da Ovid) RIS biçiminde dışa aktarın.",
         "ieee": "Sonuçları seçin → Export → Citations → Format: RIS, Include: \"Citation & Abstract\" → Export.",
         "acm": "Sonuçları işaretleyin → Export citations → BibTeX → Download.",
-        "scholar": "Ayarlar → Kaynakça yöneticisi → \"BibTeX'e aktarma bağlantılarını göster\". Sonra her sonucun altındaki \"BibTeX'e aktar\": her dosyada bir kayıt.",
-        "trdizin": "Sonuçlarda sitenin \"Dışa aktar\" seçeneğini kullanıp BibTeX'i seçin.",
-        "yoktez": "Bildiğimiz kadarıyla sitenin dışa aktarma dosyası yok; tezleri şimdilik elle ekleyin."
+        "scholar": "Her sonucun altındaki ❞ → BibTeX; açılan metni bir .bib dosyasına alt alta yapıştırın. Yavaş gidin: hızlı tıklamada Google robot doğrulaması açar.",
+        "trdizin": "Her yayının sayfasını açın, alttaki Ris düğmesiyle indirin. RIS'i seçin: BibTeX dosyasında özet yok.",
+        "yoktez": "Site dosya olarak dışa aktarmıyor, yalnız biçimli atıfı panoya kopyalıyor; tezleri elle ekleyin."
       }
     },
     "thesesOnly": "Yalnız tezler",

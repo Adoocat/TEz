@@ -1,0 +1,90 @@
+
+TY  - JOUR
+TI  - Yapay Zeka Destekli Üretilen Kodlar ile İnsan Yazımı Kodların Karşılaştırılması: Python Örneği
+AB  - Yapay zeka (YZ) temelli kod üretim araçlarının yükselişi, yazılım mühendisliğinde kod yazım süreçlerini dönüştürmektedir. Bu çalışma, YZ destekli “Bolt.New” aracıyla üretilen Python programlarını, insan eliyle yazılmış eşdeğer programlarla kalite, karmaşıklık ve okunabilirlik açısından sistematik olarak karşılaştırmayı amaçlamaktadır. 2019 öncesi GitHub’dan seçilen 30 adet insan yapımı program ile aynı işlevleri gerçekleştiren YZ üretimi programlar, satır sayılarına göre basit, orta ve karmaşık ulamlara ayrılarak incelenmiştir. Python’a özgü statik inceleme aracı Pylint ile ölçülen kalite puanı, hata sayısı, siklomatik karmaşıklık, stil ihlali, kod tekrar oranı ve belge puanı ölçüleri, iki küme arasında istatistiksel olarak karşılaştırılmıştır. Bulgular, YZ’nin basit görevlerde yüksek kalite ve düşük hata oranı sunduğunu, karmaşık görevlerde ise daha düşük karmaşıklık ve daha iyi belge sağladığını, ancak bağlamsal uygunlukta sınırlamalar gösterebildiğini ortaya koymaktadır. Bu çalışma, YZ destekli kod üretiminin Python’a özgü ölçünlere uyumunu ve hata azaltma potansiyelini nesnel ölçülerle değerlendirerek, yazılım geliştirme süreçlerinde otomasyon ve insan denetimi arasında denge kurulmasına yönelik rehber bir çerçeve sunmaktadır.
+AU  - Seda EYGÜ
+AU  - Mustafa KESKİNKILIÇ
+PY  - 2026
+JO  - Bilgisayar bilimleri ve mühendisliği dergisi
+VL  - 19
+IS  - 1
+SN  - 3023-7459
+SP  - 24
+EP  - 37
+DB  - TRDizin,
+UR  - https://search.trdizin.gov.tr/tr/yayin/detay/1438942/yapay-zeka-destekli-uretilen-kodlar-ile-insan-yazimi-kodlarin-karsilastirilmasi-python-ornegi
+ER  - 
+
+TY  - RPRT
+TI  - Statik ve Dinamik Yazılım Analiz Tekniklerinin Otomatik Entegrasyonu
+AB  - Statik ve dinamik analiz, yazılım sistemlerinde hataları tespit etmek için kullanılan iki temel yöntemdir. Statik analiz ile yazılım kaynak kodu çalıştırılmadan, hataya yol açabilecek kod parçaları önceden belirlenmiş kurallara göre tespit edilmektedir. Dinamik analiz yönteminde ise, yazılım koşum esnasında gerçekleşen durumlar gözlemlenerek hatalar tespit edilmektedir. Bu projede, mevcut statik ve dinamik yazılım analiz tekniklerinin bir kısmının otomatik bir şekilde entegrasyonu sağlanarak güvenilirlik artırma faaliyetlerini daha etkili kılan araçlar ve yöntemler geliştirilmiştir. Spesifik olarak, bu araçlar ve yöntemler 3 temel problem için çözümler sunmuştur: i) Koşum zamanı denetim araçları çalışmakta olan bir sistemi formal belirtimlere göre gözlemlerler. Bu belirtimler genellikle sistem gereklerine göre manuel olarak tanımlanırlar. Bu projede, statik analiz araçları tarafından üretilen uyarılar temel alınarak koşum zamanı denetim belirtimlerinin otomatik olarak oluşturulması sağlanmıştır. ii) Statik analiz araçları çoğunlukla fazla sayıda uyarı üretmektedirler. Bu uyarıların bir kısmı yanlış kabullere tabi olmaktadır. Sınırlı kaynaklar dolayısıyla bütün uyarıları incelemek çok zordur. Proje kapsamında bu probleme iki ayrı yöntem ile çözüm getirilmiştir. Birincisi, koşum zamanında dinamik analizler ile hataya yol açmadığı tespit edilen durumların statik analiz araçları tarafından göz ardı edilmesi sağlanmıştır. İkincisi, statik kod analiz araçları tarafından tespit edilen olası hata durumları konkolik test ile sistematik olarak sınanarak gerçekten hataya yol açıp açmadıkları tespit edilmiştir. iii) Statik analiz araçları sadece bellek kaçağı gibi genel programlama hatalarına ilişkin uyarılar üretirler. Sisteme özel kural ihlallerini tespit edemezler. Bu kurallar çoğunlukla kayıt altında değildir. Bu projede, sisteme özel programlama kurallarının, koşum zamanında toplanan yürütüm izleri temel alınarak oluşturulması sağlanmıştır. Bu kurallar etkinliklerini artırmak üzere statik analiz araçlarına entegre edilmiştir.Geliştirilen araçlar ve yöntemler açık kaynaklı veya endüstride geliştirilip kullanılan çeşitli yazılım sistemleri üzerinde denenmişlerdir. Yanlış kabuller önlenerek ve sisteme özel kural ihlallerinin tespiti sağlanarak statik analiz araçlarının etkinliğini artırılmıştır. Diğer yandan, potansiyel hatalar ile ilişkili alanların otomatik olarak koşum zamanında denetlenmesi sağlanmıştır.
+AU  - Hasan SÖZER
+PY  - 2017
+SP  - 1
+EP  - 28
+N1  - EEEAG, Proje No:113E548
+DB  - TRDizin,
+UR  - https://search.trdizin.gov.tr/tr/yayin/detay/617807/statik-ve-dinamik-yazilim-analiz-tekniklerinin-otomatik-entegrasyonu
+ER  - 
+
+TY  - JOUR
+TI  - KAYNAK KOD (SOURCE CODE) ESCROW SÖZLEŞMESİ
+AB  - Kaynak kod escrow sözleşmesi, yazılım sahibi ile escrow aracısı arasında yapılan bir sözleşmedir. Sözleşmenin unsurlarını temel sözleşme, teminat amacı ve kaynak kodun escrow aracısına teslim edilmesi oluşturur. Sözleşmeye göre kaynak kod, yazılım sahibi ile kullanıcı arasında yapılmış olan ve yazılımı kullanma hakkı veren sözleşmeye nazaran üçüncü kişi durumundaki escrow aracısı nezdinde muhafaza edilerek, taraflar arasında kararlaştırılan şartların gerçekleşmesi durumunda kullanıcıya ya da duruma göre yazılım sahibine teslim edilir. Borçlar Kanununda ya da başka bir özel kanunda düzenlenmemiş olduğundan, kaynak kod escrow sözleşmesi, isimsiz sözleşme olarak nitelendirilir. Kaynak kod escrow sözleşmesinden doğan başlıca yükümlülükler, escrow aracısı için kaynak kodu güvenli bir şekilde muhafaza etmek, kaynak kodun okunabilir olup olmadığını incelemek, sır saklamak ve sözleşmede kararlaştırılan durumlardan biri gerçekleştiği takdirde kaynak kodu yazılım sahibine iade veya kullanıcıya teslim etmek olarak sayılabilir. Sözleşmenin karşı tarafı ise kaynak kodu uygun bir veri taşıyıcı içerisinde escrow aracısına teslim etmek, kararlaştırılan aralıklarla güncellemek ve sözleşmede belirlenen bir ücreti, faaliyetlerine karşılık olmak üzere escrow aracısına ödemekle yükümlüdür
+AU  - AYŞE DİLŞAD KESKİN
+PY  - 2012
+JO  - Türkiye Adalet Akademisi Dergisi
+VL  - 
+IS  - 10
+SN  - 1309-6826
+SP  - 95
+EP  - 128
+DB  - TRDizin,
+UR  - https://search.trdizin.gov.tr/tr/yayin/detay/225934/kaynak-kod-source-code-escrow-sozlesmesi
+ER  - 
+
+TY  - JOUR
+TI  - Ordu-Çambaşı Kayak Merkezinin Gelişimine İlişkin Paydaşların Görüşlerinin Değerlendirilmesi
+AB  - Bu araştırmanın amacı gelişim sürecindeki bir destinasyon olan Ordu-Çambaşı kayak merkezine ilişkin paydaş görüşlerinin derinlemesine incelenmesidir. Destinasyonun önemini vurgulamak amacıyla Çambaşı kayak merkezi araştırmaya konu olmuş ve nitel araştırma yöntemlerinden yararlanılarak gelişim süreci ortaya konulmuştur. Araştırma deseni olarak fenomenoloji ve durum araştırmasından yararlanılmıştır. Katılımcıların belirlenmesi için amaçlı örnekleme yöntemlerinden biri olan kartopu örnekleme yöntemi seçilmiştir. Veri toplama aracı olarak görüşme/mülakat ve doküman inceleme tekniği kullanılmıştır. Bu araştırmada telefonla görüşme yapılmış olup, 9 katılımcıya ulaşılmıştır. Veri analiz stratejisi olarak içerik analizinden yararlanılmış ve verilerin görselleştirilmesi için “MAXQDA 18” yazılım programı kullanılmıştır. Verilerin işlenmesi tümdengelimsel ve tümevarımsal yöntemlerin bir arada kullanılması ile gerçekleşmiştir. Araştırma sorularının belirlenmesinde öncelikle kapalı kod sisteminden yararlanılmış olup, literatür doğrultusunda temalar ve alt temalar belirlenmiş ve sonrasında sahadan gelen veriler ışığında açık kod sistemiyle temalar ve alt temalar yeniden ele alınmıştır. Araştırma sonucunda üç ana tema ve on alt tema belirlenmiş olup, belirlenen temalar ve alt temalar vasıtasıyla Ordu-Çambaşı kayak merkezine ilişkin paydaşların görüşleri değerlendirilerek öneriler sunulmuştur.
+AU  - Nilgün DEMİREL
+AU  - Ezgi KIRICI TEKELİ
+PY  - 2020
+JO  - Atatürk Üniversitesi Sosyal Bilimler Enstitüsü Dergisi
+VL  - 24
+IS  - 1
+SN  - 1304-4990
+SP  - 315
+EP  - 332
+DB  - TRDizin,
+UR  - https://search.trdizin.gov.tr/tr/yayin/detay/387759/ordu-cambasi-kayak-merkezinin-gelisimine-iliskin-paydaslarin-goruslerinin-degerlendirilmesi
+ER  - 
+
+TY  - JOUR
+TI  - SOSYAL BİLGİLER ÖĞRETMENLERİNİN SOSYAL BİLGİLER ÖĞRETİMİNİN AMACINA YÖNELİK GÖRÜŞLERİ
+AB  - Bu araştırmanın amacı, Sosyal Bilgiler öğretmenlerinin Sosyal Bilgiler öğretiminin amacına ilişkin görüşlerininin neler olduğunu belirlemektir. Araştırmanın katılımcılarını İzmir İlinde görev yapmakta olan 63 Sosyal Bilgiler öğretmeninden oluşmaktadır. Katılımcılara "Çevrenizdeki kişiler (anneniz, babanız, arkadaşlarınız, öğretmen arkadaşlarınız, öğrencileriniz ya da velileriniz...) okullarda neden sosyal bilgiler dersi öğretiliyor? Bu dersin öğretim amacı nedir? Diye sorarlar ise onlara ne gibi cevaplar verirsiniz? Sorusunun yazılı olarak sunulduğu ve kendilerinin cevaplarını yazılı olarak iletebilecekleri bir anket uygulanmıştır. Anketten elde edilen veriler doküman olarak değerlendirilmiş ve doküman analizine tabi tutulmuştur. Ayrıca içerik ve betimsel analiz yöntemlerinden yararlanılarak alan yazınına göre kategorileştiriler çerçevesinde kod ve temalar yoluyla veriler analiz edilmiştir. Elde edilen veriler ışığında Sosyal Bilgiler öğretmenlerinin, Sosyal bilgiler öğretminin amaçını 7 yaklaşım çerçevesinde değerlendirdikleri anlaşılmıştır. Bu yaklaşımlar; vatandaşlık aktarımı, sosyal bilimler, yansıtıcı inceleme, toplumsal yeterlilikler, yaşama uyarlayıcı, bireysel gelişim ve küresel eğitim olarak sosyal bilgilerdir. Öğretmenler arasında en çok benimsenen yaklaşımın vatandaşlık aktarımı olarak sosyal bilgiler öğretimi yaklaşımı olduğu tesbit edilmiştir. Araştırmanın sonucunda Sosyal Bilgiler öğretmenlerinin, Sosyal Bilgiler öğretiminin amacına ilişkin benimsemiş oldukları yaklaşımların mesleki kıdem, cinsiyet, mezun olunan fakülte ve bölüm değişkenlerine göre farklılıklar olduğu tespit edilmiş bu sonuçlar ışığında bundan sonra bu alanda yapılacak araştırmalar ve sosyal bilgiler öğretmenlerine yönelik hazırlanacak hizmet içi eğitimlere yönelik önerilerde bulunulmuştur
+AU  - Banu ÇULHA ÖZBAŞ
+AU  - Kadir Can ERBUDAK
+PY  - 2015
+JO  - Turkish Studies (Elektronik)
+VL  - 10
+IS  - 3
+SN  - 1308-2140
+SP  - 303
+EP  - 330
+DB  - TRDizin,
+UR  - https://search.trdizin.gov.tr/tr/yayin/detay/256628/sosyal-bilgiler-ogretmenlerinin-sosyal-bilgiler-ogretiminin-amacina-yonelik-gorusleri
+ER  - 
+
+TY  - JOUR
+TI  - A Numerical Algorithm to Solve Supersonic Flow over a Wedge Shaped Airfoil
+AB  - In this paper, a new algorithm is developed to solve a two dimensional supersonic flow around a wedge-shaped airfoil. The MacCormackpredictor-corrector method is utilized to develop a solution. To further investigate the flow properties, a numerical algorithm written inC++ has been compiled so that it may be compared to commercial softwares. The developed algorithm is compiled and run with theinitial conditions of a free stream Mach number of 2 while the wedge angle is set at 15º. The compiled program revealed that the flowvelocities increased without bound. Adjustment of this condition was achieved by adding artificial dissipation. The addition ofdissipation term into the code resulted stable output and the presence of a shock. Same case was also simulated with ANSYS Fluentand CFL3D softwares using second order discretization.
+AU  - Murat BAKIRCI
+PY  - 2020
+JO  - Europan Journal of Science and Technology
+VL  - 
+IS  - 18
+SN  - 2148-2683
+SP  - 934
+EP  - 942
+DB  - TRDizin,
+UR  - https://search.trdizin.gov.tr/tr/yayin/detay/363286/a-numerical-algorithm-to-solve-supersonic-flow-over-a-wedge-shaped-airfoil
+ER  - 

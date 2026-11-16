@@ -53,7 +53,7 @@ describe("saved external searches", () => {
 
     expect(await screen.findByText(/RIS \(other reference software\)/)).toBeInTheDocument();
     await user.selectOptions(screen.getByLabelText("Database"), "Google Scholar");
-    expect(screen.getByText(/Import into BibTeX/)).toBeInTheDocument();
+    expect(screen.getByText(/❞ → BibTeX/)).toBeInTheDocument();
   });
 
   it("logs an import under a tested database preset", async () => {

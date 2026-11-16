@@ -12,8 +12,11 @@ from tests.conftest import AUTH, TOKEN
 from tez.core.config import Settings
 from tez.main import create_app
 from tez.modules.importers import presets
+from tez.modules.importers.parsing import ImportFormat
 from tez.modules.importers.service import detect_format, parse_file
+from tez.modules.library.models import IdentifierScheme
 from tez.modules.library.service import Library, open_library
+from tez.modules.search.schemas import NormalizedRecord
 
 SAMPLES = Path(__file__).parents[1] / "fixtures" / "imports" / "presets"
 
@@ -40,6 +43,57 @@ def test_every_sample_of_a_verified_preset_reads_cleanly(key: str) -> None:
         assert detect_format(sample.name, text) in preset.formats, sample.name
         assert parsed.records, sample.name
         assert not parsed.issues, (sample.name, parsed.issues)
+
+
+def _records(key: str, name: str) -> list[NormalizedRecord]:
+    parsed, _ = parse_file(name, (SAMPLES / key / name).read_bytes())
+    return parsed.records
+
+
+def test_google_scholar_bibtex_keeps_turkish_names_and_arxiv_ids() -> None:
+    # Copied record by record from "Cite" → BibTeX, as Scholar has no bulk export.
+    records = _records("scholar", "scholar.bib")
+
+    assert len(records) == 5
+    evaluating = next(r for r in records if r.title.startswith("Evaluating"))
+    assert [a.display_name for a in evaluating.authors] == [
+        "Umut Cihan",
+        "Arda İçöz",
+        "Vahid Haratian",
+        "Eray Tüzün",
+    ]
+    assert evaluating.venue_type == "preprint"
+    assert evaluating.identifiers == {IdentifierScheme.ARXIV: "2505.20206"}
+
+
+def test_tr_dizin_ris_and_bibtex_hold_the_same_records() -> None:
+    # The same six records, exported one by one with the site's own Ris and Bibtex buttons.
+    ris = _records("trdizin", "trdizin.ris")
+    bib = _records("trdizin", "trdizin.bib")
+
+    assert len(ris) == len(bib) == 6
+    assert [r.title for r in ris] == [r.title for r in bib]
+    assert [r.year for r in ris] == [r.year for r in bib]
+
+
+def test_tr_dizin_ris_is_the_better_export() -> None:
+    # TR Dizin's BibTeX has keys with spaces, no abstracts and a name missing its Turkish
+    # letter ("Seda Eygu"); its RIS has all of them, so the preset lists RIS first.
+    ris = _records("trdizin", "trdizin.ris")
+    bib = _records("trdizin", "trdizin.bib")
+    preset = next(p for p in presets.PRESETS if p.key == "trdizin")
+
+    assert all(r.abstract for r in ris)
+    assert not any(r.abstract for r in bib)
+    assert ris[0].authors[0].display_name == "Seda EYGÜ"
+    assert bib[0].authors[0].display_name == "Seda Eygu"
+    assert preset.formats[0] is ImportFormat.RIS
+
+
+def test_yok_tez_has_no_preset() -> None:
+    # Checked 2026-11-16: the site exports no file, only formatted citations to the
+    # clipboard, so it is not a file-road source (ADR 0019).
+    assert "yoktez" not in {p.key for p in presets.PRESETS}
 
 
 @pytest.fixture

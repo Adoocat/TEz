@@ -35,12 +35,14 @@ PRESETS: tuple[DatabasePreset, ...] = (
     DatabasePreset("ieee", "IEEE Xplore", _RIS_BIB),
     DatabasePreset("acm", "ACM DL", (ImportFormat.BIBTEX, ImportFormat.RIS)),
     DatabasePreset("scholar", "Google Scholar", (ImportFormat.BIBTEX,)),
-    DatabasePreset("trdizin", "TR Dizin", (ImportFormat.BIBTEX,)),
-    DatabasePreset("yoktez", "YÖK Tez", (ImportFormat.RIS, ImportFormat.BIBTEX)),
+    # RIS first: TR Dizin's BibTeX drops abstracts and some Turkish letters.
+    DatabasePreset("trdizin", "TR Dizin", (ImportFormat.RIS, ImportFormat.BIBTEX)),
+    # No YÖK Tez preset: checked on 2026-11-16, the site exports no file, only formatted
+    # citations to the clipboard, so it is not a file-road source (ADR 0019).
 )
 
 # Keys whose real sample export is in the test data and tested. Add a key only with its sample.
-VERIFIED: frozenset[str] = frozenset()
+VERIFIED: frozenset[str] = frozenset({"scholar", "trdizin"})
 
 
 def available() -> list[DatabasePreset]:
