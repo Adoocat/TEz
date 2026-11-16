@@ -1056,6 +1056,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reviews/{review_id}/prisma": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Counts
+         * @description Every box of the PRISMA 2020 flow diagram, derived now from the review's records.
+         */
+        get: operations["get_counts_reviews__review_id__prisma_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/secrets": {
         parameters: {
             query?: never;
@@ -1293,6 +1313,37 @@ export interface components {
             shortcuts: components["schemas"]["CriterionShortcuts"];
             /** Keywords */
             keywords: string[];
+        };
+        /** DatabasesBranch */
+        DatabasesBranch: {
+            /** Identified */
+            identified: number;
+            /** Unlogged */
+            unlogged: number;
+            /** Duplicates */
+            duplicates: number;
+            /** Not Taken */
+            not_taken: number;
+            /** Screened */
+            screened: number;
+            /** Excluded */
+            excluded: number;
+            /** Awaiting Screening */
+            awaiting_screening: number;
+            /** Sought */
+            sought: number;
+            /** Not Retrieved */
+            not_retrieved: number;
+            /** Assessed */
+            assessed: number;
+            /** Awaiting Full Text */
+            awaiting_full_text: number;
+            /** Excluded Reports */
+            excluded_reports: components["schemas"]["ReasonCount"][];
+            /** Included */
+            included: number;
+            /** Sources */
+            sources: components["schemas"]["SourceCount"][];
         };
         /**
          * Decision
@@ -1726,6 +1777,49 @@ export interface components {
             paper_ids: string[];
         };
         /**
+         * OtherMethodCount
+         * @description Records one other method found: snowballing (per round), websites, organisations,
+         *     registers or theses.
+         */
+        OtherMethodCount: {
+            method: components["schemas"]["RunMethod"];
+            /** Round */
+            round: number | null;
+            /** Identified */
+            identified: number;
+        };
+        /** OtherMethodsBranch */
+        OtherMethodsBranch: {
+            /** Identified */
+            identified: number;
+            /** Unlogged */
+            unlogged: number;
+            /** Duplicates */
+            duplicates: number;
+            /** Not Taken */
+            not_taken: number;
+            /** Screened */
+            screened: number;
+            /** Excluded */
+            excluded: number;
+            /** Awaiting Screening */
+            awaiting_screening: number;
+            /** Sought */
+            sought: number;
+            /** Not Retrieved */
+            not_retrieved: number;
+            /** Assessed */
+            assessed: number;
+            /** Awaiting Full Text */
+            awaiting_full_text: number;
+            /** Excluded Reports */
+            excluded_reports: components["schemas"]["ReasonCount"][];
+            /** Included */
+            included: number;
+            /** Methods */
+            methods: components["schemas"]["OtherMethodCount"][];
+        };
+        /**
          * PaperDetail
          * @description Everything the inspector shows about one paper (design 4.4).
          */
@@ -1864,6 +1958,15 @@ export interface components {
             status: "new" | "known" | "in_library" | "repeated";
             match_method: components["schemas"]["MatchMethod"];
         };
+        /** PrismaCounts */
+        PrismaCounts: {
+            /** Review Id */
+            review_id: string;
+            databases: components["schemas"]["DatabasesBranch"];
+            other_methods: components["schemas"]["OtherMethodsBranch"];
+            /** Included */
+            included: number;
+        };
         /**
          * QueueFilter
          * @enum {string}
@@ -1904,6 +2007,17 @@ export interface components {
             /** Paper Ids */
             paper_ids: string[];
             reading_status: components["schemas"]["ReadingStatus"];
+        };
+        /** ReasonCount */
+        ReasonCount: {
+            /** Criterion Id */
+            criterion_id: string | null;
+            /** Code */
+            code: string | null;
+            /** Text */
+            text: string | null;
+            /** Count */
+            count: number;
         };
         /**
          * RecordOrigin
@@ -2325,6 +2439,18 @@ export interface components {
             round: number;
             /** Job Id */
             job_id: string;
+        };
+        /**
+         * SourceCount
+         * @description Records one source returned across its runs, repeats included.
+         */
+        SourceCount: {
+            /** Source */
+            source: string;
+            /** Runs */
+            runs: number;
+            /** Identified */
+            identified: number;
         };
         /** SourceProgress */
         SourceProgress: {
@@ -6396,6 +6522,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GreyRecordAdded"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_counts_reviews__review_id__prisma_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PrismaCounts"];
                 };
             };
             /** @description Missing or invalid token */

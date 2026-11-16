@@ -5501,6 +5501,84 @@
         }
       }
     },
+    "/reviews/{review_id}/prisma": {
+      "get": {
+        "tags": [
+          "prisma"
+        ],
+        "summary": "Get Counts",
+        "description": "Every box of the PRISMA 2020 flow diagram, derived now from the review's records.",
+        "operationId": "get_counts_reviews__review_id__prisma_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrismaCounts"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/secrets": {
       "get": {
         "tags": [
@@ -6404,6 +6482,90 @@
           "keywords"
         ],
         "title": "CriterionView"
+      },
+      "DatabasesBranch": {
+        "properties": {
+          "identified": {
+            "type": "integer",
+            "title": "Identified"
+          },
+          "unlogged": {
+            "type": "integer",
+            "title": "Unlogged"
+          },
+          "duplicates": {
+            "type": "integer",
+            "title": "Duplicates"
+          },
+          "not_taken": {
+            "type": "integer",
+            "title": "Not Taken"
+          },
+          "screened": {
+            "type": "integer",
+            "title": "Screened"
+          },
+          "excluded": {
+            "type": "integer",
+            "title": "Excluded"
+          },
+          "awaiting_screening": {
+            "type": "integer",
+            "title": "Awaiting Screening"
+          },
+          "sought": {
+            "type": "integer",
+            "title": "Sought"
+          },
+          "not_retrieved": {
+            "type": "integer",
+            "title": "Not Retrieved"
+          },
+          "assessed": {
+            "type": "integer",
+            "title": "Assessed"
+          },
+          "awaiting_full_text": {
+            "type": "integer",
+            "title": "Awaiting Full Text"
+          },
+          "excluded_reports": {
+            "items": {
+              "$ref": "#/components/schemas/ReasonCount"
+            },
+            "type": "array",
+            "title": "Excluded Reports"
+          },
+          "included": {
+            "type": "integer",
+            "title": "Included"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceCount"
+            },
+            "type": "array",
+            "title": "Sources"
+          }
+        },
+        "type": "object",
+        "required": [
+          "identified",
+          "unlogged",
+          "duplicates",
+          "not_taken",
+          "screened",
+          "excluded",
+          "awaiting_screening",
+          "sought",
+          "not_retrieved",
+          "assessed",
+          "awaiting_full_text",
+          "excluded_reports",
+          "included",
+          "sources"
+        ],
+        "title": "DatabasesBranch"
       },
       "Decision": {
         "type": "string",
@@ -7747,6 +7909,120 @@
         ],
         "title": "OpenAccessRequest"
       },
+      "OtherMethodCount": {
+        "properties": {
+          "method": {
+            "$ref": "#/components/schemas/RunMethod"
+          },
+          "round": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Round"
+          },
+          "identified": {
+            "type": "integer",
+            "title": "Identified"
+          }
+        },
+        "type": "object",
+        "required": [
+          "method",
+          "round",
+          "identified"
+        ],
+        "title": "OtherMethodCount",
+        "description": "Records one other method found: snowballing (per round), websites, organisations,\nregisters or theses."
+      },
+      "OtherMethodsBranch": {
+        "properties": {
+          "identified": {
+            "type": "integer",
+            "title": "Identified"
+          },
+          "unlogged": {
+            "type": "integer",
+            "title": "Unlogged"
+          },
+          "duplicates": {
+            "type": "integer",
+            "title": "Duplicates"
+          },
+          "not_taken": {
+            "type": "integer",
+            "title": "Not Taken"
+          },
+          "screened": {
+            "type": "integer",
+            "title": "Screened"
+          },
+          "excluded": {
+            "type": "integer",
+            "title": "Excluded"
+          },
+          "awaiting_screening": {
+            "type": "integer",
+            "title": "Awaiting Screening"
+          },
+          "sought": {
+            "type": "integer",
+            "title": "Sought"
+          },
+          "not_retrieved": {
+            "type": "integer",
+            "title": "Not Retrieved"
+          },
+          "assessed": {
+            "type": "integer",
+            "title": "Assessed"
+          },
+          "awaiting_full_text": {
+            "type": "integer",
+            "title": "Awaiting Full Text"
+          },
+          "excluded_reports": {
+            "items": {
+              "$ref": "#/components/schemas/ReasonCount"
+            },
+            "type": "array",
+            "title": "Excluded Reports"
+          },
+          "included": {
+            "type": "integer",
+            "title": "Included"
+          },
+          "methods": {
+            "items": {
+              "$ref": "#/components/schemas/OtherMethodCount"
+            },
+            "type": "array",
+            "title": "Methods"
+          }
+        },
+        "type": "object",
+        "required": [
+          "identified",
+          "unlogged",
+          "duplicates",
+          "not_taken",
+          "screened",
+          "excluded",
+          "awaiting_screening",
+          "sought",
+          "not_retrieved",
+          "assessed",
+          "awaiting_full_text",
+          "excluded_reports",
+          "included",
+          "methods"
+        ],
+        "title": "OtherMethodsBranch"
+      },
       "PaperDetail": {
         "properties": {
           "id": {
@@ -8315,6 +8591,32 @@
         ],
         "title": "PreviewRecord"
       },
+      "PrismaCounts": {
+        "properties": {
+          "review_id": {
+            "type": "string",
+            "title": "Review Id"
+          },
+          "databases": {
+            "$ref": "#/components/schemas/DatabasesBranch"
+          },
+          "other_methods": {
+            "$ref": "#/components/schemas/OtherMethodsBranch"
+          },
+          "included": {
+            "type": "integer",
+            "title": "Included"
+          }
+        },
+        "type": "object",
+        "required": [
+          "review_id",
+          "databases",
+          "other_methods",
+          "included"
+        ],
+        "title": "PrismaCounts"
+      },
       "QueueFilter": {
         "type": "string",
         "enum": [
@@ -8451,6 +8753,55 @@
           "reading_status"
         ],
         "title": "ReadingStatusChange"
+      },
+      "ReasonCount": {
+        "properties": {
+          "criterion_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Criterion Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "criterion_id",
+          "code",
+          "text",
+          "count"
+        ],
+        "title": "ReasonCount"
       },
       "RecordOrigin": {
         "type": "string",
@@ -9733,6 +10084,30 @@
           "job_id"
         ],
         "title": "SnowballStarted"
+      },
+      "SourceCount": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "runs": {
+            "type": "integer",
+            "title": "Runs"
+          },
+          "identified": {
+            "type": "integer",
+            "title": "Identified"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "runs",
+          "identified"
+        ],
+        "title": "SourceCount",
+        "description": "Records one source returned across its runs, repeats included."
       },
       "SourceProgress": {
         "properties": {
