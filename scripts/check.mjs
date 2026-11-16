@@ -28,7 +28,7 @@ const steps = [
   ["web", "eslint", "pnpm", ["--filter", "@tez/web", "lint"]],
   ["web", "tsc", "pnpm", ["--filter", "@tez/web", "typecheck"]],
   ["web", "vitest", "pnpm", ["--filter", "@tez/web", "test"]],
-  ["format", "prettier", "pnpm", ["exec", "prettier", "--check", "--cache", "."]],
+  ["format", "prettier", "pnpm", ["exec", "prettier", "--check", "."]],
   ["rust", "cargo fmt", "cargo", ["fmt", "--check", "--manifest-path", cargoToml]],
   ["rust", "cargo test", "cargo", ["test", "--quiet", "--manifest-path", cargoToml]],
   [
