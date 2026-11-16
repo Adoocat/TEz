@@ -45,6 +45,10 @@ class Decision(StrEnum):
     INCLUDE = "include"
     EXCLUDE = "exclude"
     MAYBE = "maybe"
+    # Written by undo when no earlier decision is left to restore (ADR 0022).
+    UNDECIDED = "undecided"
+    # Full text only: the report could not be obtained; PRISMA counts it on its own.
+    NOT_RETRIEVED = "not_retrieved"
 
 
 class Review(TimestampMixin, Base):

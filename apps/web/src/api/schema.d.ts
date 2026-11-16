@@ -501,6 +501,121 @@ export interface paths {
         patch: operations["update_criterion_reviews__review_id__criteria__criterion_id__patch"];
         trace?: never;
     };
+    "/reviews/{review_id}/screening/{stage}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Queue
+         * @description The stage's queue in its stable order, with counts per state (counts ignore the filter).
+         */
+        get: operations["get_queue_reviews__review_id__screening__stage__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/screening/{stage}/records/{paper_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Record */
+        get: operations["get_record_reviews__review_id__screening__stage__records__paper_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/screening/{stage}/step": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Step
+         * @description The next (or previous) record from `origin` that matches the filter, wrapping around;
+         *     null when no other record matches.
+         */
+        get: operations["step_reviews__review_id__screening__stage__step_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/screening/{stage}/decisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Decide
+         * @description Decide on a record. It replaces the current decision as a new row (append-only).
+         */
+        post: operations["decide_reviews__review_id__screening__stage__decisions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/screening/{stage}/undo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Undo
+         * @description Take a decision back by restoring the state before it, as a new row.
+         */
+        post: operations["undo_reviews__review_id__screening__stage__undo_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/screening/history/{paper_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** History */
+        get: operations["history_reviews__review_id__screening_history__paper_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/searches": {
         parameters: {
             query?: never;
@@ -982,6 +1097,12 @@ export interface components {
             /** Unchanged */
             unchanged: number;
         };
+        /**
+         * ChosenDecision
+         * @description What a person can choose; `undecided` is only ever written by undo.
+         * @enum {string}
+         */
+        ChosenDecision: "include" | "exclude" | "maybe" | "not_retrieved";
         /** CollectionCreate */
         CollectionCreate: {
             /** Name */
@@ -1075,6 +1196,48 @@ export interface components {
             used: boolean;
             shortcuts: components["schemas"]["CriterionShortcuts"];
         };
+        /**
+         * Decision
+         * @enum {string}
+         */
+        Decision: "include" | "exclude" | "maybe" | "undecided" | "not_retrieved";
+        /** DecisionCreate */
+        DecisionCreate: {
+            /** Paper Id */
+            paper_id: string;
+            decision: components["schemas"]["ChosenDecision"];
+            /** Criterion Id */
+            criterion_id?: string | null;
+            /** Note */
+            note?: string | null;
+        };
+        /** DecisionView */
+        DecisionView: {
+            /** Id */
+            id: string;
+            /** Paper Id */
+            paper_id: string;
+            stage: components["schemas"]["ScreeningStage"];
+            decision: components["schemas"]["Decision"];
+            /** Criterion Id */
+            criterion_id: string | null;
+            /** Note */
+            note: string | null;
+            /** Reviewer */
+            reviewer: string;
+            /** Supersedes Id */
+            supersedes_id: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /**
+         * Direction
+         * @enum {string}
+         */
+        Direction: "next" | "previous";
         /** ErrorDetail */
         ErrorDetail: {
             /**
@@ -1527,6 +1690,36 @@ export interface components {
             match_method: components["schemas"]["MatchMethod"];
         };
         /**
+         * QueueFilter
+         * @enum {string}
+         */
+        QueueFilter: "all" | "undecided" | "include" | "exclude" | "maybe" | "not_retrieved";
+        /**
+         * QueueItem
+         * @description One row of the queue, as the list mode shows it.
+         */
+        QueueItem: {
+            /** Paper Id */
+            paper_id: string;
+            /** Position */
+            position: number;
+            state: components["schemas"]["RecordState"];
+            /** Decision Id */
+            decision_id: string | null;
+            /** Criterion Id */
+            criterion_id: string | null;
+            /** Title */
+            title: string;
+            /** Year */
+            year: number | null;
+            /** Venue */
+            venue: string | null;
+            /** First Author */
+            first_author: string | null;
+            /** Author Count */
+            author_count: number;
+        };
+        /**
          * ReadingStatus
          * @enum {string}
          */
@@ -1537,6 +1730,12 @@ export interface components {
             paper_ids: string[];
             reading_status: components["schemas"]["ReadingStatus"];
         };
+        /**
+         * RecordState
+         * @description Where a record stands at one stage; derived from its current decision.
+         * @enum {string}
+         */
+        RecordState: "undecided" | "include" | "exclude" | "maybe" | "not_retrieved";
         /**
          * RecordWarning
          * @description A record was read, but a field the user would expect is missing or unusable.
@@ -1645,6 +1844,40 @@ export interface components {
             /** Retrieved Count */
             retrieved_count: number;
             error: components["schemas"]["ErrorDetail"] | null;
+        };
+        /** ScreeningQueue */
+        ScreeningQueue: {
+            stage: components["schemas"]["ScreeningStage"];
+            counts: components["schemas"]["StateCounts"];
+            /** Items */
+            items: components["schemas"]["QueueItem"][];
+        };
+        /**
+         * ScreeningRecord
+         * @description One record as the focus mode shows it, with where it sits in the queue.
+         */
+        ScreeningRecord: {
+            /** Paper Id */
+            paper_id: string;
+            /** Position */
+            position: number;
+            /** Total */
+            total: number;
+            state: components["schemas"]["RecordState"];
+            decision: components["schemas"]["DecisionView"] | null;
+            /** Title */
+            title: string;
+            /** Abstract */
+            abstract: string | null;
+            /** Authors */
+            authors: string[];
+            /** Year */
+            year: number | null;
+            /** Venue */
+            venue: string | null;
+            /** Doi */
+            doi: string | null;
+            retraction_status: components["schemas"]["RetractionStatus"];
         };
         /**
          * ScreeningStage
@@ -1846,6 +2079,21 @@ export interface components {
             /** Maybe */
             maybe: number;
         };
+        /** StateCounts */
+        StateCounts: {
+            /** Total */
+            total: number;
+            /** Undecided */
+            undecided: number;
+            /** Include */
+            include: number;
+            /** Exclude */
+            exclude: number;
+            /** Maybe */
+            maybe: number;
+            /** Not Retrieved */
+            not_retrieved: number;
+        };
         /** TagCreate */
         TagCreate: {
             /** Name */
@@ -1882,6 +2130,11 @@ export interface components {
          * @enum {string}
          */
         ThesisType: "masters" | "doctoral";
+        /** UndoRequest */
+        UndoRequest: {
+            /** Decision Id */
+            decision_id: string;
+        };
         /**
          * VenueType
          * @enum {string}
@@ -3865,6 +4118,375 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CriterionView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_queue_reviews__review_id__screening__stage__get: {
+        parameters: {
+            query?: {
+                filter?: components["schemas"]["QueueFilter"];
+            };
+            header?: never;
+            path: {
+                review_id: string;
+                stage: components["schemas"]["ScreeningStage"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScreeningQueue"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_record_reviews__review_id__screening__stage__records__paper_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                stage: components["schemas"]["ScreeningStage"];
+                paper_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScreeningRecord"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    step_reviews__review_id__screening__stage__step_get: {
+        parameters: {
+            query?: {
+                origin?: string | null;
+                direction?: components["schemas"]["Direction"];
+                filter?: components["schemas"]["QueueFilter"];
+            };
+            header?: never;
+            path: {
+                review_id: string;
+                stage: components["schemas"]["ScreeningStage"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScreeningRecord"] | null;
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    decide_reviews__review_id__screening__stage__decisions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                stage: components["schemas"]["ScreeningStage"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    undo_reviews__review_id__screening__stage__undo_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                stage: components["schemas"]["ScreeningStage"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UndoRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    history_reviews__review_id__screening_history__paper_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                paper_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionView"][];
                 };
             };
             /** @description Missing or invalid token */
