@@ -53,5 +53,8 @@ export default defineConfig({
     include: ["src/**/*.test.{ts,tsx}"],
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
+    // The UI tests click through whole screens; on a busy machine (`pnpm check` runs the
+    // groups side by side) the default 5 s cut some of them off at random.
+    testTimeout: 15_000,
   },
 });

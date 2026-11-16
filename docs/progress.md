@@ -124,10 +124,10 @@ Aşama 2 görevlerinin (24–42) ayrıntısı ve kabul kriterleri: `docs/plan.md
 - (4) Görev 5: kütüphane açılışında `migrate(db)` çağrılmalı; migration öncesi `backups/`'a kopya alınması değerlendirilmeli.
 - (5) Arayüzden kütüphane oluştur/aç uçları ve karşılama ekranı (tasarım 4.1) — açık soru 1 ile birlikte karara bağlanmalı.
 - (5) Kütüphane OneDrive/Dropbox/ağ sürücüsündeyse uyarı (SQLite WAL ve dosya kilidi bu klasörlerde güvenilmez).
-- (5) Arka uç testleri ~35 sn (gerçek süreç başlatan entegrasyon testleri, her biri ~3 sn); uzarsa `pytest-xdist` ile paralel çalıştırma.
+- ~~(5) Arka uç testleri ~35 sn; uzarsa `pytest-xdist`~~ — Yapıldı (2026-11-16): `pnpm check` testleri `pytest -n auto` ile koşuyor.
 - (6) Çöp kutusunu boşaltma: ek dosyalar (diskteki PDF'lerle) makaleden önce açıkça silinmeli (`attachment` RESTRICT).
 - (6) Alembic otomatik üretimi tetikleyicileri ve kısmi indeks koşullarını görmez; bunlara dokunan migration'lar elle yazılmalı (ADR 0004).
-- (6b) Arka uç testleri ~80 sn'ye çıktı (gerçek süreçli kuyruk testleri); `pytest-xdist` ile paralel çalıştırma artık değerlendirilmeli.
+- ~~(6b) `pytest-xdist` ile paralel çalıştırma~~ — Yapıldı (2026-11-16). `pnpm check` grupları da yan yana koşuyor; bu makinede ~450 sn'den ~200 sn'ye indi. En uzun parça şimdi arka uç testleri (2000 makalelik demo kütüphanesini kuran test ~20–60 sn).
 - (6b) İş ilerlemesi veritabanı yoklamasıyla (0,25 sn); gerekirse işçiden API'ye bildirim kanalı (API değişmeden).
 - (8) Kod bölme: üretim paketi ~500 kB (Vite uyarısı); okuyucu (pdf.js, Görev 20) gelince rota bazlı `import()`.
 - (8) Sürüm modu kütüphanesi şimdilik `Belgeler/TEz Library`; karşılama ekranı (açık soru 1) gelince kullanıcı seçecek, son açılan kütüphane hatırlanacak.
@@ -141,7 +141,7 @@ Aşama 2 görevlerinin (24–42) ayrıntısı ve kabul kriterleri: `docs/plan.md
 - (1) TypeScript 7'ye geçiş: typescript-eslint desteği gelince.
 - (S1) macOS/Linux'ta Job Object yerine stdin-EOF bekçisi + Linux'ta `PR_SET_PDEATHSIG` (Aşama 6).
 - (35) Diyagram dosyası `lib/download.ts` (geçici bağlantı) ile kaydediliyor; tarayıcıda çalışıyor, masaüstünde (WebView2) elle denenmedi. Çalışmazsa `platform` üzerinden kaydetme diyaloğu (Tauri dialog eklentisi) eklenmeli.
-- (35) Yerelde tüm Vitest paketi koşunca her seferinde farklı 2–6 arayüz testi düşüyor (çoğu 5 sn zaman aşımı; `main`'de de aynı, 2026-11-16). CI'da geçiyorlar. Test başına zaman aşımı artırılmalı veya yavaş testler (eleme, kriterler, gri literatür) hızlandırılmalı.
+- (35) Yerelde tüm Vitest paketi koşunca her seferinde farklı 2–6 arayüz testi düşüyor (çoğu 5 sn zaman aşımı; `main`'de de aynı, 2026-11-16). CI'da geçiyorlar. Test başına zaman aşımı artırılmalı veya yavaş testler (eleme, kriterler, gri literatür) hızlandırılmalı. → Hafifletildi (2026-11-16): `testTimeout` 15 sn, Testing Library bekleme süresi 5 sn.
 - (35) Diyagram ekranında kutu konumları sabit; tasarım 5.7'deki gibi kutuları sürükleme ve dikey/yatay yerleşim seçimi yok.
 
 ## Açık sorular
