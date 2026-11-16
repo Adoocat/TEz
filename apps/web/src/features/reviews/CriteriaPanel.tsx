@@ -29,6 +29,13 @@ const stages: ScreeningStage[] = ["title_abstract", "full_text"];
 
 const toStage = (choice: StageChoice): ScreeningStage | null => (choice === "both" ? null : choice);
 
+// Highlight terms are typed as one comma-separated line (Task 32).
+const toKeywords = (line: string): string[] =>
+  line
+    .split(",")
+    .map((term) => term.trim())
+    .filter(Boolean);
+
 function errorText(t: TFunction, error: unknown): string {
   const code = error instanceof ApiError ? error.code : "unknown";
   const params = error instanceof ApiError ? error.params : {};
@@ -198,6 +205,12 @@ function CriterionRow({
         {criterion.archived && (
           <span className="ml-2 text-meta">{t("reviews.criteria.archivedTag")}</span>
         )}
+        {criterion.keywords.length > 0 && (
+          <p className="text-meta text-fg-muted">
+            <span className="sr-only">{t("reviews.criteria.keywords")}: </span>
+            {criterion.keywords.join(", ")}
+          </p>
+        )}
       </td>
       <td className="py-2 pr-2 text-meta text-fg-muted">
         {t(`reviews.criteria.stages.${criterion.stage ?? "both"}`)}
@@ -304,6 +317,22 @@ function StageSelect({
   );
 }
 
+function KeywordsInput({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const { t } = useTranslation();
+  return (
+    <Input
+      aria-label={t("reviews.criteria.keywords")}
+      placeholder={t("reviews.criteria.keywordsPlaceholder")}
+      title={t("reviews.criteria.keywordsHint")}
+      className="min-w-48 basis-full"
+      value={value}
+      onChange={(event) => {
+        onChange(event.target.value);
+      }}
+    />
+  );
+}
+
 function CriterionEditor({
   reviewId,
   criterion,
@@ -318,12 +347,19 @@ function CriterionEditor({
   const [code, setCode] = useState(criterion.code);
   const [text, setText] = useState(criterion.text);
   const [stage, setStage] = useState<StageChoice>(criterion.stage ?? "both");
+  const [keywords, setKeywords] = useState(criterion.keywords.join(", "));
 
   function save(event: SyntheticEvent) {
     event.preventDefault();
     if (!code.trim() || !text.trim()) return;
     update.mutate(
-      { id: criterion.id, code: code.trim(), text: text.trim(), stage: toStage(stage) },
+      {
+        id: criterion.id,
+        code: code.trim(),
+        text: text.trim(),
+        stage: toStage(stage),
+        keywords: toKeywords(keywords),
+      },
       { onSuccess: onDone },
     );
   }
@@ -349,6 +385,7 @@ function CriterionEditor({
         }}
       />
       <StageSelect value={stage} onChange={setStage} />
+      <KeywordsInput value={keywords} onChange={setKeywords} />
       <Button type="submit" size="sm" variant="primary" disabled={update.isPending}>
         {t("reviews.criteria.save")}
       </Button>
@@ -371,16 +408,24 @@ function AddCriterion({ reviewId }: { reviewId: string }) {
   const [code, setCode] = useState("");
   const [text, setText] = useState("");
   const [stage, setStage] = useState<StageChoice>("both");
+  const [keywords, setKeywords] = useState("");
 
   function submit(event: SyntheticEvent) {
     event.preventDefault();
     if (!text.trim()) return;
     add.mutate(
-      { kind, code: code.trim() || null, text: text.trim(), stage: toStage(stage) },
+      {
+        kind,
+        code: code.trim() || null,
+        text: text.trim(),
+        stage: toStage(stage),
+        keywords: toKeywords(keywords),
+      },
       {
         onSuccess: () => {
           setCode("");
           setText("");
+          setKeywords("");
         },
       },
     );
@@ -422,6 +467,7 @@ function AddCriterion({ reviewId }: { reviewId: string }) {
         }}
       />
       <StageSelect value={stage} onChange={setStage} />
+      <KeywordsInput value={keywords} onChange={setKeywords} />
       <Button type="submit" size="sm" disabled={!text.trim() || add.isPending}>
         <Plus />
         {t("reviews.criteria.add")}

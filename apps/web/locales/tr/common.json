@@ -300,7 +300,10 @@
       "deleteLabel": "{{code}} kriterini sil",
       "restore": "Geri getir",
       "restoreLabel": "{{code}} kriterini geri getir",
-      "archivedTag": "arşivde"
+      "archivedTag": "arşivde",
+      "keywords": "Vurgu terimleri",
+      "keywordsPlaceholder": "Vurgulanacak terimler, virgülle ayrılmış",
+      "keywordsHint": "Eleme bu terimleri başlık ve özette vurgular: dahil etme yeşil, hariç tutma kırmızı alt çizgi. Büyük/küçük harf ve Türkçe harfler fark etmez."
     }
   },
   "search": {
@@ -683,6 +686,88 @@
         "preview": "Denetçiyi göster veya gizle",
         "open": "PDF'i aç"
       }
+    }
+  },
+  "screening": {
+    "noReview": "Elenecek bir review henüz yok.",
+    "toReview": "Review panelinden oluşturun.",
+    "stages": "Eleme aşaması",
+    "progress": "{{decided}} / {{total}} karar · {{percent}}",
+    "session_one": "Bu oturumda {{count}} karar",
+    "session_other": "Bu oturumda {{count}} karar",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "nothingToUndo": "Bu oturumda geri alınacak karar yok.",
+    "filter": {
+      "label": "Göster",
+      "all": "Tümü ({{n}})",
+      "undecided": "Kararsızlar ({{n}})",
+      "maybe": "Yalnız belkiler ({{n}})",
+      "include": "Dahil edilenler ({{n}})",
+      "exclude": "Elenenler ({{n}})",
+      "not_retrieved": "Erişilemeyenler ({{n}})"
+    },
+    "mode": {
+      "label": "Görünüm",
+      "focus": "Odak",
+      "list": "Liste"
+    },
+    "empty": {
+      "noRecords": "Bu aşamada henüz kayıt yok.",
+      "filterDone": "Bu görünümde kayıt kalmadı.",
+      "showAll": "Tüm kayıtları göster"
+    },
+    "state": {
+      "undecided": "Kararsız",
+      "include": "Dahil",
+      "exclude": "Hariç",
+      "maybe": "Belki",
+      "not_retrieved": "Erişilemedi"
+    },
+    "record": {
+      "position": "Kayıt {{position}} / {{total}}",
+      "moreAuthors": "ve {{n}} yazar daha",
+      "noAuthors": "Yazar yok",
+      "abstract": "Özet",
+      "noAbstract": "Bu kaydın özeti yok.",
+      "legendInclusion": "Dahil etme terimi",
+      "legendExclusion": "Hariç tutma terimi",
+      "retraction": {
+        "retracted": "Bu makale geri çekilmiş.",
+        "expression_of_concern": "Bu makale için kaygı bildirimi var."
+      }
+    },
+    "criteria": {
+      "title": "Kriterler",
+      "none": "Bu aşamanın henüz kriteri yok.",
+      "edit": "Review panelinden ekleyin.",
+      "inclusion": "Dahil etme kriterleri",
+      "exclusion": "Hariç tutma kriterleri",
+      "noExclusion": "Bu aşama için hariç tutma kriteri yok.",
+      "choose": {
+        "inclusion": "Dahil et: {{code}} {{text}}",
+        "exclusion": "Hariç tut: {{code}} {{text}}"
+      }
+    },
+    "bar": {
+      "label": "Karar",
+      "include": "Dahil",
+      "exclude": "Hariç",
+      "reason": "Gerekçe",
+      "maybe": "Belki",
+      "notRetrieved": "Tam metne erişilemedi",
+      "skip": "Atla",
+      "undo": "Geri al",
+      "note": "Not"
+    },
+    "note": {
+      "title": "Eleme notu",
+      "hint": "Kaydın kararıyla birlikte saklanır. Ctrl+Enter kaydeder.",
+      "save": "Notu kaydet",
+      "cancel": "Vazgeç"
+    },
+    "list": {
+      "label": "Kayıtlar"
     }
   }
 }

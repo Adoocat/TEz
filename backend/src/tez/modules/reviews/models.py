@@ -7,7 +7,7 @@ row whose `supersedes_id` points at the decision it replaces.
 from datetime import datetime
 from enum import StrEnum
 
-from sqlalchemy import ForeignKey, ForeignKeyConstraint, String, Text, UniqueConstraint
+from sqlalchemy import JSON, ForeignKey, ForeignKeyConstraint, String, Text, UniqueConstraint
 from sqlalchemy import text as sql_text
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -90,6 +90,8 @@ class ScreeningCriterion(TimestampMixin, Base):
     position: Mapped[int] = mapped_column(default=0, server_default=sql_text("0"))
     # A criterion that decisions use is archived, never deleted.
     archived_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
+    # Terms screening highlights in titles and abstracts, in the criterion's colour (ADR 0023).
+    keywords: Mapped[list[str]] = mapped_column(JSON, default=list, server_default=sql_text("'[]'"))
 
 
 class ScreeningDecision(CreatedMixin, Base):

@@ -32,6 +32,7 @@ from tez.modules.reviews.schemas import (
     StageCriterion,
     StageProgress,
 )
+from tez.shared.text import fold
 
 _NUMBERED = re.compile(r"^\d+\.\s+")
 
@@ -220,6 +221,7 @@ def _criterion_views(repository: ReviewsRepository, review_id: str) -> list[Crit
                 title_abstract=title_abstract.get(criterion.id),
                 full_text=full_text.get(criterion.id),
             ),
+            keywords=list(criterion.keywords),
         )
         for criterion in criteria
     ]
@@ -247,6 +249,7 @@ def criteria_for_stage(db: Database, review_id: str, stage: ScreeningStage) -> l
                 code=criterion.code,
                 text=criterion.text,
                 shortcut=keys.get(criterion.id),
+                keywords=list(criterion.keywords),
             )
             for criterion in criteria
             if _in_stage(criterion, stage)
@@ -281,8 +284,21 @@ def add_criterion(db: Database, review_id: str, body: CriterionCreate) -> Criter
         repository = _review_repository(session, review_id)
         code = body.code or _next_code(repository, review_id, body.kind)
         _check_code(repository, review_id, code)
-        criterion = repository.add_criterion(review_id, body.kind, code, body.text, body.stage)
+        criterion = repository.add_criterion(
+            review_id, body.kind, code, body.text, body.stage, _distinct(body.keywords)
+        )
         return _view_of(_criterion_views(repository, review_id), criterion.id)
+
+
+def _distinct(keywords: Sequence[str]) -> list[str]:
+    """Keywords once each, as first written; "Işık" and "ışık" are the same term."""
+    seen: set[str] = set()
+    kept: list[str] = []
+    for keyword in keywords:
+        if (key := fold(keyword)) not in seen:
+            seen.add(key)
+            kept.append(keyword)
+    return kept
 
 
 def _end_of_active(repository: ReviewsRepository, review_id: str) -> int:
@@ -308,6 +324,8 @@ def update_criterion(
             criterion.text = body.text
         if "stage" in body.model_fields_set:
             criterion.stage = body.stage
+        if body.keywords is not None:
+            criterion.keywords = _distinct(body.keywords)
         if body.archived is not None and body.archived != (criterion.archived_at is not None):
             if body.archived:
                 criterion.archived_at = utcnow()

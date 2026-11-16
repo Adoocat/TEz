@@ -259,3 +259,42 @@ def test_the_screening_service_reads_a_stage_s_criteria_in_key_order(
 
     assert [(c.code, c.shortcut) for c in title_abstract] == [("I1", 1), ("E3", 2)]
     assert [(c.code, c.shortcut) for c in full_text] == [("I1", 1), ("E1", 2)]
+
+
+# --- highlight keywords (Task 32, ADR 0023) ---------------------------------------------
+
+
+def test_a_criterion_keeps_its_highlight_keywords_once_each(
+    client: TestClient, review_id: str
+) -> None:
+    made = add(
+        client,
+        review_id,
+        kind="inclusion",
+        text="Code review",
+        keywords=[" code review ", "Işık", "ışık", "IŞIK", "LLM"],
+    )
+    assert made["keywords"] == ["code review", "Işık", "LLM"]
+
+    changed = client.patch(
+        f"/reviews/{review_id}/criteria/{made['id']}", json={"keywords": ["review"]}
+    ).json()
+    untouched = client.patch(
+        f"/reviews/{review_id}/criteria/{made['id']}", json={"text": "Code reviews"}
+    ).json()
+
+    assert changed["keywords"] == ["review"]
+    assert untouched["keywords"] == ["review"]
+    stage = client.get(f"/reviews/{review_id}/screening/title_abstract/criteria").json()
+    assert [(c["code"], c["shortcut"], c["keywords"]) for c in stage] == [("I1", 1, ["review"])]
+
+
+@pytest.mark.parametrize("keywords", [[""], ["x" * 101], ["k"] * 51])
+def test_invalid_keywords_are_rejected(
+    client: TestClient, review_id: str, keywords: list[str]
+) -> None:
+    response = client.post(
+        f"/reviews/{review_id}/criteria",
+        json={"kind": "exclusion", "text": "Off topic", "keywords": keywords},
+    )
+    assert response.status_code == 422

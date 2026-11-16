@@ -1,0 +1,12 @@
+[
+  ["IŞIK", "isik"],
+  ["Işık", "isik"],
+  ["ışık", "isik"],
+  ["İstanbul", "istanbul"],
+  ["ÇĞÖŞÜ çğöşü", "cgosu cgosu"],
+  ["Ünlü Kod İncelemesi", "unlu kod incelemesi"],
+  ["Café résumé", "cafe resume"],
+  ["Straße", "strasse"],
+  ["ﬁle", "file"],
+  ["é", "e"]
+]

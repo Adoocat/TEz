@@ -2805,6 +2805,96 @@
         }
       }
     },
+    "/reviews/{review_id}/screening/{stage}/criteria": {
+      "get": {
+        "tags": [
+          "screening"
+        ],
+        "summary": "Get Criteria",
+        "description": "The criteria the stage's screening shows, in key order, with their highlight terms.",
+        "operationId": "get_criteria_reviews__review_id__screening__stage__criteria_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          },
+          {
+            "name": "stage",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ScreeningStage"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StageCriterion"
+                  },
+                  "title": "Response Get Criteria Reviews  Review Id  Screening  Stage  Criteria Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/reviews/{review_id}/screening/{stage}/records/{paper_id}": {
       "get": {
         "tags": [
@@ -5689,6 +5779,17 @@
                 "type": "null"
               }
             ]
+          },
+          "keywords": {
+            "items": {
+              "type": "string",
+              "maxLength": 100,
+              "minLength": 1
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Keywords",
+            "default": []
           }
         },
         "additionalProperties": false,
@@ -5797,6 +5898,23 @@
               }
             ],
             "title": "Archived"
+          },
+          "keywords": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "maxLength": 100,
+                  "minLength": 1
+                },
+                "type": "array",
+                "maxItems": 50
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keywords"
           }
         },
         "additionalProperties": false,
@@ -5845,6 +5963,13 @@
           },
           "shortcuts": {
             "$ref": "#/components/schemas/CriterionShortcuts"
+          },
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Keywords"
           }
         },
         "type": "object",
@@ -5857,7 +5982,8 @@
           "position",
           "archived",
           "used",
-          "shortcuts"
+          "shortcuts",
+          "keywords"
         ],
         "title": "CriterionView"
       },
@@ -8693,6 +8819,54 @@
           "failed"
         ],
         "title": "SourceState"
+      },
+      "StageCriterion": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/CriterionKind"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "shortcut": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shortcut"
+          },
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Keywords"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "code",
+          "text",
+          "shortcut",
+          "keywords"
+        ],
+        "title": "StageCriterion",
+        "description": "A criterion as one stage's screening shows it, with its key (for Task 31's service)."
       },
       "StageProgress": {
         "properties": {

@@ -4,7 +4,9 @@ from fastapi import APIRouter, Depends, Query
 
 from tez.modules.library.router import get_library
 from tez.modules.library.service import Library
+from tez.modules.reviews import service as reviews_service
 from tez.modules.reviews.models import Decision, ScreeningStage
+from tez.modules.reviews.schemas import StageCriterion
 from tez.modules.screening import service
 from tez.modules.screening.schemas import (
     DecisionCreate,
@@ -31,6 +33,14 @@ def get_queue(
 ) -> ScreeningQueue:
     """The stage's queue in its stable order, with counts per state (counts ignore the filter)."""
     return service.queue_view(library.db, review_id, stage, wanted)
+
+
+@router.get("/{stage}/criteria")
+def get_criteria(
+    review_id: str, stage: ScreeningStage, library: LibraryDep
+) -> list[StageCriterion]:
+    """The criteria the stage's screening shows, in key order, with their highlight terms."""
+    return reviews_service.criteria_for_stage(library.db, review_id, stage)
 
 
 @router.get("/{stage}/records/{paper_id}")
