@@ -100,7 +100,10 @@ export function AppShell() {
           <main className="min-w-0 flex-1 overflow-y-auto">
             <Outlet />
           </main>
-          {inspectorOpen && !settingsRoute && <Inspector route={pathname} />}
+          {/* Screening has its own right-hand panel: the criteria. */}
+          {inspectorOpen && !settingsRoute && !pathname.startsWith("/screening") && (
+            <Inspector route={pathname} />
+          )}
         </div>
         <StatusBar />
       </div>

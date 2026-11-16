@@ -768,6 +768,16 @@
     },
     "list": {
       "label": "Kayıtlar"
+    },
+    "fullText": {
+      "label": "Tam metin",
+      "noPdf": "Bu kaydın PDF'i yok",
+      "noPdfHint": "Ücretsiz bir kopya arayın ya da PDF'i kütüphaneden ekleyin. Rapora ulaşılamıyorsa \"Tam metne erişilemedi\" kararını verin: PRISMA bunu ayrı sayar.",
+      "find": "PDF'leri bul",
+      "looking": "Ücretsiz PDF aranıyor…",
+      "noSource": "Bu kayıt için bilinen ücretsiz kaynak yok.",
+      "notFound": "Ücretsiz PDF bulunamadı.",
+      "findFailed": "PDF araması başlatılamadı."
     }
   }
 }

@@ -25,6 +25,7 @@ from sqlalchemy.orm import Session
 
 from tez.core.db import Database
 from tez.core.errors import ErrorCode, TezError
+from tez.modules.files import service as files_service
 from tez.modules.library.models import IdentifierScheme
 from tez.modules.library.paper_service import PaperService
 from tez.modules.reviews.models import (
@@ -369,6 +370,7 @@ def _record(
         venue=paper.venue,
         doi=card.identifiers.get(IdentifierScheme.DOI),
         retraction_status=paper.retraction_status,
+        attachments=files_service.attachments_in(session, paper.id),
     )
 
 

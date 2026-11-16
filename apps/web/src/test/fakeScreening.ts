@@ -14,6 +14,7 @@ export interface ScreeningPaper {
   title: string;
   abstract?: string | null;
   authors?: string[];
+  attachments?: components["schemas"]["AttachmentView"][];
 }
 
 export interface FakeScreening {
@@ -136,6 +137,7 @@ export function fakeScreening(
         authors: paper.authors ?? [],
         doi: null,
         retraction_status: "none",
+        attachments: paper.attachments ?? [],
       });
     }
     if (rest === "/decisions") {

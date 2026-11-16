@@ -30,6 +30,7 @@ import {
 } from "./api";
 import { CriteriaSidebar } from "./CriteriaSidebar";
 import { DecisionBar } from "./DecisionBar";
+import { FullTextPane } from "./FullTextPane";
 import { NoteDialog } from "./NoteDialog";
 import { matches, step, type QueueFilter, type QueueItem } from "./queue";
 import { RecordView } from "./RecordView";
@@ -109,6 +110,7 @@ function Screening({ reviewId }: { reviewId: string }) {
   const record = useRecord(reviewId, stage, currentId);
   // A record from the cache is shown only if it is the current one.
   const shownRecord = record.data?.paper_id === currentId ? record.data : undefined;
+  const fullTextPane = stage === "full_text" && mode === "focus" ? shownRecord : undefined;
   const stageCriteria = criteria.data ?? [];
   const exclusions = stageCriteria.filter((c) => c.kind === "exclusion");
 
@@ -305,7 +307,14 @@ function Screening({ reviewId }: { reviewId: string }) {
         </p>
       )}
       <div className="flex min-h-0 flex-1">
-        <main className="min-w-0 flex-1 overflow-y-auto">
+        {fullTextPane && <FullTextPane reviewId={reviewId} record={fullTextPane} />}
+        <main
+          className={cn(
+            "overflow-y-auto",
+            // Beside the PDF the record takes the smaller share, never less than a column.
+            fullTextPane ? "min-w-72 flex-[2] basis-0" : "min-w-0 flex-1",
+          )}
+        >
           {queue.isPending ? null : queue.isError ? (
             <p role="alert" className="p-6 text-ui text-danger">
               {errorText(t, queue.error)}

@@ -95,7 +95,7 @@ export function usePaperDetail(paperId: string | null) {
 }
 
 /** The file "Open PDF" opens: a readable PDF first; a broken one can still be tried. */
-export function readablePdf(paper: PaperDetail) {
+export function readablePdf(paper: Pick<PaperDetail, "attachments">) {
   return (
     paper.attachments.find((a) => a.kind === "pdf" && a.text_status !== "failed") ??
     paper.attachments[0]
