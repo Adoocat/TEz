@@ -1,5 +1,5 @@
 // The active review's home (design 5.1): research questions, where each stage stands with
-// a way to carry on, the latest searches and room for the PRISMA summary (Task 35).
+// a way to carry on, the latest searches and the PRISMA summary (Task 35).
 // Every number comes from GET /reviews/{id}/overview, which derives it on each read.
 import { ArrowRight, GitBranch } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,8 @@ import { useSearchView } from "@/features/search/store";
 
 import { useReviewOverview, useReviews, type ReviewView, type StageProgress } from "./api";
 import { GreyLiteraturePanel } from "@/features/greylit/GreyLiteraturePanel";
+import { usePrismaCounts } from "@/features/prisma/api";
+import { PrismaSummary } from "@/features/prisma/PrismaPage";
 import { SnowballPanel } from "@/features/snowballing/SnowballPanel";
 
 import { CriteriaPanel } from "./CriteriaPanel";
@@ -102,12 +104,27 @@ function Panel({ review }: { review: ReviewView }) {
           <h2 id="review-prisma" className="text-h3">
             {t("reviews.panel.prisma")}
           </h2>
-          <div className="flex items-start gap-3 rounded-md border border-dashed border-line-strong p-4 text-ui text-fg-muted">
-            <GitBranch className="mt-0.5 size-4 shrink-0" aria-hidden />
-            <p>{t("reviews.panel.prismaSoon")}</p>
-          </div>
+          <PrismaBox reviewId={review.id} />
         </section>
       </div>
+    </div>
+  );
+}
+
+/** The same counts as the diagram, in one line per stage, with a way to the diagram. */
+function PrismaBox({ reviewId }: { reviewId: string }) {
+  const { t } = useTranslation();
+  const counts = usePrismaCounts(reviewId);
+  return (
+    <div className="space-y-3 rounded-md border border-line p-4">
+      {counts.data && <PrismaSummary counts={counts.data} />}
+      <Link
+        to="/prisma"
+        className="inline-flex items-center gap-1.5 text-ui text-primary underline"
+      >
+        <GitBranch className="size-4" aria-hidden />
+        {t("reviews.panel.openDiagram")}
+      </Link>
     </div>
   );
 }

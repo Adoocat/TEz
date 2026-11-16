@@ -447,3 +447,24 @@ def add_found(
             present.add(paper_id)
             added += 1
     return added
+
+
+# --- PRISMA diagram labels (Task 35) --------------------------------------------------------
+
+
+def prisma_labels(db: Database, review_id: str) -> dict[str, str]:
+    with db.session() as session:
+        review = ReviewsRepository(session).get_review(review_id)
+        if review is None:
+            raise _not_found(review_id)
+        return dict(review.prisma_labels)
+
+
+def set_prisma_labels(db: Database, review_id: str, labels: dict[str, str]) -> dict[str, str]:
+    """Replace the edited titles; a box left out shows its default title again."""
+    with db.write_session() as session:
+        review = ReviewsRepository(session).get_review(review_id)
+        if review is None:
+            raise _not_found(review_id)
+        review.prisma_labels = dict(labels)
+        return dict(review.prisma_labels)

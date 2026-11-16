@@ -264,7 +264,7 @@
       "searches": "Son aramalar",
       "unique": "{{n}} tekil",
       "prisma": "PRISMA özeti",
-      "prismaSoon": "Diyagram hazır olduğunda PRISMA 2020 akış özeti burada görünecek."
+      "openDiagram": "Diyagramı aç"
     },
     "criteria": {
       "title": "Eleme kriterleri",
@@ -850,5 +850,69 @@
     "list": "Bulunan gri literatür",
     "records_one": "{{n}} kayıt",
     "records_other": "{{n}} kayıt"
+  },
+  "prisma": {
+    "title": "PRISMA akış diyagramı",
+    "noReview": "Diyagramı görmek için üst çubuktan bir review seçin.",
+    "theme": {
+      "label": "Tema",
+      "color": "Renkli",
+      "print": "Siyah-beyaz"
+    },
+    "editLabels": "Kutu başlıklarını düzenle",
+    "labelsHint": "Boş bırakılan kutu varsayılan başlığını gösterir. Yalnız başlıklar saklanır; sayılar her seferinde yeniden hesaplanır.",
+    "saveLabels": "Başlıkları kaydet",
+    "cancel": "Vazgeç",
+    "exportSvg": "SVG olarak kaydet",
+    "exportPng": "PNG olarak kaydet",
+    "hint": "Sayılar review'daki kayıtlardan ve eleme kararlarından şu anki haliyle hesaplanır.",
+    "back": "Review paneline dön",
+    "documentTitle": "PRISMA 2020 akış diyagramı",
+    "n": "(n = {{n}})",
+    "line": "{{label}} (n = {{n}})",
+    "unlogged": "Kaydı tutulmamış aramalar",
+    "noReason": "Gerekçe yok",
+    "awaiting": "Karar bekleyen",
+    "duplicates": "Çıkarılan tekrar kayıtlar",
+    "notTaken": "Başka nedenlerle çıkarılan kayıtlar",
+    "methods": {
+      "database": "Veri tabanları",
+      "citation_backward": "Geriye kartopu, {{round}}. tur",
+      "citation_forward": "İleriye kartopu, {{round}}. tur",
+      "website": "Web siteleri",
+      "organisation": "Kuruluşlar",
+      "register": "Kayıtlar",
+      "thesis": "Tezler"
+    },
+    "boxes": {
+      "identification": "Tanımlama",
+      "screening": "Tarama",
+      "included_phase": "Dahil edilme",
+      "db_identified": "Veri tabanları ve kayıtlardan tanımlanan kayıtlar",
+      "db_removed": "Taramadan önce çıkarılan kayıtlar",
+      "db_screened": "Taranan kayıtlar",
+      "db_excluded": "Hariç tutulan kayıtlar",
+      "db_sought": "Erişilmeye çalışılan raporlar",
+      "db_not_retrieved": "Erişilemeyen raporlar",
+      "db_assessed": "Uygunluğu değerlendirilen raporlar",
+      "db_reports_excluded": "Hariç tutulan raporlar",
+      "other_identified": "Diğer yöntemlerle tanımlanan kayıtlar",
+      "other_removed": "Taramadan önce çıkarılan kayıtlar",
+      "other_screened": "Taranan kayıtlar",
+      "other_excluded": "Hariç tutulan kayıtlar",
+      "other_sought": "Erişilmeye çalışılan raporlar",
+      "other_not_retrieved": "Erişilemeyen raporlar",
+      "other_assessed": "Uygunluğu değerlendirilen raporlar",
+      "other_reports_excluded": "Hariç tutulan raporlar",
+      "included": "Derlemeye dahil edilen çalışmalar"
+    },
+    "summary": {
+      "identified": "Tanımlanan",
+      "duplicates": "Tekrar",
+      "screened": "Taranan",
+      "notRetrieved": "Erişilemeyen",
+      "assessed": "Tam metni değerlendirilen",
+      "included": "Dahil edilen"
+    }
   }
 }

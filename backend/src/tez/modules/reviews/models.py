@@ -61,6 +61,11 @@ class Review(TimestampMixin, Base):
     status: Mapped[ReviewStatus] = mapped_column(
         enum_type(ReviewStatus, "status"), default=ReviewStatus.ACTIVE
     )
+    # The PRISMA diagram's box titles the user rewrote, by box (Task 35). Only the words are
+    # kept: every number in the diagram is derived (CLAUDE.md rule 4).
+    prisma_labels: Mapped[dict[str, str]] = mapped_column(
+        JSON, default=dict, server_default=sql_text("'{}'")
+    )
 
 
 class ReviewRecord(TimestampMixin, Base):
