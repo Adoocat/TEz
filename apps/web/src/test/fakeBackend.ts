@@ -246,6 +246,11 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
         }
         return json({ labels: backend.prismaLabels[reviewId] ?? {} });
       }
+      // The review panel asks for the optional quality stage (Task 38): off unless a test
+      // wraps this backend with fakeQuality.
+      if (request.method === "GET" && /^\/reviews\/[^/]+\/quality\/summary$/.test(path)) {
+        return json({ enabled: false, questions: 0, papers: 0, assessed: 0, in_progress: 0 });
+      }
       const overviewOf = /^\/reviews\/([^/]+)\/overview$/.exec(path)?.[1];
       if (overviewOf && request.method === "GET") {
         return json(

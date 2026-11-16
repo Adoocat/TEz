@@ -636,6 +636,209 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/quality/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Catalog
+         * @description Bundled checklist templates (with their licenses) and scale presets.
+         */
+        get: operations["get_catalog_quality_catalog_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/quality": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Quality */
+        get: operations["get_quality_reviews__review_id__quality_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/quality/setting": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set Quality Setting
+         * @description Turn the optional stage on or off; off keeps every question and answer.
+         */
+        put: operations["set_quality_setting_reviews__review_id__quality_setting_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/quality/questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Questions */
+        post: operations["add_questions_reviews__review_id__quality_questions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/quality/templates/{template_key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Apply Template
+         * @description Copy a bundled checklist's questions after the review's own.
+         */
+        post: operations["apply_template_reviews__review_id__quality_templates__template_key__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/quality/questions/{question_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Question */
+        delete: operations["delete_question_reviews__review_id__quality_questions__question_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Question */
+        patch: operations["update_question_reviews__review_id__quality_questions__question_id__patch"];
+        trace?: never;
+    };
+    "/reviews/{review_id}/quality/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Reorder Questions */
+        put: operations["reorder_questions_reviews__review_id__quality_order_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/quality/papers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Papers
+         * @description Papers included at full text, with derived progress and totals.
+         */
+        get: operations["list_papers_reviews__review_id__quality_papers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/quality/papers/{paper_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Paper Assessment */
+        get: operations["get_paper_assessment_reviews__review_id__quality_papers__paper_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/quality/papers/{paper_id}/answers/{question_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Put Answer
+         * @description Set, change or clear one answer; clearing the answer and the note removes it.
+         */
+        put: operations["put_answer_reviews__review_id__quality_papers__paper_id__answers__question_id__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/quality/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Summary */
+        get: operations["get_summary_reviews__review_id__quality_summary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/searches": {
         parameters: {
             query?: never;
@@ -1139,6 +1342,27 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AnswerPut */
+        AnswerPut: {
+            /** Answer */
+            answer?: string | null;
+            /** Note */
+            note?: string | null;
+        };
+        /** AnswerView */
+        AnswerView: {
+            /** Question Id */
+            question_id: string;
+            /** Answer */
+            answer: string | null;
+            /** Note */
+            note: string | null;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
         /** AppSettings */
         AppSettings: {
             /** Language */
@@ -1840,6 +2064,13 @@ export interface components {
             /** Methods */
             methods: components["schemas"]["OtherMethodCount"][];
         };
+        /** PaperAssessment */
+        PaperAssessment: {
+            /** Paper Id */
+            paper_id: string;
+            /** Answers */
+            answers: components["schemas"]["AnswerView"][];
+        };
         /**
          * PaperDetail
          * @description Everything the inspector shows about one paper (design 4.4).
@@ -1902,6 +2133,28 @@ export interface components {
             /** Citekey */
             citekey: string;
         };
+        /**
+         * PaperQualityRow
+         * @description An included paper with its derived progress and total; nothing here is stored.
+         */
+        PaperQualityRow: {
+            /** Paper Id */
+            paper_id: string;
+            /** Title */
+            title: string;
+            /** Year */
+            year: number | null;
+            /** First Author */
+            first_author: string | null;
+            /** Answered */
+            answered: number;
+            /** Questions */
+            questions: number;
+            /** Score */
+            score: number | null;
+            /** Max Score */
+            max_score: number | null;
+        };
         /** PaperSelection */
         PaperSelection: {
             /** Paper Ids */
@@ -1941,6 +2194,17 @@ export interface components {
             paths: string[];
             /** Paper Id */
             paper_id?: string | null;
+        };
+        /** PresetOptionView */
+        PresetOptionView: {
+            /** Value */
+            value: string;
+            /** Labels */
+            labels: {
+                [key: string]: string;
+            };
+            /** Score */
+            score: number | null;
         };
         /** PresetView */
         PresetView: {
@@ -1997,6 +2261,82 @@ export interface components {
             labels: {
                 [key: string]: string;
             };
+        };
+        /** QualityCatalog */
+        QualityCatalog: {
+            /** Templates */
+            templates: components["schemas"]["TemplateView"][];
+            /** Scales */
+            scales: components["schemas"]["ScalePresetView"][];
+        };
+        /** QualitySettingPut */
+        QualitySettingPut: {
+            /** Enabled */
+            enabled: boolean;
+        };
+        /**
+         * QualitySummary
+         * @description What the review panel shows for the stage; hidden there when `enabled` is false.
+         */
+        QualitySummary: {
+            /** Enabled */
+            enabled: boolean;
+            /** Questions */
+            questions: number;
+            /** Papers */
+            papers: number;
+            /** Assessed */
+            assessed: number;
+            /** In Progress */
+            in_progress: number;
+        };
+        /** QualityView */
+        QualityView: {
+            /** Enabled */
+            enabled: boolean;
+            /** Questions */
+            questions: components["schemas"]["QuestionView"][];
+        };
+        /** QuestionCreate */
+        QuestionCreate: {
+            /** Text */
+            text: string;
+            /** Guidance */
+            guidance?: string | null;
+            scale: components["schemas"]["Scale"];
+        };
+        /** QuestionOrder */
+        QuestionOrder: {
+            /** Question Ids */
+            question_ids: string[];
+        };
+        /** QuestionPatch */
+        QuestionPatch: {
+            /** Text */
+            text?: string | null;
+            /** Guidance */
+            guidance?: string | null;
+            scale?: components["schemas"]["Scale"] | null;
+        };
+        /** QuestionView */
+        QuestionView: {
+            /** Id */
+            id: string;
+            /** Text */
+            text: string;
+            /** Guidance */
+            guidance: string | null;
+            /** Scale */
+            scale: components["schemas"]["ScaleOption"][];
+            /** Sort Order */
+            sort_order: number;
+            /** Template */
+            template: string | null;
+        };
+        /** QuestionsCreate */
+        QuestionsCreate: {
+            /** Questions */
+            questions: components["schemas"]["QuestionCreate"][];
         };
         /**
          * QueueFilter
@@ -2175,6 +2515,30 @@ export interface components {
             /** Retrieved Count */
             retrieved_count: number;
             error: components["schemas"]["ErrorDetail"] | null;
+        };
+        /**
+         * Scale
+         * @description Wrapper so the option list is validated as a whole (unique values).
+         */
+        Scale: {
+            /** Options */
+            options: components["schemas"]["ScaleOption"][];
+        };
+        /** ScaleOption */
+        ScaleOption: {
+            /** Value */
+            value: string;
+            /** Label */
+            label: string;
+            /** Score */
+            score?: number | null;
+        };
+        /** ScalePresetView */
+        ScalePresetView: {
+            /** Key */
+            key: string;
+            /** Options */
+            options: components["schemas"]["PresetOptionView"][];
         };
         /** ScreeningQueue */
         ScreeningQueue: {
@@ -2577,6 +2941,39 @@ export interface components {
             color: string | null;
             /** Paper Count */
             paper_count: number;
+        };
+        /** TemplateApply */
+        TemplateApply: {
+            /**
+             * Language
+             * @enum {string}
+             */
+            language: "en" | "tr";
+        };
+        /** TemplateView */
+        TemplateView: {
+            /** Key */
+            key: string;
+            /** Title */
+            title: string;
+            /** Publisher */
+            publisher: string;
+            /** Design */
+            design: string;
+            /** Version */
+            version: string;
+            /** License */
+            license: string;
+            /** Source Url */
+            source_url: string;
+            /** Questions */
+            questions: string[];
+            /** Scale */
+            scale: string;
+            /** Rating Question */
+            rating_question: string | null;
+            /** Rating Scale */
+            rating_scale: string | null;
         };
         /**
          * TextStatus
@@ -5015,6 +5412,728 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DecisionView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_catalog_quality_catalog_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QualityCatalog"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_quality_reviews__review_id__quality_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QualityView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    set_quality_setting_reviews__review_id__quality_setting_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QualitySettingPut"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QualityView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_questions_reviews__review_id__quality_questions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuestionsCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuestionView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    apply_template_reviews__review_id__quality_templates__template_key__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                template_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TemplateApply"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuestionView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_question_reviews__review_id__quality_questions__question_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                question_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_question_reviews__review_id__quality_questions__question_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                question_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuestionPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuestionView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    reorder_questions_reviews__review_id__quality_order_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuestionOrder"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuestionView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_papers_reviews__review_id__quality_papers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaperQualityRow"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_paper_assessment_reviews__review_id__quality_papers__paper_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                paper_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaperAssessment"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    put_answer_reviews__review_id__quality_papers__paper_id__answers__question_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                paper_id: string;
+                question_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnswerPut"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaperAssessment"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_summary_reviews__review_id__quality_summary_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QualitySummary"];
                 };
             };
             /** @description Missing or invalid token */

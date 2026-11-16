@@ -24,6 +24,7 @@ from tez.modules.jobs.supervisor import WorkerSupervisor
 from tez.modules.library.router import router as library_router
 from tez.modules.library.service import Library, open_library
 from tez.modules.prisma.router import router as prisma_router
+from tez.modules.quality.router import router as quality_router
 from tez.modules.reviews.router import router as reviews_router
 from tez.modules.screening.router import router as screening_router
 from tez.modules.search.live import SearchRegistry
@@ -92,6 +93,7 @@ def create_app(
     app.include_router(jobs_router, dependencies=secured, responses=needs_library)
     app.include_router(reviews_router, dependencies=secured, responses=needs_library)
     app.include_router(screening_router, dependencies=secured, responses=needs_library)
+    app.include_router(quality_router, dependencies=secured, responses=needs_library)
     app.include_router(search_router, dependencies=secured, responses=needs_library)
     app.include_router(imports_router, dependencies=secured, responses=needs_library)
     app.include_router(files_router, dependencies=secured, responses=needs_library)

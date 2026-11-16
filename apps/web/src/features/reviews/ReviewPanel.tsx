@@ -1,6 +1,7 @@
 // The active review's home (design 5.1): research questions, where each stage stands with
 // a way to carry on, the latest searches and the PRISMA summary (Task 35).
-// Every number comes from GET /reviews/{id}/overview, which derives it on each read.
+// Every number comes from GET /reviews/{id}/overview, which derives it on each read; the
+// optional quality stage (Task 38) shows only while it is turned on.
 import { ArrowRight, GitBranch } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router";
@@ -13,6 +14,7 @@ import { useReviewOverview, useReviews, type ReviewView, type StageProgress } fr
 import { GreyLiteraturePanel } from "@/features/greylit/GreyLiteraturePanel";
 import { usePrismaCounts } from "@/features/prisma/api";
 import { PrismaSummary } from "@/features/prisma/PrismaPage";
+import { QualityStageCard, QualityToggle } from "@/features/quality/QualityStage";
 import { SnowballPanel } from "@/features/snowballing/SnowballPanel";
 
 import { CriteriaPanel } from "./CriteriaPanel";
@@ -90,7 +92,9 @@ function Panel({ review }: { review: ReviewView }) {
           {overview.data?.stages.map((stage) => (
             <ScreeningStageCard key={stage.stage} progress={stage} />
           ))}
+          <QualityStageCard reviewId={review.id} />
         </ol>
+        <QualityToggle reviewId={review.id} />
         {overview.isError && (
           <p role="alert" className="text-meta text-danger">
             {t("reviews.panel.overviewFailed")}
