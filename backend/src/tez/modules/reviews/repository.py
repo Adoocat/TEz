@@ -70,6 +70,7 @@ class ReviewsRepository:
         code: str,
         text: str,
         stage: ScreeningStage | None = None,
+        keywords: list[str] | None = None,
     ) -> ScreeningCriterion:
         """Add a criterion after the review's others."""
         last = self.session.scalar(
@@ -83,6 +84,7 @@ class ReviewsRepository:
             code=code,
             text=text,
             stage=stage,
+            keywords=keywords or [],
             position=0 if last is None else last + 1,
         )
         self.session.add(criterion)

@@ -521,6 +521,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reviews/{review_id}/screening/{stage}/criteria": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Criteria
+         * @description The criteria the stage's screening shows, in key order, with their highlight terms.
+         */
+        get: operations["get_criteria_reviews__review_id__screening__stage__criteria_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/reviews/{review_id}/screening/{stage}/records/{paper_id}": {
         parameters: {
             query?: never;
@@ -1148,6 +1168,11 @@ export interface components {
             /** Text */
             text: string;
             stage?: components["schemas"]["ScreeningStage"] | null;
+            /**
+             * Keywords
+             * @default []
+             */
+            keywords: string[];
         };
         /**
          * CriterionKind
@@ -1177,6 +1202,8 @@ export interface components {
             stage?: components["schemas"]["ScreeningStage"] | null;
             /** Archived */
             archived?: boolean | null;
+            /** Keywords */
+            keywords?: string[] | null;
         };
         /** CriterionView */
         CriterionView: {
@@ -1195,6 +1222,8 @@ export interface components {
             /** Used */
             used: boolean;
             shortcuts: components["schemas"]["CriterionShortcuts"];
+            /** Keywords */
+            keywords: string[];
         };
         /**
          * Decision
@@ -2060,6 +2089,23 @@ export interface components {
          * @enum {string}
          */
         SourceState: "waiting" | "searching" | "rate_limited" | "done" | "partial" | "failed";
+        /**
+         * StageCriterion
+         * @description A criterion as one stage's screening shows it, with its key (for Task 31's service).
+         */
+        StageCriterion: {
+            /** Id */
+            id: string;
+            kind: components["schemas"]["CriterionKind"];
+            /** Code */
+            code: string;
+            /** Text */
+            text: string;
+            /** Shortcut */
+            shortcut: number | null;
+            /** Keywords */
+            keywords: string[];
+        };
         /**
          * StageProgress
          * @description Where one screening stage stands, derived from the decisions in force.
@@ -4179,6 +4225,65 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ScreeningQueue"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_criteria_reviews__review_id__screening__stage__criteria_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                stage: components["schemas"]["ScreeningStage"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StageCriterion"][];
                 };
             };
             /** @description Missing or invalid token */

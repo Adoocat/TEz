@@ -8,6 +8,7 @@ import { JobsPage } from "@/features/jobs/JobsPage";
 import { LibraryPage } from "@/features/library/LibraryPage";
 import { ReaderPage } from "@/features/reader/ReaderPage";
 import { ReviewPanel } from "@/features/reviews/ReviewPanel";
+import { ScreeningPage } from "@/features/screening/ScreeningPage";
 import { SearchPage } from "@/features/search/SearchPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
 import { createI18n } from "@/i18n";
@@ -18,7 +19,7 @@ import { BackendGate, type FetchLike } from "./backend";
 import { ComingSoon } from "./ComingSoon";
 import { AppShell } from "./layout/AppShell";
 
-const sections = ["screening", "notes", "matrix"] as const;
+const sections = ["notes", "matrix"] as const;
 
 function createRouter() {
   // Hash routing: works the same from Tauri's asset protocol and any static server.
@@ -32,6 +33,7 @@ function createRouter() {
           element: <ComingSoon section={section} />,
         })),
         { path: "/review", element: <ReviewPanel /> },
+        { path: "/screening", element: <ScreeningPage /> },
         { path: "/library", element: <LibraryPage /> },
         { path: "/reader/:attachmentId?", element: <ReaderPage /> },
         { path: "/search", element: <SearchPage /> },

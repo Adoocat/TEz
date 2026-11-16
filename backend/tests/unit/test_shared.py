@@ -1,7 +1,9 @@
+import json
 import threading
 import uuid
 from collections.abc import Generator
 from datetime import UTC, datetime, timedelta, timezone
+from pathlib import Path
 
 import pytest
 from sqlalchemy import Column, Engine, MetaData, Table, create_engine, insert, select, text
@@ -134,3 +136,14 @@ def test_utc_datetime_rejects_naive_values(table: tuple[Table, Engine]) -> None:
 )
 def test_strip_markup(given: str, expected: str) -> None:
     assert strip_markup(given) == expected
+
+
+FOLD_CASES = json.loads(
+    (Path(__file__).parents[1] / "fixtures" / "text" / "fold_cases.json").read_text("utf-8")
+)
+
+
+@pytest.mark.parametrize(("text", "expected"), FOLD_CASES)
+def test_fold_matches_the_shared_table(text: str, expected: str) -> None:
+    # The frontend's lib/text.ts folds the same table (Task 32, ADR 0023).
+    assert fold(text) == expected

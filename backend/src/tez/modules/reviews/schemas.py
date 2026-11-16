@@ -67,6 +67,9 @@ CriterionCode = Annotated[
     str, StringConstraints(strip_whitespace=True, to_upper=True, pattern=r"^[A-Za-z0-9._-]{1,16}$")
 ]
 CriterionText = Annotated[str, StringConstraints(min_length=1, max_length=2000)]
+Keyword = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=100)]
+# Terms screening highlights for a criterion; matched Turkish-safe, case- and accent-blind.
+Keywords = Annotated[list[Keyword], Field(max_length=50)]
 
 
 class CriterionCreate(BaseModel):
@@ -78,6 +81,7 @@ class CriterionCreate(BaseModel):
     text: CriterionText
     # None: both stages.
     stage: ScreeningStage | None = None
+    keywords: Keywords = []
 
 
 class CriterionUpdate(BaseModel):
@@ -90,6 +94,7 @@ class CriterionUpdate(BaseModel):
     text: CriterionText | None = None
     stage: ScreeningStage | None = None
     archived: bool | None = None
+    keywords: Keywords | None = None
 
 
 class CriteriaOrder(BaseModel):
@@ -117,6 +122,7 @@ class CriterionView(BaseModel):
     # A screening decision cites it: it can be archived, not deleted.
     used: bool
     shortcuts: CriterionShortcuts
+    keywords: list[str]
 
 
 class StageCriterion(BaseModel):
@@ -127,3 +133,4 @@ class StageCriterion(BaseModel):
     code: str
     text: str
     shortcut: int | None
+    keywords: list[str]

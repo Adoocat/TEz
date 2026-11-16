@@ -300,7 +300,10 @@
       "deleteLabel": "Delete {{code}}",
       "restore": "Restore",
       "restoreLabel": "Restore {{code}}",
-      "archivedTag": "archived"
+      "archivedTag": "archived",
+      "keywords": "Highlight terms",
+      "keywordsPlaceholder": "Terms to highlight, separated by commas",
+      "keywordsHint": "Screening highlights these terms in titles and abstracts: green for inclusion, red underline for exclusion. Case and Turkish letters do not matter."
     }
   },
   "search": {
@@ -683,6 +686,88 @@
         "preview": "Show or hide the inspector",
         "open": "Open the PDF"
       }
+    }
+  },
+  "screening": {
+    "noReview": "There is no review to screen yet.",
+    "toReview": "Create one in the review panel.",
+    "stages": "Screening stage",
+    "progress": "{{decided}} / {{total}} decided · {{percent}}",
+    "session_one": "{{count}} decision this session",
+    "session_other": "{{count}} decisions this session",
+    "previous": "Previous",
+    "next": "Next",
+    "nothingToUndo": "Nothing to undo in this session.",
+    "filter": {
+      "label": "Show",
+      "all": "All ({{n}})",
+      "undecided": "Undecided ({{n}})",
+      "maybe": "Maybe only ({{n}})",
+      "include": "Included ({{n}})",
+      "exclude": "Excluded ({{n}})",
+      "not_retrieved": "Not retrieved ({{n}})"
+    },
+    "mode": {
+      "label": "View",
+      "focus": "Focus",
+      "list": "List"
+    },
+    "empty": {
+      "noRecords": "The review has no records at this stage yet.",
+      "filterDone": "No records left in this view.",
+      "showAll": "Show all records"
+    },
+    "state": {
+      "undecided": "Undecided",
+      "include": "Included",
+      "exclude": "Excluded",
+      "maybe": "Maybe",
+      "not_retrieved": "Not retrieved"
+    },
+    "record": {
+      "position": "Record {{position}} / {{total}}",
+      "moreAuthors": "and {{n}} more",
+      "noAuthors": "No authors",
+      "abstract": "Abstract",
+      "noAbstract": "This record has no abstract.",
+      "legendInclusion": "Inclusion term",
+      "legendExclusion": "Exclusion term",
+      "retraction": {
+        "retracted": "This paper has been retracted.",
+        "expression_of_concern": "This paper has an expression of concern."
+      }
+    },
+    "criteria": {
+      "title": "Criteria",
+      "none": "This stage has no criteria yet.",
+      "edit": "Add them in the review panel.",
+      "inclusion": "Inclusion criteria",
+      "exclusion": "Exclusion criteria",
+      "noExclusion": "No exclusion criteria for this stage.",
+      "choose": {
+        "inclusion": "Include: {{code}} {{text}}",
+        "exclusion": "Exclude: {{code}} {{text}}"
+      }
+    },
+    "bar": {
+      "label": "Decision",
+      "include": "Include",
+      "exclude": "Exclude",
+      "reason": "Reason",
+      "maybe": "Maybe",
+      "notRetrieved": "Full text not retrieved",
+      "skip": "Skip",
+      "undo": "Undo",
+      "note": "Note"
+    },
+    "note": {
+      "title": "Screening note",
+      "hint": "Saved with the record's decision. Ctrl+Enter saves.",
+      "save": "Save note",
+      "cancel": "Cancel"
+    },
+    "list": {
+      "label": "Records"
     }
   }
 }

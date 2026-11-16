@@ -191,6 +191,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
             code,
             text: input.text ?? "",
             stage: input.stage ?? null,
+            keywords: input.keywords ?? [],
           });
           list.push(created);
           return json(
@@ -454,6 +455,7 @@ export function criterion(overrides: Partial<CriterionView> = {}): CriterionView
     archived: false,
     used: false,
     shortcuts: { title_abstract: null, full_text: null },
+    keywords: [],
     ...overrides,
   };
 }

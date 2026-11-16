@@ -87,16 +87,27 @@ describe("screening criteria", () => {
     await user.click(within(form).getByRole("radio", { name: "Exclusion" }));
     await user.type(within(form).getByRole("textbox", { name: "Criterion" }), "No evaluation");
     await user.selectOptions(within(form).getByRole("combobox", { name: "Stage" }), "Full text");
+    await user.type(
+      within(form).getByRole("textbox", { name: "Highlight terms" }),
+      " benchmark only, , position paper ",
+    );
     await user.click(within(form).getByRole("button", { name: "Add criterion" }));
     await within(section).findByText("No evaluation");
+    expect(within(section).getByText("benchmark only, position paper")).toBeVisible();
 
     expect(rows(section)).toEqual([
       ["1", "1", "I1"],
       ["—", "2", "E1"],
     ]);
     expect(backend.requests.filter((r) => r.method === "POST").map((r) => r.body)).toEqual([
-      { kind: "inclusion", code: null, text: "Empirical study", stage: null },
-      { kind: "exclusion", code: null, text: "No evaluation", stage: "full_text" },
+      { kind: "inclusion", code: null, text: "Empirical study", stage: null, keywords: [] },
+      {
+        kind: "exclusion",
+        code: null,
+        text: "No evaluation",
+        stage: "full_text",
+        keywords: ["benchmark only", "position paper"],
+      },
     ]);
   });
 
@@ -194,6 +205,7 @@ describe("screening criteria", () => {
       code: "E1",
       text: "New text",
       stage: null,
+      keywords: [],
     });
   });
 });
