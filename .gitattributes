@@ -5,6 +5,9 @@
 *.bat text eol=crlf
 *.ps1 text eol=crlf
 
+# Real database exports (Task 26): keep their bytes, line endings included.
+backend/tests/fixtures/imports/presets/** -text
+
 # Binary files
 *.png binary
 *.jpg binary

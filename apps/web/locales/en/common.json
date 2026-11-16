@@ -433,9 +433,9 @@
         "psycinfo": "Export from the platform your library uses (EBSCO, ProQuest or Ovid) in RIS format.",
         "ieee": "Select the results → Export → Citations → Format: RIS, Include: \"Citation & Abstract\" → Export.",
         "acm": "Tick the results → Export citations → BibTeX → Download.",
-        "scholar": "Settings → Bibliography manager → \"Show links to import citations into BibTeX\". Then use \"Import into BibTeX\" under each result: one record per file.",
-        "trdizin": "Use the site's export (\"Dışa aktar\") on the results and choose BibTeX.",
-        "yoktez": "The site has no export file as far as we know; add theses by hand for now."
+        "scholar": "Under each result, ❞ → BibTeX; paste the text into one .bib file, one record after another. Go slowly: Google shows a robot check if you click fast.",
+        "trdizin": "Open each publication's page and download it with the Ris button at the bottom. Choose RIS: the BibTeX file has no abstract.",
+        "yoktez": "The site exports no file, only formatted citations to the clipboard; add theses by hand."
       }
     },
     "thesesOnly": "Theses only",
