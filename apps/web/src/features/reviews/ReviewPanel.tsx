@@ -10,6 +10,7 @@ import { useSearchHistory, type SearchOverview } from "@/features/search/api";
 import { useSearchView } from "@/features/search/store";
 
 import { useReviewOverview, useReviews, type ReviewView, type StageProgress } from "./api";
+import { GreyLiteraturePanel } from "@/features/greylit/GreyLiteraturePanel";
 import { SnowballPanel } from "@/features/snowballing/SnowballPanel";
 
 import { CriteriaPanel } from "./CriteriaPanel";
@@ -76,6 +77,7 @@ function Panel({ review }: { review: ReviewView }) {
 
       <CriteriaPanel reviewId={review.id} />
       <SnowballPanel reviewId={review.id} />
+      <GreyLiteraturePanel reviewId={review.id} />
 
       <section aria-labelledby="review-stages" className="space-y-2">
         <h2 id="review-stages" className="text-h3">

@@ -519,7 +519,14 @@
     "savedSearch": "Kayıtlı harici arama",
     "noSavedSearch": "Yok (veritabanını girin)",
     "sinceLast_one": "Son içe aktarmadan ({{date}}) beri {{n}} yeni kayıt",
-    "sinceLast_other": "Son içe aktarmadan ({{date}}) beri {{n}} yeni kayıt"
+    "sinceLast_other": "Son içe aktarmadan ({{date}}) beri {{n}} yeni kayıt",
+    "method": {
+      "label": "Bulunduğu yol",
+      "database": "Veritabanı araması",
+      "website": "Web sitesi (diğer yöntemler)",
+      "organisation": "Kuruluş (diğer yöntemler)",
+      "register": "Kayıt (diğer yöntemler)"
+    }
   },
   "files": {
     "dropToAdd": "Kütüphaneye eklemek için PDF'leri bırakın",
@@ -810,5 +817,38 @@
     "counts": "{{seeds}} tohum · {{identified}} bulundu · {{added}} yeni · {{already}} zaten review'da",
     "failedRuns_one": "{{n}} kaynak yanıtı başarısız",
     "failedRuns_other": "{{n}} kaynak yanıtı başarısız"
+  },
+  "grey": {
+    "title": "Gri literatür",
+    "hint": "Veritabanları dışında bulunan tezler, raporlar, kayıtlar ve web sayfaları. Her biri kütüphaneyle karşılaştırılır, PRISMA'nın diğer yöntemler dalında sayılır ve elemeye girer. Web sitelerinden veya kuruluşlardan gelen içe aktarmaları içe aktarma penceresinde işaretleyin.",
+    "add": "Kayıt ekle",
+    "kind": "Tür",
+    "kinds": {
+      "thesis": "Tez",
+      "report": "Rapor",
+      "register_record": "Kayıt (sicil)",
+      "web_page": "Web sayfası"
+    },
+    "box": "PRISMA kutusu",
+    "boxAuto": "Türe göre ({{box}})",
+    "boxes": {
+      "thesis": "Tezler",
+      "website": "Web siteleri",
+      "organisation": "Kuruluşlar",
+      "register": "Kayıtlar"
+    },
+    "titleField": "Başlık",
+    "source": "Bulunduğu yer",
+    "sourcePlaceholder": "YÖK Ulusal Tez Merkezi, WHO…",
+    "authors": "Yazarlar",
+    "authorsPlaceholder": "Soyadı, Adı; Soyadı, Adı",
+    "year": "Yıl",
+    "institution": "Üniversite veya kuruluş",
+    "url": "Bağlantı",
+    "added": "Review'a ve elemeye eklendi.",
+    "matched": "Kütüphanede bu kayıt zaten vardı: tekrar olarak sayılır.",
+    "list": "Bulunan gri literatür",
+    "records_one": "{{n}} kayıt",
+    "records_other": "{{n}} kayıt"
   }
 }

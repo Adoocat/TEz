@@ -441,6 +441,8 @@ class ImportRun:
     # The saved external search this import is a run of (Task 27).
     query_id: str | None = None
     initiated_via: InitiatedVia = InitiatedVia.GUI
+    # Database, or a grey-literature box when the import came from other methods (Task 37).
+    method: RunMethod = RunMethod.DATABASE
 
 
 @dataclass(frozen=True)
@@ -485,6 +487,7 @@ def store_imported(
                 error=_error_text(error),
                 snapshot_path=snapshot,
                 file_name=run.file_name,
+                method=run.method,
             )
     return ImportedRecords(
         paper_ids=[result.paper_id for result in results],

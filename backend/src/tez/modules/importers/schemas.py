@@ -5,12 +5,17 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from tez.modules.importers.parsing import ImportFormat, IssueCode, RecordWarning
 from tez.modules.library.models import VenueType
-from tez.modules.search.models import InitiatedVia, MatchMethod
+from tez.modules.search.models import InitiatedVia, MatchMethod, RunMethod
 from tez.modules.search.schemas import SinceLastImport
 
 # Base64 of a 30 MB export; IEEE Xplore caps an export at 2000 records, far below this.
 MAX_CONTENT_LENGTH = 40_000_000
 SAMPLE_SIZE = 5
+
+# How an imported file was found: a database, or a grey-literature box (Task 37, ADR 0025).
+ImportMethod = Literal[
+    RunMethod.DATABASE, RunMethod.WEBSITE, RunMethod.ORGANISATION, RunMethod.REGISTER
+]
 
 
 class ImportFile(BaseModel):
@@ -52,6 +57,9 @@ class ImportLog(BaseModel):
     # The day the search ran at the source; today if not given.
     searched_at: date | None = None
     query: str | None = Field(default=None, max_length=4000)
+    # A database search, or other methods (Task 37): an export from a website or an
+    # organisation's list, which PRISMA counts in its other-methods branch.
+    method: ImportMethod = RunMethod.DATABASE
 
     @model_validator(mode="after")
     def _one_search(self) -> Self:

@@ -42,7 +42,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 34 · PRISMA sayıları | bekliyor | — | D · Türetilir, saklanmaz; diğer yöntemler dalı |
 | 35 · PRISMA diyagramı | bekliyor | — | D · Tasarım 5.7; SVG/PNG, siyah-beyaz tema |
 | 36 · Kartopu | bitti | `task/36-snowball-rounds` · #49 | D · Durdurulan D oturumunun yarım işi üzerine kuruldu. Geri (kaynakça) ve ileri (atıf yapanlar) kartopu, OpenAlex ve Semantic Scholar üzerinden, işçide `snowball.round` işi. Her kaynak yanıtı bir `search_run` (`method`, `snowball_round`, `seed_paper_id`; migration 0014, ADR 0024); sonuçlar arama gibi tekilleştirilir; review'da olmayanlar `review_record` (`citation_backward`/`citation_forward`, tohum `origin_ref`'te) olur ve başlık-özet kuyruğuna girer; review'da olan yeniden eklenmez. Tohumlar elemede dahil edilenlerden; turlar Wohlin'e göre numaralanır; `round_counts` PRISMA için tur başına sayar. Review panelinde "Kartopu" bölümü (tohum seçimi, yönler, kaynaklar, geçmiş turlar). Kabul: kaynaklar kaydedilmiş gerçek yanıtlarla (cassette), servis sahte kaynakla test edildi |
-| 37 · Gri literatür | bekliyor | — | D · Elle kayıt; içe aktarmayı "diğer yöntemler" işaretleme |
+| 37 · Gri literatür | bitti | `task/37-grey-literature` · #50 | D · Elle kayıt (tez, rapor, kayıt, web sayfası): `POST /reviews/{id}/grey-literature`; tek kayıtlık içe aktarma gibi kütüphaneyle eşlenir, `search_run` olarak kutusuyla (`method`: tezler, web siteleri, kuruluşlar, kayıtlar; migration 0015, ADR 0025) kaydedilir ve review'a `manual` kökenle girip elemeye düşer. İçe aktarma penceresinde "Bulunduğu yol": veritabanı araması veya web sitesi / kuruluş / kayıt. Arama geçmişi yalnız veritabanı aramalarını gösterir; review panelinde "Gri literatür" bölümü. Kabul: elle eklenen tez tezler kutusunda, aynı kayıt veritabanından gelince aynı makaleye eşlenip tekrar olur (servis testleri; PRISMA kutusu Görev 34'te) |
 | 38 · Kalite değerlendirmesi | bekliyor | — | E · Migration; aşaması açık soru 20 |
 | 39 · Biçimlendirilmiş kaynakça (CSL) | bekliyor | — | F · `citeproc-py`; APA 7, MLA, Chicago, Vancouver, IEEE |
 | 40 · Dışa aktarma ekranı | bekliyor | — | F · Tasarım 5.10; arama stratejisi tablosu |
@@ -53,6 +53,7 @@ Aşama 2 görevlerinin (24–42) ayrıntısı ve kabul kriterleri: `docs/plan.md
 
 ## Sonraya
 
+- (37) Elle eklenen kaydı düzenleme veya silme yok (kayıtlar yalnız eklenir); yanlış girilen kayıt elemede hariç tutulur. Kayıt (sicil) ve web sayfası türleri `other` olarak saklanıyor; BibTeX/RIS'te `@misc`/`GEN` çıkar.
 - (36) Tasarım 4.4'teki denetçi "Atıflar" sekmesi (bir makalenin kaynakları ve atıf yapanları, "Tümünü tarama listesine ekle") yok; kartopu yalnız review panelinden. OpenAlex anahtarsız yalnız ilk sayfayı (200 kayıt) veriyor; çok atıf alan tohumlarda tur `partial` olur.
 - (32) Eleme oturum sayacı ve geri alma listesi bellekte; uygulama yeniden açılınca sıfırlanır. Notu olan kararsız kayıt için not da yalnız bellekte bekler, karar verilince kaydedilir.
 - (32) Tasarımdaki "Tekilleştirme güveni", "Benzerlik: kütüphanede benzer N makale" ve YZ ön skoru çipleri yok (YZ Aşama 5).

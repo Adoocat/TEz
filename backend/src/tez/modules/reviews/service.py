@@ -152,7 +152,12 @@ def paper_ids_in_review(db: Database, review_id: str) -> set[str]:
 
 
 def add_papers(
-    db: Database, review_id: str, paper_ids: Sequence[str], search_id: str | None
+    db: Database,
+    review_id: str,
+    paper_ids: Sequence[str],
+    search_id: str | None,
+    *,
+    origin: RecordOrigin = RecordOrigin.DATABASE,
 ) -> SelectionResult:
     """Take papers into a review, as found by a database search. Repeats change nothing."""
     with db.write_session() as session:
@@ -165,7 +170,7 @@ def add_papers(
         present = {record.paper_id for record in repository.records(review_id)}
         new = wanted - present
         for paper_id in sorted(new):
-            repository.add_record(review_id, paper_id, RecordOrigin.DATABASE, search_id)
+            repository.add_record(review_id, paper_id, origin, search_id)
     return SelectionResult(added=len(new), already_present=len(wanted) - len(new))
 
 

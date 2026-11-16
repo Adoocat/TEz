@@ -17,6 +17,7 @@ from tez.core.requests import RequestContextMiddleware
 from tez.modules.backup.router import router as backup_router
 from tez.modules.export.router import router as export_router
 from tez.modules.files.router import router as files_router
+from tez.modules.greylit.router import router as greylit_router
 from tez.modules.importers.router import router as imports_router
 from tez.modules.jobs.router import router as jobs_router
 from tez.modules.jobs.supervisor import WorkerSupervisor
@@ -97,6 +98,7 @@ def create_app(
     app.include_router(export_router, dependencies=secured, responses=needs_library)
     app.include_router(settings_router, dependencies=secured, responses=needs_library)
     app.include_router(snowball_router, dependencies=secured, responses=needs_library)
+    app.include_router(greylit_router, dependencies=secured, responses=needs_library)
     app.include_router(
         secrets_router,
         dependencies=secured,

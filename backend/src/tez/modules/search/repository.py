@@ -7,7 +7,6 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from tez.modules.search.models import (
-    CITATION_METHODS,
     InitiatedVia,
     MatchMethod,
     RunMethod,
@@ -175,14 +174,14 @@ class SearchRepository:
     def search_ids(self, review_id: str) -> list[str]:
         """The review's searches, newest first. Ids are time-ordered (UUIDv7).
 
-        Snowballing rounds are not searches the user typed; they are listed on their own.
+        Snowballing and grey literature are other methods; they are listed on their own.
         """
         found = self.session.scalars(
             select(SearchRun.search_id)
             .where(
                 SearchRun.review_id == review_id,
                 SearchRun.search_id.is_not(None),
-                SearchRun.method.not_in(CITATION_METHODS),
+                SearchRun.method == RunMethod.DATABASE,
             )
             .group_by(SearchRun.search_id)
             .order_by(SearchRun.search_id.desc())

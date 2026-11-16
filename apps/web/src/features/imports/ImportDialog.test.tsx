@@ -93,6 +93,26 @@ describe("importing an exported file", () => {
     expect(useSearchView.getState().activeSearchId).toBe("search-import");
   });
 
+  it("marks an import as found through other methods (Task 37)", async () => {
+    const { backend, user } = setUp();
+    const dialog = await chooseFile(user, "oecd.ris");
+    await within(dialog).findByText(/3 entries/);
+
+    await user.selectOptions(
+      within(dialog).getByLabelText("Found through"),
+      "Organisation (other methods)",
+    );
+    await user.selectOptions(within(dialog).getByLabelText("Database"), "Other…");
+    await user.type(within(dialog).getByLabelText("Database name"), "OECD");
+    await user.click(within(dialog).getByRole("button", { name: "Import 2 records" }));
+
+    await waitFor(() => {
+      expect(lastRequest(backend, "/imports")).toMatchObject({
+        log: { source: "OECD", method: "organisation" },
+      });
+    });
+  });
+
   it("asks for a name when the database is not in the list", async () => {
     const { backend, user } = setUp();
     const dialog = await chooseFile(user);

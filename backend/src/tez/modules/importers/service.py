@@ -33,8 +33,9 @@ from tez.modules.importers.schemas import (
 from tez.modules.library.models import IdentifierScheme
 from tez.modules.library.paper_service import PaperService
 from tez.modules.reviews import service as reviews_service
+from tez.modules.reviews.models import RecordOrigin
 from tez.modules.search.external import EarlierImports
-from tez.modules.search.models import InitiatedVia
+from tez.modules.search.models import InitiatedVia, RunMethod
 from tez.modules.search.service import ImportRun, PreviewMatch, preview_matches, store_imported
 
 logger = logging.getLogger(__name__)
@@ -219,13 +220,19 @@ def import_bytes(
             query=query,
             query_id=query_id,
             initiated_via=initiated_via,
+            method=log.method,
         )
     stored = store_imported(db, library_path, parsed.records, run)
     paper_ids = list(dict.fromkeys(stored.paper_ids))
 
     added_to_review = 0
     if request.add_to_review and request.review_id is not None:
-        selection = reviews_service.add_papers(db, request.review_id, paper_ids, stored.search_id)
+        # Records from other methods enter the review as found by hand, not by a database.
+        method = request.log.method if request.log is not None else RunMethod.DATABASE
+        origin = RecordOrigin.DATABASE if method is RunMethod.DATABASE else RecordOrigin.MANUAL
+        selection = reviews_service.add_papers(
+            db, request.review_id, paper_ids, stored.search_id, origin=origin
+        )
         added_to_review = selection.added
     added_to_library = 0
     if request.add_to_library:
