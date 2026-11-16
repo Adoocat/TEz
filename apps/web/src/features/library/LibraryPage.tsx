@@ -4,6 +4,7 @@ import type { SortingState } from "@tanstack/react-table";
 import { Search, X } from "lucide-react";
 import { useCallback, useDeferredValue, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,7 @@ import {
   useSetReadingStatus,
   useTagPapers,
   useTags,
+  usePdfToOpen,
   type TagView,
 } from "./api";
 import {
@@ -41,6 +43,8 @@ function parseYear(text: string): number | null {
 export function LibraryPage() {
   const { t, i18n } = useTranslation();
   const { scope, selectedPaperId, selectPaper } = useLibraryView();
+  const pdfToOpen = usePdfToOpen();
+  const navigate = useNavigate();
   const papers = useLibraryPapers(scope);
   const collections = useCollections();
   const tags = useTags();
@@ -168,6 +172,11 @@ export function LibraryPage() {
           onSortingChange={setSorting}
           onToggle={togglePaper}
           onSelect={selectPaper}
+          onOpen={(paperId) => {
+            void pdfToOpen(paperId).then((pdf) => {
+              if (pdf) void navigate(`/reader/${pdf.id}`);
+            });
+          }}
           dragIdsFor={dragIdsFor}
         />
       )}

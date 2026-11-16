@@ -12,6 +12,7 @@ import { Segmented } from "@/components/ui/segmented";
 import { ApiError } from "@/lib/api/query";
 
 import {
+  readablePdf,
   readingStatuses,
   useCollections,
   usePaperDetail,
@@ -49,10 +50,7 @@ function PaperInspector({ paper }: { paper: PaperDetail }) {
   const typeLabel = type && t(`search.venueTypes.${type}`);
   const published = paper.related.find((r) => r.relation === "published_version");
   const navigate = useNavigate();
-  // A readable file first; a broken one can still be tried.
-  const pdf =
-    paper.attachments.find((a) => a.kind === "pdf" && a.text_status !== "failed") ??
-    paper.attachments[0];
+  const pdf = readablePdf(paper);
 
   return (
     <div className="space-y-4">

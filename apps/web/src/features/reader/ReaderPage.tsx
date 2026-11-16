@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAttachment } from "@/features/files/api";
 import { openPdf, type PdfDocument, type PdfPageSize } from "@/lib/pdf";
+import { useShortcuts } from "@/lib/shortcuts/useShortcuts";
 
 const PAGE_GAP = 12;
 const ZOOM_STEPS = [0.5, 0.67, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
@@ -201,6 +202,21 @@ function PageList({
     const from = index === -1 ? ZOOM_STEPS.length - 1 : index;
     const next = ZOOM_STEPS[Math.min(Math.max(from + direction, 0), ZOOM_STEPS.length - 1)];
     if (next !== undefined) setZoom({ kind: "scale", value: next });
+  }
+
+  // J / K turn the page (design-prompt §6, reader context).
+  useShortcuts("reader", {
+    nextPage: () => {
+      turnPage(1);
+    },
+    previousPage: () => {
+      turnPage(-1);
+    },
+  });
+
+  function turnPage(by: 1 | -1) {
+    const page = Math.min(Math.max(current + by, 1), document.numPages);
+    virtualizer.scrollToIndex(page - 1, { align: "start" });
   }
 
   const percent = useMemo(

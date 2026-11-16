@@ -647,5 +647,42 @@
     "unknownLink": "TEz bu bağlantıyı tanımıyor.",
     "addedSome": "{{added}} tanesi Gelen kutusuna eklendi · {{duplicates}} tanesi zaten kütüphanede · {{failed}} tanesi eklenemedi",
     "addedSomeTruncated": "{{added}} tanesi Gelen kutusuna eklendi · {{duplicates}} tanesi zaten kütüphanede · {{failed}} tanesi eklenemedi (yalnızca ilk 500 PDF'e bakıldı)"
+  },
+  "shortcuts": {
+    "title": "Klavye kısayolları",
+    "description": "Bir yazı alanına yazarken kısayollar çalışmaz. Bu listeyi açıp kapatmak için ? tuşuna basın.",
+    "contexts": {
+      "global": "Her yerde",
+      "screening": "Eleme",
+      "reader": "Okuyucu",
+      "list": "Listeler"
+    },
+    "actions": {
+      "global": {
+        "help": "Kısayolları göster",
+        "goTo": "Gezinmedeki bir ekrana git"
+      },
+      "screening": {
+        "include": "Dahil",
+        "exclude": "Hariç",
+        "reason": "Hariç tutma gerekçesi",
+        "maybe": "Belki",
+        "skip": "Atla",
+        "undo": "Geri al",
+        "note": "Not ekle",
+        "next": "Sonraki kayıt (karar vermeden)",
+        "previous": "Önceki kayıt (karar vermeden)"
+      },
+      "reader": {
+        "nextPage": "Sonraki sayfa",
+        "previousPage": "Önceki sayfa"
+      },
+      "list": {
+        "down": "Sonraki satır",
+        "up": "Önceki satır",
+        "preview": "Denetçiyi göster veya gizle",
+        "open": "PDF'i aç"
+      }
+    }
   }
 }

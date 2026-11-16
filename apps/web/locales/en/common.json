@@ -647,5 +647,42 @@
     "unknownLink": "TEz does not know this link.",
     "addedSome": "{{added}} added to the inbox · {{duplicates}} already in the library · {{failed}} could not be added",
     "addedSomeTruncated": "{{added}} added to the inbox · {{duplicates}} already in the library · {{failed}} could not be added (only the first 500 PDFs were looked at)"
+  },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "description": "Shortcuts are silent while you type in a text field. Press ? to open or close this list.",
+    "contexts": {
+      "global": "Everywhere",
+      "screening": "Screening",
+      "reader": "Reader",
+      "list": "Lists"
+    },
+    "actions": {
+      "global": {
+        "help": "Show shortcuts",
+        "goTo": "Go to a screen in the navigation"
+      },
+      "screening": {
+        "include": "Include",
+        "exclude": "Exclude",
+        "reason": "Exclusion reason",
+        "maybe": "Maybe",
+        "skip": "Skip",
+        "undo": "Undo",
+        "note": "Add a note",
+        "next": "Next record (no decision)",
+        "previous": "Previous record (no decision)"
+      },
+      "reader": {
+        "nextPage": "Next page",
+        "previousPage": "Previous page"
+      },
+      "list": {
+        "down": "Next row",
+        "up": "Previous row",
+        "preview": "Show or hide the inspector",
+        "open": "Open the PDF"
+      }
+    }
   }
 }
