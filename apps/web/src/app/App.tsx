@@ -9,6 +9,7 @@ import { LibraryPage } from "@/features/library/LibraryPage";
 import { ReaderPage } from "@/features/reader/ReaderPage";
 import { ReviewPanel } from "@/features/reviews/ReviewPanel";
 import { PrismaPage } from "@/features/prisma/PrismaPage";
+import { QualityPage } from "@/features/quality/QualityPage";
 import { ScreeningPage } from "@/features/screening/ScreeningPage";
 import { SearchPage } from "@/features/search/SearchPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
@@ -36,6 +37,7 @@ function createRouter() {
         { path: "/review", element: <ReviewPanel /> },
         { path: "/screening", element: <ScreeningPage /> },
         { path: "/prisma", element: <PrismaPage /> },
+        { path: "/quality", element: <QualityPage /> },
         { path: "/library", element: <LibraryPage /> },
         { path: "/reader/:attachmentId?", element: <ReaderPage /> },
         { path: "/search", element: <SearchPage /> },

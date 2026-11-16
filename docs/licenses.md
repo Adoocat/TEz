@@ -55,3 +55,11 @@ The reader's text-layer CSS (`apps/web/src/styles/index.css`) is adapted from pd
 | serde, serde_json | Apache-2.0 or MIT |
 | getrandom | Apache-2.0 or MIT |
 | windows | Apache-2.0 or MIT |
+
+## Bundled data
+
+| Data | Source | Licence | Used for |
+| --- | --- | --- | --- |
+| NHLBI Study Quality Assessment Tools (six checklists, July 2021) | National Heart, Lung, and Blood Institute, <https://www.nhlbi.nih.gov/health-topics/study-quality-assessment-tools> | Public domain (U.S. Government work, 17 U.S.C. § 105) | quality assessment templates (Task 38, ADR 0026) |
+
+Checklists whose terms forbid commercial use or adaptation, or give no licence (Kitchenham's, JBI, RoB 2, CASP), are not bundled (ADR 0026).
