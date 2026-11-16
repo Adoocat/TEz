@@ -17,7 +17,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { NavLink, Outlet, useLocation } from "react-router";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
@@ -30,9 +30,13 @@ import { ReviewPicker } from "@/features/reviews/ReviewPicker";
 import { SearchInspector } from "@/features/search/SearchInspector";
 import { useSettings, useUpdateSettings } from "@/features/settings/api";
 import { SettingsNav } from "@/features/settings/SettingsNav";
+import { ShortcutOverlay } from "@/features/shortcuts/ShortcutOverlay";
 import { PreferencesSync } from "@/features/settings/PreferencesSync";
 import { cn } from "@/lib/cn";
 import { cachedTheme, resolveTheme } from "@/lib/preferences";
+import { bindingLabel } from "@/lib/shortcuts/keys";
+import { shortcut } from "@/lib/shortcuts/maps";
+import { useShortcuts } from "@/lib/shortcuts/useShortcuts";
 
 import { StatusBar } from "./StatusBar";
 import { useLayoutStore } from "./uiStore";
@@ -77,6 +81,7 @@ export function AppShell() {
     <TooltipProvider delayDuration={300}>
       <PreferencesSync />
       <PdfDrop />
+      <ShortcutOverlay />
       <div className="grid h-full grid-cols-[minmax(0,1fr)] grid-rows-[auto_minmax(0,1fr)_auto] bg-canvas text-fg">
         <TopBar />
         <div className="flex min-h-0">
@@ -146,24 +151,38 @@ function TopBar() {
   );
 }
 
+// The main screens answer to $mod+1 … $mod+7, in rail order.
+const goToKeys = shortcut("global", "goTo").keys;
+
 function NavRail() {
   const { t } = useTranslation();
-  const link = ({ to, icon: Icon, label }: NavItem) => (
-    <Tooltip key={to} label={t(`nav.${label}`)}>
-      <NavLink
-        to={to}
-        aria-label={t(`nav.${label}`)}
-        className={({ isActive }) =>
-          cn(
-            "grid size-10 place-items-center rounded-md text-fg-muted hover:bg-hovered hover:text-fg [&_svg]:size-4",
-            isActive && "bg-primary-soft text-primary",
-          )
-        }
-      >
-        <Icon aria-hidden />
-      </NavLink>
-    </Tooltip>
-  );
+  const navigate = useNavigate();
+  useShortcuts("global", {
+    goTo: (event) => {
+      const item = mainNav[Number.parseInt(event.key, 10) - 1];
+      if (item) void navigate(item.to);
+    },
+  });
+  const link = ({ to, icon: Icon, label }: NavItem, index: number, items: NavItem[]) => {
+    const key = items === mainNav ? goToKeys[index] : undefined;
+    const name = t(`nav.${label}`);
+    return (
+      <Tooltip key={to} label={key ? `${name} (${bindingLabel(key)})` : name}>
+        <NavLink
+          to={to}
+          aria-label={t(`nav.${label}`)}
+          className={({ isActive }) =>
+            cn(
+              "grid size-10 place-items-center rounded-md text-fg-muted hover:bg-hovered hover:text-fg [&_svg]:size-4",
+              isActive && "bg-primary-soft text-primary",
+            )
+          }
+        >
+          <Icon aria-hidden />
+        </NavLink>
+      </Tooltip>
+    );
+  };
 
   return (
     <nav

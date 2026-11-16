@@ -79,16 +79,35 @@ export function useLibrarySearch(query: string) {
   });
 }
 
-export function usePaperDetail(paperId: string | null) {
-  const api = useApi();
-  return useQuery({
+function paperDetailQuery(api: ReturnType<typeof useApi>, paperId: string | null) {
+  return {
     queryKey: ["library", "paper", paperId ?? ""] as const,
-    enabled: paperId !== null,
     queryFn: async () =>
       unwrap(
         await api.GET("/papers/{paper_id}", { params: { path: { paper_id: paperId ?? "" } } }),
       ),
-  });
+  };
+}
+
+export function usePaperDetail(paperId: string | null) {
+  const api = useApi();
+  return useQuery({ ...paperDetailQuery(api, paperId), enabled: paperId !== null });
+}
+
+/** The file "Open PDF" opens: a readable PDF first; a broken one can still be tried. */
+export function readablePdf(paper: PaperDetail) {
+  return (
+    paper.attachments.find((a) => a.kind === "pdf" && a.text_status !== "failed") ??
+    paper.attachments[0]
+  );
+}
+
+/** Fetches (or reuses) a paper's detail to find the file to open. */
+export function usePdfToOpen() {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return async (paperId: string) =>
+    readablePdf(await queryClient.query(paperDetailQuery(api, paperId)));
 }
 
 export function useUpdateCitekey() {

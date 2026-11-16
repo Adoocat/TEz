@@ -21,7 +21,9 @@ import {
 import { memo, useMemo, useRef, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useLayoutStore } from "@/app/layout/uiStore";
 import { cn } from "@/lib/cn";
+import { useShortcuts } from "@/lib/shortcuts/useShortcuts";
 
 import type { LibraryPaperRow, TagView } from "./api";
 import { dragPapers } from "./dnd";
@@ -46,6 +48,8 @@ interface PaperTableProps {
   onSortingChange: (sorting: SortingState) => void;
   onToggle: (paperId: string) => void;
   onSelect: (paperId: string) => void;
+  /** Enter on the selected row: open its PDF. */
+  onOpen: (paperId: string) => void;
   /** The ids a drag starting on this row carries: the selection if the row is in it. */
   dragIdsFor: (paperId: string) => string[];
 }
@@ -59,6 +63,7 @@ export function PaperTable({
   onSortingChange,
   onToggle,
   onSelect,
+  onOpen,
   dragIdsFor,
 }: PaperTableProps) {
   const { t, i18n } = useTranslation();
@@ -142,6 +147,30 @@ export function PaperTable({
     // The sticky header sits above the rows inside the same scroller.
     scrollMargin: TABLE_ROW_HEIGHT,
   });
+  const toggleInspector = useLayoutStore((state) => state.toggleInspector);
+  // The list context (design-prompt §6): arrows move the selection, Space shows or hides the
+  // inspector, Enter opens the PDF.
+  function move(by: 1 | -1) {
+    const at = sortedRows.findIndex((row) => row.id === selectedId);
+    const index = at === -1 ? 0 : Math.min(Math.max(at + by, 0), sortedRows.length - 1);
+    const row = sortedRows[index];
+    if (!row) return;
+    onSelect(row.id);
+    virtualizer.scrollToIndex(index);
+  }
+  useShortcuts("list", {
+    down: () => {
+      move(1);
+    },
+    up: () => {
+      move(-1);
+    },
+    preview: toggleInspector,
+    open: () => {
+      if (selectedId !== null) onOpen(selectedId);
+    },
+  });
+
   const dateFormat = useMemo(
     () => new Intl.DateTimeFormat(i18n.language, { dateStyle: "medium" }),
     [i18n.language],

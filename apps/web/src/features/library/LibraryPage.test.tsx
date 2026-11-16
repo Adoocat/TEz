@@ -251,6 +251,22 @@ describe("the paper list", () => {
     expect(JSON.parse(data[PAPERS_TYPE] ?? "[]")).toEqual(["p1", "p2"]);
   });
 
+  it("moves the selection with the arrows and shows or hides the inspector with Space", async () => {
+    const { user } = withLibrary();
+    await screen.findByText("First paper");
+    const row = (title: string) => screen.getByText(title).closest('[role="row"]');
+
+    await user.keyboard("{ArrowDown}");
+    expect(row("First paper")).toHaveAttribute("aria-selected", "true");
+    await user.keyboard("{ArrowDown}{ArrowDown}");
+    expect(row("Second paper")).toHaveAttribute("aria-selected", "true");
+    await user.keyboard("{ArrowUp}");
+    expect(row("First paper")).toHaveAttribute("aria-selected", "true");
+
+    await user.keyboard(" ");
+    expect(useLayoutStore.getState().inspectorOpen).toBe(false);
+  });
+
   it("sets reading status and tags for a selection", async () => {
     const { backend, user } = withLibrary();
     await user.click(await screen.findByRole("checkbox", { name: "Select all" }));
