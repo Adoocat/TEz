@@ -15,6 +15,7 @@ from tez.modules.reviews.models import (
     Decision,
     RecordOrigin,
     Review,
+    ReviewRecord,
     ScreeningCriterion,
     ScreeningStage,
 )
@@ -104,8 +105,13 @@ def _progress(
 def _in_force(
     repository: ReviewsRepository, review_id: str, stage: ScreeningStage
 ) -> dict[str, Decision]:
-    # Oldest first, so a paper's latest decision in force wins.
-    return {d.paper_id: d.decision for d in repository.current_decisions(review_id, stage)}
+    # Oldest first, so a paper's latest decision in force wins. Only the owner's decisions
+    # count, and an undo that left a record undecided is no decision (Task 31).
+    return {
+        d.paper_id: d.decision
+        for d in repository.current_decisions(review_id, stage)
+        if d.reviewer == "owner" and d.decision is not Decision.UNDECIDED
+    }
 
 
 def _passed(decisions: dict[str, Decision], to_next: Iterable[Decision]) -> set[str]:
@@ -341,3 +347,42 @@ def reorder_criteria(db: Database, review_id: str, body: CriteriaOrder) -> list[
             criterion.position = position
         session.flush()
         return _criterion_views(repository, review_id)
+
+
+# --- reads for screening (Task 31) -----------------------------------------------------
+
+
+class ReviewReader:
+    """Reads the screening module needs inside its own session."""
+
+    def __init__(self, session: Session) -> None:
+        self._session = session
+        self._repository = ReviewsRepository(session)
+
+    def exists(self, review_id: str) -> bool:
+        return self._repository.get_review(review_id) is not None
+
+    def record_paper_ids(self, review_id: str) -> list[str]:
+        """The review's papers in a stable order: when they were taken in, then by id."""
+        return list(
+            self._session.scalars(
+                select(ReviewRecord.paper_id)
+                .where(ReviewRecord.review_id == review_id)
+                .order_by(ReviewRecord.created_at, ReviewRecord.id)
+            )
+        )
+
+    def has_record(self, review_id: str, paper_id: str) -> bool:
+        found = self._session.scalar(
+            select(ReviewRecord.id).where(
+                ReviewRecord.review_id == review_id, ReviewRecord.paper_id == paper_id
+            )
+        )
+        return found is not None
+
+    def usable_criterion(
+        self, review_id: str, criterion_id: str, stage: ScreeningStage
+    ) -> ScreeningCriterion | None:
+        """A criterion a new decision at the stage may cite: this review's, not archived."""
+        criterion = self._repository.get_criterion(review_id, criterion_id)
+        return criterion if criterion is not None and _in_stage(criterion, stage) else None
