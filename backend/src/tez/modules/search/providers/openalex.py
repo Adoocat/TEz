@@ -24,7 +24,7 @@ from tez.shared.http import HttpClient, SourcePolicy
 
 API_HOST = "api.openalex.org"
 _URL = f"https://{API_HOST}/works"
-_FIELDS = (
+WORK_FIELDS = (
     "id,doi,title,publication_year,type,language,cited_by_count,is_retracted,authorships,"
     "primary_location,best_oa_location,biblio,abstract_inverted_index"
 )
@@ -141,7 +141,7 @@ class OpenAlexProvider(PagedProvider):
             "search": translated,
             "per_page": size,
             "cursor": cursor or "*",
-            "select": _FIELDS,
+            "select": WORK_FIELDS,
         }
         if work_filter_ := work_filter(request):
             params["filter"] = work_filter_

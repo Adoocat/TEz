@@ -41,7 +41,7 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 33 · Tam metin eleme | bitti | `task/33-full-text-screening` · #48 | C · `/screening?stage=full_text`: solda kaydın PDF'i okuyucuda (Görev 20'nin okuyucusu gömülü: adres ve `J`/`K` elemede kalır), ortada kayıt, sağda kriterler, altta aynı karar çubuğu. PDF yoksa "PDF'leri bul" (Görev 17, iş bitince kayıt yeniden yüklenir) ve "Tam metne erişilemedi" (`not_retrieved`, kendi durumu ve filtresi). Eleme ekranında kabuğun boş denetçisi gösterilmez. `ScreeningRecord.attachments`. Kabul E2E: PDF'li ve PDF'siz kayıt; "erişilemedi" tam metin sayılarında ayrı. PRISMA'daki kendi kutusu Görev 34'ün testleriyle doğrulanır |
 | 34 · PRISMA sayıları | bekliyor | — | D · Türetilir, saklanmaz; diğer yöntemler dalı |
 | 35 · PRISMA diyagramı | bekliyor | — | D · Tasarım 5.7; SVG/PNG, siyah-beyaz tema |
-| 36 · Kartopu | bekliyor | — | D · Geri ve ileri, OpenAlex + Semantic Scholar; turlar |
+| 36 · Kartopu | bitti | `task/36-snowball-rounds` · #49 | D · Durdurulan D oturumunun yarım işi üzerine kuruldu. Geri (kaynakça) ve ileri (atıf yapanlar) kartopu, OpenAlex ve Semantic Scholar üzerinden, işçide `snowball.round` işi. Her kaynak yanıtı bir `search_run` (`method`, `snowball_round`, `seed_paper_id`; migration 0014, ADR 0024); sonuçlar arama gibi tekilleştirilir; review'da olmayanlar `review_record` (`citation_backward`/`citation_forward`, tohum `origin_ref`'te) olur ve başlık-özet kuyruğuna girer; review'da olan yeniden eklenmez. Tohumlar elemede dahil edilenlerden; turlar Wohlin'e göre numaralanır; `round_counts` PRISMA için tur başına sayar. Review panelinde "Kartopu" bölümü (tohum seçimi, yönler, kaynaklar, geçmiş turlar). Kabul: kaynaklar kaydedilmiş gerçek yanıtlarla (cassette), servis sahte kaynakla test edildi |
 | 37 · Gri literatür | bekliyor | — | D · Elle kayıt; içe aktarmayı "diğer yöntemler" işaretleme |
 | 38 · Kalite değerlendirmesi | bekliyor | — | E · Migration; aşaması açık soru 20 |
 | 39 · Biçimlendirilmiş kaynakça (CSL) | bekliyor | — | F · `citeproc-py`; APA 7, MLA, Chicago, Vancouver, IEEE |
@@ -53,6 +53,7 @@ Aşama 2 görevlerinin (24–42) ayrıntısı ve kabul kriterleri: `docs/plan.md
 
 ## Sonraya
 
+- (36) Tasarım 4.4'teki denetçi "Atıflar" sekmesi (bir makalenin kaynakları ve atıf yapanları, "Tümünü tarama listesine ekle") yok; kartopu yalnız review panelinden. OpenAlex anahtarsız yalnız ilk sayfayı (200 kayıt) veriyor; çok atıf alan tohumlarda tur `partial` olur.
 - (32) Eleme oturum sayacı ve geri alma listesi bellekte; uygulama yeniden açılınca sıfırlanır. Notu olan kararsız kayıt için not da yalnız bellekte bekler, karar verilince kaydedilir.
 - (32) Tasarımdaki "Tekilleştirme güveni", "Benzerlik: kütüphanede benzer N makale" ve YZ ön skoru çipleri yok (YZ Aşama 5).
 - (31) `ReviewsRepository.decide/current_decisions` eleme servisinin kopyası; review paneli (`overview`) hâlâ onları kullanıyor (yalnız `owner` ve `undecided` olmayanları sayacak şekilde düzeltildi). Döngüsel içe aktarmayı çözüp paneli `ScreeningService`'e taşımak ve kopyaları silmek gerekir.

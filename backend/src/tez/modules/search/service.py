@@ -31,7 +31,7 @@ from tez.modules.search.dedup import (
     is_preprint_type,
     normalized_identifiers,
 )
-from tez.modules.search.models import InitiatedVia, MatchMethod, RunStatus, SearchRun
+from tez.modules.search.models import InitiatedVia, MatchMethod, RunMethod, RunStatus, SearchRun
 from tez.modules.search.providers.base import ProviderResult, SearchProvider, SearchRequest
 from tez.modules.search.repository import ResultInput, SearchRepository
 from tez.modules.search.schemas import NormalizedRecord, RecordAuthor, SourceState
@@ -201,6 +201,9 @@ class _Plan:
     review_id: str
     query_id: str | None
     initiated_via: InitiatedVia
+    method: RunMethod = RunMethod.DATABASE
+    snowball_round: int | None = None
+    seed_paper_id: str | None = None
 
 
 def _write_run(
@@ -225,6 +228,9 @@ def _write_run(
         total_reported=result.total_reported,
         error=_error_text(result.error),
         snapshot_path=snapshot,
+        method=plan.method,
+        snowball_round=plan.snowball_round,
+        seed_paper_id=plan.seed_paper_id,
     )
 
 
@@ -338,6 +344,48 @@ async def run_search(
         for task in pending:
             task.cancel()
     return search_id
+
+
+# --- snowballing (Task 36) -------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class CitationRun:
+    """Where one source's answer for one seed paper is recorded."""
+
+    review_id: str
+    search_id: str
+    method: RunMethod
+    snowball_round: int
+    seed_paper_id: str
+    initiated_via: InitiatedVia = InitiatedVia.GUI
+
+
+def paper_index(db: Database) -> PaperIndex:
+    """Every known paper, for matching one answer after another against them."""
+    with db.session() as session:
+        return PaperIndex(_candidate(card) for card in PaperService(session).all_cards())
+
+
+def record_citation_run(
+    db: Database,
+    library_path: Path,
+    run: CitationRun,
+    result: ProviderResult,
+    executed_at: datetime,
+    index: PaperIndex,
+) -> RunStatus:
+    """Match and store the papers a citation source returned, as a run of the review."""
+    plan = _Plan(
+        run.search_id,
+        run.review_id,
+        None,
+        run.initiated_via,
+        method=run.method,
+        snowball_round=run.snowball_round,
+        seed_paper_id=run.seed_paper_id,
+    )
+    return _record(db, library_path, plan, result, executed_at, index).status
 
 
 # --- imported search results (Task 15) -----------------------------------------------

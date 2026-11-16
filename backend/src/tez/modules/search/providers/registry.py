@@ -58,7 +58,7 @@ def read_access(store: SecretStore, email: str | None) -> SourceAccess:
         return SourceAccess(email=email)
 
 
-def _secret_headers(access: SourceAccess) -> dict[str, dict[str, str]]:
+def secret_headers(access: SourceAccess) -> dict[str, dict[str, str]]:
     headers: dict[str, dict[str, str]] = {}
     if access.openalex_key:
         headers[openalex.API_HOST] = {"Authorization": f"Bearer {access.openalex_key}"}
@@ -88,5 +88,5 @@ async def open_providers(
     names: Sequence[str], access: SourceAccess
 ) -> AsyncGenerator[Sequence[SearchProvider]]:
     """The named sources on one HTTP client. Searches do not use the response cache."""
-    async with HttpClient(secret_headers=_secret_headers(access)) as http:
+    async with HttpClient(secret_headers=secret_headers(access)) as http:
         yield [_build(name, http, access) for name in names]

@@ -199,7 +199,11 @@
     "screening.criteria_order_mismatch": "The criteria changed meanwhile; reload and try again.",
     "external_search.not_found": "This saved search no longer exists.",
     "search.filter_unsupported": "These sources cannot filter by publication type.",
-    "import.preset_unavailable": "This database preset is not available yet."
+    "import.preset_unavailable": "This database preset is not available yet.",
+    "snowball.seed_not_in_review": "Some seeds are not in this review.",
+    "snowball.seed_not_included": "Seeds must be included in screening first.",
+    "snowball.seed_unidentified": "The paper has no identifier this source knows.",
+    "snowball.seed_not_found": "The source does not know this paper."
   },
   "reviews": {
     "active": "Active review",
@@ -779,5 +783,32 @@
       "notFound": "No free PDF was found.",
       "findFailed": "The search for a PDF could not start."
     }
+  },
+  "snowball": {
+    "title": "Snowballing",
+    "hint": "Follow the included papers' references (backward) and the papers citing them (forward). New papers go to title-abstract screening; papers already in the review are not added again.",
+    "noSeeds": "Include papers in screening first: snowballing starts from them.",
+    "seeds": "Seeds ({{n}})",
+    "includedAt": {
+      "title_abstract": "included at title-abstract",
+      "full_text": "included at full text"
+    },
+    "foundInRound": "found in round {{n}}",
+    "followed": "followed: {{ways}}",
+    "untraceable": "no identifier a source knows",
+    "directions": "Directions",
+    "sources": "Sources",
+    "direction": {
+      "backward": "Backward (references)",
+      "forward": "Forward (citing papers)"
+    },
+    "start": "Start a snowballing round",
+    "running": "Round {{n}} is running in the background…",
+    "done": "Round {{n}} finished.",
+    "history": "Snowballing rounds",
+    "round": "Round {{n}}",
+    "counts": "{{seeds}} seeds · {{identified}} found · {{added}} new · {{already}} already in the review",
+    "failedRuns_one": "{{n}} source answer failed",
+    "failedRuns_other": "{{n}} source answers failed"
   }
 }

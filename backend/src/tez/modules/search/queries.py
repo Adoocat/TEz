@@ -1,6 +1,9 @@
 """Reading searches back for the API. Every count is derived, never stored (CLAUDE.md rule 4)."""
 
 import json
+from collections.abc import Sequence
+from dataclasses import dataclass
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 
@@ -9,7 +12,7 @@ from tez.core.errors import ErrorDetail
 from tez.modules.library.models import IdentifierScheme
 from tez.modules.library.paper_service import PaperCard, PaperService
 from tez.modules.reviews.service import paper_ids_in_review
-from tez.modules.search.models import SearchRun
+from tez.modules.search.models import RunMethod, RunStatus, SearchRun
 from tez.modules.search.repository import SearchRepository
 from tez.modules.search.schemas import (
     ResultSource,
@@ -125,3 +128,47 @@ def result_rows(db: Database, search_id: str) -> list[SearchResultRow]:
         ]
     rows.sort(key=lambda row: min(s.rank for s in row.sources))
     return rows
+
+
+@dataclass(frozen=True)
+class RunFacts:
+    """A recorded run and the papers it found, for modules that count them (PRISMA)."""
+
+    id: str
+    search_id: str | None
+    source: str
+    method: RunMethod
+    snowball_round: int | None
+    seed_paper_id: str | None
+    status: RunStatus
+    error: ErrorDetail | None
+    executed_at: datetime
+    translated_query: str | None
+    total_reported: int | None
+    # In rank order; a paper the source sent twice is here twice.
+    paper_ids: tuple[str, ...]
+
+
+def runs_by_method(db: Database, review_id: str, methods: Sequence[RunMethod]) -> list[RunFacts]:
+    """The review's runs of the given kinds, oldest first."""
+    with db.session() as session:
+        repository = SearchRepository(session)
+        runs = repository.runs_by_method(review_id, methods)
+        papers = repository.result_papers([run.id for run in runs])
+        return [
+            RunFacts(
+                id=run.id,
+                search_id=run.search_id,
+                source=run.source,
+                method=run.method,
+                snowball_round=run.snowball_round,
+                seed_paper_id=run.seed_paper_id,
+                status=run.status,
+                error=_error(run),
+                executed_at=run.executed_at,
+                translated_query=run.translated_query,
+                total_reported=run.total_reported,
+                paper_ids=tuple(papers[run.id]),
+            )
+            for run in runs
+        ]

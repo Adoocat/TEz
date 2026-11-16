@@ -23,7 +23,7 @@ from tez.shared.http import HttpClient, SourcePolicy
 
 API_HOST = "api.semanticscholar.org"
 _URL = f"https://{API_HOST}/graph/v1/paper/search/bulk"
-_FIELDS = (
+PAPER_FIELDS = (
     "title,abstract,year,venue,publicationVenue,publicationTypes,journal,authors,externalIds,"
     "url,openAccessPdf,citationCount"
 )
@@ -105,7 +105,7 @@ class SemanticScholarProvider(PagedProvider):
         size: int,
         on_wait: OnWait | None,
     ) -> Page:
-        params: dict[str, Any] = {"query": translated, "fields": _FIELDS}
+        params: dict[str, Any] = {"query": translated, "fields": PAPER_FIELDS}
         if years := _year_range(request):
             params["year"] = years
         if cursor is not None:

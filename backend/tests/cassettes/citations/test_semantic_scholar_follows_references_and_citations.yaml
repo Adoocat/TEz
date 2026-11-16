@@ -1,0 +1,398 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.semanticscholar.org
+    method: GET
+    uri: https://api.semanticscholar.org/graph/v1/paper/DOI:10.1145/3183519.3183525/references?fields=title%2Cabstract%2Cyear%2Cvenue%2CpublicationVenue%2CpublicationTypes%2Cjournal%2Cauthors%2CexternalIds%2Curl%2CopenAccessPdf%2CcitationCount&limit=5&offset=0
+  response:
+    body:
+      string: '{"offset": 0, "citingPaperInfo": {"openAccessPdf": {"url": "http://dl.acm.org/ft_gateway.cfm?id=3183525&type=pdf",
+        "status": "HYBRID", "license": "CCBYNCND", "disclaimer": "Notice: Paper or
+        abstract available at https://api.unpaywall.org/v2/10.1145/3183519.3183525?email=<INSERT_YOUR_EMAIL>
+        or https://doi.org/10.1145/3183519.3183525, which is subject to the license
+        by the author or copyright owner provided with this content. Please go to
+        the source to verify the license and copyright information for your use."},
+        "title": "Modern Code Review: A Case Study at Google", "authors": [{"authorId":
+        "143867476", "name": "Caitlin Sadowski"}, {"authorId": "3300970", "name":
+        "E. S\u00f6derberg"}, {"authorId": "1821411", "name": "Luke Church"}, {"authorId":
+        "96622336", "name": "Michael A. Sipko"}, {"authorId": "1686038", "name": "Alberto
+        Bacchelli"}]}, "next": 5, "data": [{"citedPaper": {"paperId": "63e84fbc419f7713fb868a49e64049fe1a4a2e2f",
+        "externalIds": {"MAG": "1558091378", "DOI": "10.2307/1134792", "CorpusId":
+        154238792}, "publicationVenue": null, "url": "https://www.semanticscholar.org/paper/63e84fbc419f7713fb868a49e64049fe1a4a2e2f",
+        "title": "The Child in America: Behavior Problems and Programs", "venue":
+        "", "year": 2017, "citationCount": 267, "openAccessPdf": {"url": "http://hdl.handle.net/2027/mdp.39015031951406",
+        "status": "GREEN", "license": "public-domain", "disclaimer": "Notice: Paper
+        or abstract available at https://api.unpaywall.org/v2/10.2307/1134792?email=<INSERT_YOUR_EMAIL>
+        or https://doi.org/10.2307/1134792, which is subject to the license by the
+        author or copyright owner provided with this content. Please go to the source
+        to verify the license and copyright information for your use."}, "publicationTypes":
+        null, "journal": {"volume": "", "pages": "314", "name": ""}, "authors": [{"authorId":
+        "2259344893", "name": "Phyllis Blanchard"}, {"authorId": "144866959", "name":
+        "W. Thomas"}, {"authorId": "30891126", "name": "D. Thomas"}], "abstract":
+        null}}, {"citedPaper": {"paperId": "98a3c3fd384f20626369e61e95cd859c53eb8a6f",
+        "externalIds": {"MAG": "2543971965", "DBLP": "journals/ese/ThongtanunamMHI17",
+        "DOI": "10.1007/s10664-016-9452-6", "CorpusId": 7525653}, "publicationVenue":
+        {"id": "f528e58c-0e4e-45b0-9456-832847244f0e", "name": "Empirical Software
+        Engineering", "type": "journal", "alternate_names": ["Empir Softw Eng"], "issn":
+        "1382-3256", "url": "http://www.springer.com/computer/programming/journal/10664",
+        "alternate_urls": ["https://link.springer.com/journal/10664"]}, "url": "https://www.semanticscholar.org/paper/98a3c3fd384f20626369e61e95cd859c53eb8a6f",
+        "title": "Review participation in modern code review", "venue": "Empirical
+        Software Engineering", "year": 2017, "citationCount": 112, "openAccessPdf":
+        {"url": "", "status": "CLOSED", "license": null, "disclaimer": "Notice: The
+        following paper fields have been elided by the publisher: {''abstract''}.
+        Paper or abstract available at https://api.unpaywall.org/v2/10.1007/s10664-016-9452-6?email=<INSERT_YOUR_EMAIL>
+        or https://doi.org/10.1007/s10664-016-9452-6, which is subject to the license
+        by the author or copyright owner provided with this content. Please go to
+        the source to verify the license and copyright information for your use."},
+        "publicationTypes": ["JournalArticle", "Review"], "journal": {"volume": "22",
+        "pages": "768-817", "name": "Empirical Software Engineering"}, "authors":
+        [{"authorId": "2352093", "name": "Patanamon Thongtanunam"}, {"authorId": "1725534",
+        "name": "S. McIntosh"}, {"authorId": "144890499", "name": "A. Hassan"}, {"authorId":
+        "1687605", "name": "H. Iida"}], "abstract": null}}, {"citedPaper": {"paperId":
+        "de9c49aee2b7c7104f9065dfbafe4b478dec2967", "externalIds": {"MAG": "2469513535",
+        "DBLP": "journals/cacm/Levenberg16", "DOI": "10.1145/2854146", "CorpusId":
+        11879777}, "publicationVenue": {"id": "4d9ce1c4-dc84-46b9-903e-e3751c00c7dd",
+        "name": "Communications of the ACM", "type": "journal", "alternate_names":
+        ["Commun ACM", "Communications of The ACM"], "issn": "0001-0782", "url": "http://www.acm.org/pubs/cacm/",
+        "alternate_urls": ["http://portal.acm.org/cacm", "http://www.acm.org/pubs/contents/journals/cacm/",
+        "https://cacm.acm.org/"]}, "url": "https://www.semanticscholar.org/paper/de9c49aee2b7c7104f9065dfbafe4b478dec2967",
+        "title": "Why Google stores billions of lines of code in a single repository",
+        "venue": "Communications of the ACM", "year": 2016, "citationCount": 196,
+        "openAccessPdf": {"url": "https://dl.acm.org/doi/pdf/10.1145/2854146?download=true",
+        "status": "BRONZE", "license": null, "disclaimer": "Notice: The following
+        paper fields have been elided by the publisher: {''abstract''}. Paper or abstract
+        available at https://api.unpaywall.org/v2/10.1145/2854146?email=<INSERT_YOUR_EMAIL>
+        or https://doi.org/10.1145/2854146, which is subject to the license by the
+        author or copyright owner provided with this content. Please go to the source
+        to verify the license and copyright information for your use."}, "publicationTypes":
+        ["JournalArticle"], "journal": {"volume": "59", "pages": "78 - 87", "name":
+        "Communications of the ACM"}, "authors": [{"authorId": "2381720011", "name":
+        "Rachel Potvin"}, {"authorId": "3369421", "name": "Josh Levenberg"}], "abstract":
+        null}}, {"citedPaper": {"paperId": "ddf29f3f2a51fa3f34eaa297b5c1556501c59821",
+        "externalIds": {"DBLP": "journals/tse/ZanjaniKB16", "MAG": "2344367508", "DOI":
+        "10.1109/TSE.2015.2500238", "CorpusId": 6348859}, "publicationVenue": {"id":
+        "c99cfe66-b71c-4ca4-bedd-26267b9cb068", "name": "IEEE Transactions on Software
+        Engineering", "type": "journal", "alternate_names": ["IEEE Trans Softw Eng"],
+        "issn": "0098-5589", "url": "http://ieeexplore.ieee.org/servlet/opac?punumber=32",
+        "alternate_urls": ["http://www.computer.org/portal/web/tse/about"]}, "url":
+        "https://www.semanticscholar.org/paper/ddf29f3f2a51fa3f34eaa297b5c1556501c59821",
+        "title": "Automatically Recommending Peer Reviewers in Modern Code Review",
+        "venue": "IEEE Transactions on Software Engineering", "year": 2016, "citationCount":
+        176, "openAccessPdf": {"url": "", "status": "CLOSED", "license": null, "disclaimer":
+        "Notice: The following paper fields have been elided by the publisher: {''abstract''}.
+        Paper or abstract available at https://api.unpaywall.org/v2/10.1109/TSE.2015.2500238?email=<INSERT_YOUR_EMAIL>
+        or https://doi.org/10.1109/TSE.2015.2500238, which is subject to the license
+        by the author or copyright owner provided with this content. Please go to
+        the source to verify the license and copyright information for your use."},
+        "publicationTypes": ["JournalArticle", "Review"], "journal": {"volume": "42",
+        "pages": "530-543", "name": "IEEE Transactions on Software Engineering"},
+        "authors": [{"authorId": "2111015", "name": "Motahareh Bahrami Zanjani"},
+        {"authorId": "3315359", "name": "Huzefa H. Kagdi"}, {"authorId": "145193818",
+        "name": "C. Bird"}], "abstract": null}}, {"citedPaper": {"paperId": "08e6d716d4e041c0c8cf742c820d2ed890973383",
+        "externalIds": {"DBLP": "conf/oss/HiraoIUPM16", "MAG": "2472590650", "DOI":
+        "10.1007/978-3-319-39225-7_8", "CorpusId": 32163635}, "publicationVenue":
+        {"id": "f1196e7b-e14c-4fb8-b6ef-106ff0604354", "name": "International Conference
+        on Open Source Systems", "type": "conference", "alternate_names": ["Int Conf
+        Open Source Syst", "OSS", "Open Source Systems", "Open Source Syst"], "url":
+        "http://www.ifipwg213.org/"}, "url": "https://www.semanticscholar.org/paper/08e6d716d4e041c0c8cf742c820d2ed890973383",
+        "title": "The Impact of a Low Level of Agreement Among Reviewers in a Code
+        Review Process", "venue": "International Conference on Open Source Systems",
+        "year": 2016, "citationCount": 17, "openAccessPdf": {"url": "https://inria.hal.science/hal-01369055",
+        "status": "GREEN", "license": "CCBY", "disclaimer": "Notice: Paper or abstract
+        available at https://api.unpaywall.org/v2/10.1007/978-3-319-39225-7_8?email=<INSERT_YOUR_EMAIL>
+        or https://doi.org/10.1007/978-3-319-39225-7_8, which is subject to the license
+        by the author or copyright owner provided with this content. Please go to
+        the source to verify the license and copyright information for your use."},
+        "publicationTypes": ["JournalArticle", "Review"], "journal": {"pages": "97-110"},
+        "authors": [{"authorId": "1978134", "name": "Toshiki Hirao"}, {"authorId":
+        "2385419", "name": "Akinori Ihara"}, {"authorId": "2074111478", "name": "Yuki
+        Ueda"}, {"authorId": "2194410", "name": "Passakorn Phannachitta"}, {"authorId":
+        "144975613", "name": "Ken-ichi Matsumoto"}], "abstract": "Software code review
+        systems are commonly used in software development. In these systems, many
+        patches are submitted to improve the quality. To verify the quality, voting
+        is commonly used by contributors; however, there still exists a major problem,
+        namely, that reviewers do not always simply reach a broad agreement. In our
+        previous study, we found that consensus is not usually reached, implying that
+        an individual reviewer\u2019s final decision usually differs from that of
+        the majority of the other reviewers. In this study, we further investigate
+        the reasons why such situations often occur, and provide suggestions for better
+        handling of these problems. Our analysis of the Qt and OpenStack project datasets
+        allow us to suggest that a patch owner should select more appropriate reviewers
+        who often agree with others\u2019 decisions."}}]}
+
+        '
+    headers:
+      access-control-allow-origin:
+      - '*'
+      connection:
+      - keep-alive
+      content-length:
+      - '9326'
+      content-type:
+      - application/json
+      date:
+      - Mon, 16 Nov 2026 15:42:17 GMT
+      via:
+      - 1.1 b7917401c97fd57331d6a30093a16dc8.cloudfront.net (CloudFront)
+      x-amz-apigw-id:
+      - G8KeEHbtPHcET6A=
+      x-amz-cf-id:
+      - cHJtvJVvArgxTASvOyzfk_BCDJUxpRVodNGiq8Qgtrs_8Z53ZYqJIA==
+      x-amz-cf-pop:
+      - IST50-P3
+      x-amzn-remapped-connection:
+      - keep-alive
+      x-amzn-remapped-content-length:
+      - '9326'
+      x-amzn-remapped-date:
+      - Mon, 16 Nov 2026 15:42:17 GMT
+      x-amzn-remapped-server:
+      - gunicorn
+      x-amzn-requestid:
+      - 9ec96aa1-c81c-4bcf-a205-85b347b52fef
+      x-cache:
+      - Miss from cloudfront
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.semanticscholar.org
+    method: GET
+    uri: https://api.semanticscholar.org/graph/v1/paper/DOI:10.1145/3183519.3183525/citations?fields=title%2Cabstract%2Cyear%2Cvenue%2CpublicationVenue%2CpublicationTypes%2Cjournal%2Cauthors%2CexternalIds%2Curl%2CopenAccessPdf%2CcitationCount&limit=5&offset=0
+  response:
+    body:
+      string: '{"offset": 0, "next": 5, "data": [{"citingPaper": {"paperId": "4f2bb6f765b49fa005a605f13e9b349ddd807d04",
+        "externalIds": {"ArXiv": "2611.15159", "CorpusId": 295824255}, "publicationVenue":
+        null, "url": "https://www.semanticscholar.org/paper/4f2bb6f765b49fa005a605f13e9b349ddd807d04",
+        "title": "An Empirical Study of Maintainer-Identified AI Slop Pull Requests
+        in Free and Open Source Software Projects", "venue": "", "year": 2026, "citationCount":
+        0, "openAccessPdf": {"url": "", "status": null, "license": null, "disclaimer":
+        "Notice: Paper or abstract available at https://arxiv.org/abs/2611.15159,
+        which is subject to the license by the author or copyright owner provided
+        with this content. Please go to the source to verify the license and copyright
+        information for your use."}, "publicationTypes": null, "journal": null, "authors":
+        [{"authorId": "2447173298", "name": "Hugo Raskin"}, {"authorId": "2212443",
+        "name": "Xavier Devroey"}, {"authorId": "3168244", "name": "B. Vanderose"}],
+        "abstract": "The FOSS ecosystem has always relied on outside contributions,
+        notably through issues or Pull Requests (PRs), to sustain itself. With the
+        advance of GenAI, the barrier to contributing to FOSS projects has never been
+        lower, leading to the emergence of AI slop PRs: low-quality, low-value generated
+        PRs. Past studies have examined AI slop PRs through theoretical, platform-level,
+        or practitioner-account frames, but not at the project level. To this end,
+        this study investigates the incidence of maintainer-identified AI slop PRs
+        in FOSS projects by focusing on PRs flagged as slop by maintainers. Using
+        a mixed-methods approach, we trace the origins of maintainer-identified AI
+        slop PRs, quantify their volume in FOSS projects, describe their characteristics,
+        and highlight maintainers''reasons for flagging or closing them. Our results
+        show that the volume of maintainer-identified AI slop PRs increased in mid-2025,
+        peaking in May 2026. These PRs are mostly additive, rarely merged, and typically
+        closed within 3 days. The authors of these PRs disclosed the use of AI in
+        14% of cases, with 1% disclosing after a maintainer''s request. Most PRs are
+        closed or marked as slop without any reason provided by the maintainer. Based
+        on our open coding, reasons range from concrete elements, like build failures,
+        to ideological or intuitive (i.e.,\"looks AI to me\"). This exploratory study
+        captures a phenomenon in its early stage and highlights GenAI''s potential
+        impact on FOSS, emphasizing the pressure it puts on maintainers and the need
+        to shift current open-source development practices."}}, {"citingPaper": {"paperId":
+        "1cc8b29e1082bcfec0c54d506f5c22aa7c257e93", "externalIds": {"ArXiv": "2611.10058",
+        "CorpusId": 295730724}, "publicationVenue": null, "url": "https://www.semanticscholar.org/paper/1cc8b29e1082bcfec0c54d506f5c22aa7c257e93",
+        "title": "From Delegation to Action Approval: An Exploratory Study of Developers''Practices
+        in Collaborating with AI Coding Agents", "venue": "", "year": 2026, "citationCount":
+        0, "openAccessPdf": {"url": "", "status": null, "license": null, "disclaimer":
+        "Notice: Paper or abstract available at https://arxiv.org/abs/2611.10058,
+        which is subject to the license by the author or copyright owner provided
+        with this content. Please go to the source to verify the license and copyright
+        information for your use."}, "publicationTypes": ["Review"], "journal": null,
+        "authors": [{"authorId": "2326817098", "name": "Yin-Wei Wu"}, {"authorId":
+        "10660223", "name": "Dominik Wermke"}, {"authorId": "2109963059", "name":
+        "Ze-Shi Li"}, {"authorId": "2619495", "name": "K. Stolee"}, {"authorId": "2325124847",
+        "name": "Bo-Wen Xu"}], "abstract": "Developers now collaborate with AI coding
+        agents that write code and take actions on their behalf. Beyond reviewing
+        this code, developers decide what to delegate and which agent actions to approve.
+        Some of these actions, such as running shell commands or reading files, can
+        have effects that never appear in the resulting code. How developers make
+        these decisions and how much effort this requires are not well understood.
+        To better understand this collaboration, we surveyed 203 developers who use
+        AI coding agents. We found that careful code review does not necessarily extend
+        to action approval: 61% of developers who carefully reviewed most or all generated
+        code still often approved at least one type of agent action without close
+        review. Developers aware of security or privacy incidents or concerning practices
+        did so more often than those who were not. We also found that autonomy varied
+        more between developers than between development activities. Although developers
+        reported a lighter workload, supervising agents remained mentally demanding.
+        When asked what would make them grant more autonomy, developers wanted more
+        than reliability: more than half of their responses called for agents that
+        are bounded, observable, or reversible. Our findings suggest that as agents
+        take on more of the coding, the challenge shifts toward supporting the developers
+        who supervise them."}}, {"citingPaper": {"paperId": "ffa48c3c684d119700843e071898a7b7bc2c9908",
+        "externalIds": {"DOI": "10.1145/3856208.3856230", "CorpusId": 295506142},
+        "publicationVenue": null, "url": "https://www.semanticscholar.org/paper/ffa48c3c684d119700843e071898a7b7bc2c9908",
+        "title": "Towards Comparative Comprehension in CS1: An Exploratory Study using
+        Structured Code Comparisons", "venue": "Proceedings of the 26th Koli Calling
+        International Conference on Computing Education Research", "year": 2026, "citationCount":
+        0, "openAccessPdf": {"url": "https://doi.org/10.1145/3856208.3856230", "status":
+        "HYBRID", "license": "CCBY", "disclaimer": "Notice: Paper or abstract available
+        at https://api.unpaywall.org/v2/10.1145/3856208.3856230?email=<INSERT_YOUR_EMAIL>
+        or https://doi.org/10.1145/3856208.3856230, which is subject to the license
+        by the author or copyright owner provided with this content. Please go to
+        the source to verify the license and copyright information for your use."},
+        "publicationTypes": ["Book", "Conference", "Review"], "journal": {"name":
+        "Proceedings of the 26th Koli Calling International Conference on Computing
+        Education Research"}, "authors": [{"authorId": "2370343887", "name": "Azeeza
+        Eagal"}, {"authorId": "2282799802", "name": "John-Paul Ore"}, {"authorId":
+        "3416007", "name": "Veronica Catet\u00e9"}], "abstract": "Software developers
+        routinely evaluate code alternatives during code review, refactoring, debugging,
+        maintenance, and when adapting examples from online resources or AI-generated
+        suggestions. This skill, known as comparative comprehension, is fundamental
+        yet difficult: developers must compare different implementations and reason
+        about correctness and task alignment. Its importance is increasing as Generative
+        AI tools produce plausible alternative solutions requiring critical evaluation.
+        Despite its growing role in professional software development, CS1 instruction
+        continues to emphasize producing working code over evaluating competing solutions.
+        As a result, an increasingly important skill in programming practice may remain
+        underdeveloped in CS1 instruction. We explore how structured code comparison
+        activities support comparative comprehension in CS1 students transitioning
+        from Snap! to Python. Drawing on work in mathematics education, we designed
+        instructional activities that ask students to analyze alternative implementations,
+        explain differences in program behavior, and justify solution choices. We
+        evaluated these activities through a pilot study using pre- and post-tests
+        and students\u2019 responses to comparison prompts. While we did not observe
+        statistically significant improvements across quantitative measures, our findings
+        reveal patterns in how novice programmers engage with code comparisons. Students
+        frequently relied on surface-level syntactic differences and struggled to
+        reason about program behavior, particularly when comparisons contained multiple
+        differences. These structured code comparisons also exposed misconceptions
+        and false carryover that traditional code-writing tasks often failed to reveal.
+        Our findings highlight both the challenges and opportunities of supporting
+        comparative comprehension through structured comparison activities, particularly
+        in terms of timing, scaffolding, and comparison design."}}, {"citingPaper":
+        {"paperId": "fed5998c4f17b1768268f2eb1546254f2170ebf7", "externalIds": {"ArXiv":
+        "2611.00689", "CorpusId": 295502449}, "publicationVenue": null, "url": "https://www.semanticscholar.org/paper/fed5998c4f17b1768268f2eb1546254f2170ebf7",
+        "title": "Getting a Grip: Operating Human-Agent Software Teams Through Governed
+        Messages", "venue": "", "year": 2026, "citationCount": 0, "openAccessPdf":
+        {"url": "", "status": null, "license": null, "disclaimer": "Notice: Paper
+        or abstract available at https://arxiv.org/abs/2611.00689, which is subject
+        to the license by the author or copyright owner provided with this content.
+        Please go to the source to verify the license and copyright information for
+        your use."}, "publicationTypes": null, "journal": null, "authors": [{"authorId":
+        "2332995016", "name": "Michael Granitzer"}, {"authorId": "13203106", "name":
+        "Kanishka Ghosh Dastidar"}, {"authorId": "116463234", "name": "Andreas Einwiller"},
+        {"authorId": "145157863", "name": "Jelena Mitrovi\u0107"}, {"authorId": "1965932383",
+        "name": "S. Zerhoudi"}], "abstract": "Software is increasingly developed by
+        teams in which several people direct many coding agents from different vendors.
+        Such teams must establish who may request what from whom, which messages start
+        work, which decisions bind, and who caused a change. We propose to govern
+        a human-agent team through its message protocol and present yoars, a relay
+        in which humans and agents are authenticated principals that exchange typed,
+        addressed messages in rooms holding goals, decision rules, routing and an
+        attributable, append-only record. This report gives the architecture, the
+        full controlled study and the field material. In 926 controlled runs (899
+        analyzable), small agent teams built programs under varied room rules, some
+        with a hostile member planting a backdoor. Revising which messages start work,
+        bundled with limits on repeated messages, was followed by a drop in total
+        coordination failure from 42% to 13% (p = .0063, adjusted p = .057 over nine
+        registered tests). Instructed roles and votes did not reliably produce the
+        intended process, and no defense inside the conversation reliably prevented
+        the backdoor. An auditor read the records of 96 runs with a confirmed backdoor.
+        In the 25 runs where the attacker had persuaded a teammate to write it, the
+        auditor named the persuader in all 25, but it also flagged 24 of 40 honest
+        runs. In a four-week field study, up to nineteen agents and two people developed
+        a distributed system through yoars, producing 7,457 acts. Human attention
+        and decision making emerged as the critical resource: requests waited mainly
+        for the human-run coordinator and for approvals, while agents answered within
+        minutes. Most governance requirements emerged from operation, and holding
+        context dominated token cost. We report twenty-six failures of our own instruments,
+        derive seven lessons and a checklist, and release the corpus, the redacted
+        room ledger and the analysis scripts."}}, {"citingPaper": {"paperId": "6dc142815765d7dd2bb135419e6c866771322ca8",
+        "externalIds": {"DOI": "10.1111/1911-3846.70095", "CorpusId": 295495432},
+        "publicationVenue": {"id": "1cb7c7c8-aa59-4391-b96f-5303ebb57282", "name":
+        "Contemporary Accounting Research", "type": "journal", "alternate_names":
+        ["Contemp Account Res"], "issn": "0823-9150", "url": "http://www.caaa.ca/CAR/",
+        "alternate_urls": ["http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1911-3846"]},
+        "url": "https://www.semanticscholar.org/paper/6dc142815765d7dd2bb135419e6c866771322ca8",
+        "title": "Whose Job Is It, Anyway? The Effect of the Review Process on Employee
+        Performance", "venue": "Contemporary Accounting Research", "year": 2026, "citationCount":
+        0, "openAccessPdf": {"url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1111/1911-3846.70095",
+        "status": "BRONZE", "license": null, "disclaimer": "Notice: Paper or abstract
+        available at https://api.unpaywall.org/v2/10.1111/1911-3846.70095?email=<INSERT_YOUR_EMAIL>
+        or https://doi.org/10.1111/1911-3846.70095, which is subject to the license
+        by the author or copyright owner provided with this content. Please go to
+        the source to verify the license and copyright information for your use."},
+        "publicationTypes": ["JournalArticle", "Review"], "journal": {"name": "Contemporary
+        Accounting Research"}, "authors": [{"authorId": "104454816", "name": "Adam
+        Bross"}, {"authorId": "1391546410", "name": "Ryan D. Sommerfeldt"}], "abstract":
+        "\n Companies have widely adopted a system of work\u2010product reviews whereby
+        the work of one individual is subsequently reviewed by another to ensure its
+        quality. We examine how managers can effectively implement a review of employee
+        work to improve performance. Organizations review employees'' work to identify
+        mistakes and improve work quality. However, reviews may also reduce employees''
+        effort and initiative if they expect reviewers to identify and correct their
+        errors for them. We use an experiment to examine how employee performance
+        depends on who conducts the review and how feedback is provided. Specifically,
+        participants'' work was reviewed by either a superior or a peer, and the reviewer
+        provided either general, high\u2010level guidance (autonomy\u2010oriented)
+        or specific corrective information about errors (dependency\u2010oriented).
+        Employees performed best when superiors provided high\u2010level guidance
+        or when peers provided specific corrective feedback, with these benefits emerging
+        over time. Guidance from a superior increased employees'' sense of responsibility,
+        whereas corrective help from a peer strengthened feelings of teamwork and
+        cohesion. Review approaches that did not fit these combinations offered no
+        clear performance benefit relative to having no review. The findings show
+        that review effectiveness depends on matching the feedback approach to the
+        reviewer''s organizational rank. These results have important implications
+        for managers, accountants responsible for internal controls, and audit professionals
+        involved in designing and implementing the review process."}}]}
+
+        '
+    headers:
+      access-control-allow-origin:
+      - '*'
+      connection:
+      - keep-alive
+      content-length:
+      - '14420'
+      content-type:
+      - application/json
+      date:
+      - Mon, 16 Nov 2026 15:42:18 GMT
+      via:
+      - 1.1 5153decc9b717ba9e0effc2ce8af4c6e.cloudfront.net (CloudFront)
+      x-amz-apigw-id:
+      - G8KeMEhrPHcELYQ=
+      x-amz-cf-id:
+      - _YK23sljp7ViaK_jTk-uPidiJKNp_DrSFp5dthJbNhJu335Gi462hg==
+      x-amz-cf-pop:
+      - IST50-P3
+      x-amzn-remapped-connection:
+      - keep-alive
+      x-amzn-remapped-content-length:
+      - '14420'
+      x-amzn-remapped-date:
+      - Mon, 16 Nov 2026 15:42:18 GMT
+      x-amzn-remapped-server:
+      - gunicorn
+      x-amzn-requestid:
+      - 81bcda27-7a33-4498-96f7-ce44f042547e
+      x-cache:
+      - Miss from cloudfront
+    status:
+      code: 200
+      message: OK
+version: 1

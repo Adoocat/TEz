@@ -1,0 +1,365 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.openalex.org
+    method: GET
+    uri: https://api.openalex.org/works/doi:10.1145/3183519.3183525?select=id
+  response:
+    body:
+      string: '{"id":"https://openalex.org/W2808429234"}
+
+        '
+    headers:
+      access-control-allow-headers:
+      - Accept, Accept-Language, Accept-Encoding, Authorization, Content-Type, X-OpenAlex-UI,
+        X-Impersonate-User
+      access-control-allow-methods:
+      - GET, HEAD, POST, PATCH, DELETE, OPTIONS
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - Cache-Control, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Onetime-Remaining,
+        X-RateLimit-Credits-Used, X-RateLimit-Credits-Required, X-RateLimit-Reset,
+        X-RateLimit-Limit-USD, X-RateLimit-Remaining-USD, X-RateLimit-Prepaid-Remaining-USD,
+        X-RateLimit-Cost-USD, X-RateLimit-Cost-Required-USD, Retry-After, Location,
+        Content-Disposition, X-OpenAlex-UI-Token
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a5b79ac28a429819-AMS
+      connection:
+      - keep-alive
+      content-length:
+      - '42'
+      content-type:
+      - application/json
+      date:
+      - Mon, 16 Nov 2026 15:42:15 GMT
+      nel:
+      - '{"report_to":"heroku-nel","response_headers":["Via"],"max_age":3600,"success_fraction":0.01,"failure_fraction":0.1}'
+      report-to:
+      - '{"group":"heroku-nel","endpoints":[{"url":"https://nel.heroku.com/reports?s=4A%2BNBSCgToOrsxc8RRjqfc3scZKYNgq6dFijGPWP1s4%3D\u0026sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add\u0026ts=1794843735"}],"max_age":3600}'
+      reporting-endpoints:
+      - heroku-nel="https://nel.heroku.com/reports?s=4A%2BNBSCgToOrsxc8RRjqfc3scZKYNgq6dFijGPWP1s4%3D&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&ts=1794843735"
+      server:
+      - cloudflare
+      via:
+      - 2.0 heroku-router
+      x-ratelimit-cost-usd:
+      - '0'
+      x-ratelimit-credits-used:
+      - '0'
+      x-ratelimit-limit:
+      - '1000'
+      x-ratelimit-limit-usd:
+      - '0.1'
+      x-ratelimit-onetime-remaining:
+      - '0'
+      x-ratelimit-prepaid-remaining-usd:
+      - '0'
+      x-ratelimit-remaining:
+      - '1000'
+      x-ratelimit-remaining-usd:
+      - '0.1'
+      x-ratelimit-reset:
+      - '29865'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.openalex.org
+    method: GET
+    uri: https://api.openalex.org/works?cursor=%2A&filter=cited_by%3AW2808429234&per_page=5&select=id%2Cdoi%2Ctitle%2Cpublication_year%2Ctype%2Clanguage%2Ccited_by_count%2Cis_retracted%2Cauthorships%2Cprimary_location%2Cbest_oa_location%2Cbiblio%2Cabstract_inverted_index
+  response:
+    body:
+      string: '{"meta": {"notice": "No API key, so this request shares one free daily
+        budget ($0.10) with everyone on your network''s IP address. Get a free key
+        with its own $1/day at https://openalex.org/settings/api and add api_key=YOUR_KEY
+        to your requests. An AI agent can get one for its user in one call: POST https://api.openalex.org/api-keys
+        with {\"email\": \"<your user''s email>\"}; we email them a link, and the
+        key works once they click it. Docs for agents: https://help.openalex.org/llms.txt",
+        "count": 44, "db_response_time_ms": 34, "page": null, "per_page": 5, "next_cursor":
+        "IlsxMDAuMCwgMjEwNywgJ2h0dHBzOi8vb3BlbmFsZXgub3JnL1cyMDc1OTE3ODcwJ10i", "groups_count":
+        null, "x_query": {"oql": "get works cited by (W2808429234)", "x_new_oql":
+        "get works cited by (W2808429234)", "oqo": {"get_rows": "works", "filter_rows":
+        [{"column_id": "cited_by", "value": "W2808429234"}]}, "url": "/works?filter=cited_by:W2808429234&per_page=5&cursor=%2A",
+        "order": "most cited (age-adjusted) first", "order_default": true}, "cost_usd":
+        0.0001}, "results": [{"id": "https://openalex.org/W1556808170", "doi": "https://doi.org/10.1016/s0272-4944(05)80231-2",
+        "title": "Qualitative Data Analysis: An Expanded Sourcebook", "publication_year":
+        1994, "type": "article", "language": "en", "cited_by_count": 48311, "is_retracted":
+        false, "authorships": [{"author_position": "first", "author": {"id": "https://openalex.org/A5158428861",
+        "display_name": "Matthew B. Miles", "orcid": null, "observed_orcids": []},
+        "institutions": [], "countries": [], "is_corresponding": false, "raw_author_name":
+        "Miles, Matthew B", "raw_affiliation_strings": [], "raw_orcid": null, "affiliations":
+        []}, {"author_position": "last", "author": {"id": "https://openalex.org/A5160004083",
+        "display_name": "A Michael Huberman", "orcid": null, "observed_orcids": []},
+        "institutions": [], "countries": [], "is_corresponding": false, "raw_author_name":
+        "Huberman, A Michael", "raw_affiliation_strings": [], "raw_orcid": null, "affiliations":
+        []}], "primary_location": {"id": "doi:10.1016/s0272-4944(05)80231-2", "doi":
+        "https://doi.org/10.1016/s0272-4944(05)80231-2", "is_oa": false, "landing_page_url":
+        "https://doi.org/10.1016/s0272-4944(05)80231-2", "pdf_url": null, "source":
+        {"id": "https://openalex.org/S32271328", "display_name": "Journal of Environmental
+        Psychology", "issn_l": "0272-4944", "issn": ["0272-4944", "1522-9610"], "is_oa":
+        false, "is_in_doaj": false, "is_core": true, "listed_in": ["abdc-a", "anvur-class-a",
+        "anvur-scientific", "cwts-core", "dongbi-c", "erih-plus", "jufo-3", "ki-jl-2",
+        "norway-2", "poland-140", "russia-white-list-1", "vabb-shw"], "host_organization":
+        "https://openalex.org/P4310320990", "host_organization_name": "Elsevier BV",
+        "host_organization_lineage": ["https://openalex.org/P4310320990"], "host_organization_lineage_names":
+        ["Elsevier BV"], "type": "journal"}, "license": null, "license_id": null,
+        "version": "publishedVersion", "is_accepted": true, "is_published": true,
+        "raw_source_name": "Journal of Environmental Psychology", "raw_type": "journal-article"},
+        "best_oa_location": {"id": "pmh:oai:generic.eprints.org:22175", "doi": null,
+        "is_oa": true, "landing_page_url": "https://www.drugsandalcohol.ie/22175/",
+        "pdf_url": "http://funes.uniandes.edu.co/22175/1/Cros2015Romper.pdf", "source":
+        {"id": "https://openalex.org/S4377196493", "display_name": "HRB National Drugs
+        Library (Health Research Board)", "issn_l": null, "issn": null, "is_oa": false,
+        "is_in_doaj": false, "is_core": false, "listed_in": [], "host_organization":
+        "https://openalex.org/I4210086850", "host_organization_name": "Health Research
+        Board", "host_organization_lineage": ["https://openalex.org/I4210086850"],
+        "host_organization_lineage_names": [], "type": "repository"}, "license": null,
+        "license_id": null, "version": "submittedVersion", "is_accepted": false, "is_published":
+        false, "raw_source_name": "", "raw_type": "Book"}, "biblio": {"volume": "14",
+        "issue": "4", "first_page": "336", "last_page": "337"}, "abstract_inverted_index":
+        null}, {"id": "https://openalex.org/W2146691185", "doi": "https://doi.org/10.1097/00006199-196807000-00014",
+        "title": "The Discovery of Grounded Theory; Strategies for Qualitative Research",
+        "publication_year": 1968, "type": "article", "language": "en", "cited_by_count":
+        40168, "is_retracted": false, "authorships": [{"author_position": "first",
+        "author": {"id": "https://openalex.org/A5044483808", "display_name": "Barney
+        G. Glaser", "orcid": null, "observed_orcids": []}, "institutions": [], "countries":
+        [], "is_corresponding": false, "raw_author_name": "Barney G. Glaser", "raw_affiliation_strings":
+        ["New Haven, Connecticut"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "New Haven, Connecticut", "institution_ids": []}]}, {"author_position": "middle",
+        "author": {"id": "https://openalex.org/A5108677812", "display_name": "Anselm
+        L. Strauss", "orcid": null, "observed_orcids": []}, "institutions": [], "countries":
+        [], "is_corresponding": false, "raw_author_name": "Anselm L. Strauss", "raw_affiliation_strings":
+        ["New Haven, Connecticut"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "New Haven, Connecticut", "institution_ids": []}]}, {"author_position": "last",
+        "author": {"id": "https://openalex.org/A5028138468", "display_name": "Elizabeth
+        Strutzel", "orcid": null, "observed_orcids": []}, "institutions": [], "countries":
+        [], "is_corresponding": false, "raw_author_name": "Elizabeth Strutzel", "raw_affiliation_strings":
+        ["New Haven, Connecticut"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "New Haven, Connecticut", "institution_ids": []}]}], "primary_location": {"id":
+        "doi:10.1097/00006199-196807000-00014", "doi": "https://doi.org/10.1097/00006199-196807000-00014",
+        "is_oa": false, "landing_page_url": "https://doi.org/10.1097/00006199-196807000-00014",
+        "pdf_url": null, "source": {"id": "https://openalex.org/S57227388", "display_name":
+        "Nursing Research", "issn_l": "0029-6562", "issn": ["0029-6562", "1538-9847"],
+        "is_oa": false, "is_in_doaj": false, "is_core": true, "listed_in": ["cwts-core",
+        "dongbi-b", "doyens", "jufo-3", "ki-jl-1", "medline", "norway-1", "poland-70",
+        "russia-white-list-1", "vabb-shw"], "host_organization": "https://openalex.org/P4310315671",
+        "host_organization_name": "Lippincott Williams & Wilkins", "host_organization_lineage":
+        ["https://openalex.org/P4310315671", "https://openalex.org/P4310318547"],
+        "host_organization_lineage_names": ["Lippincott Williams & Wilkins", "Wolters
+        Kluwer"], "type": "journal"}, "license": null, "license_id": null, "version":
+        "publishedVersion", "is_accepted": true, "is_published": true, "raw_source_name":
+        "Nursing Research", "raw_type": "journal-article"}, "best_oa_location": null,
+        "biblio": {"volume": "17", "issue": "4", "first_page": "364", "last_page":
+        "364"}, "abstract_inverted_index": {"Most": [0, 83], "writing": [1], "on":
+        [2, 218], "sociological": [3], "method": [4], "has": [5], "been": [6], "concerned":
+        [7], "with": [8], "how": [9, 16, 41], "accurate": [10], "facts": [11], "can":
+        [12, 18, 111], "be": [13, 20, 54, 188, 200], "obtained": [14, 48], "and":
+        [15, 32, 49, 75, 80, 91, 120, 128, 150, 163], "theory": [17, 45, 59, 71, 145,
+        185], "thereby": [19], "more": [21], "rigorously": [22], "tested.": [23],
+        "In": [24, 93, 134, 155, 205], "The": [25, 56, 137, 171], "Discovery": [26,
+        172], "of": [27, 40, 44, 58, 96, 115, 130, 140, 144, 159, 168, 173], "Grounded":
+        [28, 160, 174], "Theory,": [161], "Barney": [30], "Glaser": [31, 162], "Anselm":
+        [33], "Strauss": [34, 164], "address": [35], "the": [36, 42, 97, 104, 113,
+        125, 142, 166], "equally": [37], "Important": [38], "enterprise": [39], "discovery":
+        [43, 57, 114], "from": [46, 60, 146], "data--systematically": [47], "analyzed":
+        [50], "in": [51], "social": [52, 180, 207], "research--can": [53], "furthered.":
+        [55], "data--grounded": [61], "theory--is": [62], "a": [63, 70, 107], "major":
+        [64], "task": [65], "confronting": [66], "sociology,": [67], "for": [68, 183],
+        "such": [69], "fits": [72], "empirical": [73], "situations,": [74], "is":
+        [76, 176], "understandable": [77], "to": [78, 190, 202], "sociologists": [79,
+        110], "laymen": [81], "alike.": [82], "important,": [84], "it": [85, 198],
+        "provides": [86], "relevant": [87, 189], "predictions,": [88], "explanations,":
+        [89], "interpretations,": [90], "applications.": [92], "Part": [94, 135, 156],
+        "I": [95], "book,": [98], "Generation": [99], "Theory": [100, 175], "by":
+        [101], "Comparative": [102], "Analysis,": [103], "authors": [105], "present":
+        [106], "strategy": [108, 123], "whereby": [109], "facilitate": [112], "grounded":
+        [116, 169], "theory,": [117], "both": [118], "substantive": [119], "formal.":
+        [121], "This": [122], "involves": [124], "systematic": [126], "choice": [127],
+        "study": [129], "several": [131], "comparison": [132], "groups.": [133], "II,":
+        [136], "Flexible": [138], "Use": [139], "Data,": [141], "generation": [143],
+        "qualitative,": [147], "especially": [148, 212], "documentary,": [149], "quantitative":
+        [151], "data": [152], "Is": [153], "considered.": [154], "III,": [157], "Implications":
+        [158], "examine": [165], "credibility": [167], "theory.": [170], "directed":
+        [177], "toward": [178], "improving": [179], "scientists''": [181], "capacity":
+        [182], "generating": [184], "that": [186], "will": [187, 199], "their": [191,
+        214], "research.": [192], "While": [193], "aimed": [194], "primarily": [195],
+        "at": [196], "sociologists,": [197], "useful": [201], "anyone": [203], "Interested":
+        [204], "studying": [206], "phenomena--political,": [208], "educational,":
+        [209], "economic,": [210], "industrial--": [211], "If": [213], "studies":
+        [215], "are": [216], "based": [217], "qualitative": [219], "data.": [220]}},
+        {"id": "https://openalex.org/W2021365718", "doi": "https://doi.org/10.1590/s1415-65552003000100015",
+        "title": "Research design: qualitative, quantitative, and mixed methods approaches",
+        "publication_year": 2003, "type": "article", "language": "pt", "cited_by_count":
+        18688, "is_retracted": false, "authorships": [{"author_position": "first",
+        "author": {"id": "https://openalex.org/A5056014764", "display_name": "Miguel
+        Caldas", "orcid": "https://orcid.org/0000-0003-4858-4730", "observed_orcids":
+        ["https://orcid.org/0000-0003-4858-4730"]}, "institutions": [{"id": "https://openalex.org/I44202434",
+        "display_name": "Funda\u00e7\u00e3o Getulio Vargas", "ror": "https://ror.org/01evzkn27",
+        "country_code": "BR", "type": "education", "lineage": ["https://openalex.org/I44202434"]}],
+        "countries": ["BR"], "is_corresponding": true, "raw_author_name": "Miguel
+        Pinto Caldas", "raw_affiliation_strings": ["Funda\u00e7ao Get\u00falio Vargas"],
+        "raw_orcid": null, "affiliations": [{"raw_affiliation_string": "Funda\u00e7ao
+        Get\u00falio Vargas", "institution_ids": ["https://openalex.org/I44202434"]}]}],
+        "primary_location": {"id": "doi:10.1590/s1415-65552003000100015", "doi": "https://doi.org/10.1590/s1415-65552003000100015",
+        "is_oa": true, "landing_page_url": "https://doi.org/10.1590/s1415-65552003000100015",
+        "pdf_url": "https://www.scielo.br/j/rac/a/df6v9Bw75mgHD3S3CghVQhD/?lang=pt&format=pdf",
+        "source": {"id": "https://openalex.org/S2739018597", "display_name": "Revista
+        de Administra\u00e7\u00e3o Contempor\u00e2nea", "issn_l": "1415-6555", "issn":
+        ["1415-6555", "1982-7849"], "is_oa": true, "is_in_doaj": true, "is_core":
+        true, "listed_in": ["cwts-core", "doaj", "erih-plus", "latindex", "norway-1",
+        "poland-20", "russia-white-list-4", "scielo"], "host_organization": "https://openalex.org/P4310312426",
+        "host_organization_name": "Associa\u00e7\u00e3o Nacional de P\u00f3s-Gradua\u00e7\u00e3o
+        e Pesquisa em Administra\u00e7\u00e3o (ANPAD)", "host_organization_lineage":
+        ["https://openalex.org/P4310312426"], "host_organization_lineage_names": ["Associa\u00e7\u00e3o
+        Nacional de P\u00f3s-Gradua\u00e7\u00e3o e Pesquisa em Administra\u00e7\u00e3o
+        (ANPAD)"], "type": "journal"}, "license": "cc-by-nc", "license_id": "https://openalex.org/licenses/cc-by-nc",
+        "version": "publishedVersion", "is_accepted": true, "is_published": true,
+        "raw_source_name": "Revista de Administra\u00e7\u00e3o Contempor\u00e2nea",
+        "raw_type": "journal-article"}, "best_oa_location": {"id": "doi:10.1590/s1415-65552003000100015",
+        "doi": "https://doi.org/10.1590/s1415-65552003000100015", "is_oa": true, "landing_page_url":
+        "https://doi.org/10.1590/s1415-65552003000100015", "pdf_url": "https://www.scielo.br/j/rac/a/df6v9Bw75mgHD3S3CghVQhD/?lang=pt&format=pdf",
+        "source": {"id": "https://openalex.org/S2739018597", "display_name": "Revista
+        de Administra\u00e7\u00e3o Contempor\u00e2nea", "issn_l": "1415-6555", "issn":
+        ["1415-6555", "1982-7849"], "is_oa": true, "is_in_doaj": true, "is_core":
+        true, "listed_in": ["cwts-core", "doaj", "erih-plus", "latindex", "norway-1",
+        "poland-20", "russia-white-list-4", "scielo"], "host_organization": "https://openalex.org/P4310312426",
+        "host_organization_name": "Associa\u00e7\u00e3o Nacional de P\u00f3s-Gradua\u00e7\u00e3o
+        e Pesquisa em Administra\u00e7\u00e3o (ANPAD)", "host_organization_lineage":
+        ["https://openalex.org/P4310312426"], "host_organization_lineage_names": ["Associa\u00e7\u00e3o
+        Nacional de P\u00f3s-Gradua\u00e7\u00e3o e Pesquisa em Administra\u00e7\u00e3o
+        (ANPAD)"], "type": "journal"}, "license": "cc-by-nc", "license_id": "https://openalex.org/licenses/cc-by-nc",
+        "version": "publishedVersion", "is_accepted": true, "is_published": true,
+        "raw_source_name": "Revista de Administra\u00e7\u00e3o Contempor\u00e2nea",
+        "raw_type": "journal-article"}, "biblio": {"volume": "7", "issue": "1", "first_page":
+        "223", "last_page": "223"}, "abstract_inverted_index": {"Nova": [0], "edi\u00e7\u00e3o":
+        [1], "do": [2], "conhecido": [3, 21], "livro": [4], "sobre": [5, 42], "metodologia":
+        [6, 58], "de": [7, 9, 52, 57, 59, 63], "pesquisa": [8, 60], "Creswell.": [10],
+        "Originalmente": [11], "pensado": [12], "no": [13], "campo": [14], "da": [15,
+        31], "Educa\u00e7\u00e3o,": [16], "o": [17], "autor": [18], "ficou": [19],
+        "muito": [20], "tamb\u00e9m": [22], "em": [23, 61], "Administra\u00e7\u00e3o.":
+        [24], "Nesta": [25], "nova": [26], "edi\u00e7\u00e3o,": [27], "ele": [28],
+        "procura": [29], "sair": [30], "dicotomia": [32], "m\u00e9todos": [33, 43],
+        "quantitativos": [34], "x": [35], "qualitativos,": [36], "com": [37], "uma":
+        [38, 49], "\u00f3tima": [39], "discuss\u00e3o": [40], "adicional": [41], "mistos.":
+        [44], "Como": [45], "um": [46], "todo,": [47], "\u00e9": [48], "obra": [50],
+        "excelente": [51], "refer\u00eancia": [53], "para": [54], "cursos": [55],
+        "introdut\u00f3rios": [56], "programas": [62], "p\u00f3s-gradua\u00e7\u00e3o.":
+        [64]}}, {"id": "https://openalex.org/W2978796458", "doi": null, "title": "Research
+        design: Qualitative, quantitative, and mixed methods approaches, 3rd ed.",
+        "publication_year": 2009, "type": "article", "language": "en", "cited_by_count":
+        6286, "is_retracted": false, "authorships": [{"author_position": "first",
+        "author": {"id": "https://openalex.org/A5025339678", "display_name": "John
+        W. Creswell", "orcid": "https://orcid.org/0000-0002-5006-880X", "observed_orcids":
+        ["https://orcid.org/0000-0002-5006-880X"]}, "institutions": [{"id": "https://openalex.org/I114395901",
+        "display_name": "University of Nebraska\u2013Lincoln", "ror": "https://ror.org/043mer456",
+        "country_code": "US", "type": "education", "lineage": ["https://openalex.org/I114395901"]}],
+        "countries": ["US"], "is_corresponding": true, "raw_author_name": "John W.
+        Creswell", "raw_affiliation_strings": ["University of Nebraska\u2014Lincoln,
+        Lincoln, NE, US"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "University of Nebraska\u2014Lincoln, Lincoln, NE, US", "institution_ids":
+        ["https://openalex.org/I114395901"]}]}], "primary_location": {"id": "mag:2978796458",
+        "doi": null, "is_oa": false, "landing_page_url": "https://psycnet.apa.org/record/2008-13604-000",
+        "pdf_url": null, "source": null, "license": null, "license_id": null, "version":
+        null, "is_accepted": false, "is_published": false, "raw_source_name": null,
+        "raw_type": null}, "best_oa_location": null, "biblio": {"volume": null, "issue":
+        null, "first_page": null, "last_page": null}, "abstract_inverted_index": null},
+        {"id": "https://openalex.org/W2075917870", "doi": "https://doi.org/10.1016/0021-9681(79)90012-2",
+        "title": "Bias in analytic research", "publication_year": 1979, "type": "article",
+        "language": "en", "cited_by_count": 2107, "is_retracted": false, "authorships":
+        [{"author_position": "first", "author": {"id": "https://openalex.org/A5035834258",
+        "display_name": "David L. Sackett", "orcid": null, "observed_orcids": []},
+        "institutions": [], "countries": [], "is_corresponding": true, "raw_author_name":
+        "David L. Sackett", "raw_affiliation_strings": [], "raw_orcid": null, "affiliations":
+        []}], "primary_location": {"id": "doi:10.1016/0021-9681(79)90012-2", "doi":
+        "https://doi.org/10.1016/0021-9681(79)90012-2", "is_oa": false, "landing_page_url":
+        "https://doi.org/10.1016/0021-9681(79)90012-2", "pdf_url": null, "source":
+        {"id": "https://openalex.org/S69091592", "display_name": "Journal of Chronic
+        Diseases", "issn_l": "0021-9681", "issn": ["0021-9681", "1878-0679"], "is_oa":
+        false, "is_in_doaj": false, "is_core": false, "listed_in": [], "host_organization":
+        "https://openalex.org/P4310320146", "host_organization_name": "Pergamon Press",
+        "host_organization_lineage": ["https://openalex.org/P4310320146"], "host_organization_lineage_names":
+        ["Pergamon Press"], "type": "journal"}, "license": null, "license_id": null,
+        "version": "publishedVersion", "is_accepted": true, "is_published": true,
+        "raw_source_name": "Journal of Chronic Diseases", "raw_type": "journal-article"},
+        "best_oa_location": null, "biblio": {"volume": "32", "issue": "1-2", "first_page":
+        "51", "last_page": "63"}, "abstract_inverted_index": null}], "group_by": []}'
+    headers:
+      access-control-allow-headers:
+      - Accept, Accept-Language, Accept-Encoding, Authorization, Content-Type, X-OpenAlex-UI,
+        X-Impersonate-User
+      access-control-allow-methods:
+      - GET, HEAD, POST, PATCH, DELETE, OPTIONS
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - Cache-Control, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Onetime-Remaining,
+        X-RateLimit-Credits-Used, X-RateLimit-Credits-Required, X-RateLimit-Reset,
+        X-RateLimit-Limit-USD, X-RateLimit-Remaining-USD, X-RateLimit-Prepaid-Remaining-USD,
+        X-RateLimit-Cost-USD, X-RateLimit-Cost-Required-USD, Retry-After, Location,
+        Content-Disposition, X-OpenAlex-UI-Token
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a5b79ac559d79819-AMS
+      connection:
+      - keep-alive
+      content-length:
+      - '17786'
+      content-type:
+      - application/json
+      date:
+      - Mon, 16 Nov 2026 15:42:16 GMT
+      nel:
+      - '{"report_to":"heroku-nel","response_headers":["Via"],"max_age":3600,"success_fraction":0.01,"failure_fraction":0.1}'
+      report-to:
+      - '{"group":"heroku-nel","endpoints":[{"url":"https://nel.heroku.com/reports?s=4A%2BNBSCgToOrsxc8RRjqfc3scZKYNgq6dFijGPWP1s4%3D\u0026sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add\u0026ts=1794843735"}],"max_age":3600}'
+      reporting-endpoints:
+      - heroku-nel="https://nel.heroku.com/reports?s=4A%2BNBSCgToOrsxc8RRjqfc3scZKYNgq6dFijGPWP1s4%3D&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&ts=1794843735"
+      server:
+      - cloudflare
+      transfer-encoding:
+      - chunked
+      via:
+      - 2.0 heroku-router
+      x-ratelimit-cost-usd:
+      - '0.0001'
+      x-ratelimit-credits-used:
+      - '1'
+      x-ratelimit-limit:
+      - '1000'
+      x-ratelimit-limit-usd:
+      - '0.1'
+      x-ratelimit-onetime-remaining:
+      - '0'
+      x-ratelimit-prepaid-remaining-usd:
+      - '0'
+      x-ratelimit-remaining:
+      - '999'
+      x-ratelimit-remaining-usd:
+      - '0.0999'
+      x-ratelimit-reset:
+      - '29864'
+    status:
+      code: 200
+      message: OK
+version: 1

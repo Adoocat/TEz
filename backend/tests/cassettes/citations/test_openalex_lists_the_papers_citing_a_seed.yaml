@@ -1,0 +1,790 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.openalex.org
+    method: GET
+    uri: https://api.openalex.org/works/doi:10.1145/3183519.3183525?select=id
+  response:
+    body:
+      string: '{"id":"https://openalex.org/W2808429234"}
+
+        '
+    headers:
+      access-control-allow-headers:
+      - Accept, Accept-Language, Accept-Encoding, Authorization, Content-Type, X-OpenAlex-UI,
+        X-Impersonate-User
+      access-control-allow-methods:
+      - GET, HEAD, POST, PATCH, DELETE, OPTIONS
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - Cache-Control, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Onetime-Remaining,
+        X-RateLimit-Credits-Used, X-RateLimit-Credits-Required, X-RateLimit-Reset,
+        X-RateLimit-Limit-USD, X-RateLimit-Remaining-USD, X-RateLimit-Prepaid-Remaining-USD,
+        X-RateLimit-Cost-USD, X-RateLimit-Cost-Required-USD, Retry-After, Location,
+        Content-Disposition, X-OpenAlex-UI-Token
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a5b79ac8c9f68b7c-AMS
+      connection:
+      - keep-alive
+      content-length:
+      - '42'
+      content-type:
+      - application/json
+      date:
+      - Mon, 16 Nov 2026 15:42:16 GMT
+      nel:
+      - '{"report_to":"heroku-nel","response_headers":["Via"],"max_age":3600,"success_fraction":0.01,"failure_fraction":0.1}'
+      report-to:
+      - '{"group":"heroku-nel","endpoints":[{"url":"https://nel.heroku.com/reports?s=877P4aGGTjhuFH1h3rZOmsPTUWoOSOZ%2BIKNgpD6e7Ks%3D\u0026sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add\u0026ts=1794843736"}],"max_age":3600}'
+      reporting-endpoints:
+      - heroku-nel="https://nel.heroku.com/reports?s=877P4aGGTjhuFH1h3rZOmsPTUWoOSOZ%2BIKNgpD6e7Ks%3D&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&ts=1794843736"
+      server:
+      - cloudflare
+      via:
+      - 2.0 heroku-router
+      x-ratelimit-cost-usd:
+      - '0'
+      x-ratelimit-credits-used:
+      - '0'
+      x-ratelimit-limit:
+      - '1000'
+      x-ratelimit-limit-usd:
+      - '0.1'
+      x-ratelimit-onetime-remaining:
+      - '0'
+      x-ratelimit-prepaid-remaining-usd:
+      - '0'
+      x-ratelimit-remaining:
+      - '999'
+      x-ratelimit-remaining-usd:
+      - '0.0999'
+      x-ratelimit-reset:
+      - '29864'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - api.openalex.org
+    method: GET
+    uri: https://api.openalex.org/works?cursor=%2A&filter=cites%3AW2808429234&per_page=5&select=id%2Cdoi%2Ctitle%2Cpublication_year%2Ctype%2Clanguage%2Ccited_by_count%2Cis_retracted%2Cauthorships%2Cprimary_location%2Cbest_oa_location%2Cbiblio%2Cabstract_inverted_index
+  response:
+    body:
+      string: '{"meta": {"notice": "No API key, so this request shares one free daily
+        budget ($0.10) with everyone on your network''s IP address. Get a free key
+        with its own $1/day at https://openalex.org/settings/api and add api_key=YOUR_KEY
+        to your requests. An AI agent can get one for its user in one call: POST https://api.openalex.org/api-keys
+        with {\"email\": \"<your user''s email>\"}; we email them a link, and the
+        key works once they click it. Docs for agents: https://help.openalex.org/llms.txt",
+        "count": 348, "db_response_time_ms": 36, "page": null, "per_page": 5, "next_cursor":
+        "IlsxMDAuMCwgMTE5LCAnaHR0cHM6Ly9vcGVuYWxleC5vcmcvVzQ0MDU1NTY2MTAnXSI=", "groups_count":
+        null, "x_query": {"oql": "get works citing (W2808429234)", "x_new_oql": "get
+        works citing (W2808429234)", "oqo": {"get_rows": "works", "filter_rows": [{"column_id":
+        "referenced_works", "value": "W2808429234"}]}, "url": "/works?filter=referenced_works:W2808429234&per_page=5&cursor=%2A",
+        "order": "most cited (age-adjusted) first", "order_default": true}, "cost_usd":
+        0.0001}, "results": [{"id": "https://openalex.org/W4308643152", "doi": "https://doi.org/10.1145/3540250.3549081",
+        "title": "Automating code review activities by large-scale pre-training",
+        "publication_year": 2022, "type": "conference-paper", "language": "en", "cited_by_count":
+        316, "is_retracted": false, "authorships": [{"author_position": "first", "author":
+        {"id": "https://openalex.org/A5100390297", "display_name": "Zhiyu Li", "orcid":
+        "https://orcid.org/0000-0002-8187-4177", "observed_orcids": ["https://orcid.org/0000-0002-8187-4177"]},
+        "institutions": [{"id": "https://openalex.org/I20231570", "display_name":
+        "Peking University", "ror": "https://ror.org/02v51f717", "country_code": "CN",
+        "type": "education", "lineage": ["https://openalex.org/I20231570"]}], "countries":
+        ["CN"], "is_corresponding": false, "raw_author_name": "Zhiyu Li", "raw_affiliation_strings":
+        ["Peking University, China"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "Peking University, China", "institution_ids": ["https://openalex.org/I20231570"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5112547849",
+        "display_name": "Shuai Lu", "orcid": "https://orcid.org/0000-0001-7466-2064",
+        "observed_orcids": ["https://orcid.org/0000-0001-7466-2064"]}, "institutions":
+        [{"id": "https://openalex.org/I4210113369", "display_name": "Microsoft Research
+        Asia (China)", "ror": "https://ror.org/0300m5276", "country_code": "CN", "type":
+        "company", "lineage": ["https://openalex.org/I1290206253", "https://openalex.org/I4210113369"]}],
+        "countries": ["CN"], "is_corresponding": false, "raw_author_name": "Shuai
+        Lu", "raw_affiliation_strings": ["Microsoft Research, China"], "raw_orcid":
+        null, "affiliations": [{"raw_affiliation_string": "Microsoft Research, China",
+        "institution_ids": ["https://openalex.org/I4210113369"]}]}, {"author_position":
+        "middle", "author": {"id": "https://openalex.org/A5060364305", "display_name":
+        "Daya Guo", "orcid": "https://orcid.org/0009-0008-0822-1517", "observed_orcids":
+        ["https://orcid.org/0009-0008-0822-1517"]}, "institutions": [{"id": "https://openalex.org/I157773358",
+        "display_name": "Sun Yat-sen University", "ror": "https://ror.org/0064kty71",
+        "country_code": "CN", "type": "education", "lineage": ["https://openalex.org/I157773358"]}],
+        "countries": ["CN"], "is_corresponding": false, "raw_author_name": "Daya Guo",
+        "raw_affiliation_strings": ["Sun Yat-sen University, China"], "raw_orcid":
+        null, "affiliations": [{"raw_affiliation_string": "Sun Yat-sen University,
+        China", "institution_ids": ["https://openalex.org/I157773358"]}]}, {"author_position":
+        "middle", "author": {"id": "https://openalex.org/A5042018181", "display_name":
+        "Nan Duan", "orcid": "https://orcid.org/0000-0002-3387-4674", "observed_orcids":
+        ["https://orcid.org/0000-0002-3387-4674"]}, "institutions": [{"id": "https://openalex.org/I4210113369",
+        "display_name": "Microsoft Research Asia (China)", "ror": "https://ror.org/0300m5276",
+        "country_code": "CN", "type": "company", "lineage": ["https://openalex.org/I1290206253",
+        "https://openalex.org/I4210113369"]}], "countries": ["CN"], "is_corresponding":
+        false, "raw_author_name": "Nan Duan", "raw_affiliation_strings": ["Microsoft
+        Research, China"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "Microsoft Research, China", "institution_ids": ["https://openalex.org/I4210113369"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5016911965",
+        "display_name": "Shailesh Jannu", "orcid": null, "observed_orcids": []}, "institutions":
+        [{"id": "https://openalex.org/I1316064682", "display_name": "LinkedIn (United
+        States)", "ror": "https://ror.org/02fyxhe35", "country_code": "US", "type":
+        "company", "lineage": ["https://openalex.org/I1290206253", "https://openalex.org/I1316064682"]}],
+        "countries": ["US"], "is_corresponding": false, "raw_author_name": "Shailesh
+        Jannu", "raw_affiliation_strings": ["LinkedIn, USA"], "raw_orcid": null, "affiliations":
+        [{"raw_affiliation_string": "LinkedIn, USA", "institution_ids": ["https://openalex.org/I1316064682"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5049287797",
+        "display_name": "Grant Jenks", "orcid": "https://orcid.org/0000-0001-5010-405X",
+        "observed_orcids": ["https://orcid.org/0000-0001-5010-405X"]}, "institutions":
+        [{"id": "https://openalex.org/I1316064682", "display_name": "LinkedIn (United
+        States)", "ror": "https://ror.org/02fyxhe35", "country_code": "US", "type":
+        "company", "lineage": ["https://openalex.org/I1290206253", "https://openalex.org/I1316064682"]}],
+        "countries": ["US"], "is_corresponding": false, "raw_author_name": "Grant
+        Jenks", "raw_affiliation_strings": ["LinkedIn, USA"], "raw_orcid": null, "affiliations":
+        [{"raw_affiliation_string": "LinkedIn, USA", "institution_ids": ["https://openalex.org/I1316064682"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5010460013",
+        "display_name": "Deep Majumder", "orcid": null, "observed_orcids": []}, "institutions":
+        [{"id": "https://openalex.org/I1316064682", "display_name": "LinkedIn (United
+        States)", "ror": "https://ror.org/02fyxhe35", "country_code": "US", "type":
+        "company", "lineage": ["https://openalex.org/I1290206253", "https://openalex.org/I1316064682"]}],
+        "countries": ["US"], "is_corresponding": false, "raw_author_name": "Deep Majumder",
+        "raw_affiliation_strings": ["LinkedIn, USA"], "raw_orcid": null, "affiliations":
+        [{"raw_affiliation_string": "LinkedIn, USA", "institution_ids": ["https://openalex.org/I1316064682"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5051546442",
+        "display_name": "Jared Green", "orcid": null, "observed_orcids": []}, "institutions":
+        [{"id": "https://openalex.org/I1316064682", "display_name": "LinkedIn (United
+        States)", "ror": "https://ror.org/02fyxhe35", "country_code": "US", "type":
+        "company", "lineage": ["https://openalex.org/I1290206253", "https://openalex.org/I1316064682"]}],
+        "countries": ["US"], "is_corresponding": false, "raw_author_name": "Jared
+        Green", "raw_affiliation_strings": ["LinkedIn, USA"], "raw_orcid": null, "affiliations":
+        [{"raw_affiliation_string": "LinkedIn, USA", "institution_ids": ["https://openalex.org/I1316064682"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5107913291",
+        "display_name": "A. Svyatkovskiy", "orcid": "https://orcid.org/0000-0001-7714-4481",
+        "observed_orcids": ["https://orcid.org/0000-0001-7714-4481"]}, "institutions":
+        [{"id": "https://openalex.org/I1290206253", "display_name": "Microsoft (United
+        States)", "ror": "https://ror.org/00d0nc645", "country_code": "US", "type":
+        "company", "lineage": ["https://openalex.org/I1290206253"]}], "countries":
+        ["US"], "is_corresponding": false, "raw_author_name": "Alexey Svyatkovskiy",
+        "raw_affiliation_strings": ["Microsoft, USA"], "raw_orcid": null, "affiliations":
+        [{"raw_affiliation_string": "Microsoft, USA", "institution_ids": ["https://openalex.org/I1290206253"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5031659418",
+        "display_name": "Sheng\u2010Yu Fu", "orcid": "https://orcid.org/0009-0000-0879-4771",
+        "observed_orcids": ["https://orcid.org/0009-0000-0879-4771", "https://orcid.org/0000-0002-0893-2430"]},
+        "institutions": [{"id": "https://openalex.org/I1290206253", "display_name":
+        "Microsoft (United States)", "ror": "https://ror.org/00d0nc645", "country_code":
+        "US", "type": "company", "lineage": ["https://openalex.org/I1290206253"]}],
+        "countries": ["US"], "is_corresponding": false, "raw_author_name": "Shengyu
+        Fu", "raw_affiliation_strings": ["Microsoft, USA"], "raw_orcid": null, "affiliations":
+        [{"raw_affiliation_string": "Microsoft, USA", "institution_ids": ["https://openalex.org/I1290206253"]}]},
+        {"author_position": "last", "author": {"id": "https://openalex.org/A5085284883",
+        "display_name": "Neel Sundaresan", "orcid": "https://orcid.org/0000-0002-0394-7588",
+        "observed_orcids": ["https://orcid.org/0000-0002-0394-7588"]}, "institutions":
+        [{"id": "https://openalex.org/I1290206253", "display_name": "Microsoft (United
+        States)", "ror": "https://ror.org/00d0nc645", "country_code": "US", "type":
+        "company", "lineage": ["https://openalex.org/I1290206253"]}], "countries":
+        ["US"], "is_corresponding": false, "raw_author_name": "Neel Sundaresan", "raw_affiliation_strings":
+        ["Microsoft, USA"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "Microsoft, USA", "institution_ids": ["https://openalex.org/I1290206253"]}]}],
+        "primary_location": {"id": "doi:10.1145/3540250.3549081", "doi": "https://doi.org/10.1145/3540250.3549081",
+        "is_oa": false, "landing_page_url": "https://doi.org/10.1145/3540250.3549081",
+        "pdf_url": null, "source": {"id": "https://openalex.org/S4363608883", "display_name":
+        "ACM Joint European Software Engineering Conference and Symposium on the Foundations
+        of Software Engineering (ESEC/FSE)", "issn_l": null, "issn": null, "is_oa":
+        false, "is_in_doaj": false, "is_core": false, "listed_in": [], "host_organization":
+        "https://openalex.org/P4310319798", "host_organization_name": "Association
+        for Computing Machinery", "host_organization_lineage": ["https://openalex.org/P4310319798"],
+        "host_organization_lineage_names": ["Association for Computing Machinery"],
+        "type": "conference"}, "license": null, "license_id": null, "version": "publishedVersion",
+        "is_accepted": true, "is_published": true, "raw_source_name": "Proceedings
+        of the 30th ACM Joint European Software Engineering Conference and Symposium
+        on the Foundations of Software Engineering", "raw_type": "proceedings-article"},
+        "best_oa_location": {"id": "pmh:oai:arXiv.org:2203.09095", "doi": null, "is_oa":
+        true, "landing_page_url": "http://arxiv.org/abs/2203.09095", "pdf_url": "https://arxiv.org/pdf/2203.09095",
+        "source": {"id": "https://openalex.org/S4306400194", "display_name": "arXiv
+        (Cornell University)", "issn_l": "2331-8422", "issn": ["2331-8422"], "is_oa":
+        true, "is_in_doaj": false, "is_core": false, "listed_in": [], "host_organization":
+        "https://openalex.org/I205783295", "host_organization_name": "Cornell University",
+        "host_organization_lineage": ["https://openalex.org/I205783295"], "host_organization_lineage_names":
+        [], "type": "repository"}, "license": null, "license_id": null, "version":
+        "submittedVersion", "is_accepted": false, "is_published": false, "raw_source_name":
+        null, "raw_type": "text"}, "biblio": {"volume": null, "issue": null, "first_page":
+        "1035", "last_page": "1047"}, "abstract_inverted_index": {"Code": [0], "review":
+        [1, 21, 69, 86, 134, 149, 156], "is": [2, 61], "an": [3], "essential": [4],
+        "part": [5], "to": [6, 32, 47, 65, 147], "software": [7], "development": [8],
+        "lifecycle": [9], "since": [10], "it": [11, 60], "aims": [12], "at": [13],
+        "guaranteeing": [14], "the": [15, 30, 54, 67, 81, 84, 106, 132, 192, 209,
+        214, 217], "quality": [16, 154], "of": [17, 56, 93, 105, 219], "codes.": [18],
+        "Modern": [19], "code": [20, 55, 68, 85, 95, 98, 114, 133, 148, 152, 160,
+        220], "activities": [22], "necessitate": [23], "developers": [24, 45], "viewing,":
+        [25], "understanding": [26, 218], "and": [27, 38, 97, 116, 159, 178, 208,
+        222], "even": [28], "running": [29], "programs": [31], "assess": [33], "logic,":
+        [34], "functionality,": [35], "latency,": [36], "style": [37], "other": [39],
+        "factors.": [40], "It": [41], "turns": [42], "out": [43], "that": [44, 124,
+        188, 203], "have": [46], "spend": [48], "far": [49], "too": [50], "much":
+        [51], "time": [52], "reviewing": [53], "their": [57], "peers.": [58], "Accordingly,":
+        [59], "in": [62, 83, 103, 197], "significant": [63], "demand": [64], "automate":
+        [66], "process.": [70], "In": [71], "this": [72], "research,": [73], "we":
+        [74, 118, 140, 163], "focus": [75, 141], "on": [76, 142, 170, 182, 216], "utilizing":
+        [77], "pre-training": [78, 127, 195, 206, 211], "techniques": [79], "for":
+        [80, 131, 174], "tasks": [82, 128, 145, 177, 207], "scenario.": [87, 135],
+        "We": [88], "collect": [89], "a": [90, 121, 165], "large-scale": [91], "dataset":
+        [92, 168, 212], "real-world": [94], "changes": [96, 221], "reviews": [99],
+        "from": [100], "open-source": [101], "projects": [102], "nine": [104], "most":
+        [107], "popular": [108], "programming": [109], "languages.": [110], "To":
+        [111, 136], "better": [112], "understand": [113], "diffs": [115], "reviews,":
+        [117], "propose": [119], "CodeReviewer,": [120], "pre-trained": [122], "model":
+        [123, 190, 215], "utilizes": [125], "four": [126], "tailored": [129], "specifically":
+        [130], "evaluate": [137], "our": [138, 171, 189, 204], "model,": [139], "three":
+        [143, 176], "key": [144], "related": [146], "activities,": [150], "including":
+        [151], "change": [153], "estimation,": [155], "comment": [157], "generation":
+        [158], "refinement.": [161], "Furthermore,": [162], "establish": [164], "high-quality":
+        [166], "benchmark": [167], "based": [169], "collected": [172], "data": [173],
+        "these": [175], "conduct": [179], "comprehensive": [180], "experiments": [181],
+        "it.": [183], "The": [184], "experimental": [185], "results": [186], "demonstrate":
+        [187], "outperforms": [191], "previous": [193], "state-of-the-art": [194],
+        "approaches": [196], "all": [198], "tasks.": [199], "Further": [200], "analysis":
+        [201], "show": [202], "proposed": [205], "multilingual": [210], "benefit":
+        [213], "reviews.": [223]}}, {"id": "https://openalex.org/W4284709233", "doi":
+        "https://doi.org/10.1145/3510003.3510621", "title": "Using pre-trained models
+        to boost code review automation", "publication_year": 2022, "type": "conference-paper",
+        "language": "en", "cited_by_count": 240, "is_retracted": false, "authorships":
+        [{"author_position": "first", "author": {"id": "https://openalex.org/A5079385464",
+        "display_name": "Rosalia Tufano", "orcid": "https://orcid.org/0009-0009-7017-3066",
+        "observed_orcids": ["https://orcid.org/0009-0009-7017-3066"]}, "institutions":
+        [{"id": "https://openalex.org/I57201433", "display_name": "Universit\u00e0
+        della Svizzera italiana", "ror": "https://ror.org/03c4atk17", "country_code":
+        "CH", "type": "education", "lineage": ["https://openalex.org/I57201433"]}],
+        "countries": ["CH"], "is_corresponding": false, "raw_author_name": "Rosalia
+        Tufano", "raw_affiliation_strings": ["Universit\u00e0 della Svizzera italiana,
+        Switzerland"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "Universit\u00e0 della Svizzera italiana, Switzerland", "institution_ids":
+        ["https://openalex.org/I57201433"]}]}, {"author_position": "middle", "author":
+        {"id": "https://openalex.org/A5084884112", "display_name": "Simone Masiero",
+        "orcid": null, "observed_orcids": []}, "institutions": [{"id": "https://openalex.org/I57201433",
+        "display_name": "Universit\u00e0 della Svizzera italiana", "ror": "https://ror.org/03c4atk17",
+        "country_code": "CH", "type": "education", "lineage": ["https://openalex.org/I57201433"]}],
+        "countries": ["CH"], "is_corresponding": false, "raw_author_name": "Simone
+        Masiero", "raw_affiliation_strings": ["Universit\u00e0 della Svizzera italiana,
+        Switzerland"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "Universit\u00e0 della Svizzera italiana, Switzerland", "institution_ids":
+        ["https://openalex.org/I57201433"]}]}, {"author_position": "middle", "author":
+        {"id": "https://openalex.org/A5069505458", "display_name": "Antonio Mastropaolo",
+        "orcid": "https://orcid.org/0000-0002-7965-7712", "observed_orcids": ["https://orcid.org/0000-0002-7965-7712"]},
+        "institutions": [{"id": "https://openalex.org/I57201433", "display_name":
+        "Universit\u00e0 della Svizzera italiana", "ror": "https://ror.org/03c4atk17",
+        "country_code": "CH", "type": "education", "lineage": ["https://openalex.org/I57201433"]}],
+        "countries": ["CH"], "is_corresponding": false, "raw_author_name": "Antonio
+        Mastropaolo", "raw_affiliation_strings": ["Universit\u00e0 della Svizzera
+        italiana, Switzerland"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "Universit\u00e0 della Svizzera italiana, Switzerland", "institution_ids":
+        ["https://openalex.org/I57201433"]}]}, {"author_position": "middle", "author":
+        {"id": "https://openalex.org/A5060494552", "display_name": "Luca Pascarella",
+        "orcid": "https://orcid.org/0000-0001-8289-7736", "observed_orcids": ["https://orcid.org/0000-0001-8289-7736"]},
+        "institutions": [{"id": "https://openalex.org/I57201433", "display_name":
+        "Universit\u00e0 della Svizzera italiana", "ror": "https://ror.org/03c4atk17",
+        "country_code": "CH", "type": "education", "lineage": ["https://openalex.org/I57201433"]}],
+        "countries": ["CH"], "is_corresponding": false, "raw_author_name": "Luca Pascarella",
+        "raw_affiliation_strings": ["Universit\u00e0 della Svizzera italiana, Switzerland"],
+        "raw_orcid": null, "affiliations": [{"raw_affiliation_string": "Universit\u00e0
+        della Svizzera italiana, Switzerland", "institution_ids": ["https://openalex.org/I57201433"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5041262116",
+        "display_name": "Denys Poshyvanyk", "orcid": "https://orcid.org/0000-0002-5626-7586",
+        "observed_orcids": ["https://orcid.org/0000-0002-5626-7586"]}, "institutions":
+        [{"id": "https://openalex.org/I16285277", "display_name": "William & Mary",
+        "ror": "https://ror.org/03hsf0573", "country_code": "US", "type": "education",
+        "lineage": ["https://openalex.org/I16285277"]}], "countries": ["US"], "is_corresponding":
+        false, "raw_author_name": "Denys Poshyvanyk", "raw_affiliation_strings": ["William
+        and Mary"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "William and Mary", "institution_ids": ["https://openalex.org/I16285277"]}]},
+        {"author_position": "last", "author": {"id": "https://openalex.org/A5056526226",
+        "display_name": "Gabriele Bavota", "orcid": "https://orcid.org/0000-0002-2216-3148",
+        "observed_orcids": ["https://orcid.org/0000-0002-2216-3148"]}, "institutions":
+        [{"id": "https://openalex.org/I57201433", "display_name": "Universit\u00e0
+        della Svizzera italiana", "ror": "https://ror.org/03c4atk17", "country_code":
+        "CH", "type": "education", "lineage": ["https://openalex.org/I57201433"]}],
+        "countries": ["CH"], "is_corresponding": false, "raw_author_name": "Gabriele
+        Bavota", "raw_affiliation_strings": ["Universit\u00e0 della Svizzera italiana,
+        Switzerland"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "Universit\u00e0 della Svizzera italiana, Switzerland", "institution_ids":
+        ["https://openalex.org/I57201433"]}]}], "primary_location": {"id": "doi:10.1145/3510003.3510621",
+        "doi": "https://doi.org/10.1145/3510003.3510621", "is_oa": false, "landing_page_url":
+        "https://doi.org/10.1145/3510003.3510621", "pdf_url": null, "source": {"id":
+        "https://openalex.org/S4210203175", "display_name": "ACM/IEEE International
+        Conference on Software Engineering: Companion Proceedings (ICSE-Companion)",
+        "issn_l": "0270-5257", "issn": ["0270-5257", "1558-1225"], "is_oa": false,
+        "is_in_doaj": false, "is_core": true, "listed_in": ["cwts-core", "norway-2"],
+        "host_organization": "https://openalex.org/P4310319808", "host_organization_name":
+        "Institute of Electrical and Electronics Engineers", "host_organization_lineage":
+        ["https://openalex.org/P4310319808"], "host_organization_lineage_names": ["Institute
+        of Electrical and Electronics Engineers"], "type": "conference"}, "license":
+        null, "license_id": null, "version": "publishedVersion", "is_accepted": true,
+        "is_published": true, "raw_source_name": "Proceedings of the 44th International
+        Conference on Software Engineering", "raw_type": "proceedings-article"}, "best_oa_location":
+        {"id": "pmh:oai:arXiv.org:2201.06850", "doi": null, "is_oa": true, "landing_page_url":
+        "http://arxiv.org/abs/2201.06850", "pdf_url": "https://arxiv.org/pdf/2201.06850",
+        "source": {"id": "https://openalex.org/S4306400194", "display_name": "arXiv
+        (Cornell University)", "issn_l": "2331-8422", "issn": ["2331-8422"], "is_oa":
+        true, "is_in_doaj": false, "is_core": false, "listed_in": [], "host_organization":
+        "https://openalex.org/I205783295", "host_organization_name": "Cornell University",
+        "host_organization_lineage": ["https://openalex.org/I205783295"], "host_organization_lineage_names":
+        [], "type": "repository"}, "license": null, "license_id": null, "version":
+        "submittedVersion", "is_accepted": false, "is_published": false, "raw_source_name":
+        null, "raw_type": "text"}, "biblio": {"volume": null, "issue": null, "first_page":
+        "2291", "last_page": "2302"}, "abstract_inverted_index": {"Code": [0], "review":
+        [1, 30, 55, 110, 162, 180], "is": [2], "a": [3, 19, 51, 66, 77, 147, 170],
+        "practice": [4], "widely": [5], "adopted": [6], "in": [7, 58, 81, 106], "open":
+        [8], "source": [9], "and": [10, 56, 76, 84, 131, 172], "industrial": [11],
+        "projects.": [12], "Given": [13], "the": [14, 24, 40, 45, 68, 73, 87, 91,
+        94, 114, 122, 129, 132], "non-negligible": [15], "cost": [16], "of": [17,
+        26, 42, 141, 178], "such": [18], "process,": [20], "researchers": [21], "started":
+        [22], "investigating": [23], "possibility": [25], "automating": [27, 160],
+        "specific": [28], "code": [29, 52, 75, 109, 161, 179], "tasks.": [31, 163],
+        "We": [32], "recently": [33], "proposed": [34], "Deep": [35], "Learning":
+        [36], "(DL)": [37], "models": [38, 102, 158], "targeting": [39], "automation":
+        [41], "two": [43], "tasks:": [44], "first": [46], "model": [47, 153], "takes":
+        [48, 70], "as": [49, 71], "input": [50, 72], "submitted": [53, 74], "for":
+        [54, 159], "implements": [57, 86], "it": [59], "changes": [60], "likely":
+        [61], "to": [62, 121], "be": [63], "recommended": [64], "by": [65, 90, 144],
+        "reviewer;": [67], "second": [69], "reviewer": [78], "comment": [79], "posted":
+        [80], "natural": [82], "language": [83], "automatically": [85], "change":
+        [88], "required": [89], "reviewer.": [92], "While": [93], "preliminary": [95],
+        "results": [96], "we": [97, 124, 137, 165], "achieved": [98], "are": [99],
+        "encouraging,": [100], "both": [101, 128], "had": [103], "been": [104], "tested":
+        [105], "rather": [107], "simple": [108], "scenarios,": [111], "substantially":
+        [112], "simplifying": [113], "targeted": [115], "problem.": [116], "This":
+        [117], "was": [118], "also": [119], "due": [120], "choices": [123], "made":
+        [125], "when": [126], "designing": [127], "technique": [130], "experiments.":
+        [133], "In": [134], "this": [135], "paper,": [136], "build": [138], "on":
+        [139, 169], "top": [140], "that": [142, 146], "work": [143], "demonstrating":
+        [145], "pre-trained": [148], "Text-To-Text": [149], "Transfer": [150], "Transformer":
+        [151], "(T5)": [152], "can": [154], "outperform": [155], "previous": [156],
+        "DL": [157], "Also,": [164], "conducted": [166], "our": [167], "experiments":
+        [168], "larger": [171], "more": [173], "realistic": [174], "(and": [175],
+        "challenging)": [176], "dataset": [177], "activities.": [181]}}, {"id": "https://openalex.org/W4388212670",
+        "doi": "https://doi.org/10.1109/issre59848.2023.00026", "title": "LLaMA-Reviewer:
+        Advancing Code Review Automation with Large Language Models through Parameter-Efficient
+        Fine-Tuning", "publication_year": 2023, "type": "conference-paper", "language":
+        "en", "cited_by_count": 174, "is_retracted": false, "authorships": [{"author_position":
+        "first", "author": {"id": "https://openalex.org/A5101680899", "display_name":
+        "Junyi Lu", "orcid": "https://orcid.org/0009-0008-2174-8866", "observed_orcids":
+        ["https://orcid.org/0009-0008-2174-8866", "https://orcid.org/0009-0002-5381-1790"]},
+        "institutions": [{"id": "https://openalex.org/I19820366", "display_name":
+        "Chinese Academy of Sciences", "ror": "https://ror.org/034t30j35", "country_code":
+        "CN", "type": "government", "lineage": ["https://openalex.org/I19820366"]},
+        {"id": "https://openalex.org/I4210128818", "display_name": "Institute of Software",
+        "ror": "https://ror.org/033dfsn42", "country_code": "CN", "type": "facility",
+        "lineage": ["https://openalex.org/I19820366", "https://openalex.org/I4210128818"]},
+        {"id": "https://openalex.org/I4210165038", "display_name": "University of
+        Chinese Academy of Sciences", "ror": "https://ror.org/05qbk4x57", "country_code":
+        "CN", "type": "education", "lineage": ["https://openalex.org/I19820366", "https://openalex.org/I4210165038"]}],
+        "countries": ["CN"], "is_corresponding": false, "raw_author_name": "Junyi
+        Lu", "raw_affiliation_strings": ["Institute of Software,Chinese Academy of
+        Sciences,Beijing,China", "Chinese Academy of Sciences, Institute of Software,
+        Beijing, China", "University of Chinese Academy of Sciences, Beijing, China"],
+        "raw_orcid": null, "affiliations": [{"raw_affiliation_string": "Institute
+        of Software,Chinese Academy of Sciences,Beijing,China", "institution_ids":
+        ["https://openalex.org/I19820366", "https://openalex.org/I4210128818"]}, {"raw_affiliation_string":
+        "Chinese Academy of Sciences, Institute of Software, Beijing, China", "institution_ids":
+        ["https://openalex.org/I19820366", "https://openalex.org/I4210128818"]}, {"raw_affiliation_string":
+        "University of Chinese Academy of Sciences, Beijing, China", "institution_ids":
+        ["https://openalex.org/I4210165038"]}]}, {"author_position": "middle", "author":
+        {"id": null, "display_name": "Lei Yu", "orcid": null, "observed_orcids": []},
+        "institutions": [{"id": "https://openalex.org/I19820366", "display_name":
+        "Chinese Academy of Sciences", "ror": "https://ror.org/034t30j35", "country_code":
+        "CN", "type": "government", "lineage": ["https://openalex.org/I19820366"]},
+        {"id": "https://openalex.org/I4210128818", "display_name": "Institute of Software",
+        "ror": "https://ror.org/033dfsn42", "country_code": "CN", "type": "facility",
+        "lineage": ["https://openalex.org/I19820366", "https://openalex.org/I4210128818"]},
+        {"id": "https://openalex.org/I4210165038", "display_name": "University of
+        Chinese Academy of Sciences", "ror": "https://ror.org/05qbk4x57", "country_code":
+        "CN", "type": "education", "lineage": ["https://openalex.org/I19820366", "https://openalex.org/I4210165038"]}],
+        "countries": ["CN"], "is_corresponding": false, "raw_author_name": "Lei Yu",
+        "raw_affiliation_strings": ["Institute of Software,Chinese Academy of Sciences,Beijing,China",
+        "Chinese Academy of Sciences, Institute of Software, Beijing, China", "University
+        of Chinese Academy of Sciences, Beijing, China"], "raw_orcid": null, "affiliations":
+        [{"raw_affiliation_string": "Institute of Software,Chinese Academy of Sciences,Beijing,China",
+        "institution_ids": ["https://openalex.org/I19820366", "https://openalex.org/I4210128818"]},
+        {"raw_affiliation_string": "Chinese Academy of Sciences, Institute of Software,
+        Beijing, China", "institution_ids": ["https://openalex.org/I19820366", "https://openalex.org/I4210128818"]},
+        {"raw_affiliation_string": "University of Chinese Academy of Sciences, Beijing,
+        China", "institution_ids": ["https://openalex.org/I4210165038"]}]}, {"author_position":
+        "middle", "author": {"id": "https://openalex.org/A5078844764", "display_name":
+        "LI Xiao-jia", "orcid": null, "observed_orcids": []}, "institutions": [{"id":
+        "https://openalex.org/I99065089", "display_name": "Tsinghua University", "ror":
+        "https://ror.org/03cve4549", "country_code": "CN", "type": "education", "lineage":
+        ["https://openalex.org/I99065089"]}], "countries": ["CN"], "is_corresponding":
+        false, "raw_author_name": "Xiaojia Li", "raw_affiliation_strings": ["Tsinghua
+        University,School of Software,Beijing,China", "School of Software, Tsinghua
+        University, Beijing, China"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "Tsinghua University,School of Software,Beijing,China", "institution_ids":
+        ["https://openalex.org/I99065089"]}, {"raw_affiliation_string": "School of
+        Software, Tsinghua University, Beijing, China", "institution_ids": ["https://openalex.org/I99065089"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5100421407",
+        "display_name": "Yang Li", "orcid": "https://orcid.org/0000-0002-0403-7287",
+        "observed_orcids": ["https://orcid.org/0000-0002-0403-7287"]}, "institutions":
+        [{"id": "https://openalex.org/I19820366", "display_name": "Chinese Academy
+        of Sciences", "ror": "https://ror.org/034t30j35", "country_code": "CN", "type":
+        "government", "lineage": ["https://openalex.org/I19820366"]}, {"id": "https://openalex.org/I4210128818",
+        "display_name": "Institute of Software", "ror": "https://ror.org/033dfsn42",
+        "country_code": "CN", "type": "facility", "lineage": ["https://openalex.org/I19820366",
+        "https://openalex.org/I4210128818"]}], "countries": ["CN"], "is_corresponding":
+        false, "raw_author_name": "Li Yang", "raw_affiliation_strings": ["Institute
+        of Software,Chinese Academy of Sciences,Beijing,China", "Chinese Academy of
+        Sciences, Institute of Software, Beijing, China"], "raw_orcid": null, "affiliations":
+        [{"raw_affiliation_string": "Institute of Software,Chinese Academy of Sciences,Beijing,China",
+        "institution_ids": ["https://openalex.org/I19820366", "https://openalex.org/I4210128818"]},
+        {"raw_affiliation_string": "Chinese Academy of Sciences, Institute of Software,
+        Beijing, China", "institution_ids": ["https://openalex.org/I19820366", "https://openalex.org/I4210128818"]}]},
+        {"author_position": "last", "author": {"id": "https://openalex.org/A5109622633",
+        "display_name": "Chun Zuo", "orcid": null, "observed_orcids": []}, "institutions":
+        [], "countries": [], "is_corresponding": false, "raw_author_name": "Chun Zuo",
+        "raw_affiliation_strings": ["Sinosoft Company Limited, Beijing, China"], "raw_orcid":
+        null, "affiliations": [{"raw_affiliation_string": "Sinosoft Company Limited,
+        Beijing, China", "institution_ids": []}]}], "primary_location": {"id": "doi:10.1109/issre59848.2023.00026",
+        "doi": "https://doi.org/10.1109/issre59848.2023.00026", "is_oa": false, "landing_page_url":
+        "https://doi.org/10.1109/issre59848.2023.00026", "pdf_url": null, "source":
+        {"id": "https://openalex.org/S4210220341", "display_name": "Proceedings/Proceedings
+        - International Symposium on Software Reliability Engineering", "issn_l":
+        "1071-9458", "issn": ["1071-9458", "2332-6549"], "is_oa": false, "is_in_doaj":
+        false, "is_core": true, "listed_in": ["cwts-core", "jufo-1", "norway-1"],
+        "host_organization": "https://openalex.org/P4310319808", "host_organization_name":
+        "Institute of Electrical and Electronics Engineers", "host_organization_lineage":
+        ["https://openalex.org/P4310319808"], "host_organization_lineage_names": ["Institute
+        of Electrical and Electronics Engineers"], "type": "conference"}, "license":
+        null, "license_id": null, "version": "publishedVersion", "is_accepted": true,
+        "is_published": true, "raw_source_name": "2023 IEEE 34th International Symposium
+        on Software Reliability Engineering (ISSRE)", "raw_type": "proceedings-article"},
+        "best_oa_location": {"id": "pmh:oai:arXiv.org:2308.11148", "doi": null, "is_oa":
+        true, "landing_page_url": "http://arxiv.org/abs/2308.11148", "pdf_url": "https://arxiv.org/pdf/2308.11148",
+        "source": {"id": "https://openalex.org/S4306400194", "display_name": "arXiv
+        (Cornell University)", "issn_l": "2331-8422", "issn": ["2331-8422"], "is_oa":
+        true, "is_in_doaj": false, "is_core": false, "listed_in": [], "host_organization":
+        "https://openalex.org/I205783295", "host_organization_name": "Cornell University",
+        "host_organization_lineage": ["https://openalex.org/I205783295"], "host_organization_lineage_names":
+        [], "type": "repository"}, "license": null, "license_id": null, "version":
+        "submittedVersion", "is_accepted": false, "is_published": false, "raw_source_name":
+        null, "raw_type": "text"}, "biblio": {"volume": null, "issue": null, "first_page":
+        "647", "last_page": "658"}, "abstract_inverted_index": {"The": [0], "automation":
+        [1], "of": [2, 79, 87, 91, 109, 114, 133, 140, 147, 158], "code": [3, 58,
+        88, 180], "review": [4, 59], "activities,": [5], "a": [6, 81, 137], "long-standing":
+        [7], "pursuit": [8], "in": [9, 84, 176], "software": [10], "engineering,":
+        [11], "has": [12], "been": [13, 186], "primarily": [14], "addressed": [15],
+        "by": [16], "numerous": [17], "domain-specific": [18, 51], "pre-trained":
+        [19], "models.": [20], "Despite": [21], "their": [22, 45, 54], "success,":
+        [23], "these": [24], "models": [25], "frequently": [26], "demand": [27], "extensive":
+        [28, 112], "resources": [29], "for": [30, 56], "pre-training": [31], "from":
+        [32], "scratch.": [33], "In": [34], "contrast,": [35], "Large": [36], "Language":
+        [37], "Models": [38], "(LLMs)": [39], "provide": [40, 153], "an": [41, 72],
+        "intriguing": [42], "alternative,": [43], "given": [44], "remarkable": [46],
+        "capabilities": [47, 78], "when": [48], "supplemented": [49], "with": [50,
+        126], "knowledge.": [52], "However,": [53], "potential": [55], "automating":
+        [57], "tasks": [60], "remains": [61], "largely": [62], "unexplored.In": [63],
+        "response": [64], "to": [65], "this": [66, 94, 177], "research": [67], "gap,":
+        [68], "we": [69], "present": [70], "LLaMA-Reviewer,": [71], "innovative":
+        [73], "framework": [74, 95], "that": [75], "leverages": [76], "the": [77,
+        85, 127, 145, 156, 179], "LLaMA,": [80], "popular": [82], "LLM,": [83], "realm":
+        [86], "review.": [89], "Mindful": [90], "resource": [92], "constraints,":
+        [93], "employs": [96], "parameter-efficient": [97], "fine-tuning": [98, 160],
+        "(PEFT)": [99], "methods,": [100], "delivering": [101], "high": [102], "performance":
+        [103, 146], "while": [104], "using": [105], "less": [106], "than": [107],
+        "1%": [108], "trainable": [110], "parameters.An": [111], "evaluation": [113],
+        "LLaMA-Reviewer": [115, 143], "is": [116], "conducted": [117], "on": [118],
+        "two": [119], "diverse,": [120], "publicly": [121], "available": [122], "datasets.":
+        [123], "Notably,": [124], "even": [125], "smallest": [128], "LLaMA": [129],
+        "base": [130], "model": [131], "consisting": [132], "6.7B": [134], "parameters":
+        [135], "and": [136, 168, 181], "limited": [138], "number": [139], "tuning":
+        [141], "epochs,": [142], "equals": [144], "existing": [148], "code-review-focused":
+        [149], "models.The": [150], "ablation": [151], "experiments": [152], "insights":
+        [154], "into": [155], "influence": [157], "various": [159], "process": [161],
+        "components,": [162], "including": [163], "input": [164], "representation,":
+        [165], "instruction": [166], "tuning,": [167], "different": [169], "PEFT":
+        [170], "methods.": [171], "To": [172], "foster": [173], "continuous": [174],
+        "progress": [175], "field,": [178], "all": [182], "PEFT-weight": [183], "plugins":
+        [184], "have": [185], "made": [187], "open-source.": [188]}}, {"id": "https://openalex.org/W2899099075",
+        "doi": "https://doi.org/10.1145/3274404", "title": "Information Needs in Contemporary
+        Code Review", "publication_year": 2018, "type": "article", "language": "en",
+        "cited_by_count": 135, "is_retracted": false, "authorships": [{"author_position":
+        "first", "author": {"id": "https://openalex.org/A5060494552", "display_name":
+        "Luca Pascarella", "orcid": "https://orcid.org/0000-0001-8289-7736", "observed_orcids":
+        ["https://orcid.org/0000-0001-8289-7736"]}, "institutions": [{"id": "https://openalex.org/I98358874",
+        "display_name": "Delft University of Technology", "ror": "https://ror.org/02e2c7k09",
+        "country_code": "NL", "type": "education", "lineage": ["https://openalex.org/I98358874"]}],
+        "countries": ["NL"], "is_corresponding": false, "raw_author_name": "Luca Pascarella",
+        "raw_affiliation_strings": ["Delft University of Technology, Delft, Netherlands"],
+        "raw_orcid": null, "affiliations": [{"raw_affiliation_string": "Delft University
+        of Technology, Delft, Netherlands", "institution_ids": ["https://openalex.org/I98358874"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5034025036",
+        "display_name": "Davide Spadini", "orcid": "https://orcid.org/0000-0003-2997-1890",
+        "observed_orcids": ["https://orcid.org/0000-0003-2997-1890"]}, "institutions":
+        [], "countries": [], "is_corresponding": false, "raw_author_name": "Davide
+        Spadini", "raw_affiliation_strings": ["Software Improvement Group, Amsterdam,
+        Netherlands"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "Software Improvement Group, Amsterdam, Netherlands", "institution_ids": []}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5033738898",
+        "display_name": "Fabio Palomba", "orcid": "https://orcid.org/0000-0001-9337-5116",
+        "observed_orcids": ["https://orcid.org/0000-0001-9337-5116"]}, "institutions":
+        [{"id": "https://openalex.org/I202697423", "display_name": "University of
+        Zurich", "ror": "https://ror.org/02crff812", "country_code": "CH", "type":
+        "education", "lineage": ["https://openalex.org/I202697423"]}], "countries":
+        ["CH"], "is_corresponding": false, "raw_author_name": "Fabio Palomba", "raw_affiliation_strings":
+        ["University of Zurich, Zurich, Switzerland"], "raw_orcid": null, "affiliations":
+        [{"raw_affiliation_string": "University of Zurich, Zurich, Switzerland", "institution_ids":
+        ["https://openalex.org/I202697423"]}]}, {"author_position": "middle", "author":
+        {"id": "https://openalex.org/A5103139734", "display_name": "Magiel Bruntink",
+        "orcid": "https://orcid.org/0000-0002-6117-6347", "observed_orcids": ["https://orcid.org/0000-0002-6117-6347"]},
+        "institutions": [], "countries": [], "is_corresponding": false, "raw_author_name":
+        "Magiel Bruntink", "raw_affiliation_strings": ["Software Improvement Group,
+        Amsterdam, Netherlands"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "Software Improvement Group, Amsterdam, Netherlands", "institution_ids": []}]},
+        {"author_position": "last", "author": {"id": "https://openalex.org/A5082720005",
+        "display_name": "Alberto Bacchelli", "orcid": "https://orcid.org/0000-0003-0193-6823",
+        "observed_orcids": ["https://orcid.org/0000-0003-0193-6823"]}, "institutions":
+        [{"id": "https://openalex.org/I202697423", "display_name": "University of
+        Zurich", "ror": "https://ror.org/02crff812", "country_code": "CH", "type":
+        "education", "lineage": ["https://openalex.org/I202697423"]}], "countries":
+        ["CH"], "is_corresponding": false, "raw_author_name": "Alberto Bacchelli",
+        "raw_affiliation_strings": ["University of Zurich, Zurich, Switzerland"],
+        "raw_orcid": null, "affiliations": [{"raw_affiliation_string": "University
+        of Zurich, Zurich, Switzerland", "institution_ids": ["https://openalex.org/I202697423"]}]}],
+        "primary_location": {"id": "doi:10.1145/3274404", "doi": "https://doi.org/10.1145/3274404",
+        "is_oa": false, "landing_page_url": "https://doi.org/10.1145/3274404", "pdf_url":
+        null, "source": {"id": "https://openalex.org/S4210183893", "display_name":
+        "Proceedings of the ACM on Human-Computer Interaction", "issn_l": "2573-0142",
+        "issn": ["2573-0142"], "is_oa": false, "is_in_doaj": false, "is_core": true,
+        "listed_in": ["ccf-c", "cwts-core", "jufo-2", "norway-1", "poland-20", "russia-white-list-1",
+        "vabb-shw"], "host_organization": "https://openalex.org/P4310319798", "host_organization_name":
+        "Association for Computing Machinery", "host_organization_lineage": ["https://openalex.org/P4310319798"],
+        "host_organization_lineage_names": ["Association for Computing Machinery"],
+        "type": "journal"}, "license": null, "license_id": null, "version": "publishedVersion",
+        "is_accepted": true, "is_published": true, "raw_source_name": "Proceedings
+        of the ACM on Human-Computer Interaction", "raw_type": "journal-article"},
+        "best_oa_location": {"id": "pmh:oai:www.zora.uzh.ch:197760", "doi": null,
+        "is_oa": true, "landing_page_url": "https://www.zora.uzh.ch/id/eprint/197760/1/cscw2018.pdf",
+        "pdf_url": "https://www.zora.uzh.ch/id/eprint/197760/1/cscw2018.pdf", "source":
+        {"id": "https://openalex.org/S4306401281", "display_name": "Zurich Open Repository
+        and Archive (University of Zurich)", "issn_l": null, "issn": null, "is_oa":
+        false, "is_in_doaj": false, "is_core": false, "listed_in": [], "host_organization":
+        "https://openalex.org/I202697423", "host_organization_name": "University of
+        Zurich", "host_organization_lineage": ["https://openalex.org/I202697423"],
+        "host_organization_lineage_names": [], "type": "repository"}, "license": "other-oa",
+        "license_id": "https://openalex.org/licenses/other-oa", "version": "acceptedVersion",
+        "is_accepted": true, "is_published": false, "raw_source_name": "Pascarella,
+        Luca; Spadini, Davide; Palomba, Fabio; Bruntink, Magiel; Bacchelli, Alberto
+        (2018). Information Needs in Contemporary Code Review. PACM on Human-Computer
+        Interaction, 2:135.", "raw_type": "info:eu-repo/semantics/article"}, "biblio":
+        {"volume": "2", "issue": "CSCW", "first_page": "1", "last_page": "27"}, "abstract_inverted_index":
+        {"Contemporary": [0], "code": [1, 23, 51, 81, 106, 150, 191, 204], "review":
+        [2, 24, 82, 107, 151, 205], "is": [3, 84], "a": [4, 49, 79, 110, 135, 166],
+        "widespread": [5], "practice": [6], "used": [7], "by": [8, 105, 163], "software":
+        [9, 14], "engineers": [10], "to": [11, 47, 53, 137], "maintain": [12], "high":
+        [13], "quality": [15], "and": [16, 27, 58, 61, 70, 89, 93, 122, 158, 186,
+        211], "share": [17], "project": [18], "knowledge.": [19], "However,": [20],
+        "conducting": [21], "proper": [22, 50], "takes": [25], "time": [26, 32], "developers":
+        [28, 66], "often": [29], "have": [30], "limited": [31], "for": [33, 120],
+        "review.": [34, 193], "In": [35, 95, 124], "this": [36, 56, 125, 130], "paper,":
+        [37, 126], "we": [38, 127, 198], "aim": [39], "at": [40], "investigating":
+        [41], "the": [42, 98, 142, 172, 182, 190, 212], "information": [43, 114, 133,
+        177], "that": [44, 78, 102, 115], "reviewers": [45, 88], "need": [46], "conduct":
+        [48], "review,": [52], "better": [54, 208], "understand": [55], "process":
+        [57, 83], "how": [59], "research": [60, 121], "tool": [62], "support": [63,
+        209], "can": [64, 116, 207], "make": [65], "become": [67], "more": [68], "effective":
+        [69], "efficient": [71], "reviewers.": [72], "Previous": [73], "work": [74],
+        "has": [75], "provided": [76], "evidence": [77], "successful": [80], "one":
+        [85], "in": [86, 161, 189, 201], "which": [87, 202], "authors": [90], "actively":
+        [91], "participate": [92], "collaborate.": [94], "these": [96, 196], "cases,":
+        [97], "threads": [99], "of": [100, 113, 132, 165, 174, 184], "discussions":
+        [101], "are": [103, 109], "saved": [104], "tools": [108, 206], "precious":
+        [111], "source": [112, 131], "be": [117], "later": [118], "exploited": [119],
+        "practice.": [123], "focus": [128], "on": [129, 141, 195], "as": [134, 180],
+        "way": [136], "gather": [138], "reliable": [139], "data": [140], "aforementioned":
+        [143], "reviewers''": [144], "needs.": [145], "We": [146], "manually": [147],
+        "analyze": [148], "900": [149], "comments": [152], "from": [153], "three":
+        [154], "large": [155], "open-source": [156], "projects": [157], "organize":
+        [159], "them": [160], "categories": [162], "means": [164], "card": [167],
+        "sort.": [168], "Our": [169], "results": [170, 197], "highlight": [171], "presence":
+        [173], "seven": [175], "high-level": [176], "needs,": [178], "such": [179],
+        "knowing": [181], "uses": [183], "methods": [185], "variables": [187], "declared/modified":
+        [188], "under": [192], "Based": [194], "suggest": [199], "ways": [200], "future":
+        [203], "collaboration": [210], "reviewing": [213], "task.": [214]}}, {"id":
+        "https://openalex.org/W4405556610", "doi": "https://doi.org/10.1007/s10664-024-10594-x",
+        "title": "Explainable automated debugging via large language model-driven
+        scientific debugging", "publication_year": 2024, "type": "article", "language":
+        "en", "cited_by_count": 119, "is_retracted": false, "authorships": [{"author_position":
+        "first", "author": {"id": "https://openalex.org/A5101607518", "display_name":
+        "Sungmin Kang", "orcid": "https://orcid.org/0000-0002-0298-5320", "observed_orcids":
+        ["https://orcid.org/0000-0002-0298-5320", "https://orcid.org/0000-0001-5758-2628"]},
+        "institutions": [{"id": "https://openalex.org/I157485424", "display_name":
+        "Korea Advanced Institute of Science and Technology", "ror": "https://ror.org/05apxxy63",
+        "country_code": "KR", "type": "education", "lineage": ["https://openalex.org/I157485424"]}],
+        "countries": ["KR"], "is_corresponding": true, "raw_author_name": "Sungmin
+        Kang", "raw_affiliation_strings": ["KAIST, Daejeon, South Korea"], "raw_orcid":
+        "https://orcid.org/0000-0002-0298-5320", "affiliations": [{"raw_affiliation_string":
+        "KAIST, Daejeon, South Korea", "institution_ids": ["https://openalex.org/I157485424"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5114950103",
+        "display_name": "Bei Chen", "orcid": "https://orcid.org/0009-0002-5805-3263",
+        "observed_orcids": ["https://orcid.org/0009-0002-5805-3263"]}, "institutions":
+        [{"id": "https://openalex.org/I4210113369", "display_name": "Microsoft Research
+        Asia (China)", "ror": "https://ror.org/0300m5276", "country_code": "CN", "type":
+        "company", "lineage": ["https://openalex.org/I1290206253", "https://openalex.org/I4210113369"]}],
+        "countries": ["CN"], "is_corresponding": true, "raw_author_name": "Bei Chen",
+        "raw_affiliation_strings": ["Microsoft Research Asia, Beijing, China"], "raw_orcid":
+        null, "affiliations": [{"raw_affiliation_string": "Microsoft Research Asia,
+        Beijing, China", "institution_ids": ["https://openalex.org/I4210113369"]}]},
+        {"author_position": "middle", "author": {"id": "https://openalex.org/A5070401254",
+        "display_name": "Shin Yoo", "orcid": "https://orcid.org/0000-0002-0836-6993",
+        "observed_orcids": ["https://orcid.org/0000-0002-0836-6993"]}, "institutions":
+        [{"id": "https://openalex.org/I157485424", "display_name": "Korea Advanced
+        Institute of Science and Technology", "ror": "https://ror.org/05apxxy63",
+        "country_code": "KR", "type": "education", "lineage": ["https://openalex.org/I157485424"]}],
+        "countries": ["KR"], "is_corresponding": true, "raw_author_name": "Shin Yoo",
+        "raw_affiliation_strings": ["KAIST, Daejeon, South Korea"], "raw_orcid": null,
+        "affiliations": [{"raw_affiliation_string": "KAIST, Daejeon, South Korea",
+        "institution_ids": ["https://openalex.org/I157485424"]}]}, {"author_position":
+        "last", "author": {"id": "https://openalex.org/A5025118710", "display_name":
+        "Jian\u2013Guang Lou", "orcid": "https://orcid.org/0000-0001-8496-033X", "observed_orcids":
+        ["https://orcid.org/0000-0001-8496-033X"]}, "institutions": [{"id": "https://openalex.org/I4210113369",
+        "display_name": "Microsoft Research Asia (China)", "ror": "https://ror.org/0300m5276",
+        "country_code": "CN", "type": "company", "lineage": ["https://openalex.org/I1290206253",
+        "https://openalex.org/I4210113369"]}], "countries": ["CN"], "is_corresponding":
+        true, "raw_author_name": "Jian-Guang Lou", "raw_affiliation_strings": ["Microsoft
+        Research Asia, Beijing, China"], "raw_orcid": null, "affiliations": [{"raw_affiliation_string":
+        "Microsoft Research Asia, Beijing, China", "institution_ids": ["https://openalex.org/I4210113369"]}]}],
+        "primary_location": {"id": "doi:10.1007/s10664-024-10594-x", "doi": "https://doi.org/10.1007/s10664-024-10594-x",
+        "is_oa": true, "landing_page_url": "https://doi.org/10.1007/s10664-024-10594-x",
+        "pdf_url": "https://link.springer.com/content/pdf/10.1007/s10664-024-10594-x.pdf",
+        "source": {"id": "https://openalex.org/S109852484", "display_name": "Empirical
+        Software Engineering", "issn_l": "1382-3256", "issn": ["1382-3256", "1573-7616"],
+        "is_oa": false, "is_in_doaj": false, "is_core": true, "listed_in": ["ccf-b",
+        "cwts-core", "dongbi-a", "jufo-3", "norway-2", "poland-140", "russia-white-list-1",
+        "vabb-shw"], "host_organization": "https://openalex.org/P4310319900", "host_organization_name":
+        "Springer Science+Business Media", "host_organization_lineage": ["https://openalex.org/P4310319900",
+        "https://openalex.org/P4310319965"], "host_organization_lineage_names": ["Springer
+        Science+Business Media", "Springer Nature"], "type": "journal"}, "license":
+        "cc-by", "license_id": "https://openalex.org/licenses/cc-by", "version": "publishedVersion",
+        "is_accepted": true, "is_published": true, "raw_source_name": "Empirical Software
+        Engineering", "raw_type": "journal-article"}, "best_oa_location": {"id": "doi:10.1007/s10664-024-10594-x",
+        "doi": "https://doi.org/10.1007/s10664-024-10594-x", "is_oa": true, "landing_page_url":
+        "https://doi.org/10.1007/s10664-024-10594-x", "pdf_url": "https://link.springer.com/content/pdf/10.1007/s10664-024-10594-x.pdf",
+        "source": {"id": "https://openalex.org/S109852484", "display_name": "Empirical
+        Software Engineering", "issn_l": "1382-3256", "issn": ["1382-3256", "1573-7616"],
+        "is_oa": false, "is_in_doaj": false, "is_core": true, "listed_in": ["ccf-b",
+        "cwts-core", "dongbi-a", "jufo-3", "norway-2", "poland-140", "russia-white-list-1",
+        "vabb-shw"], "host_organization": "https://openalex.org/P4310319900", "host_organization_name":
+        "Springer Science+Business Media", "host_organization_lineage": ["https://openalex.org/P4310319900",
+        "https://openalex.org/P4310319965"], "host_organization_lineage_names": ["Springer
+        Science+Business Media", "Springer Nature"], "type": "journal"}, "license":
+        "cc-by", "license_id": "https://openalex.org/licenses/cc-by", "version": "publishedVersion",
+        "is_accepted": true, "is_published": true, "raw_source_name": "Empirical Software
+        Engineering", "raw_type": "journal-article"}, "biblio": {"volume": "30", "issue":
+        "2", "first_page": null, "last_page": null}, "abstract_inverted_index": {"Abstract":
+        [0], "Automated": [1, 52], "debugging": [2, 22], "techniques": [3, 25], "have":
+        [4], "the": [5, 19, 42, 102, 196], "potential": [6], "to": [7, 28, 65, 71,
+        82, 90, 109, 152, 160], "reduce": [8], "developer": [9, 111], "effort": [10],
+        "in": [11, 140, 167], "debugging.": [12], "However,": [13], "while": [14],
+        "developers": [15, 44], "want": [16], "rationales": [17], "for": [18], "provided":
+        [20], "automatic": [21], "results,": [23], "existing": [24], "are": [26],
+        "ill-suited": [27], "provide": [29], "them,": [30], "as": [31], "their": [32],
+        "deduction": [33], "process": [34], "differs": [35], "significantly": [36],
+        "froof": [37], "human": [38, 147], "developers.": [39], "Inspired": [40],
+        "by": [41], "way": [43], "interact": [45, 72], "with": [46, 73, 101, 126,
+        149, 158, 195], "code": [47], "when": [48, 136, 184], "debugging,": [49],
+        "we": [50, 88, 144], "propose": [51], "Scientific": [53, 197], "Debugging":
+        [54, 198], "(": [55], "AutoSD": [56, 123, 154], "),": [57], "a": [58, 95,
+        146], "technique": [59], "that": [60, 104, 122, 132, 180, 191], "prompts":
+        [61], "large": [62], "language": [63], "models": [64], "automatically": [66,
+        78], "generate": [67], "hypotheses,": [68], "uses": [69], "debuggers": [70],
+        "buggy": [74], "code,": [75], "and": [76, 131, 188], "thus": [77], "reach":
+        [79], "conclusions": [80], "prior": [81], "patch": [83, 97, 163], "generation.":
+        [84], "In": [85], "doing": [86], "so,": [87], "aim": [89], "produce": [91],
+        "explanations": [92, 106, 161, 183], "of": [93, 170, 177], "how": [94], "specific":
+        [96], "has": [98], "been": [99], "generated,": [100], "hope": [103], "these":
+        [105], "will": [107], "lead": [108], "enhanced": [110], "decision-making.":
+        [112], "Our": [113], "empirical": [114], "analysis": [115], "on": [116], "three":
+        [117], "program": [118, 128], "repair": [119, 129, 186], "benchmarks": [120],
+        "shows": [121], "performs": [124], "competitively": [125], "other": [127],
+        "baselines,": [130], "it": [133, 137], "can": [134], "indicate": [135], "is":
+        [138], "confident": [139], "its": [141], "results.": [142], "Furthermore,":
+        [143, 175], "perform": [145], "study": [148], "20": [150], "participants":
+        [151, 178], "evaluate": [153], "-generated": [155], "explanations.": [156],
+        "Participants": [157], "access": [159], "judged": [162], "correctness": [164],
+        "more": [165], "accurately": [166], "five": [168], "out": [169], "six": [171],
+        "real-world": [172], "bugs": [173], "studied.": [174], "70%": [176], "answered":
+        [179, 190], "they": [181, 192], "wanted": [182], "using": [185], "tools,":
+        [187], "55%": [189], "were": [193], "satisfied": [194], "presentation.": [199]}}],
+        "group_by": []}'
+    headers:
+      access-control-allow-headers:
+      - Accept, Accept-Language, Accept-Encoding, Authorization, Content-Type, X-OpenAlex-UI,
+        X-Impersonate-User
+      access-control-allow-methods:
+      - GET, HEAD, POST, PATCH, DELETE, OPTIONS
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - Cache-Control, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Onetime-Remaining,
+        X-RateLimit-Credits-Used, X-RateLimit-Credits-Required, X-RateLimit-Reset,
+        X-RateLimit-Limit-USD, X-RateLimit-Remaining-USD, X-RateLimit-Prepaid-Remaining-USD,
+        X-RateLimit-Cost-USD, X-RateLimit-Cost-Required-USD, Retry-After, Location,
+        Content-Disposition, X-OpenAlex-UI-Token
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a5b79aca3fd38b7c-AMS
+      connection:
+      - keep-alive
+      content-length:
+      - '52533'
+      content-type:
+      - application/json
+      date:
+      - Mon, 16 Nov 2026 15:42:16 GMT
+      nel:
+      - '{"report_to":"heroku-nel","response_headers":["Via"],"max_age":3600,"success_fraction":0.01,"failure_fraction":0.1}'
+      report-to:
+      - '{"group":"heroku-nel","endpoints":[{"url":"https://nel.heroku.com/reports?s=877P4aGGTjhuFH1h3rZOmsPTUWoOSOZ%2BIKNgpD6e7Ks%3D\u0026sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add\u0026ts=1794843736"}],"max_age":3600}'
+      reporting-endpoints:
+      - heroku-nel="https://nel.heroku.com/reports?s=877P4aGGTjhuFH1h3rZOmsPTUWoOSOZ%2BIKNgpD6e7Ks%3D&sid=c46efe9b-d3d2-4a0c-8c76-bfafa16c5add&ts=1794843736"
+      server:
+      - cloudflare
+      transfer-encoding:
+      - chunked
+      via:
+      - 2.0 heroku-router
+      x-ratelimit-cost-usd:
+      - '0.0001'
+      x-ratelimit-credits-used:
+      - '1'
+      x-ratelimit-limit:
+      - '1000'
+      x-ratelimit-limit-usd:
+      - '0.1'
+      x-ratelimit-onetime-remaining:
+      - '0'
+      x-ratelimit-prepaid-remaining-usd:
+      - '0'
+      x-ratelimit-remaining:
+      - '998'
+      x-ratelimit-remaining-usd:
+      - '0.0998'
+      x-ratelimit-reset:
+      - '29864'
+    status:
+      code: 200
+      message: OK
+version: 1
