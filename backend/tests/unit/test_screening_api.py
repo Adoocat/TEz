@@ -9,8 +9,10 @@ import pytest
 from fastapi.testclient import TestClient
 
 from tests.conftest import AUTH, TOKEN
+from tests.pdfs import make_pdf
 from tez.core.config import Settings
 from tez.main import create_app
+from tez.modules.files import service as files_service
 from tez.modules.library.repository import LibraryRepository
 from tez.modules.library.service import Library, open_library
 from tez.modules.reviews.models import (
@@ -179,3 +181,35 @@ def test_the_next_record_comes_within_50_ms_in_a_2000_record_review(library: Lib
         assert found is not None
 
     assert statistics.median(timings) < 0.050, timings
+
+
+def test_full_text_records_carry_their_pdf_and_not_retrieved_counts_apart(
+    client: TestClient, library: Library
+) -> None:
+    """Task 33: the full-text screen opens a record's PDF; "not retrieved" is its own state."""
+    review, (with_pdf, without_pdf), _ = make_review(library, 2)
+    files_service.add_pdf(library.db, library.path, make_pdf(2), "paper.pdf", paper_id=with_pdf)
+    base = f"/reviews/{review}/screening"
+    for paper_id in (with_pdf, without_pdf):
+        client.post(
+            f"{base}/title_abstract/decisions", json={"paper_id": paper_id, "decision": "include"}
+        )
+
+    record = client.get(f"{base}/full_text/records/{with_pdf}").json()
+    bare = client.get(f"{base}/full_text/records/{without_pdf}").json()
+    made = client.post(
+        f"{base}/full_text/decisions", json={"paper_id": without_pdf, "decision": "not_retrieved"}
+    )
+
+    assert [a["file_name"] for a in record["attachments"]] == ["paper.pdf"]
+    assert bare["attachments"] == []
+    assert made.status_code == 201
+    counts = client.get(f"{base}/full_text").json()["counts"]
+    assert counts == {
+        "total": 2,
+        "undecided": 1,
+        "include": 0,
+        "exclude": 0,
+        "maybe": 0,
+        "not_retrieved": 1,
+    }

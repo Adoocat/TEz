@@ -3,6 +3,7 @@ from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from tez.modules.files.schemas import AttachmentView
 from tez.modules.library.models import RetractionStatus
 from tez.modules.reviews.models import Decision, ScreeningStage
 
@@ -108,3 +109,5 @@ class ScreeningRecord(BaseModel):
     venue: str | None
     doi: str | None
     retraction_status: RetractionStatus
+    # The record's files; full-text screening opens its PDF beside the criteria (Task 33).
+    attachments: list[AttachmentView]

@@ -768,6 +768,16 @@
     },
     "list": {
       "label": "Records"
+    },
+    "fullText": {
+      "label": "Full text",
+      "noPdf": "No PDF for this record",
+      "noPdfHint": "Look for a free copy, or add the PDF from the library. If the report cannot be obtained, decide \"Full text not retrieved\": PRISMA counts it on its own.",
+      "find": "Find PDFs",
+      "looking": "Looking for a free PDF…",
+      "noSource": "No free source is known for this record.",
+      "notFound": "No free PDF was found.",
+      "findFailed": "The search for a PDF could not start."
     }
   }
 }

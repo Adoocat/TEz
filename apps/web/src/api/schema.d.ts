@@ -1907,6 +1907,8 @@ export interface components {
             /** Doi */
             doi: string | null;
             retraction_status: components["schemas"]["RetractionStatus"];
+            /** Attachments */
+            attachments: components["schemas"]["AttachmentView"][];
         };
         /**
          * ScreeningStage

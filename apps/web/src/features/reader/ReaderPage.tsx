@@ -35,7 +35,7 @@ export function ReaderPage() {
       </div>
     );
   }
-  return <Reader key={attachmentId} attachmentId={attachmentId} />;
+  return <PdfReader key={attachmentId} attachmentId={attachmentId} />;
 }
 
 function usePdf(attachmentId: string) {
@@ -71,20 +71,34 @@ function usePdf(attachmentId: string) {
   return state;
 }
 
-function Reader({ attachmentId }: { attachmentId: string }) {
+/** A PDF with its toolbar. `embedded` (full-text screening, Task 33) leaves the address and
+ * the J/K keys alone: the screen around it owns them. */
+export function PdfReader({
+  attachmentId,
+  embedded = false,
+}: {
+  attachmentId: string;
+  embedded?: boolean;
+}) {
   const { t } = useTranslation();
   const attachment = useAttachment(attachmentId);
   const pdf = usePdf(attachmentId);
   const title = attachment.data?.file_name ?? t("reader.title");
+  const Heading = embedded ? "h2" : "h1";
 
   return (
     <div className="flex h-full min-h-0 flex-col">
       {pdf.status === "ready" ? (
-        <PageList document={pdf.document} firstPage={pdf.firstPage} title={title} />
+        <PageList
+          document={pdf.document}
+          firstPage={pdf.firstPage}
+          title={title}
+          embedded={embedded}
+        />
       ) : (
         <>
           <header className="border-b border-line px-4 py-2">
-            <h1 className="truncate text-h3">{title}</h1>
+            <Heading className="truncate text-h3">{title}</Heading>
           </header>
           <p
             role={pdf.status === "failed" ? "alert" : "status"}
@@ -104,11 +118,15 @@ function PageList({
   document,
   firstPage,
   title,
+  embedded,
 }: {
   document: PdfDocument;
   firstPage: PdfPageSize;
   title: string;
+  embedded: boolean;
 }) {
+  // Embedded, the file name is a section heading under the screen's own title.
+  const Heading = embedded ? "h2" : "h1";
   const { t, i18n } = useTranslation();
   const [params, setParams] = useSearchParams();
   const scroller = useRef<HTMLDivElement>(null);
@@ -152,7 +170,7 @@ function PageList({
   }, [virtualizer, pageHeight]);
 
   // A deep link (?page=12) opens at that page once the pages have their size.
-  const requested = Number.parseInt(params.get("page") ?? "1", 10);
+  const requested = embedded ? 1 : Number.parseInt(params.get("page") ?? "1", 10);
   const opened = useRef(false);
   useEffect(() => {
     if (opened.current || width === 0) return;
@@ -172,7 +190,7 @@ function PageList({
     const page = visibleIndex + 1;
     setCurrent(page);
     setPageInput(String(page));
-    if (!opened.current) return;
+    if (!opened.current || embedded) return;
     const timer = setTimeout(() => {
       setParams(
         (previous) => {
@@ -186,7 +204,7 @@ function PageList({
     return () => {
       clearTimeout(timer);
     };
-  }, [visibleIndex, setParams]);
+  }, [visibleIndex, setParams, embedded]);
 
   function goTo(event: SyntheticEvent) {
     event.preventDefault();
@@ -205,14 +223,18 @@ function PageList({
   }
 
   // J / K turn the page (design-prompt §6, reader context).
-  useShortcuts("reader", {
-    nextPage: () => {
-      turnPage(1);
+  useShortcuts(
+    "reader",
+    {
+      nextPage: () => {
+        turnPage(1);
+      },
+      previousPage: () => {
+        turnPage(-1);
+      },
     },
-    previousPage: () => {
-      turnPage(-1);
-    },
-  });
+    { enabled: !embedded },
+  );
 
   function turnPage(by: 1 | -1) {
     const page = Math.min(Math.max(current + by, 1), document.numPages);
@@ -227,7 +249,7 @@ function PageList({
   return (
     <>
       <header className="flex flex-wrap items-center gap-2 border-b border-line px-4 py-1.5">
-        <h1 className="min-w-0 flex-1 truncate text-h3">{title}</h1>
+        <Heading className="min-w-0 flex-1 truncate text-h3">{title}</Heading>
         <form onSubmit={goTo} className="flex items-center gap-1 text-meta text-fg-muted">
           <Input
             aria-label={t("reader.page")}
