@@ -987,6 +987,50 @@ export interface paths {
         patch: operations["update_settings_settings_patch"];
         trace?: never;
     };
+    "/reviews/{review_id}/snowball": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Rounds
+         * @description The review's snowballing actions, newest first.
+         */
+        get: operations["list_rounds_reviews__review_id__snowball_get"];
+        put?: never;
+        /**
+         * Start Round
+         * @description Queue a snowballing round from the given seed papers; the worker runs it as a job.
+         */
+        post: operations["start_round_reviews__review_id__snowball_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/snowball/seeds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Seeds
+         * @description The review's papers as candidate seeds.
+         */
+        get: operations["list_seeds_reviews__review_id__snowball_seeds_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/secrets": {
         parameters: {
             query?: never;
@@ -1266,7 +1310,7 @@ export interface components {
          * Direction
          * @enum {string}
          */
-        Direction: "next" | "previous";
+        "Direction-Output": "backward" | "forward";
         /** ErrorDetail */
         ErrorDetail: {
             /**
@@ -1760,6 +1804,11 @@ export interface components {
             reading_status: components["schemas"]["ReadingStatus"];
         };
         /**
+         * RecordOrigin
+         * @enum {string}
+         */
+        RecordOrigin: "database" | "citation_backward" | "citation_forward" | "manual";
+        /**
          * RecordState
          * @description Where a record stands at one stage; derived from its current decision.
          * @enum {string}
@@ -2072,6 +2121,103 @@ export interface components {
             /** New */
             new: number;
         };
+        /**
+         * SnowballRoundView
+         * @description One snowballing action and what it found. Every count is derived.
+         */
+        SnowballRoundView: {
+            /** Search Id */
+            search_id: string;
+            /** Round */
+            round: number;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /** Directions */
+            directions: components["schemas"]["Direction-Output"][];
+            /** Sources */
+            sources: string[];
+            /** Seeds */
+            seeds: number;
+            /** Identified */
+            identified: number;
+            /** Unique */
+            unique: number;
+            /** Added */
+            added: number;
+            /** Already In Review */
+            already_in_review: number;
+            /** Runs */
+            runs: components["schemas"]["SnowballRunView"][];
+        };
+        /** SnowballRunView */
+        SnowballRunView: {
+            /** Seed Paper Id */
+            seed_paper_id: string;
+            direction: components["schemas"]["Direction-Output"];
+            /** Source */
+            source: string;
+            status: components["schemas"]["RunStatus"];
+            /** Translated Query */
+            translated_query: string | null;
+            /** Total Reported */
+            total_reported: number | null;
+            /** Retrieved Count */
+            retrieved_count: number;
+            error: components["schemas"]["ErrorDetail"] | null;
+        };
+        /** SnowballSeed */
+        SnowballSeed: {
+            /** Paper Id */
+            paper_id: string;
+            /** Title */
+            title: string;
+            /** First Author */
+            first_author: string | null;
+            /** Year */
+            year: number | null;
+            origin: components["schemas"]["RecordOrigin"];
+            /** Round */
+            round: number;
+            included_at: components["schemas"]["ScreeningStage"];
+            /** Traceable */
+            traceable: boolean;
+            /** Followed */
+            followed: components["schemas"]["Direction-Output"][];
+        };
+        /** SnowballStart */
+        SnowballStart: {
+            /** Paper Ids */
+            paper_ids: string[];
+            /** Directions */
+            directions: components["schemas"]["tez__modules__snowballing__sources__Direction"][];
+            /**
+             * Sources
+             * @example [
+             *       "openalex",
+             *       "semantic_scholar"
+             *     ]
+             */
+            sources: string[];
+            /**
+             * Limit
+             * @default 1000
+             */
+            limit: number;
+            /** @default gui */
+            initiated_via: components["schemas"]["InitiatedVia"];
+        };
+        /** SnowballStarted */
+        SnowballStarted: {
+            /** Search Id */
+            search_id: string;
+            /** Round */
+            round: number;
+            /** Job Id */
+            job_id: string;
+        };
         /** SourceProgress */
         SourceProgress: {
             /** Source */
@@ -2197,6 +2343,16 @@ export interface components {
             /** Restarts */
             restarts: number;
         };
+        /**
+         * Direction
+         * @enum {string}
+         */
+        tez__modules__screening__service__Direction: "next" | "previous";
+        /**
+         * Direction
+         * @enum {string}
+         */
+        tez__modules__snowballing__sources__Direction: "backward" | "forward";
     };
     responses: never;
     parameters: never;
@@ -4390,7 +4546,7 @@ export interface operations {
         parameters: {
             query?: {
                 origin?: string | null;
-                direction?: components["schemas"]["Direction"];
+                direction?: components["schemas"]["tez__modules__screening__service__Direction"];
                 filter?: components["schemas"]["QueueFilter"];
             };
             header?: never;
@@ -5834,6 +5990,184 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AppSettings"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_rounds_reviews__review_id__snowball_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SnowballRoundView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    start_round_reviews__review_id__snowball_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SnowballStart"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SnowballStarted"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_seeds_reviews__review_id__snowball_seeds_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SnowballSeed"][];
                 };
             };
             /** @description Missing or invalid token */

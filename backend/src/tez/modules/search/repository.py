@@ -7,8 +7,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from tez.modules.search.models import (
+    CITATION_METHODS,
     InitiatedVia,
     MatchMethod,
+    RunMethod,
     RunStatus,
     SearchQuery,
     SearchResult,
@@ -114,6 +116,9 @@ class SearchRepository:
         error: str | None = None,
         snapshot_path: str | None = None,
         file_name: str | None = None,
+        method: RunMethod = RunMethod.DATABASE,
+        snowball_round: int | None = None,
+        seed_paper_id: str | None = None,
     ) -> SearchRun:
         """Write a finished run and its results at once; neither changes afterwards."""
         run = SearchRun(
@@ -130,6 +135,9 @@ class SearchRepository:
             error=error,
             snapshot_path=snapshot_path,
             file_name=file_name,
+            method=method,
+            snowball_round=snowball_round,
+            seed_paper_id=seed_paper_id,
         )
         self.session.add(run)
         self.session.flush()
@@ -165,10 +173,17 @@ class SearchRepository:
         )
 
     def search_ids(self, review_id: str) -> list[str]:
-        """The review's searches, newest first. Ids are time-ordered (UUIDv7)."""
+        """The review's searches, newest first. Ids are time-ordered (UUIDv7).
+
+        Snowballing rounds are not searches the user typed; they are listed on their own.
+        """
         found = self.session.scalars(
             select(SearchRun.search_id)
-            .where(SearchRun.review_id == review_id, SearchRun.search_id.is_not(None))
+            .where(
+                SearchRun.review_id == review_id,
+                SearchRun.search_id.is_not(None),
+                SearchRun.method.not_in(CITATION_METHODS),
+            )
             .group_by(SearchRun.search_id)
             .order_by(SearchRun.search_id.desc())
         )
@@ -194,3 +209,24 @@ class SearchRepository:
                 .order_by(SearchResult.rank)
             )
         )
+
+    def runs_by_method(self, review_id: str, methods: Sequence[RunMethod]) -> list[SearchRun]:
+        return list(
+            self.session.scalars(
+                select(SearchRun)
+                .where(SearchRun.review_id == review_id, SearchRun.method.in_(methods))
+                .order_by(SearchRun.executed_at, SearchRun.id)
+            )
+        )
+
+    def result_papers(self, run_ids: Sequence[str]) -> dict[str, list[str]]:
+        """Each run's papers in rank order (a repeated paper repeats)."""
+        rows = self.session.execute(
+            select(SearchResult.run_id, SearchResult.paper_id)
+            .where(SearchResult.run_id.in_(run_ids))
+            .order_by(SearchResult.run_id, SearchResult.rank)
+        )
+        found: dict[str, list[str]] = {run_id: [] for run_id in run_ids}
+        for run_id, paper_id in rows:
+            found[run_id].append(paper_id)
+        return found

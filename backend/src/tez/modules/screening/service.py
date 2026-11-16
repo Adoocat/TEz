@@ -443,3 +443,17 @@ def history(db: Database, review_id: str, paper_id: str) -> list[DecisionView]:
         screening = ScreeningService(session)
         screening.require_review(review_id)
         return [decision_view(row) for row in screening.history(review_id, paper_id)]
+
+
+def included_papers(db: Database, review_id: str) -> dict[str, ScreeningStage]:
+    """The owner's included papers and the furthest stage each is included at: full text
+    when included there, else title-abstract. Snowballing starts from these (Task 36)."""
+    with db.session() as session:
+        screening = ScreeningService(session)
+        found = dict.fromkeys(
+            screening.included(review_id, ScreeningStage.TITLE_ABSTRACT),
+            ScreeningStage.TITLE_ABSTRACT,
+        )
+        for paper_id in screening.included(review_id, ScreeningStage.FULL_TEXT):
+            found[paper_id] = ScreeningStage.FULL_TEXT
+        return found

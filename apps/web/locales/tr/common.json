@@ -199,7 +199,11 @@
     "screening.criteria_order_mismatch": "Kriterler bu arada değişti; yenileyip yeniden deneyin.",
     "external_search.not_found": "Bu kayıtlı arama artık yok.",
     "search.filter_unsupported": "Bu kaynaklar yayın türüne göre süzemiyor.",
-    "import.preset_unavailable": "Bu veritabanı ön ayarı henüz kullanılamıyor."
+    "import.preset_unavailable": "Bu veritabanı ön ayarı henüz kullanılamıyor.",
+    "snowball.seed_not_in_review": "Bazı tohumlar bu review'da değil.",
+    "snowball.seed_not_included": "Tohumların önce elemede dahil edilmesi gerekir.",
+    "snowball.seed_unidentified": "Makalenin bu kaynağın tanıdığı bir tanımlayıcısı yok.",
+    "snowball.seed_not_found": "Kaynak bu makaleyi tanımıyor."
   },
   "reviews": {
     "active": "Etkin review",
@@ -779,5 +783,32 @@
       "notFound": "Ücretsiz PDF bulunamadı.",
       "findFailed": "PDF araması başlatılamadı."
     }
+  },
+  "snowball": {
+    "title": "Kartopu",
+    "hint": "Dahil edilen makalelerin kaynakçasını (geri) ve onlara atıf yapanları (ileri) izleyin. Yeni makaleler başlık-özet elemesine girer; review'da olan makale yeniden eklenmez.",
+    "noSeeds": "Önce elemede makale dahil edin: kartopu onlardan başlar.",
+    "seeds": "Tohumlar ({{n}})",
+    "includedAt": {
+      "title_abstract": "başlık-özette dahil",
+      "full_text": "tam metinde dahil"
+    },
+    "foundInRound": "{{n}}. turda bulundu",
+    "followed": "izlendi: {{ways}}",
+    "untraceable": "kaynakların tanıdığı bir tanımlayıcı yok",
+    "directions": "Yönler",
+    "sources": "Kaynaklar",
+    "direction": {
+      "backward": "Geri (kaynakça)",
+      "forward": "İleri (atıf yapanlar)"
+    },
+    "start": "Kartopu turu başlat",
+    "running": "{{n}}. tur arka planda çalışıyor…",
+    "done": "{{n}}. tur bitti.",
+    "history": "Kartopu turları",
+    "round": "{{n}}. tur",
+    "counts": "{{seeds}} tohum · {{identified}} bulundu · {{added}} yeni · {{already}} zaten review'da",
+    "failedRuns_one": "{{n}} kaynak yanıtı başarısız",
+    "failedRuns_other": "{{n}} kaynak yanıtı başarısız"
   }
 }

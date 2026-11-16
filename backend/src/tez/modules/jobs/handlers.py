@@ -7,11 +7,13 @@ from tez.modules.backup.service import BACKUP_JOB, backup_job
 from tez.modules.files.open_access import FETCH_JOB, fetch_open_access
 from tez.modules.files.service import INSPECT_JOB, inspect_attachment
 from tez.modules.jobs.registry import JobContext, Registry
+from tez.modules.snowballing.service import SNOWBALL_JOB, snowball_job
 
 registry = Registry()
 registry.handler(INSPECT_JOB)(inspect_attachment)
 registry.handler(FETCH_JOB)(fetch_open_access)
 registry.handler(BACKUP_JOB)(backup_job)
+registry.handler(SNOWBALL_JOB)(snowball_job)
 
 
 @registry.handler("diagnostics.sleep")

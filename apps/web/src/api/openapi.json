@@ -3041,7 +3041,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "$ref": "#/components/schemas/Direction",
+              "$ref": "#/components/schemas/tez__modules__screening__service__Direction",
               "default": "next"
             }
           },
@@ -5083,6 +5083,256 @@
         ]
       }
     },
+    "/reviews/{review_id}/snowball": {
+      "post": {
+        "tags": [
+          "snowballing"
+        ],
+        "summary": "Start Round",
+        "description": "Queue a snowballing round from the given seed papers; the worker runs it as a job.",
+        "operationId": "start_round_reviews__review_id__snowball_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SnowballStart"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnowballStarted"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "snowballing"
+        ],
+        "summary": "List Rounds",
+        "description": "The review's snowballing actions, newest first.",
+        "operationId": "list_rounds_reviews__review_id__snowball_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SnowballRoundView"
+                  },
+                  "title": "Response List Rounds Reviews  Review Id  Snowball Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{review_id}/snowball/seeds": {
+      "get": {
+        "tags": [
+          "snowballing"
+        ],
+        "summary": "List Seeds",
+        "description": "The review's papers as candidate seeds.",
+        "operationId": "list_seeds_reviews__review_id__snowball_seeds_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SnowballSeed"
+                  },
+                  "title": "Response List Seeds Reviews  Review Id  Snowball Seeds Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/secrets": {
       "get": {
         "tags": [
@@ -6112,11 +6362,11 @@
         ],
         "title": "DecisionView"
       },
-      "Direction": {
+      "Direction-Output": {
         "type": "string",
         "enum": [
-          "next",
-          "previous"
+          "backward",
+          "forward"
         ],
         "title": "Direction"
       },
@@ -7782,6 +8032,16 @@
         ],
         "title": "ReadingStatusChange"
       },
+      "RecordOrigin": {
+        "type": "string",
+        "enum": [
+          "database",
+          "citation_backward",
+          "citation_forward",
+          "manual"
+        ],
+        "title": "RecordOrigin"
+      },
       "RecordState": {
         "type": "string",
         "enum": [
@@ -8755,6 +9015,291 @@
         "title": "SinceLastImport",
         "description": "How a new import of a saved external search compares with its earlier imports."
       },
+      "SnowballRoundView": {
+        "properties": {
+          "search_id": {
+            "type": "string",
+            "title": "Search Id"
+          },
+          "round": {
+            "type": "integer",
+            "title": "Round"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "directions": {
+            "items": {
+              "$ref": "#/components/schemas/Direction-Output"
+            },
+            "type": "array",
+            "title": "Directions"
+          },
+          "sources": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "seeds": {
+            "type": "integer",
+            "title": "Seeds"
+          },
+          "identified": {
+            "type": "integer",
+            "title": "Identified"
+          },
+          "unique": {
+            "type": "integer",
+            "title": "Unique"
+          },
+          "added": {
+            "type": "integer",
+            "title": "Added"
+          },
+          "already_in_review": {
+            "type": "integer",
+            "title": "Already In Review"
+          },
+          "runs": {
+            "items": {
+              "$ref": "#/components/schemas/SnowballRunView"
+            },
+            "type": "array",
+            "title": "Runs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "search_id",
+          "round",
+          "started_at",
+          "directions",
+          "sources",
+          "seeds",
+          "identified",
+          "unique",
+          "added",
+          "already_in_review",
+          "runs"
+        ],
+        "title": "SnowballRoundView",
+        "description": "One snowballing action and what it found. Every count is derived."
+      },
+      "SnowballRunView": {
+        "properties": {
+          "seed_paper_id": {
+            "type": "string",
+            "title": "Seed Paper Id"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/Direction-Output"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RunStatus"
+          },
+          "translated_query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Translated Query"
+          },
+          "total_reported": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Reported"
+          },
+          "retrieved_count": {
+            "type": "integer",
+            "title": "Retrieved Count"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "seed_paper_id",
+          "direction",
+          "source",
+          "status",
+          "translated_query",
+          "total_reported",
+          "retrieved_count",
+          "error"
+        ],
+        "title": "SnowballRunView"
+      },
+      "SnowballSeed": {
+        "properties": {
+          "paper_id": {
+            "type": "string",
+            "title": "Paper Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "first_author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Author"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "origin": {
+            "$ref": "#/components/schemas/RecordOrigin"
+          },
+          "round": {
+            "type": "integer",
+            "title": "Round"
+          },
+          "included_at": {
+            "$ref": "#/components/schemas/ScreeningStage"
+          },
+          "traceable": {
+            "type": "boolean",
+            "title": "Traceable"
+          },
+          "followed": {
+            "items": {
+              "$ref": "#/components/schemas/Direction-Output"
+            },
+            "type": "array",
+            "title": "Followed"
+          }
+        },
+        "type": "object",
+        "required": [
+          "paper_id",
+          "title",
+          "first_author",
+          "year",
+          "origin",
+          "round",
+          "included_at",
+          "traceable",
+          "followed"
+        ],
+        "title": "SnowballSeed"
+      },
+      "SnowballStart": {
+        "properties": {
+          "paper_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "minItems": 1,
+            "title": "Paper Ids"
+          },
+          "directions": {
+            "items": {
+              "$ref": "#/components/schemas/tez__modules__snowballing__sources__Direction"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Directions"
+          },
+          "sources": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Sources",
+            "examples": [
+              [
+                "openalex",
+                "semantic_scholar"
+              ]
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 5000.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "default": 1000
+          },
+          "initiated_via": {
+            "$ref": "#/components/schemas/InitiatedVia",
+            "default": "gui"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "paper_ids",
+          "directions",
+          "sources"
+        ],
+        "title": "SnowballStart"
+      },
+      "SnowballStarted": {
+        "properties": {
+          "search_id": {
+            "type": "string",
+            "title": "Search Id"
+          },
+          "round": {
+            "type": "integer",
+            "title": "Round"
+          },
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "search_id",
+          "round",
+          "job_id"
+        ],
+        "title": "SnowballStarted"
+      },
       "SourceProgress": {
         "properties": {
           "source": {
@@ -9130,6 +9675,22 @@
           "restarts"
         ],
         "title": "WorkerStatus"
+      },
+      "tez__modules__screening__service__Direction": {
+        "type": "string",
+        "enum": [
+          "next",
+          "previous"
+        ],
+        "title": "Direction"
+      },
+      "tez__modules__snowballing__sources__Direction": {
+        "type": "string",
+        "enum": [
+          "backward",
+          "forward"
+        ],
+        "title": "Direction"
       }
     },
     "securitySchemes": {

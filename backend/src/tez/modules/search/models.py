@@ -34,6 +34,18 @@ class RunStatus(StrEnum):
     ERROR = "error"
 
 
+class RunMethod(StrEnum):
+    """How a run identified its records; PRISMA counts databases and other methods apart."""
+
+    DATABASE = "database"
+    # Snowballing (Task 36): one seed paper's references or the papers citing it.
+    CITATION_BACKWARD = "citation_backward"
+    CITATION_FORWARD = "citation_forward"
+
+
+CITATION_METHODS = (RunMethod.CITATION_BACKWARD, RunMethod.CITATION_FORWARD)
+
+
 class MatchMethod(StrEnum):
     DOI = "doi"
     ID = "id"
@@ -62,6 +74,7 @@ class SearchRun(CreatedMixin, Base):
     __table_args__ = (
         CheckConstraint("retrieved_count >= 0", name="retrieved_count"),
         CheckConstraint("total_reported >= 0", name="total_reported"),
+        CheckConstraint("snowball_round >= 1", name="snowball_round"),
     )
 
     review_id: Mapped[str] = mapped_column(ForeignKey("review.id", ondelete="RESTRICT"), index=True)
@@ -82,6 +95,14 @@ class SearchRun(CreatedMixin, Base):
     snapshot_path: Mapped[str | None] = mapped_column(Text)
     # Imports only: the exported file's name, as the user knows it.
     file_name: Mapped[str | None] = mapped_column(Text)
+    method: Mapped[RunMethod] = mapped_column(
+        enum_type(RunMethod, "method"), default=RunMethod.DATABASE, server_default="database"
+    )
+    # Snowballing only: the iteration (Wohlin) and the paper whose citations were followed.
+    snowball_round: Mapped[int | None] = mapped_column(Integer)
+    seed_paper_id: Mapped[str | None] = mapped_column(
+        ForeignKey("paper.id", ondelete="RESTRICT"), index=True
+    )
 
 
 class SearchResult(CreatedMixin, Base):

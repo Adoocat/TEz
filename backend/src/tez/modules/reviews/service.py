@@ -2,6 +2,7 @@
 
 import re
 from collections.abc import Iterable, Sequence
+from dataclasses import dataclass
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -404,3 +405,40 @@ class ReviewReader:
         """A criterion a new decision at the stage may cite: this review's, not archived."""
         criterion = self._repository.get_criterion(review_id, criterion_id)
         return criterion if criterion is not None and _in_stage(criterion, stage) else None
+
+
+@dataclass(frozen=True)
+class RecordFacts:
+    paper_id: str
+    origin: RecordOrigin
+    origin_ref: str | None
+
+
+def records(db: Database, review_id: str) -> list[RecordFacts]:
+    """The papers taken into a review and how each got there, oldest first."""
+    with db.session() as session:
+        return [
+            RecordFacts(record.paper_id, record.origin, record.origin_ref)
+            for record in ReviewsRepository(session).records(review_id)
+        ]
+
+
+def add_found(
+    db: Database, review_id: str, found: Sequence[tuple[str, str]], origin: RecordOrigin
+) -> int:
+    """Take in papers another method found, each with what led to it (`origin_ref`).
+
+    A paper already in the review keeps its first origin; the first of repeats wins.
+    Returns how many were new.
+    """
+    with db.write_session() as session:
+        repository = ReviewsRepository(session)
+        present = {record.paper_id for record in repository.records(review_id)}
+        added = 0
+        for paper_id, origin_ref in found:
+            if paper_id in present:
+                continue
+            repository.add_record(review_id, paper_id, origin, origin_ref)
+            present.add(paper_id)
+            added += 1
+    return added
