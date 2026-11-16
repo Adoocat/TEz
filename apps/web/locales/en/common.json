@@ -264,7 +264,7 @@
       "searches": "Recent searches",
       "unique": "{{n}} unique",
       "prisma": "PRISMA summary",
-      "prismaSoon": "The PRISMA 2020 flow summary will appear here once the diagram is ready."
+      "openDiagram": "Open the diagram"
     },
     "criteria": {
       "title": "Screening criteria",
@@ -850,5 +850,69 @@
     "list": "Grey literature found",
     "records_one": "{{n}} record",
     "records_other": "{{n}} records"
+  },
+  "prisma": {
+    "title": "PRISMA flow diagram",
+    "noReview": "Choose a review in the top bar to see its diagram.",
+    "theme": {
+      "label": "Theme",
+      "color": "Colour",
+      "print": "Black and white"
+    },
+    "editLabels": "Edit box titles",
+    "labelsHint": "A box left empty shows its default title. Only titles are kept; the numbers are worked out again each time.",
+    "saveLabels": "Save titles",
+    "cancel": "Cancel",
+    "exportSvg": "Save as SVG",
+    "exportPng": "Save as PNG",
+    "hint": "The numbers come from the review's records and screening decisions as they are now.",
+    "back": "Back to the review panel",
+    "documentTitle": "PRISMA 2020 flow diagram",
+    "n": "(n = {{n}})",
+    "line": "{{label}} (n = {{n}})",
+    "unlogged": "Searches with no log",
+    "noReason": "No reason given",
+    "awaiting": "Awaiting decision",
+    "duplicates": "Duplicate records removed",
+    "notTaken": "Records removed for other reasons",
+    "methods": {
+      "database": "Databases",
+      "citation_backward": "Backward snowballing, round {{round}}",
+      "citation_forward": "Forward snowballing, round {{round}}",
+      "website": "Websites",
+      "organisation": "Organisations",
+      "register": "Registers",
+      "thesis": "Theses"
+    },
+    "boxes": {
+      "identification": "Identification",
+      "screening": "Screening",
+      "included_phase": "Included",
+      "db_identified": "Records identified from databases and registers",
+      "db_removed": "Records removed before screening",
+      "db_screened": "Records screened",
+      "db_excluded": "Records excluded",
+      "db_sought": "Reports sought for retrieval",
+      "db_not_retrieved": "Reports not retrieved",
+      "db_assessed": "Reports assessed for eligibility",
+      "db_reports_excluded": "Reports excluded",
+      "other_identified": "Records identified from other methods",
+      "other_removed": "Records removed before screening",
+      "other_screened": "Records screened",
+      "other_excluded": "Records excluded",
+      "other_sought": "Reports sought for retrieval",
+      "other_not_retrieved": "Reports not retrieved",
+      "other_assessed": "Reports assessed for eligibility",
+      "other_reports_excluded": "Reports excluded",
+      "included": "Studies included in review"
+    },
+    "summary": {
+      "identified": "Identified",
+      "duplicates": "Duplicates",
+      "screened": "Screened",
+      "notRetrieved": "Not retrieved",
+      "assessed": "Assessed in full text",
+      "included": "Included"
+    }
   }
 }

@@ -32,6 +32,10 @@ export interface FakeBackend {
   reviewOverviews: Record<string, ReviewOverview>;
   /** Each review's screening criteria, in order; shortcuts are recomputed on change. */
   criteria: Record<string, CriterionView[]>;
+  /** What GET /reviews/{id}/prisma answers; an empty review when missing (Task 35). */
+  prismaCounts: Record<string, PrismaCounts>;
+  /** Each review's edited PRISMA box titles. */
+  prismaLabels: Record<string, Record<string, string>>;
   searchOverview: SearchOverview | null;
   searchResults: SearchResultRow[];
   searchHistory: SearchOverview[];
@@ -76,6 +80,8 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     reviews: [],
     reviewOverviews: {},
     criteria: {},
+    prismaCounts: {},
+    prismaLabels: {},
     searchOverview: null,
     searchResults: [],
     searchHistory: [],
@@ -228,6 +234,17 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
           else list.splice(list.filter((c) => !c.archived).length, 0, changed);
           return json(withShortcuts(list).find((c) => c.id === found.id));
         }
+      }
+      const prismaOf = /^\/reviews\/([^/]+)\/prisma(\/labels)?$/.exec(path);
+      if (prismaOf) {
+        const reviewId = prismaOf[1] ?? "";
+        if (!prismaOf[2] && request.method === "GET") {
+          return json(backend.prismaCounts[reviewId] ?? prismaCounts({ review_id: reviewId }));
+        }
+        if (request.method === "PUT") {
+          backend.prismaLabels[reviewId] = (body as { labels: Record<string, string> }).labels;
+        }
+        return json({ labels: backend.prismaLabels[reviewId] ?? {} });
       }
       const overviewOf = /^\/reviews\/([^/]+)\/overview$/.exec(path)?.[1];
       if (overviewOf && request.method === "GET") {
@@ -473,6 +490,38 @@ export function withShortcuts(list: CriterionView[]): CriterionView[] {
     }
     return { ...c, position, shortcuts };
   });
+}
+
+type PrismaCounts = components["schemas"]["PrismaCounts"];
+type PrismaBranch = Omit<PrismaCounts["databases"], "sources">;
+
+export function prismaBranch(overrides: Partial<PrismaBranch> = {}): PrismaBranch {
+  return {
+    identified: 0,
+    unlogged: 0,
+    duplicates: 0,
+    not_taken: 0,
+    screened: 0,
+    excluded: 0,
+    awaiting_screening: 0,
+    sought: 0,
+    not_retrieved: 0,
+    assessed: 0,
+    awaiting_full_text: 0,
+    excluded_reports: [],
+    included: 0,
+    ...overrides,
+  };
+}
+
+export function prismaCounts(overrides: Partial<PrismaCounts> = {}): PrismaCounts {
+  return {
+    review_id: "review-1",
+    databases: { ...prismaBranch(), sources: [] },
+    other_methods: { ...prismaBranch(), methods: [] },
+    included: 0,
+    ...overrides,
+  };
 }
 
 export function reviewOverview(overrides: Partial<ReviewOverview> = {}): ReviewOverview {

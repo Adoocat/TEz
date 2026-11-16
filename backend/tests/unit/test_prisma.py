@@ -283,3 +283,21 @@ def test_repeated_imports_of_a_saved_search_are_all_counted(
         ("Scopus", 2, 5)
     ]
     assert (counts.databases.duplicates, counts.databases.screened) == (2, 3)
+
+
+# --- diagram labels (Task 35) ---------------------------------------------------------------
+
+
+def test_edited_box_titles_are_kept_but_never_numbers(client: TestClient, library: Library) -> None:
+    review = Review(client, library)
+    url = f"/reviews/{review.id}/prisma/labels"
+    assert client.get(url).json() == {"labels": {}}
+
+    saved = client.put(url, json={"labels": {"db_identified": " Veri tabanlarından kayıtlar "}})
+    cleared = client.put(url, json={"labels": {}})
+
+    assert saved.json() == {"labels": {"db_identified": "Veri tabanlarından kayıtlar"}}
+    assert cleared.json() == {"labels": {}}
+    assert client.put(url, json={"labels": {"db_count": "7"}}).status_code == 422
+    assert client.put(url, json={"labels": {"included": ""}}).status_code == 422
+    assert client.get("/reviews/missing/prisma/labels").status_code == 404

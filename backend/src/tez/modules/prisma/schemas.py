@@ -1,6 +1,8 @@
 """PRISMA 2020 flow counts (Task 34). Every number is derived on each read; none is stored."""
 
-from pydantic import BaseModel
+from typing import Annotated, Literal
+
+from pydantic import BaseModel, ConfigDict, StringConstraints
 
 from tez.modules.search.models import RunMethod
 
@@ -72,3 +74,37 @@ class PrismaCounts(BaseModel):
     other_methods: OtherMethodsBranch
     # Studies included in the review: both branches.
     included: int
+
+
+# The diagram's boxes whose titles can be edited (Task 35); the web app draws the same list.
+BoxKey = Literal[
+    "identification",
+    "screening",
+    "included_phase",
+    "db_identified",
+    "db_removed",
+    "db_screened",
+    "db_excluded",
+    "db_sought",
+    "db_not_retrieved",
+    "db_assessed",
+    "db_reports_excluded",
+    "other_identified",
+    "other_removed",
+    "other_screened",
+    "other_excluded",
+    "other_sought",
+    "other_not_retrieved",
+    "other_assessed",
+    "other_reports_excluded",
+    "included",
+]
+Label = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
+
+
+class PrismaLabels(BaseModel):
+    """Edited box titles; a box not listed shows its translated default."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    labels: dict[BoxKey, Label]
