@@ -7,6 +7,8 @@ import { Dialog } from "radix-ui";
 import { useEffect, useId, useState, type DragEvent, type SyntheticEvent } from "react";
 import { useTranslation } from "react-i18next";
 
+import type { components } from "@/api/schema";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ApiError } from "@/lib/api/query";
@@ -26,6 +28,8 @@ import {
 } from "./api";
 import { defaultDatabase, knownDatabases } from "./databases";
 
+type ImportMethod = components["schemas"]["ImportLog"]["method"];
+const importMethods: ImportMethod[] = ["database", "website", "organisation", "register"];
 const ACCEPT = ".bib,.bibtex,.ris,.txt";
 const OTHER = "other";
 
@@ -122,6 +126,8 @@ function ImportWizard({
   );
   const [readFailed, setReadFailed] = useState(false);
   const [logRun, setLogRun] = useState(true);
+  // A database search, or other methods (Task 37): PRISMA counts those in their own branch.
+  const [method, setMethod] = useState<ImportMethod>("database");
   const [database, setDatabase] = useState<string>(defaultDatabase);
   const [otherDatabase, setOtherDatabase] = useState("");
   const [searchedAt, setSearchedAt] = useState(today);
@@ -170,11 +176,12 @@ function ImportWizard({
       log: !logRun
         ? null
         : savedSearch
-          ? { saved_search_id: savedSearch, searched_at: searchedAt || null }
+          ? { saved_search_id: savedSearch, searched_at: searchedAt || null, method: "database" }
           : {
               ...presetOrSource(),
               searched_at: searchedAt || null,
               query: query.trim() || null,
+              method,
             },
       add_to_review: toReview,
       add_to_library: toLibrary,
@@ -236,6 +243,23 @@ function ImportWizard({
                 )}
                 {!savedSearch && (
                   <>
+                    <label className="contents">
+                      <span className="text-meta text-fg-muted">{t("imports.method.label")}</span>
+                      <select
+                        className="h-8 rounded-md border border-line-strong bg-raised px-2 text-ui text-fg"
+                        value={method}
+                        onChange={(event) => {
+                          const next = importMethods.find((m) => m === event.target.value);
+                          if (next) setMethod(next);
+                        }}
+                      >
+                        {importMethods.map((m) => (
+                          <option key={m} value={m}>
+                            {t(`imports.method.${m}`)}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
                     <span className="text-meta text-fg-muted">{t("imports.database")}</span>
                     <div className="flex gap-2">
                       <select

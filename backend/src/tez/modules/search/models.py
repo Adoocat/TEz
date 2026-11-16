@@ -41,9 +41,18 @@ class RunMethod(StrEnum):
     # Snowballing (Task 36): one seed paper's references or the papers citing it.
     CITATION_BACKWARD = "citation_backward"
     CITATION_FORWARD = "citation_forward"
+    # Grey literature (Task 37), by PRISMA 2020's other-methods boxes: records found on
+    # websites, through organisations, in registers, or theses (ADR 0025).
+    WEBSITE = "website"
+    ORGANISATION = "organisation"
+    REGISTER = "register"
+    THESIS = "thesis"
 
 
 CITATION_METHODS = (RunMethod.CITATION_BACKWARD, RunMethod.CITATION_FORWARD)
+GREY_METHODS = (RunMethod.WEBSITE, RunMethod.ORGANISATION, RunMethod.REGISTER, RunMethod.THESIS)
+# Everything PRISMA counts in its "identification via other methods" branch.
+OTHER_METHODS = (*CITATION_METHODS, *GREY_METHODS)
 
 
 class MatchMethod(StrEnum):

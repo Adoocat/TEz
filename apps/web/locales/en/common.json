@@ -519,7 +519,14 @@
     "savedSearch": "Saved external search",
     "noSavedSearch": "None (enter the database)",
     "sinceLast_one": "{{n}} new record since the last import ({{date}})",
-    "sinceLast_other": "{{n}} new records since the last import ({{date}})"
+    "sinceLast_other": "{{n}} new records since the last import ({{date}})",
+    "method": {
+      "label": "Found through",
+      "database": "Database search",
+      "website": "Website (other methods)",
+      "organisation": "Organisation (other methods)",
+      "register": "Register (other methods)"
+    }
   },
   "files": {
     "dropToAdd": "Drop PDFs to add them to the library",
@@ -810,5 +817,38 @@
     "counts": "{{seeds}} seeds · {{identified}} found · {{added}} new · {{already}} already in the review",
     "failedRuns_one": "{{n}} source answer failed",
     "failedRuns_other": "{{n}} source answers failed"
+  },
+  "grey": {
+    "title": "Grey literature",
+    "hint": "Theses, reports, register records and web pages found outside the databases. Each is checked against the library, counted in PRISMA's other-methods branch and goes to screening. Mark imports from websites or organisations in the import dialog.",
+    "add": "Add a record",
+    "kind": "Kind",
+    "kinds": {
+      "thesis": "Thesis",
+      "report": "Report",
+      "register_record": "Register record",
+      "web_page": "Web page"
+    },
+    "box": "PRISMA box",
+    "boxAuto": "By kind ({{box}})",
+    "boxes": {
+      "thesis": "Theses",
+      "website": "Websites",
+      "organisation": "Organisations",
+      "register": "Registers"
+    },
+    "titleField": "Title",
+    "source": "Found at",
+    "sourcePlaceholder": "YÖK Ulusal Tez Merkezi, WHO…",
+    "authors": "Authors",
+    "authorsPlaceholder": "Family, Given; Family, Given",
+    "year": "Year",
+    "institution": "University or organisation",
+    "url": "Link",
+    "added": "Added to the review and to screening.",
+    "matched": "The library already had this record: it is counted as a duplicate.",
+    "list": "Grey literature found",
+    "records_one": "{{n}} record",
+    "records_other": "{{n}} records"
   }
 }

@@ -1031,6 +1031,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reviews/{review_id}/grey-literature": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Entries
+         * @description The review's grey literature: records by hand and imports marked as other methods.
+         */
+        get: operations["list_entries_reviews__review_id__grey_literature_get"];
+        put?: never;
+        /**
+         * Add Record
+         * @description Add a thesis, report, register record or web page found by other methods. It is
+         *     matched against the library, logged for PRISMA and taken into the review.
+         */
+        post: operations["add_record_reviews__review_id__grey_literature_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/secrets": {
         parameters: {
             query?: never;
@@ -1385,6 +1410,77 @@ export interface components {
             /** Last Retrieved */
             last_retrieved: number | null;
         };
+        /**
+         * GreyEntry
+         * @description A grey-literature run of the review: one record by hand, or a marked import.
+         */
+        GreyEntry: {
+            /** Search Id */
+            search_id: string;
+            found_via: components["schemas"]["RunMethod"];
+            /** Source */
+            source: string;
+            /**
+             * Executed At
+             * Format: date-time
+             */
+            executed_at: string;
+            /** File Name */
+            file_name: string | null;
+            /** Records */
+            records: number;
+            /** Titles */
+            titles: string[];
+        };
+        /**
+         * GreyKind
+         * @enum {string}
+         */
+        GreyKind: "thesis" | "report" | "register_record" | "web_page";
+        /** GreyRecordAdded */
+        GreyRecordAdded: {
+            /** Paper Id */
+            paper_id: string;
+            /** Search Id */
+            search_id: string;
+            /**
+             * Found Via
+             * @enum {string}
+             */
+            found_via: "website" | "organisation" | "register" | "thesis";
+            /** Matched Existing */
+            matched_existing: boolean;
+            /** Added To Review */
+            added_to_review: boolean;
+        };
+        /**
+         * GreyRecordCreate
+         * @description One record entered by hand: a thesis, a report, a register record or a web page.
+         */
+        GreyRecordCreate: {
+            kind: components["schemas"]["GreyKind"];
+            /** Found Via */
+            found_via?: ("website" | "organisation" | "register" | "thesis") | null;
+            /** Source */
+            source: string;
+            /** Found At */
+            found_at?: string | null;
+            /** Title */
+            title: string;
+            /** Authors */
+            authors?: string[];
+            /** Year */
+            year?: number | null;
+            /** Institution */
+            institution?: string | null;
+            thesis_type?: components["schemas"]["ThesisType"] | null;
+            /** Url */
+            url?: string | null;
+            /** Doi */
+            doi?: string | null;
+            /** Abstract */
+            abstract?: string | null;
+        };
         /** Health */
         Health: {
             /**
@@ -1436,6 +1532,12 @@ export interface components {
             searched_at?: string | null;
             /** Query */
             query?: string | null;
+            /**
+             * Method
+             * @default database
+             * @enum {string}
+             */
+            method: "database" | "website" | "organisation" | "register";
         };
         /** ImportOutcome */
         ImportOutcome: {
@@ -1900,6 +2002,12 @@ export interface components {
              */
             created_at: string;
         };
+        /**
+         * RunMethod
+         * @description How a run identified its records; PRISMA counts databases and other methods apart.
+         * @enum {string}
+         */
+        RunMethod: "database" | "citation_backward" | "citation_forward" | "website" | "organisation" | "register" | "thesis";
         /**
          * RunStatus
          * @enum {string}
@@ -6168,6 +6276,126 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SnowballSeed"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_entries_reviews__review_id__grey_literature_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GreyEntry"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_record_reviews__review_id__grey_literature_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GreyRecordCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GreyRecordAdded"];
                 };
             };
             /** @description Missing or invalid token */

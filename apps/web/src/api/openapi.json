@@ -5333,6 +5333,174 @@
         }
       }
     },
+    "/reviews/{review_id}/grey-literature": {
+      "post": {
+        "tags": [
+          "grey literature"
+        ],
+        "summary": "Add Record",
+        "description": "Add a thesis, report, register record or web page found by other methods. It is\nmatched against the library, logged for PRISMA and taken into the review.",
+        "operationId": "add_record_reviews__review_id__grey_literature_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GreyRecordCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GreyRecordAdded"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "grey literature"
+        ],
+        "summary": "List Entries",
+        "description": "The review's grey literature: records by hand and imports marked as other methods.",
+        "operationId": "list_entries_reviews__review_id__grey_literature_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GreyEntry"
+                  },
+                  "title": "Response List Entries Reviews  Review Id  Grey Literature Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/secrets": {
       "get": {
         "tags": [
@@ -6551,6 +6719,247 @@
         ],
         "title": "ExternalSearchView"
       },
+      "GreyEntry": {
+        "properties": {
+          "search_id": {
+            "type": "string",
+            "title": "Search Id"
+          },
+          "found_via": {
+            "$ref": "#/components/schemas/RunMethod"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "executed_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Executed At"
+          },
+          "file_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Name"
+          },
+          "records": {
+            "type": "integer",
+            "title": "Records"
+          },
+          "titles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Titles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "search_id",
+          "found_via",
+          "source",
+          "executed_at",
+          "file_name",
+          "records",
+          "titles"
+        ],
+        "title": "GreyEntry",
+        "description": "A grey-literature run of the review: one record by hand, or a marked import."
+      },
+      "GreyKind": {
+        "type": "string",
+        "enum": [
+          "thesis",
+          "report",
+          "register_record",
+          "web_page"
+        ],
+        "title": "GreyKind"
+      },
+      "GreyRecordAdded": {
+        "properties": {
+          "paper_id": {
+            "type": "string",
+            "title": "Paper Id"
+          },
+          "search_id": {
+            "type": "string",
+            "title": "Search Id"
+          },
+          "found_via": {
+            "type": "string",
+            "enum": [
+              "website",
+              "organisation",
+              "register",
+              "thesis"
+            ],
+            "title": "Found Via"
+          },
+          "matched_existing": {
+            "type": "boolean",
+            "title": "Matched Existing"
+          },
+          "added_to_review": {
+            "type": "boolean",
+            "title": "Added To Review"
+          }
+        },
+        "type": "object",
+        "required": [
+          "paper_id",
+          "search_id",
+          "found_via",
+          "matched_existing",
+          "added_to_review"
+        ],
+        "title": "GreyRecordAdded"
+      },
+      "GreyRecordCreate": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/GreyKind"
+          },
+          "found_via": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "website",
+                  "organisation",
+                  "register",
+                  "thesis"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Found Via"
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Source"
+          },
+          "found_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Found At"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "authors": {
+            "items": {
+              "type": "string",
+              "maxLength": 1000,
+              "minLength": 1
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Authors"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 2100.0,
+                "minimum": 1000.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "institution": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Institution"
+          },
+          "thesis_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ThesisType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "doi": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doi"
+          },
+          "abstract": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 20000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Abstract"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "source",
+          "title"
+        ],
+        "title": "GreyRecordCreate",
+        "description": "One record entered by hand: a thesis, a report, a register record or a web page."
+      },
       "Health": {
         "properties": {
           "status": {
@@ -6705,6 +7114,17 @@
               }
             ],
             "title": "Query"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "database",
+              "website",
+              "organisation",
+              "register"
+            ],
+            "title": "Method",
+            "default": "database"
           }
         },
         "additionalProperties": false,
@@ -8285,6 +8705,20 @@
           "created_at"
         ],
         "title": "ReviewView"
+      },
+      "RunMethod": {
+        "type": "string",
+        "enum": [
+          "database",
+          "citation_backward",
+          "citation_forward",
+          "website",
+          "organisation",
+          "register",
+          "thesis"
+        ],
+        "title": "RunMethod",
+        "description": "How a run identified its records; PRISMA counts databases and other methods apart."
       },
       "RunStatus": {
         "type": "string",

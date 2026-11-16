@@ -145,6 +145,7 @@ class RunFacts:
     executed_at: datetime
     translated_query: str | None
     total_reported: int | None
+    file_name: str | None
     # In rank order; a paper the source sent twice is here twice.
     paper_ids: tuple[str, ...]
 
@@ -168,6 +169,7 @@ def runs_by_method(db: Database, review_id: str, methods: Sequence[RunMethod]) -
                 executed_at=run.executed_at,
                 translated_query=run.translated_query,
                 total_reported=run.total_reported,
+                file_name=run.file_name,
                 paper_ids=tuple(papers[run.id]),
             )
             for run in runs
