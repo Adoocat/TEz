@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "pnpm typecheck && vite build",
     "preview": "vite preview",
-    "lint": "eslint --max-warnings 0 .",
+    "lint": "eslint --max-warnings 0 --cache --cache-location node_modules/.cache/eslint/ .",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p e2e",
     "test": "vitest run",
     "e2e": "playwright test"
