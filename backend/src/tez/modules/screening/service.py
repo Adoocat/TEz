@@ -13,7 +13,9 @@ Derived state, never stored:
 
 Other modules use `ScreeningService` inside their own session, or the functions below that
 take a `Database`. Everything defaults to the library owner's decisions (`LOCAL_REVIEWER`);
-two-reviewer screening (Tasks 41-42) passes another `reviewer`.
+two-reviewer screening (Tasks 41-42) passes another `reviewer`. `RECONCILED` is not a reviewer
+but a view: the owner's decisions with every reconciled (`CONSENSUS_REVIEWER`) decision in
+their place. PRISMA and "the included studies" read that view (Task 42).
 """
 
 from collections.abc import Sequence
@@ -48,6 +50,10 @@ from tez.modules.screening.schemas import (
 
 # The person who owns the library. Imported decisions carry a colleague's name instead.
 LOCAL_REVIEWER = "owner"
+# Decisions written when two reviewers' conflict is resolved (Task 42).
+CONSENSUS_REVIEWER = "consensus"
+# A read-only view, never stored: the owner's decisions, a reconciled one wherever it exists.
+RECONCILED = "reconciled"
 
 # Title-abstract decisions that send a record on to full-text screening.
 FULL_TEXT_ENTRY = frozenset({Decision.INCLUDE, Decision.MAYBE})
@@ -115,6 +121,20 @@ class ScreeningService:
 
     # --- reading ----------------------------------------------------------------------
 
+    def _heads(
+        self, review_id: str, stage: ScreeningStage, reviewer: str, paper_id: str | None = None
+    ) -> dict[str, Head]:
+        if reviewer != RECONCILED:
+            return self._repository.heads(review_id, stage, reviewer, paper_id)
+        heads = self._repository.heads(review_id, stage, LOCAL_REVIEWER, paper_id)
+        for found, head in self._repository.heads(
+            review_id, stage, CONSENSUS_REVIEWER, paper_id
+        ).items():
+            # An undone reconciliation hands the record back to the owner's decision.
+            if head.decision is not Decision.UNDECIDED:
+                heads[found] = head
+        return heads
+
     def require_review(self, review_id: str) -> None:
         if not self._reviews.exists(review_id):
             raise TezError(ErrorCode.REVIEW_NOT_FOUND, {"review_id": review_id}, status=404)
@@ -129,7 +149,7 @@ class ScreeningService:
             paper_id: CurrentDecision(
                 head.id, paper_id, head.decision, head.criterion_id, head.note, head.created_at
             )
-            for paper_id, head in self._repository.heads(review_id, stage, reviewer).items()
+            for paper_id, head in self._heads(review_id, stage, reviewer).items()
             if head.decision is not Decision.UNDECIDED
         }
 
@@ -140,7 +160,7 @@ class ScreeningService:
         papers = self._reviews.record_paper_ids(review_id)
         if stage is ScreeningStage.TITLE_ABSTRACT:
             return papers
-        title_abstract = self._repository.heads(review_id, ScreeningStage.TITLE_ABSTRACT, reviewer)
+        title_abstract = self._heads(review_id, ScreeningStage.TITLE_ABSTRACT, reviewer)
         return [
             paper_id
             for paper_id in papers
@@ -152,7 +172,7 @@ class ScreeningService:
         self, review_id: str, stage: ScreeningStage, reviewer: str = LOCAL_REVIEWER
     ) -> list[QueueEntry]:
         """The stage's queue with each record's derived state."""
-        heads = self._repository.heads(review_id, stage, reviewer)
+        heads = self._heads(review_id, stage, reviewer)
         return [
             QueueEntry(paper_id, position, _state(heads.get(paper_id)), heads.get(paper_id))
             for position, paper_id in enumerate(self.queue(review_id, stage, reviewer), start=1)
@@ -192,6 +212,8 @@ class ScreeningService:
     ) -> ScreeningDecision:
         """Record a decision; it supersedes the reviewer's current one for the record and
         stage. Deciding exactly what is already in force writes nothing."""
+        if reviewer == RECONCILED:
+            raise TezError(ErrorCode.REQUEST_INVALID, {"reviewer": reviewer})
         self._check_record(review_id, paper_id)
         if decision is Decision.UNDECIDED or (
             decision is Decision.NOT_RETRIEVED and stage is not ScreeningStage.FULL_TEXT
@@ -268,7 +290,9 @@ class ScreeningService:
             )
 
     def _check_reached_full_text(self, review_id: str, paper_id: str, reviewer: str) -> None:
-        heads = self._repository.heads(review_id, ScreeningStage.TITLE_ABSTRACT, reviewer, paper_id)
+        # A reconciled full-text decision follows the reconciled title-abstract outcome.
+        basis = RECONCILED if reviewer == CONSENSUS_REVIEWER else reviewer
+        heads = self._heads(review_id, ScreeningStage.TITLE_ABSTRACT, basis, paper_id)
         head = heads.get(paper_id)
         if head is None or head.decision not in FULL_TEXT_ENTRY:
             raise TezError(
@@ -446,14 +470,15 @@ def history(db: Database, review_id: str, paper_id: str) -> list[DecisionView]:
 
 
 def included_papers(db: Database, review_id: str) -> dict[str, ScreeningStage]:
-    """The owner's included papers and the furthest stage each is included at: full text
-    when included there, else title-abstract. Snowballing starts from these (Task 36)."""
+    """The included papers (reconciled decisions where there are any) and the furthest stage
+    each is included at: full text when included there, else title-abstract. Snowballing
+    starts from these (Task 36)."""
     with db.session() as session:
         screening = ScreeningService(session)
         found = dict.fromkeys(
-            screening.included(review_id, ScreeningStage.TITLE_ABSTRACT),
+            screening.included(review_id, ScreeningStage.TITLE_ABSTRACT, RECONCILED),
             ScreeningStage.TITLE_ABSTRACT,
         )
-        for paper_id in screening.included(review_id, ScreeningStage.FULL_TEXT):
+        for paper_id in screening.included(review_id, ScreeningStage.FULL_TEXT, RECONCILED):
             found[paper_id] = ScreeningStage.FULL_TEXT
         return found

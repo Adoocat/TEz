@@ -35,7 +35,7 @@ from tez.modules.quality.schemas import (
 from tez.modules.quality.templates import SCALES, TEMPLATES, Language, ScalePreset
 from tez.modules.reviews import service as reviews
 from tez.modules.reviews.models import ScreeningStage
-from tez.modules.screening.service import ScreeningService
+from tez.modules.screening.service import RECONCILED, ScreeningService
 
 # --- catalog --------------------------------------------------------------------------------
 
@@ -221,7 +221,7 @@ def reorder_questions(
 def _included_paper_ids(db: Database, review_id: str) -> list[str]:
     """Papers whose current full-text decision is include, in the screening service's order."""
     with db.session() as session:
-        return ScreeningService(session).included(review_id, ScreeningStage.FULL_TEXT)
+        return ScreeningService(session).included(review_id, ScreeningStage.FULL_TEXT, RECONCILED)
 
 
 def _require_included(db: Database, review_id: str, paper_id: str) -> None:

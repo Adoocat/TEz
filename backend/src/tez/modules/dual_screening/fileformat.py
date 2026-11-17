@@ -21,7 +21,7 @@ from tez.modules.reviews.models import CriterionKind, Decision, ScreeningStage
 FORMAT = "tez.screening-decisions"
 VERSION = 1
 # Reviewer names this library uses for itself and for reconciled decisions.
-RESERVED_REVIEWERS = frozenset({"owner", "consensus"})
+RESERVED_REVIEWERS = frozenset({"owner", "consensus", "reconciled"})
 
 _ShortText = Field(min_length=1, max_length=300)
 

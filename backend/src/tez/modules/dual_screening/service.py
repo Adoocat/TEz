@@ -8,10 +8,12 @@ Rows are only ever appended: importing the same file again writes nothing, and a
 changed in the colleague's library supersedes the imported one.
 """
 
+from collections.abc import Mapping
 from datetime import UTC, datetime
 
 from tez.core.db import Database
 from tez.core.errors import ErrorCode, TezError
+from tez.modules.dual_screening.agreement import conflicting_papers, stage_agreement
 from tez.modules.dual_screening.building import (
     CriterionInfo,
     DecisionInfo,
@@ -26,15 +28,29 @@ from tez.modules.dual_screening.fileformat import (
 from tez.modules.dual_screening.matching import match_records
 from tez.modules.dual_screening.planning import DecisionKey, ExistingDecision, plan_import
 from tez.modules.dual_screening.schemas import (
+    AgreementView,
+    ConflictList,
+    ConflictView,
     ImportReport,
+    Reconciliation,
+    SideDecision,
     SkippedDecision,
+    StageAgreementView,
     UnknownCriterion,
     UnmatchedRecord,
 )
 from tez.modules.library.paper_service import PaperService
 from tez.modules.reviews import service as reviews_service
-from tez.modules.reviews.models import ScreeningStage
-from tez.modules.screening.service import LOCAL_REVIEWER, ScreeningService
+from tez.modules.reviews.models import Decision, ScreeningStage
+from tez.modules.reviews.schemas import CriterionView
+from tez.modules.screening.schemas import DecisionView
+from tez.modules.screening.service import (
+    CONSENSUS_REVIEWER,
+    LOCAL_REVIEWER,
+    CurrentDecision,
+    ScreeningService,
+    decision_view,
+)
 
 
 def _reviewer_name(name: str) -> str:
@@ -148,3 +164,143 @@ def reviewers(db: Database, review_id: str) -> list[str]:
     with db.session() as session:
         found = ScreeningService(session).reviewers(review_id)
     return sorted(found, key=lambda name: (name != LOCAL_REVIEWER, name.casefold()))
+
+
+# --- Agreement, conflicts and reconciliation (Task 42) -------------------------------------
+
+
+def _colleagues(screening: ScreeningService, review_id: str) -> list[str]:
+    found = screening.reviewers(review_id)
+    return sorted(
+        (r for r in found if r not in (LOCAL_REVIEWER, CONSENSUS_REVIEWER)), key=str.casefold
+    )
+
+
+def _colleague(screening: ScreeningService, review_id: str, reviewer: str | None) -> str | None:
+    """The colleague to compare with: the one asked for, else the first by name."""
+    colleagues = _colleagues(screening, review_id)
+    if reviewer is None:
+        return colleagues[0] if colleagues else None
+    if reviewer not in colleagues:
+        raise TezError(ErrorCode.REQUEST_INVALID, {"reviewer": reviewer})
+    return reviewer
+
+
+def _decisions(
+    screening: ScreeningService, review_id: str, stage: ScreeningStage, reviewer: str
+) -> dict[str, Decision]:
+    return {
+        paper_id: current.decision
+        for paper_id, current in screening.current(review_id, stage, reviewer).items()
+    }
+
+
+def agreement(db: Database, review_id: str, reviewer: str | None = None) -> AgreementView:
+    """Per stage: how often the owner and the colleague agree, with Cohen's kappa, over the
+    records both decided; and how many disagreements are still open."""
+    if not reviews_service.review_exists(db, review_id):
+        raise TezError(ErrorCode.REVIEW_NOT_FOUND, {"review_id": review_id}, status=404)
+    with db.session() as session:
+        screening = ScreeningService(session)
+        colleague = _colleague(screening, review_id, reviewer)
+        stages: list[StageAgreementView] = []
+        for stage in ScreeningStage:
+            if colleague is None:
+                stages.append(
+                    StageAgreementView(
+                        stage=stage, compared=0, agreed=0, percent=None, kappa=None, conflicts=0
+                    )
+                )
+                continue
+            owner = _decisions(screening, review_id, stage, LOCAL_REVIEWER)
+            other = _decisions(screening, review_id, stage, colleague)
+            result = stage_agreement(stage, owner, other)
+            reconciled = screening.current(review_id, stage, CONSENSUS_REVIEWER)
+            stages.append(
+                StageAgreementView(
+                    stage=stage,
+                    compared=result.compared,
+                    agreed=result.agreed,
+                    percent=result.percent,
+                    kappa=result.kappa,
+                    conflicts=len(conflicting_papers(stage, owner, other, reconciled)),
+                )
+            )
+        return AgreementView(
+            reviewer=colleague, reviewers=_colleagues(screening, review_id), stages=stages
+        )
+
+
+def _side(current: CurrentDecision, criteria: Mapping[str, CriterionView]) -> SideDecision:
+    criterion = criteria.get(current.criterion_id) if current.criterion_id else None
+    return SideDecision(
+        decision=current.decision,
+        criterion_code=criterion.code if criterion else None,
+        criterion_text=criterion.text if criterion else None,
+        note=current.note,
+    )
+
+
+def conflicts(
+    db: Database, review_id: str, stage: ScreeningStage, reviewer: str | None = None
+) -> ConflictList:
+    """Records the owner and the colleague decided differently and nobody has reconciled,
+    in the review's order, with both decisions side by side."""
+    if not reviews_service.review_exists(db, review_id):
+        raise TezError(ErrorCode.REVIEW_NOT_FOUND, {"review_id": review_id}, status=404)
+    criteria = {c.id: c for c in reviews_service.list_criteria(db, review_id)}
+    with db.session() as session:
+        screening = ScreeningService(session)
+        colleague = _colleague(screening, review_id, reviewer)
+        if colleague is None:
+            return ConflictList(reviewer=None, stage=stage, items=[])
+        owner = screening.current(review_id, stage, LOCAL_REVIEWER)
+        other = screening.current(review_id, stage, colleague)
+        still_open = set(
+            conflicting_papers(
+                stage,
+                {paper_id: c.decision for paper_id, c in owner.items()},
+                {paper_id: c.decision for paper_id, c in other.items()},
+                screening.current(review_id, stage, CONSENSUS_REVIEWER),
+            )
+        )
+        order = [
+            paper_id
+            for paper_id in screening.queue(review_id, ScreeningStage.TITLE_ABSTRACT)
+            if paper_id in still_open
+        ]
+        cards = PaperService(session).cards(order)
+        items: list[ConflictView] = []
+        for paper_id in order:
+            card = cards[paper_id]
+            items.append(
+                ConflictView(
+                    paper_id=paper_id,
+                    title=card.paper.title,
+                    first_author=card.first_author.display_name if card.first_author else None,
+                    author_count=card.author_count,
+                    year=card.paper.year,
+                    venue=card.paper.venue,
+                    owner=_side(owner[paper_id], criteria),
+                    other=_side(other[paper_id], criteria),
+                )
+            )
+        return ConflictList(reviewer=colleague, stage=stage, items=items)
+
+
+def reconcile(
+    db: Database, review_id: str, stage: ScreeningStage, body: Reconciliation
+) -> DecisionView:
+    """The agreed decision for a conflict, as a new `consensus` row. PRISMA and the included
+    studies read it in place of the owner's."""
+    with db.write_session() as session:
+        row = ScreeningService(session).decide(
+            review_id,
+            body.paper_id,
+            stage,
+            Decision(body.decision.value),
+            criterion_id=body.criterion_id,
+            note=body.note or None,
+            reviewer=CONSENSUS_REVIEWER,
+        )
+        return decision_view(row)

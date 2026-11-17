@@ -35,7 +35,7 @@ from tez.modules.prisma.schemas import (
 from tez.modules.reviews import service as reviews_service
 from tez.modules.reviews.models import Decision, RecordOrigin, ScreeningStage
 from tez.modules.screening.schemas import RecordState
-from tez.modules.screening.service import CurrentDecision, ScreeningService
+from tez.modules.screening.service import RECONCILED, CurrentDecision, ScreeningService
 from tez.modules.search import queries as search_queries
 from tez.modules.search.models import CITATION_METHODS, OTHER_METHODS, RunMethod
 from tez.modules.search.queries import RunFacts
@@ -48,10 +48,11 @@ def _screening(
     with db.session() as session:
         screening = ScreeningService(session)
         title_abstract = {
-            e.paper_id: e.state for e in screening.entries(review_id, ScreeningStage.TITLE_ABSTRACT)
+            e.paper_id: e.state
+            for e in screening.entries(review_id, ScreeningStage.TITLE_ABSTRACT, RECONCILED)
         }
-        full_text = screening.current(review_id, ScreeningStage.FULL_TEXT)
-        queue = set(screening.queue(review_id, ScreeningStage.FULL_TEXT))
+        full_text = screening.current(review_id, ScreeningStage.FULL_TEXT, RECONCILED)
+        queue = set(screening.queue(review_id, ScreeningStage.FULL_TEXT, RECONCILED))
     return title_abstract, full_text, queue
 
 
