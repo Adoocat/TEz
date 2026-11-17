@@ -55,6 +55,7 @@ describe("the PRISMA diagram", () => {
     ];
     for (const n of numbers) expect(shown).toContain(`(n = ${String(n)})`);
     expect(shown).toContain("Scopus (n = 842)");
+    expect(shown).toContain("pubmed (n = 583)");
     expect(shown).toContain("citation_backward 1 (n = 40)");
     expect(shown).toContain("thesis (n = 5)");
     expect(shown).toContain("[included] (n = 23)");

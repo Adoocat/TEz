@@ -7,6 +7,7 @@ space after "[1]")."""
 # ruff: noqa: E501, RUF001
 
 from collections.abc import Iterator
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -272,6 +273,38 @@ def test_an_unknown_language_is_the_bibliography_language() -> None:
     # A Turkish list leaves the title as it is; an English one title-cases it (as English).
     assert tr.text == "Kim, Jo. eğitim ve bilim. Press, 2020."
     assert en.text == "Kim, Jo. Eğitim Ve Bilim. Press, 2020."
+
+
+@pytest.mark.parametrize(
+    ("display_name", "expected"),
+    [
+        # Search sources often give only the full name; the family name is the last word.
+        ("Erdal Bay", "Bay, E."),
+        ("Mehmet Nur Tuğluk", "Tuğluk, M. N."),
+        # TR Dizin writes family names in capitals; a short one is still a family name.
+        ("Osman KOÇ", "KOÇ, O."),
+        # "Family, Given" as typed in BibTeX.
+        ("Gençdoğan, Başaran", "Gençdoğan, B."),
+        # A particle goes with the family name.
+        ("Ludwig van Beethoven", "van Beethoven, L."),
+    ],
+)
+def test_a_full_name_alone_is_split_into_family_and_given(display_name: str, expected: str) -> None:
+    paper = _paper("a2020", "Title", [], 2020, "Journal", VenueType.JOURNAL)
+    paper = replace(paper, authors=(ExportAuthor(display_name, None, None),))
+
+    (entry,) = render(CslStyle.APA, CslLocale.EN, [paper])
+
+    assert entry.text.startswith(f"{expected} (2020)."), entry.text
+
+
+def test_a_one_word_name_stays_as_written() -> None:
+    paper = _paper("a2020", "Title", [], 2020, "Journal", VenueType.JOURNAL)
+    paper = replace(paper, authors=(ExportAuthor("UNESCO", None, None),))
+
+    (entry,) = render(CslStyle.APA, CslLocale.EN, [paper])
+
+    assert entry.text.startswith("UNESCO. (2020)."), entry.text
 
 
 def test_no_papers_no_entries() -> None:

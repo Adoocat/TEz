@@ -22,7 +22,7 @@ export const sampleCounts = prismaCounts({
     }),
     sources: [
       { source: "Scopus", runs: 2, identified: 842 },
-      { source: "PubMed", runs: 1, identified: 583 },
+      { source: "pubmed", runs: 1, identified: 583 },
     ],
   },
   other_methods: {

@@ -56,7 +56,7 @@ export function useDiagramText(labels: Partial<Record<BoxKey, string>>): Diagram
       title: (key) => labels[key] ?? t(`prisma.boxes.${key}`),
       n: (value) => t("prisma.n", { n: number.format(value) }),
       line: (label, value) => t("prisma.line", { label, n: number.format(value) }),
-      source: (name) => name || t("prisma.unlogged"),
+      source: (name) => (name ? t(`search.sources.${name}`, name) : t("prisma.unlogged")),
       method: (method, round) =>
         round === null ? t(`prisma.methods.${method}`) : t(`prisma.methods.${method}`, { round }),
       reason: (code, text) => (code ? `${code}: ${text ?? ""}` : t("prisma.noReason")),

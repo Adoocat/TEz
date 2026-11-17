@@ -196,6 +196,8 @@ export function ExportPage() {
                 <input
                   type="radio"
                   name="export-scope"
+                  // The label also wraps the hint; name the choice by its title alone.
+                  aria-label={option.label}
                   className="mt-1"
                   value={option.kind}
                   checked={effectiveScope === option.kind}

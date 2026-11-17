@@ -67,6 +67,66 @@ ShortText = Annotated[str | None, BeforeValidator(_short_or_none)]
 WebLink = Annotated[str | None, BeforeValidator(_web_link_or_none)]
 
 
+# ISO 639-2 (bibliographic and terminology forms) to ISO 639-1, for the languages search
+# sources return most; a code not listed is kept as it came.
+_ISO_639_2_TO_1: dict[str, str] = {
+    "ara": "ar",
+    "aze": "az",
+    "bul": "bg",
+    "cat": "ca",
+    "ces": "cs",
+    "cze": "cs",
+    "chi": "zh",
+    "zho": "zh",
+    "dan": "da",
+    "deu": "de",
+    "ger": "de",
+    "dut": "nl",
+    "nld": "nl",
+    "ell": "el",
+    "gre": "el",
+    "eng": "en",
+    "eus": "eu",
+    "baq": "eu",
+    "fas": "fa",
+    "per": "fa",
+    "fin": "fi",
+    "fra": "fr",
+    "fre": "fr",
+    "glg": "gl",
+    "heb": "he",
+    "hin": "hi",
+    "hrv": "hr",
+    "hun": "hu",
+    "ind": "id",
+    "ita": "it",
+    "jpn": "ja",
+    "kaz": "kk",
+    "kor": "ko",
+    "kur": "ku",
+    "lat": "la",
+    "may": "ms",
+    "msa": "ms",
+    "nor": "no",
+    "pol": "pl",
+    "por": "pt",
+    "ron": "ro",
+    "rum": "ro",
+    "rus": "ru",
+    "slk": "sk",
+    "slo": "sk",
+    "slv": "sl",
+    "spa": "es",
+    "srp": "sr",
+    "swe": "sv",
+    "tha": "th",
+    "tur": "tr",
+    "ukr": "uk",
+    "uzb": "uz",
+    "vie": "vi",
+}
+
+
 class RecordAuthor(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -127,7 +187,12 @@ class NormalizedRecord(BaseModel):
     @field_validator("language", mode="after")
     @classmethod
     def _lower_language(cls, value: str | None) -> str | None:
-        return value.lower() if value is not None else None
+        if value is None:
+            return None
+        code = value.lower()
+        # PubMed and Europe PMC send ISO 639-2 ("eng"), OpenAlex ISO 639-1 ("en"): keep one
+        # code per language, so the language filter does not list English twice.
+        return _ISO_639_2_TO_1.get(code, code)
 
     @field_validator("identifiers", mode="before")
     @classmethod

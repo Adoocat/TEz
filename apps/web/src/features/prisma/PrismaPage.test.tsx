@@ -63,6 +63,8 @@ describe("the PRISMA diagram screen", () => {
     // Long lines wrap onto several lines of the drawing; join them back.
     const text = (await diagram()).textContent.replace(/\s+/g, " ");
     expect(text).toContain("Scopus (n = 842)");
+    // An API source by its name, not its key; a file import by the name it was logged with.
+    expect(text).toContain("PubMed (n = 583)");
     expect(text).toContain("Backward snowballing, round 1 (n = 40)");
     expect(text).toContain("Theses (n = 5)");
     expect(text).toContain("Studies included in review (n = 23)");
