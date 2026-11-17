@@ -38,6 +38,8 @@ class ReviewView(BaseModel):
     research_questions: list[str]
     protocol: str | None
     created_at: datetime
+    # Set while the review is in the trash.
+    deleted_at: datetime | None = None
 
 
 class StageProgress(BaseModel):

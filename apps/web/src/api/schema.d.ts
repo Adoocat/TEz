@@ -368,7 +368,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Reviews */
+        /**
+         * List Reviews
+         * @description The reviews in use; `deleted=true` lists those in the trash.
+         */
         get: operations["list_reviews_reviews_get"];
         put?: never;
         /** Create Review */
@@ -390,6 +393,27 @@ export interface paths {
         get: operations["get_review_reviews__review_id__get"];
         put?: never;
         post?: never;
+        /**
+         * Delete Review
+         * @description Move the review to the trash; nothing recorded under it is removed.
+         */
+        delete: operations["delete_review_reviews__review_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Restore Review */
+        post: operations["restore_review_reviews__review_id__restore_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2906,6 +2930,8 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
+            /** Deleted At */
+            deleted_at?: string | null;
         };
         /**
          * RunMethod
@@ -4928,7 +4954,9 @@ export interface operations {
     };
     list_reviews_reviews_get: {
         parameters: {
-            query?: never;
+            query?: {
+                deleted?: boolean;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -5043,6 +5071,120 @@ export interface operations {
         };
     };
     get_review_reviews__review_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_review_reviews__review_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    restore_review_reviews__review_id__restore_post: {
         parameters: {
             query?: never;
             header?: never;

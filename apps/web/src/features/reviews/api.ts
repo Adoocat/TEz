@@ -35,6 +35,44 @@ export function useCreateReview() {
   });
 }
 
+/** Reviews in the trash. */
+export function useDeletedReviews() {
+  const api = useApi();
+  return useQuery({
+    queryKey: [...reviewKeys.all, "deleted"] as const,
+    queryFn: async () =>
+      unwrap(await api.GET("/reviews", { params: { query: { deleted: true } } })),
+  });
+}
+
+/** Move a review to the trash: it leaves the lists, its records and decisions stay. */
+export function useDeleteReview() {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (reviewId: string) => {
+      unwrapEmpty(
+        await api.DELETE("/reviews/{review_id}", { params: { path: { review_id: reviewId } } }),
+      );
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: reviewKeys.all }),
+  });
+}
+
+export function useRestoreReview() {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (reviewId: string) =>
+      unwrap(
+        await api.POST("/reviews/{review_id}/restore", {
+          params: { path: { review_id: reviewId } },
+        }),
+      ),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: reviewKeys.all }),
+  });
+}
+
 /** The review panel's counts; the backend derives them on every read. */
 export function useReviewOverview(reviewId: string | undefined) {
   const api = useApi();

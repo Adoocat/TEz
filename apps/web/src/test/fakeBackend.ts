@@ -159,7 +159,21 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
         backend.secrets.delete(secret);
         return new Response(null, { status: 204 });
       }
-      if (route === "GET /reviews") return json(backend.reviews);
+      if (route === "GET /reviews") {
+        const inTrash = new URL(request.url, "http://test").searchParams.get("deleted") === "true";
+        return json(backend.reviews.filter((r) => Boolean(r.deleted_at) === inTrash));
+      }
+      const trashOf = /^\/reviews\/([^/]+)(\/restore)?$/.exec(path);
+      if (trashOf && (request.method === "DELETE" || (trashOf[2] && request.method === "POST"))) {
+        const found = backend.reviews.find((r) => r.id === trashOf[1]);
+        if (!found) return json({ error: { code: "review.not_found", params: {} } }, 404);
+        if (request.method === "DELETE") {
+          found.deleted_at ??= "2026-11-18T10:00:00Z";
+          return new Response(null, { status: 204 });
+        }
+        found.deleted_at = null;
+        return json(found);
+      }
       if (route === "POST /reviews") {
         const created = review({
           id: `review-${String(backend.reviews.length + 1)}`,

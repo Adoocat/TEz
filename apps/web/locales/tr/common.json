@@ -319,6 +319,17 @@
       "keywords": "Vurgu terimleri",
       "keywordsPlaceholder": "Vurgulanacak terimler, virgülle ayrılmış",
       "keywordsHint": "Eleme bu terimleri başlık ve özette vurgular: dahil etme yeşil, hariç tutma kırmızı alt çizgi. Büyük/küçük harf ve Türkçe harfler fark etmez."
+    },
+    "trash": {
+      "delete": "Review'u sil",
+      "cancel": "Vazgeç",
+      "confirmTitle": "“{{title}}” silinsin mi?",
+      "confirmText": "Review çöp kutusuna taşınır ve listelerden kalkar. Kayıtları, aramaları ve eleme kararları silinmez; istediğinde geri getirebilirsin.",
+      "title_one": "Silinen review'lar ({{count}})",
+      "title_other": "Silinen review'lar ({{count}})",
+      "hint": "Geri getirdiğin review kaldığı yerden devam eder.",
+      "restore": "Geri getir",
+      "restoreNamed": "{{title}} review'unu geri getir"
     }
   },
   "search": {

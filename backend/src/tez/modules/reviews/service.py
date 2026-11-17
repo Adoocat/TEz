@@ -57,6 +57,7 @@ def _view(review: Review) -> ReviewView:
         research_questions=_questions(review.research_questions_md),
         protocol=review.protocol_md,
         created_at=review.created_at,
+        deleted_at=review.deleted_at,
     )
 
 
@@ -64,10 +65,33 @@ def _not_found(review_id: str) -> TezError:
     return TezError(ErrorCode.REVIEW_NOT_FOUND, {"review_id": review_id}, status=404)
 
 
-def list_reviews(db: Database) -> list[ReviewView]:
+def list_reviews(db: Database, *, deleted: bool = False) -> list[ReviewView]:
+    """The reviews in use, or with `deleted` those in the trash."""
+    in_trash = Review.deleted_at.is_not(None) if deleted else Review.deleted_at.is_(None)
     with db.session() as session:
-        reviews = session.scalars(select(Review).order_by(Review.created_at, Review.id))
+        reviews = session.scalars(
+            select(Review).where(in_trash).order_by(Review.created_at, Review.id)
+        )
         return [_view(review) for review in reviews]
+
+
+def delete_review(db: Database, review_id: str) -> None:
+    """Move a review to the trash. Its records, searches and decisions stay as they are."""
+    with db.write_session() as session:
+        review = ReviewsRepository(session).get_review(review_id)
+        if review is None:
+            raise _not_found(review_id)
+        if review.deleted_at is None:
+            review.deleted_at = utcnow()
+
+
+def restore_review(db: Database, review_id: str) -> ReviewView:
+    with db.write_session() as session:
+        review = ReviewsRepository(session).get_review(review_id)
+        if review is None:
+            raise _not_found(review_id)
+        review.deleted_at = None
+        return _view(review)
 
 
 def create_review(db: Database, body: ReviewCreate) -> ReviewView:

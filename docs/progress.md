@@ -156,6 +156,7 @@ Aşama 2 görevlerinin (24–42) ayrıntısı ve kabul kriterleri: `docs/plan.md
 - (42) Üç ve daha fazla değerlendiricide sahip her seferinde bir meslektaşla karşılaştırılır; Fleiss kappa ve kriter başına uyum sonraya.
 - (39) PyInstaller paketi (Aşama 6) `tez/modules/export/styles/*.csl` ve citeproc-py'nin `data/` klasörünü toplamalı.
 - (Aşama 2 denemesi, 2026-11-17) Uygulamada uçtan uca denendi; bulunan 7 kusur `fix/phase-2-walkthrough` ile düzeltildi. Kalanlar: PubMed tırnaklı ifadeyi kendi dizininde bulamayınca 0 döndürüyor (PubMed'in kendisi de 0 diyor), kullanıcıya ipucu gösterilebilir; Crossref boolean değil benzerlik araması yaptığı için 1.000 gevşek sonuç getiriyor, uyarı veya daha düşük üst sınır düşünülmeli; dahil etme kriterleri de 1–9 tuşlarından pay aldığı için ilk hariç tutma gerekçesi `2` oluyor (tasarım 5.2'de 1–9 yalnız gerekçeler içindi). Denenemeyenler: iki değerlendiricinin dosya alışverişi, PDF bulma ve okuyucuda tam metin, dosyadan içe aktarma, masaüstü uygulaması.
+- (Review silme, 2026-11-18) Review silmek onu çöp kutusuna taşır (`review.deleted_at`, migration 0018; `DELETE /reviews/{id}`, `POST /reviews/{id}/restore`, `GET /reviews?deleted=true`). Kayıtları, aramaları ve kararları silinmez, çünkü bunlar yalnız eklenir (kural 3). Kalıcı silme (çöp kutusunu boşaltma) kural 3'ten sapma olur: karar ve ADR bekliyor.
 
 ## Açık sorular
 
