@@ -21,6 +21,12 @@ TEz ("thesis" in Turkish) helps graduate students and researchers in **every dis
 
 Everything lives in a folder on your own computer. The only network traffic goes to public academic sources.
 
+<sub>Screenshots show a fictional demo review; the records in them are made up.</sub>
+
+<p align="center">
+  <img src="docs/images/review-panel.png" alt="The review panel: research questions, stage progress with continue buttons, recent searches and the PRISMA summary" width="900">
+</p>
+
 > **Status:** Phases 1 (library and search) and 2 (systematic review: screening, PRISMA, snowballing, quality assessment, bibliographies, two reviewers) are complete. Phase 3 (full text, notes and the literature matrix) is next. See the [roadmap](#roadmap).
 
 ## Contents
@@ -60,6 +66,10 @@ TEz follows a review from start to finish:
 
 ### Screening
 
+<p align="center">
+  <img src="docs/images/screening.png" alt="Title-abstract screening in focus mode: one record with highlighted terms, the criteria panel and the decision bar with keyboard hints" width="900">
+</p>
+
 - **A focus mode built for hundreds of records:** one record at a time, title and abstract in a readable serif, your highlight terms marked in the abstract (Turkish-aware), criteria on the side.
 - **Two stages:** title/abstract, then full text with the PDF beside the decision bar. "Full text not retrieved" is a decision of its own and has its own PRISMA box.
 - **Criteria with codes** (`I1`, `E1`, `E2` …) and number keys. An exclusion always records its reason.
@@ -67,6 +77,10 @@ TEz follows a review from start to finish:
 - **Two reviewers:** each person screens in their own library, decisions move between libraries as a versioned JSON file, conflicts are shown side by side, and **Cohen's kappa** and percent agreement are reported per stage.
 
 ### Other methods, appraisal and reporting
+
+<p align="center">
+  <img src="docs/images/prisma.png" alt="The PRISMA 2020 flow diagram drawn from the review: databases and other methods side by side, with counts at every stage" width="900">
+</p>
 
 - **Snowballing:** backward (references) and forward (citing papers) from your included studies, in numbered rounds (Wohlin), through OpenAlex and Semantic Scholar.
 - **Grey literature:** theses, reports, registers and web pages added by hand or marked on import, counted in PRISMA's "other methods" branch.
@@ -76,7 +90,22 @@ TEz follows a review from start to finish:
 - **Search strategy table** for the methods chapter: every search, import and snowballing step with its date, exact query and counts, as Markdown or CSV.
 - **BibTeX and RIS export**, with stable citation keys like `yilmaz2024automated`.
 
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/quality.png" alt="Quality assessment of an included study with an NHLBI checklist and a running score"></td>
+    <td width="50%"><img src="docs/images/export.png" alt="The export screen with an APA 7 bibliography of the included studies and the search strategy table"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Quality assessment with a bundled checklist</sub></td>
+    <td align="center"><sub>APA 7 bibliography and the search strategy table</sub></td>
+  </tr>
+</table>
+
 ### Library and reading
+
+<p align="center">
+  <img src="docs/images/library.png" alt="The library: collections and tags on the left, a sortable, filterable table of papers" width="900">
+</p>
 
 - **Collections** (a tree; a paper can sit in several), coloured **tags**, reading status, and a trash.
 - **A virtualised table** that stays smooth with 2,000+ papers, with sorting, filters and full-text search over metadata that folds Turkish correctly (`isik` finds "Işık").
