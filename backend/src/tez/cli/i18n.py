@@ -106,6 +106,10 @@ MESSAGES: dict[str, dict[Language, str]] = {
         "tr": "Yalnızca bu review'daki makaleler.",
         "en": "Only the papers in this review.",
     },
+    "help.export.included": {
+        "tr": "--review ile: yalnızca dahil edilen çalışmalar (tam metin elemesinde).",
+        "en": "With --review: only the included studies (at full-text screening).",
+    },
     "help.export.collection": {
         "tr": "Yalnızca bu koleksiyondaki makaleler.",
         "en": "Only the papers in this collection.",

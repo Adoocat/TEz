@@ -13,7 +13,8 @@
     "matrix": "Matris",
     "jobs": "İşler",
     "settings": "Ayarlar",
-    "review": "Review"
+    "review": "Review",
+    "export": "Dışa aktarma"
   },
   "shell": {
     "toggleSidebar": "Kenar çubuğunu aç/kapat",
@@ -645,7 +646,8 @@
     "openPdf": "PDF'i aç",
     "openNamed": "{{name}} aç",
     "filterType": "Yayın türü",
-    "anyType": "Her tür"
+    "anyType": "Her tür",
+    "exportSelected": "Dışa aktar"
   },
   "reader": {
     "title": "Okuyucu",
@@ -993,6 +995,88 @@
       "remove": "{{n}}. seçeneği kaldır",
       "add": "Seçenek ekle",
       "scoreHint": "Puan isteğe bağlı; puanı olmayan seçenekler (ör. “Uygulanamaz”) toplama girmez."
+    }
+  },
+  "export": {
+    "title": "Dışa aktarma",
+    "scope": {
+      "label": "Kapsam",
+      "included": "Dahil edilen çalışmalar",
+      "noReview": "Önce bir review seç",
+      "selected_one": "Seçili makale ({{count}})",
+      "selected_other": "Seçili makaleler ({{count}})",
+      "noneSelected": "Kütüphanede seçip “Dışa aktar”a bas",
+      "collection": "Koleksiyon",
+      "noCollections": "Henüz koleksiyon yok",
+      "chooseCollection": "Koleksiyon seç",
+      "collectionOption": "{{name}} ({{count}})",
+      "library": "Kütüphanenin tamamı"
+    },
+    "format": {
+      "label": "Biçim",
+      "bibliography": "Kaynakça"
+    },
+    "style": "Stil",
+    "language": "Kaynakça dili",
+    "styles": {
+      "apa": "APA 7",
+      "mla": "MLA 9",
+      "chicago-author-date": "Chicago 18 (yazar-tarih)",
+      "chicago-notes": "Chicago 18 (notlar ve kaynakça)",
+      "vancouver": "Vancouver",
+      "ieee": "IEEE"
+    },
+    "citekey": {
+      "label": "Atıf anahtarı biçimi:",
+      "pattern": "[yazar soyadı][yıl][başlığın ilk anlamlı kelimesi]",
+      "examples": "Örnek:"
+    },
+    "loading": "Hazırlanıyor…",
+    "count_one": "{{count}} kayıt",
+    "count_other": "{{count}} kayıt",
+    "previewFirst": "Önizleme: ilk {{count}} girdi",
+    "preview": "Önizleme",
+    "empty": "Bu kapsamda kayıt yok.",
+    "copy": "Panoya kopyala",
+    "save": "Dosyaya kaydet ({{fileName}})",
+    "copied": "Panoya kopyalandı.",
+    "saved": "{{fileName}} kaydedildi.",
+    "failed": "Olmadı; tekrar dene.",
+    "bibliographyTitle": "Kaynakça",
+    "command": {
+      "copy": "Terminal komutunu kopyala",
+      "noBibliography": "Biçimlendirilmiş kaynakça henüz terminalden alınamıyor.",
+      "noSelected": "Seçili makaleler için terminal komutu yok."
+    },
+    "strategy": {
+      "title": "Arama stratejisi",
+      "hint": "Yöntem bölümü için: her arama, içe aktarılan dosya ve kartopu adımı bir satır.",
+      "empty": "Bu review'da henüz arama yok.",
+      "copyMarkdown": "Markdown'u kopyala",
+      "saveMarkdown": "Markdown olarak kaydet",
+      "saveCsv": "CSV olarak kaydet",
+      "columns": {
+        "number": "#",
+        "source": "Kaynak",
+        "method": "Yöntem",
+        "date": "Tarih",
+        "query": "Sorgu",
+        "reported": "Bildirilen sonuç",
+        "retrieved": "Alınan kayıt"
+      },
+      "methods": {
+        "database": "Veri tabanı araması",
+        "citation_backward": "Geriye kartopu, {{round}}. tur",
+        "citation_forward": "İleriye kartopu, {{round}}. tur",
+        "website": "Web sitesi",
+        "organisation": "Kuruluş",
+        "register": "Kayıt",
+        "thesis": "Tez"
+      },
+      "status": {
+        "partial": "yarım kaldı",
+        "error": "hata"
+      }
     }
   }
 }

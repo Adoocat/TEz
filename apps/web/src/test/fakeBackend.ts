@@ -612,6 +612,8 @@ export function platformWith(state: BackendState): Platform {
     },
     onOpenRequests: () => () => undefined,
     openExternal: () => Promise.resolve(),
+    copyText: () => Promise.resolve(),
+    saveFile: () => Promise.resolve(),
   };
 }
 

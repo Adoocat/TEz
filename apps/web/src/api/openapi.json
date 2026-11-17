@@ -5878,7 +5878,7 @@
           "export"
         ],
         "summary": "Export References",
-        "description": "References as BibTeX or RIS: a review's papers, a collection, or the whole library.",
+        "description": "References as BibTeX or RIS: a review's papers (or only its included studies), a\ncollection, or the whole library.",
         "operationId": "export_references_export_get",
         "security": [
           {
@@ -5912,6 +5912,16 @@
             }
           },
           {
+            "name": "included",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Included"
+            }
+          },
+          {
             "name": "collection_id",
             "in": "query",
             "required": false,
@@ -5935,6 +5945,161 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExportResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/export/references": {
+      "post": {
+        "tags": [
+          "export"
+        ],
+        "summary": "Export Chosen References",
+        "description": "BibTeX or RIS for any scope, chosen papers included (too many ids for a URL).",
+        "operationId": "export_chosen_references_export_references_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/export/search-strategy": {
+      "get": {
+        "tags": [
+          "export"
+        ],
+        "summary": "Search Strategy",
+        "description": "The review's searches for the methods chapter: source, date, exact query and result\ncount, one row per search run.",
+        "operationId": "search_strategy_export_search_strategy_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchStrategy"
                 }
               }
             }
@@ -8226,6 +8391,63 @@
         ],
         "title": "ExportFormat"
       },
+      "ExportRequest": {
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "bibtex",
+              "ris"
+            ],
+            "title": "Format",
+            "default": "bibtex"
+          },
+          "review_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review Id"
+          },
+          "included": {
+            "type": "boolean",
+            "title": "Included",
+            "default": false
+          },
+          "collection_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collection Id"
+          },
+          "paper_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 10000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paper Ids"
+          }
+        },
+        "type": "object",
+        "title": "ExportRequest"
+      },
       "ExportResult": {
         "properties": {
           "format": {
@@ -8243,13 +8465,21 @@
           "content": {
             "type": "string",
             "title": "Content"
+          },
+          "citekeys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Citekeys"
           }
         },
         "type": "object",
         "required": [
           "format",
           "count",
-          "content"
+          "content",
+          "citekeys"
         ],
         "title": "ExportResult"
       },
@@ -11671,6 +11901,27 @@
         ],
         "title": "SearchStarted"
       },
+      "SearchStrategy": {
+        "properties": {
+          "review_id": {
+            "type": "string",
+            "title": "Review Id"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/StrategyRow"
+            },
+            "type": "array",
+            "title": "Rows"
+          }
+        },
+        "type": "object",
+        "required": [
+          "review_id",
+          "rows"
+        ],
+        "title": "SearchStrategy"
+      },
       "SecretName": {
         "type": "string",
         "enum": [
@@ -12311,6 +12562,91 @@
           "not_retrieved"
         ],
         "title": "StateCounts"
+      },
+      "StrategyRow": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "method": {
+            "$ref": "#/components/schemas/RunMethod"
+          },
+          "snowball_round": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snowball Round"
+          },
+          "executed_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Executed At"
+          },
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query"
+          },
+          "file_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Name"
+          },
+          "total_reported": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Reported"
+          },
+          "retrieved": {
+            "type": "integer",
+            "title": "Retrieved"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RunStatus"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "source",
+          "method",
+          "snowball_round",
+          "executed_at",
+          "query",
+          "file_name",
+          "total_reported",
+          "retrieved",
+          "status"
+        ],
+        "title": "StrategyRow"
       },
       "TagCreate": {
         "properties": {

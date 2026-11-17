@@ -1161,9 +1161,51 @@ export interface paths {
         };
         /**
          * Export References
-         * @description References as BibTeX or RIS: a review's papers, a collection, or the whole library.
+         * @description References as BibTeX or RIS: a review's papers (or only its included studies), a
+         *     collection, or the whole library.
          */
         get: operations["export_references_export_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/export/references": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Export Chosen References
+         * @description BibTeX or RIS for any scope, chosen papers included (too many ids for a URL).
+         */
+        post: operations["export_chosen_references_export_references_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/export/search-strategy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search Strategy
+         * @description The review's searches for the methods chapter: source, date, exact query and result
+         *     count, one row per search run.
+         */
+        get: operations["search_strategy_export_search_strategy_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1719,6 +1761,26 @@ export interface components {
          * @enum {string}
          */
         ExportFormat: "bibtex" | "ris";
+        /** ExportRequest */
+        ExportRequest: {
+            /**
+             * Format
+             * @default bibtex
+             * @enum {string}
+             */
+            format: "bibtex" | "ris";
+            /** Review Id */
+            review_id?: string | null;
+            /**
+             * Included
+             * @default false
+             */
+            included: boolean;
+            /** Collection Id */
+            collection_id?: string | null;
+            /** Paper Ids */
+            paper_ids?: string[] | null;
+        };
         /** ExportResult */
         ExportResult: {
             /**
@@ -1730,6 +1792,8 @@ export interface components {
             count: number;
             /** Content */
             content: string;
+            /** Citekeys */
+            citekeys: string[];
         };
         /**
          * ExternalSearchCreate
@@ -2756,6 +2820,13 @@ export interface components {
             /** Sources */
             sources: string[];
         };
+        /** SearchStrategy */
+        SearchStrategy: {
+            /** Review Id */
+            review_id: string;
+            /** Rows */
+            rows: components["schemas"]["StrategyRow"][];
+        };
         /**
          * SecretName
          * @enum {string}
@@ -2982,6 +3053,30 @@ export interface components {
             maybe: number;
             /** Not Retrieved */
             not_retrieved: number;
+        };
+        /** StrategyRow */
+        StrategyRow: {
+            /** Run Id */
+            run_id: string;
+            /** Source */
+            source: string;
+            method: components["schemas"]["RunMethod"];
+            /** Snowball Round */
+            snowball_round: number | null;
+            /**
+             * Executed At
+             * Format: date-time
+             */
+            executed_at: string;
+            /** Query */
+            query: string | null;
+            /** File Name */
+            file_name: string | null;
+            /** Total Reported */
+            total_reported: number | null;
+            /** Retrieved */
+            retrieved: number;
+            status: components["schemas"]["RunStatus"];
         };
         /** TagCreate */
         TagCreate: {
@@ -7309,6 +7404,7 @@ export interface operations {
             query?: {
                 format?: components["schemas"]["ExportFormat"];
                 review_id?: string | null;
+                included?: boolean;
                 collection_id?: string | null;
             };
             header?: never;
@@ -7324,6 +7420,124 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ExportResult"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    export_chosen_references_export_references_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportResult"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    search_strategy_export_search_strategy_get: {
+        parameters: {
+            query: {
+                review_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchStrategy"];
                 };
             };
             /** @description Missing or invalid token */

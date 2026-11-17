@@ -241,6 +241,17 @@ def test_export_writes_bibtex_that_reads_back(
     }
 
 
+def test_export_of_the_included_studies(mode: str, library_path: Path) -> None:
+    tez(library_path, "import", str(FIXTURES / "ieee-xplore.bib"), "--source", "IEEE Xplore")
+
+    code, out, _ = tez(library_path, "export", "--review", "llm kod inceleme slr", "--included")
+    alone, error, _ = tez(library_path, "export", "--included")
+
+    # Nothing is screened yet, so nothing is included.
+    assert (code, out["export"]["count"]) == (0, 0)
+    assert (alone, error["error"]["code"]) == (1, "request.invalid")
+
+
 def test_errors_have_codes_and_exit_1(mode: str, library_path: Path) -> None:
     code, out, _ = tez(library_path, "search", "x", "--sources", "google")
     assert (code, out["error"]["code"]) == (1, "source.unknown")

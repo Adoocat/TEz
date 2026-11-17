@@ -3,6 +3,7 @@
 // It is kept for the tab's lifetime and removed from the address bar. In development
 // (`pnpm dev`) the Vite proxy at /api adds the token itself (vite.config.ts).
 import type { BackendState, Platform } from "./types";
+import { copyToClipboard, saveTextFile } from "./files";
 
 const SESSION_KEY = "tez.backend";
 
@@ -59,4 +60,6 @@ export const browserPlatform: Platform = {
     window.open(url, "_blank", "noopener,noreferrer");
     return Promise.resolve();
   },
+  copyText: copyToClipboard,
+  saveFile: saveTextFile,
 };
