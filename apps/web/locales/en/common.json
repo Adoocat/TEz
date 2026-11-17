@@ -13,7 +13,8 @@
     "matrix": "Matrix",
     "jobs": "Jobs",
     "settings": "Settings",
-    "review": "Review"
+    "review": "Review",
+    "export": "Export"
   },
   "shell": {
     "toggleSidebar": "Toggle sidebar",
@@ -645,7 +646,8 @@
     "openPdf": "Open PDF",
     "openNamed": "Open {{name}}",
     "filterType": "Publication type",
-    "anyType": "Any type"
+    "anyType": "Any type",
+    "exportSelected": "Export"
   },
   "reader": {
     "title": "Reader",
@@ -993,6 +995,88 @@
       "remove": "Remove option {{n}}",
       "add": "Add option",
       "scoreHint": "Scores are optional; options without one (e.g. “Not applicable”) do not count towards the total."
+    }
+  },
+  "export": {
+    "title": "Export",
+    "scope": {
+      "label": "Scope",
+      "included": "Included studies",
+      "noReview": "Choose a review first",
+      "selected_one": "Selected paper ({{count}})",
+      "selected_other": "Selected papers ({{count}})",
+      "noneSelected": "Select papers in the library and press “Export”",
+      "collection": "Collection",
+      "noCollections": "No collections yet",
+      "chooseCollection": "Choose a collection",
+      "collectionOption": "{{name}} ({{count}})",
+      "library": "The whole library"
+    },
+    "format": {
+      "label": "Format",
+      "bibliography": "Bibliography"
+    },
+    "style": "Style",
+    "language": "Bibliography language",
+    "styles": {
+      "apa": "APA 7",
+      "mla": "MLA 9",
+      "chicago-author-date": "Chicago 18 (author-date)",
+      "chicago-notes": "Chicago 18 (notes and bibliography)",
+      "vancouver": "Vancouver",
+      "ieee": "IEEE"
+    },
+    "citekey": {
+      "label": "Citation key format:",
+      "pattern": "[author family name][year][first meaningful title word]",
+      "examples": "For example:"
+    },
+    "loading": "Preparing…",
+    "count_one": "{{count}} record",
+    "count_other": "{{count}} records",
+    "previewFirst": "Preview: first {{count}} entries",
+    "preview": "Preview",
+    "empty": "No records in this scope.",
+    "copy": "Copy to clipboard",
+    "save": "Save to file ({{fileName}})",
+    "copied": "Copied to the clipboard.",
+    "saved": "{{fileName}} saved.",
+    "failed": "That did not work; try again.",
+    "bibliographyTitle": "Bibliography",
+    "command": {
+      "copy": "Copy terminal command",
+      "noBibliography": "Formatted bibliographies cannot be made from the terminal yet.",
+      "noSelected": "There is no terminal command for selected papers."
+    },
+    "strategy": {
+      "title": "Search strategy",
+      "hint": "For the methods chapter: one row per search, imported file and snowballing step.",
+      "empty": "This review has no searches yet.",
+      "copyMarkdown": "Copy Markdown",
+      "saveMarkdown": "Save as Markdown",
+      "saveCsv": "Save as CSV",
+      "columns": {
+        "number": "#",
+        "source": "Source",
+        "method": "Method",
+        "date": "Date",
+        "query": "Query",
+        "reported": "Results reported",
+        "retrieved": "Records retrieved"
+      },
+      "methods": {
+        "database": "Database search",
+        "citation_backward": "Backward snowballing, round {{round}}",
+        "citation_forward": "Forward snowballing, round {{round}}",
+        "website": "Website",
+        "organisation": "Organisation",
+        "register": "Register",
+        "thesis": "Thesis"
+      },
+      "status": {
+        "partial": "stopped early",
+        "error": "failed"
+      }
     }
   }
 }

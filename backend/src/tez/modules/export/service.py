@@ -15,7 +15,13 @@ from sqlalchemy import select
 from tez.core.db import Database
 from tez.core.errors import ErrorCode, TezError
 from tez.modules.export import csl
-from tez.modules.export.schemas import BibliographyEntry, BibliographyResult, ExportResult
+from tez.modules.export.schemas import (
+    BibliographyEntry,
+    BibliographyResult,
+    ExportResult,
+    SearchStrategy,
+    StrategyRow,
+)
 from tez.modules.export.writers import ExportAuthor, ExportPaper, to_bibtex, to_ris
 from tez.modules.library import citekeys
 from tez.modules.library.models import CollectionPaper, IdentifierScheme, Paper
@@ -23,6 +29,9 @@ from tez.modules.library.paper_service import PaperCard, PaperService
 from tez.modules.reviews import service as reviews_service
 from tez.modules.reviews.models import ScreeningStage
 from tez.modules.screening.service import ScreeningService
+from tez.modules.search import queries as search_queries
+from tez.modules.search.models import RunMethod
+from tez.modules.search.queries import RunFacts
 
 
 class ExportFormat(StrEnum):
@@ -122,17 +131,50 @@ def export(
     export_format: ExportFormat,
     *,
     review_id: str | None = None,
+    included_only: bool = False,
     collection_id: str | None = None,
+    paper_ids: Sequence[str] | None = None,
 ) -> ExportResult:
+    """BibTeX or RIS. A review's scope is every paper taken into it, or with `included_only`
+    its included studies."""
     items = _papers(
         db,
         review_id=review_id,
-        included_only=False,
+        included_only=included_only,
         collection_id=collection_id,
-        paper_ids=None,
+        paper_ids=paper_ids,
     )
     content = to_bibtex(items) if export_format is ExportFormat.BIBTEX else to_ris(items)
-    return ExportResult(format=export_format.value, count=len(items), content=content)
+    return ExportResult(
+        format=export_format.value,
+        count=len(items),
+        content=content,
+        citekeys=[item.citekey for item in items],
+    )
+
+
+def _strategy_row(run: RunFacts) -> StrategyRow:
+    return StrategyRow(
+        run_id=run.id,
+        source=run.source,
+        method=run.method,
+        snowball_round=run.snowball_round,
+        executed_at=run.executed_at,
+        query=run.translated_query,
+        file_name=run.file_name,
+        total_reported=run.total_reported,
+        retrieved=len(run.paper_ids),
+        status=run.status,
+    )
+
+
+def search_strategy(db: Database, review_id: str) -> SearchStrategy:
+    """Every search run of the review, oldest first, for the methods chapter: one row per
+    source asked, file imported or snowballing step."""
+    if not reviews_service.review_exists(db, review_id):
+        raise TezError(ErrorCode.REVIEW_NOT_FOUND, {"review_id": review_id}, status=404)
+    runs = search_queries.runs_by_method(db, review_id, list(RunMethod))
+    return SearchStrategy(review_id=review_id, rows=[_strategy_row(run) for run in runs])
 
 
 def bibliography(

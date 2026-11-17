@@ -4,6 +4,7 @@ import { useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import { createHashRouter, Navigate, RouterProvider } from "react-router";
 
+import { ExportPage } from "@/features/export/ExportPage";
 import { JobsPage } from "@/features/jobs/JobsPage";
 import { LibraryPage } from "@/features/library/LibraryPage";
 import { ReaderPage } from "@/features/reader/ReaderPage";
@@ -38,6 +39,7 @@ function createRouter() {
         { path: "/screening", element: <ScreeningPage /> },
         { path: "/prisma", element: <PrismaPage /> },
         { path: "/quality", element: <QualityPage /> },
+        { path: "/export", element: <ExportPage /> },
         { path: "/library", element: <LibraryPage /> },
         { path: "/reader/:attachmentId?", element: <ReaderPage /> },
         { path: "/search", element: <SearchPage /> },

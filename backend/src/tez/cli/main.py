@@ -318,6 +318,9 @@ def build_app(m: Messages) -> typer.Typer:
         review: Annotated[
             str | None, typer.Option("--review", "-r", help=m("help.export.review"))
         ] = None,
+        included: Annotated[
+            bool, typer.Option("--included", help=m("help.export.included"))
+        ] = False,
         collection: Annotated[
             str | None, typer.Option("--collection", "-c", help=m("help.export.collection"))
         ] = None,
@@ -330,6 +333,8 @@ def build_app(m: Messages) -> typer.Typer:
         def work(access: Access, say: Say) -> tuple[dict[str, Any], int]:
             if fmt not in ("bibtex", "ris"):
                 raise CliFailure(ErrorCode.REQUEST_INVALID.value, {"format": fmt})
+            if included and not review:
+                raise CliFailure(ErrorCode.REQUEST_INVALID.value, {"included": True})
             review_id = resolve_review(access, review).id if review else None
             collection_id = None
             if collection:
@@ -344,7 +349,7 @@ def build_app(m: Messages) -> typer.Typer:
                 if found is None:
                     raise CliFailure(ErrorCode.COLLECTION_NOT_FOUND.value, {"name": collection})
                 collection_id = found.id
-            result = access.export(fmt, review_id, collection_id)
+            result = access.export(fmt, review_id, collection_id, included)
             if output is None:
                 if not settings.json:
                     typer.echo(result.content, nl=False)

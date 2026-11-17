@@ -42,4 +42,8 @@ export interface Platform {
    * desktop window ignores `target="_blank"`, so outside links go through here.
    */
   openExternal(url: string): Promise<void>;
+  /** Put text on the clipboard; with `html` also as rich text, which pastes into Word formatted. */
+  copyText(text: string, html?: string): Promise<void>;
+  /** Save a file the app made (a bibliography, a table) where the user's downloads go. */
+  saveFile(fileName: string, content: string, mimeType: string): Promise<void>;
 }

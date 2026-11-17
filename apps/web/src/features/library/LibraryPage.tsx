@@ -8,6 +8,7 @@ import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useExportSelection } from "@/features/export/store";
 import { ApiError } from "@/lib/api/query";
 
 import {
@@ -312,6 +313,8 @@ function BulkBar({
   const reading = useSetReadingStatus();
   const tag = useTagPapers();
   const leave = useRemoveFromCollection();
+  const navigate = useNavigate();
+  const chooseForExport = useExportSelection((state) => state.choose);
   const selectClass = "h-7 rounded-md border border-line bg-raised px-1 text-meta text-fg";
   const failure = reading.error ?? tag.error ?? leave.error;
 
@@ -362,6 +365,15 @@ function BulkBar({
           {t("library.removeFromCollection")}
         </Button>
       )}
+      <Button
+        size="sm"
+        onClick={() => {
+          chooseForExport(paperIds);
+          void navigate("/export");
+        }}
+      >
+        {t("library.exportSelected")}
+      </Button>
       {failure && (
         <span role="alert" className="text-meta text-danger">
           {t(`errors.${failure instanceof ApiError ? failure.code : "unknown"}`, {

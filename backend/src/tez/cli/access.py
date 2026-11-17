@@ -79,7 +79,7 @@ class Access(Protocol):
     def file_in(self, collection_id: str, paper_ids: list[str]) -> ChangeCount: ...
 
     def export(
-        self, fmt: str, review_id: str | None, collection_id: str | None
+        self, fmt: str, review_id: str | None, collection_id: str | None, included: bool = False
     ) -> ExportResult: ...
 
     def close(self) -> None: ...
@@ -150,11 +150,14 @@ class DirectAccess:
     def file_in(self, collection_id: str, paper_ids: list[str]) -> ChangeCount:
         return organize.add_to_collection(self.library.db, collection_id, paper_ids)
 
-    def export(self, fmt: str, review_id: str | None, collection_id: str | None) -> ExportResult:
+    def export(
+        self, fmt: str, review_id: str | None, collection_id: str | None, included: bool = False
+    ) -> ExportResult:
         return export_service.export(
             self.library.db,
             export_service.ExportFormat(fmt),
             review_id=review_id,
+            included_only=included,
             collection_id=collection_id,
         )
 
@@ -250,10 +253,14 @@ class ApiAccess:
             json={"paper_ids": paper_ids},
         )
 
-    def export(self, fmt: str, review_id: str | None, collection_id: str | None) -> ExportResult:
+    def export(
+        self, fmt: str, review_id: str | None, collection_id: str | None, included: bool = False
+    ) -> ExportResult:
         params = {"format": fmt}
         if review_id:
             params["review_id"] = review_id
+        if included:
+            params["included"] = "true"
         if collection_id:
             params["collection_id"] = collection_id
         return self._call("GET", "/export", ExportResult, params=params)
