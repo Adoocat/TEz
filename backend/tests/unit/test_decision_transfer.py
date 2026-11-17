@@ -443,14 +443,14 @@ def test_decisions_make_a_round_trip_between_two_libraries(
         ScreeningService(session).decide(review_id, ours["doi"], TA, Decision.MAYBE)
         ScreeningService(session).decide(review_id, ours["title"], TA, Decision.INCLUDE)
 
-    with _client(ayse_library) as client:
-        exported = client.get(
+    # Each app owns its library and closes it on shutdown: one client per library throughout.
+    with _client(ayse_library) as ayse_client, _client(library) as client:
+        exported = ayse_client.get(
             f"/reviews/{ayse_review}/decisions/export", params={"reviewer": "Ayşe"}
         )
-    assert exported.status_code == 200
-    content = exported.text
+        assert exported.status_code == 200
+        content = exported.text
 
-    with _client(library) as client:
         report = client.post(
             f"/reviews/{review_id}/decisions/import", json={"content": content}
         ).json()
@@ -458,7 +458,17 @@ def test_decisions_make_a_round_trip_between_two_libraries(
         again = client.post(
             f"/reviews/{review_id}/decisions/import", json={"content": content}
         ).json()
+        rows_after_second = _decision_rows(library, review_id)
         reviewers = client.get(f"/reviews/{review_id}/decisions/reviewers").json()
+
+        # And back: Demirkan's decisions reach Ayşe's library under his name.
+        back = client.get(
+            f"/reviews/{review_id}/decisions/export", params={"reviewer": "Demirkan"}
+        ).text
+        returned = ayse_client.post(
+            f"/reviews/{ayse_review}/decisions/import", json={"content": back}
+        ).json()
+        ayse_rows = _decision_rows(ayse_library, ayse_review)
 
     assert (report["reviewer"], report["records"], report["matched"]) == ("Ayşe", 3, 2)
     assert (report["added"], report["corrected"], report["unchanged"]) == (3, 0, 0)
@@ -471,24 +481,12 @@ def test_decisions_make_a_round_trip_between_two_libraries(
     assert ("owner", ours["doi"], "title_abstract", "maybe") in rows_after_first
     # Importing the same file again writes nothing.
     assert (again["added"], again["corrected"], again["unchanged"]) == (0, 0, 3)
-    assert _decision_rows(library, review_id) == rows_after_first
+    assert rows_after_second == rows_after_first
     assert reviewers == ["owner", "Ayşe"]
-
-    # And back: Demirkan's decisions reach Ayşe's library under his name.
-    with _client(library) as client:
-        back = client.get(
-            f"/reviews/{review_id}/decisions/export", params={"reviewer": "Demirkan"}
-        ).text
-    with _client(ayse_library) as client:
-        returned = client.post(
-            f"/reviews/{ayse_review}/decisions/import", json={"content": back}
-        ).json()
     # The title-matched record finds Ayşe's paper; the DOI one does not, because this fixture
     # keeps her DOI unnormalized (imports normalize it).
     assert (returned["reviewer"], returned["added"]) == ("Demirkan", 1)
-    assert ("Demirkan", theirs["title"], "title_abstract", "include") in _decision_rows(
-        ayse_library, ayse_review
-    )
+    assert ("Demirkan", theirs["title"], "title_abstract", "include") in ayse_rows
 
 
 def test_export_and_import_errors(demirkan: tuple[Library, str, dict[str, str]]) -> None:
