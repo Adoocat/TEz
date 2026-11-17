@@ -8,10 +8,12 @@ TEz is MIT-licensed. Every dependency that ships with the app has a licence comp
 | --- | --- | --- | --- |
 | alembic | 1.20 | MIT | database migrations |
 | bibtexparser | 2.1 | MIT | BibTeX import |
+| citeproc-py | 0.12 | BSD-2-Clause-Views | formatted bibliographies (CSL); bundles the CSL locale files (CC BY-SA 3.0) |
 | fastapi | 0.162 | MIT | the API |
 | hishel | 1.4 | BSD-3-Clause | HTTP cache |
 | httpx2 | 2.16 | BSD-3-Clause | outbound HTTP |
 | keyring | 25.7 | MIT | API keys in the OS keyring |
+| lxml | 6.1 | BSD-3-Clause (bundles libxml2 and libxslt, MIT) | XML for citeproc-py and the CSL styles |
 | pydantic, pydantic-settings | 2.14, 2.16 | MIT | schemas, configuration |
 | pylatexenc | 2.11 | MIT | LaTeX in BibTeX to text |
 | pypdfium2 | 5.15 | Apache-2.0 or BSD-3-Clause (PDFium: BSD-3-Clause, Apache-2.0) | PDF page count and text layer |
@@ -61,5 +63,10 @@ The reader's text-layer CSS (`apps/web/src/styles/index.css`) is adapted from pd
 | Data | Source | Licence | Used for |
 | --- | --- | --- | --- |
 | NHLBI Study Quality Assessment Tools (six checklists, July 2021) | National Heart, Lung, and Blood Institute, <https://www.nhlbi.nih.gov/health-topics/study-quality-assessment-tools> | Public domain (U.S. Government work, 17 U.S.C. § 105) | quality assessment templates (Task 38, ADR 0026) |
+
+| CSL styles: APA 7th edition, MLA 9th edition, Chicago 18th edition (author-date; notes and bibliography), NLM/Vancouver (citation-sequence), IEEE (`backend/src/tez/modules/export/styles/`) | Citation Style Language project, <https://github.com/citation-style-language/styles>; authors and contributors are named in each file's `<info>` | CC BY-SA 3.0 | formatted bibliographies (Task 39) |
+| CSL locales tr-TR and en-US (shipped inside citeproc-py) | Citation Style Language project, <https://github.com/citation-style-language/locales> | CC BY-SA 3.0 | Turkish and English terms in bibliographies (Task 39) |
+
+The CSL styles are bundled unchanged. At render time TEz adds a space after the citation number of numbered styles (`second-field-align`), in memory only. Any changed copy of a style is shared under CC BY-SA 3.0 too.
 
 Checklists whose terms forbid commercial use or adaptation, or give no licence (Kitchenham's, JBI, RoB 2, CASP), are not bundled (ADR 0026).
