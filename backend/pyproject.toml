@@ -7,10 +7,12 @@ requires-python = ">=3.12"
 dependencies = [
     "alembic>=1",
     "bibtexparser>=2.1",
+    "citeproc-py>=0.12.3,<0.13",  # csl_compat patches its internals
     "fastapi>=0.162",
     "hishel[httpx2]>=1.4",
     "httpx2>=2.16",
     "keyring>=25",
+    "lxml>=6.1",
     "pydantic-settings>=2",
     "pylatexenc>=2.10",
     "pypdfium2>=5.15",

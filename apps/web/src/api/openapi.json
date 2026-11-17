@@ -5982,6 +5982,83 @@
         }
       }
     },
+    "/export/bibliography": {
+      "post": {
+        "tags": [
+          "export"
+        ],
+        "summary": "Formatted Bibliography",
+        "description": "A bibliography in a CSL style (APA 7, MLA, Chicago, Vancouver, IEEE), Turkish or\nEnglish: chosen papers, a collection, a review's included studies, or the whole library.",
+        "operationId": "formatted_bibliography_export_bibliography_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BibliographyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BibliographyResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/settings": {
       "get": {
         "tags": [
@@ -7368,6 +7445,119 @@
         ],
         "title": "BackupView"
       },
+      "BibliographyEntry": {
+        "properties": {
+          "citekey": {
+            "type": "string",
+            "title": "Citekey"
+          },
+          "html": {
+            "type": "string",
+            "title": "Html"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "citekey",
+          "html",
+          "text"
+        ],
+        "title": "BibliographyEntry"
+      },
+      "BibliographyRequest": {
+        "properties": {
+          "style": {
+            "$ref": "#/components/schemas/CslStyle",
+            "default": "apa"
+          },
+          "locale": {
+            "$ref": "#/components/schemas/CslLocale",
+            "default": "tr-TR"
+          },
+          "review_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review Id"
+          },
+          "collection_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collection Id"
+          },
+          "paper_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 10000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paper Ids"
+          }
+        },
+        "type": "object",
+        "title": "BibliographyRequest"
+      },
+      "BibliographyResult": {
+        "properties": {
+          "style": {
+            "$ref": "#/components/schemas/CslStyle"
+          },
+          "locale": {
+            "$ref": "#/components/schemas/CslLocale"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/BibliographyEntry"
+            },
+            "type": "array",
+            "title": "Entries"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "html": {
+            "type": "string",
+            "title": "Html"
+          }
+        },
+        "type": "object",
+        "required": [
+          "style",
+          "locale",
+          "count",
+          "entries",
+          "text",
+          "html"
+        ],
+        "title": "BibliographyResult"
+      },
       "ChangeCount": {
         "properties": {
           "changed": {
@@ -7757,6 +7947,26 @@
           "keywords"
         ],
         "title": "CriterionView"
+      },
+      "CslLocale": {
+        "type": "string",
+        "enum": [
+          "tr-TR",
+          "en-US"
+        ],
+        "title": "CslLocale"
+      },
+      "CslStyle": {
+        "type": "string",
+        "enum": [
+          "apa",
+          "mla",
+          "chicago-author-date",
+          "chicago-notes",
+          "vancouver",
+          "ieee"
+        ],
+        "title": "CslStyle"
       },
       "DatabasesBranch": {
         "properties": {

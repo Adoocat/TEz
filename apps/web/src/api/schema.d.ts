@@ -1172,6 +1172,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/export/bibliography": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Formatted Bibliography
+         * @description A bibliography in a CSL style (APA 7, MLA, Chicago, Vancouver, IEEE), Turkish or
+         *     English: chosen papers, a collection, a review's included studies, or the whole library.
+         */
+        post: operations["formatted_bibliography_export_bibliography_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/settings": {
         parameters: {
             query?: never;
@@ -1444,6 +1465,41 @@ export interface components {
             /** App Version */
             app_version: string | null;
         };
+        /** BibliographyEntry */
+        BibliographyEntry: {
+            /** Citekey */
+            citekey: string;
+            /** Html */
+            html: string;
+            /** Text */
+            text: string;
+        };
+        /** BibliographyRequest */
+        BibliographyRequest: {
+            /** @default apa */
+            style: components["schemas"]["CslStyle"];
+            /** @default tr-TR */
+            locale: components["schemas"]["CslLocale"];
+            /** Review Id */
+            review_id?: string | null;
+            /** Collection Id */
+            collection_id?: string | null;
+            /** Paper Ids */
+            paper_ids?: string[] | null;
+        };
+        /** BibliographyResult */
+        BibliographyResult: {
+            style: components["schemas"]["CslStyle"];
+            locale: components["schemas"]["CslLocale"];
+            /** Count */
+            count: number;
+            /** Entries */
+            entries: components["schemas"]["BibliographyEntry"][];
+            /** Text */
+            text: string;
+            /** Html */
+            html: string;
+        };
         /** ChangeCount */
         ChangeCount: {
             /** Changed */
@@ -1559,6 +1615,16 @@ export interface components {
             /** Keywords */
             keywords: string[];
         };
+        /**
+         * CslLocale
+         * @enum {string}
+         */
+        CslLocale: "tr-TR" | "en-US";
+        /**
+         * CslStyle
+         * @enum {string}
+         */
+        CslStyle: "apa" | "mla" | "chicago-author-date" | "chicago-notes" | "vancouver" | "ieee";
         /** DatabasesBranch */
         DatabasesBranch: {
             /** Identified */
@@ -7258,6 +7324,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ExportResult"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    formatted_bibliography_export_bibliography_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BibliographyRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BibliographyResult"];
                 };
             };
             /** @description Missing or invalid token */

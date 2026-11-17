@@ -1,22 +1,28 @@
-"""Which papers an export holds, as BibTeX or RIS text (plan: `tez export`; design 5.10 later).
+"""Which papers an export holds, as BibTeX, RIS or a formatted bibliography (`tez export`,
+design 5.10).
 
-The scope is a review (every paper taken into it), a collection, or the whole library. Papers
-are written in the order of their citation keys, so the same library gives the same file. A
-paper without a key (a review record never kept in the library) gets one for this file only.
+The scope is a review (every paper taken into it, or only its included studies), a collection,
+chosen papers, or the whole library. Papers are taken in the order of their citation keys, so
+the same library gives the same file. A paper without a key (a review record never kept in the
+library) gets one for this file only.
 """
 
+from collections.abc import Sequence
 from enum import StrEnum
 
 from sqlalchemy import select
 
 from tez.core.db import Database
 from tez.core.errors import ErrorCode, TezError
-from tez.modules.export.schemas import ExportResult
+from tez.modules.export import csl
+from tez.modules.export.schemas import BibliographyEntry, BibliographyResult, ExportResult
 from tez.modules.export.writers import ExportAuthor, ExportPaper, to_bibtex, to_ris
 from tez.modules.library import citekeys
 from tez.modules.library.models import CollectionPaper, IdentifierScheme, Paper
 from tez.modules.library.paper_service import PaperCard, PaperService
 from tez.modules.reviews import service as reviews_service
+from tez.modules.reviews.models import ScreeningStage
+from tez.modules.screening.service import ScreeningService
 
 
 class ExportFormat(StrEnum):
@@ -71,23 +77,30 @@ def _keys(cards: list[PaperCard]) -> dict[str, str]:
     return keys
 
 
-def export(
+def _papers(
     db: Database,
-    export_format: ExportFormat,
     *,
-    review_id: str | None = None,
-    collection_id: str | None = None,
-) -> ExportResult:
-    if review_id is not None and collection_id is not None:
+    review_id: str | None,
+    included_only: bool,
+    collection_id: str | None,
+    paper_ids: Sequence[str] | None,
+) -> list[ExportPaper]:
+    """The papers in scope, sorted by citation key. At most one of review, collection and
+    papers; none means the whole library."""
+    if sum(scope is not None for scope in (review_id, collection_id, paper_ids)) > 1:
         raise TezError(ErrorCode.EXPORT_ONE_SCOPE, status=422)
-    wanted: set[str] = set()
-    if review_id is not None:
-        if not reviews_service.review_exists(db, review_id):
-            raise TezError(ErrorCode.REVIEW_NOT_FOUND, {"review_id": review_id}, status=404)
-        wanted = reviews_service.paper_ids_in_review(db, review_id)
+    if review_id is not None and not reviews_service.review_exists(db, review_id):
+        raise TezError(ErrorCode.REVIEW_NOT_FOUND, {"review_id": review_id}, status=404)
+    if review_id is not None and not included_only:
+        wanted: set[str] | None = reviews_service.paper_ids_in_review(db, review_id)
+    else:
+        wanted = set(paper_ids) if paper_ids is not None else None
     with db.session() as session:
+        if review_id is not None and included_only:
+            # The review's included studies: included at full text (Task 31's decisions).
+            wanted = set(ScreeningService(session).included(review_id, ScreeningStage.FULL_TEXT))
         papers = PaperService(session)
-        if review_id is not None:
+        if wanted is not None:
             cards = list(papers.cards(wanted).values())
         elif collection_id is not None:
             members = select(CollectionPaper.paper_id).where(
@@ -99,8 +112,55 @@ def export(
                 Paper.library_added_at.is_not(None), Paper.deleted_at.is_(None)
             )
         keys = _keys(cards)
-        items = sorted(
+        return sorted(
             (_paper(card, keys[card.paper.id]) for card in cards), key=lambda p: p.citekey
         )
+
+
+def export(
+    db: Database,
+    export_format: ExportFormat,
+    *,
+    review_id: str | None = None,
+    collection_id: str | None = None,
+) -> ExportResult:
+    items = _papers(
+        db,
+        review_id=review_id,
+        included_only=False,
+        collection_id=collection_id,
+        paper_ids=None,
+    )
     content = to_bibtex(items) if export_format is ExportFormat.BIBTEX else to_ris(items)
     return ExportResult(format=export_format.value, count=len(items), content=content)
+
+
+def bibliography(
+    db: Database,
+    style: csl.CslStyle,
+    locale: csl.CslLocale,
+    *,
+    review_id: str | None = None,
+    collection_id: str | None = None,
+    paper_ids: Sequence[str] | None = None,
+) -> BibliographyResult:
+    """A formatted bibliography. A review's scope is its included studies."""
+    items = _papers(
+        db,
+        review_id=review_id,
+        included_only=True,
+        collection_id=collection_id,
+        paper_ids=paper_ids,
+    )
+    entries = [
+        BibliographyEntry(citekey=entry.citekey, html=entry.html, text=entry.text)
+        for entry in csl.render(style, locale, items)
+    ]
+    return BibliographyResult(
+        style=style,
+        locale=locale,
+        count=len(entries),
+        entries=entries,
+        text="\n".join(entry.text for entry in entries),
+        html="".join(f"<p>{entry.html}</p>" for entry in entries),
+    )
