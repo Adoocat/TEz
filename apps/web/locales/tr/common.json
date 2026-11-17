@@ -1108,5 +1108,24 @@
       "not_in_review": "kütüphanede var ama bu review'da değil",
       "duplicate": "dosyada aynı makale iki kez"
     }
+  },
+  "conflicts": {
+    "title": "Çakışmalar",
+    "tab": "Çakışmalar",
+    "back": "Elemeye dön",
+    "noReview": "Önce bir review seç.",
+    "reviewer": "Değerlendirici",
+    "noColleague": "Bu review'da henüz meslektaş kararı yok. Meslektaşının karar dosyasını review panelinden al.",
+    "toReview": "Review paneline git",
+    "agreement": "Uyum",
+    "nothingCompared": "İkinizin de karar verdiği kayıt yok.",
+    "summary": "Uyum %{{percent}} · Cohen kappa {{kappa}}",
+    "counts": "{{compared}} kaydın {{agreed}} tanesinde aynı karar; {{open}} açık çakışma",
+    "none": "Bu aşamada açık çakışma yok.",
+    "list": "Açık çakışmalar",
+    "you": "Sen",
+    "etAl": "{{name}} vd.",
+    "reconcile": "Uzlaşılan karar:",
+    "reason": "Hariç tutma gerekçesi"
   }
 }

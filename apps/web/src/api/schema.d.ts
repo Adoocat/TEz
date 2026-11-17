@@ -697,6 +697,68 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reviews/{review_id}/decisions/agreement": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Agreement
+         * @description Agreement between the owner and a colleague per stage: percent, Cohen's kappa and the
+         *     conflicts still open. Without `reviewer`, the first colleague by name.
+         */
+        get: operations["get_agreement_reviews__review_id__decisions_agreement_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/decisions/conflicts/{stage}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Conflicts
+         * @description The stage's open conflicts, both decisions side by side.
+         */
+        get: operations["get_conflicts_reviews__review_id__decisions_conflicts__stage__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/decisions/conflicts/{stage}/reconcile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reconcile
+         * @description Resolve a conflict: the agreed decision is a new `consensus` row; the reviewers' own
+         *     decisions stay as they are.
+         */
+        post: operations["reconcile_reviews__review_id__decisions_conflicts__stage__reconcile_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/quality/catalog": {
         parameters: {
             query?: never;
@@ -1466,6 +1528,15 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AgreementView */
+        AgreementView: {
+            /** Reviewer */
+            reviewer: string | null;
+            /** Reviewers */
+            reviewers: string[];
+            /** Stages */
+            stages: components["schemas"]["StageAgreementView"][];
+        };
         /** AnswerPut */
         AnswerPut: {
             /** Answer */
@@ -1647,6 +1718,31 @@ export interface components {
             is_system: boolean;
             /** Paper Count */
             paper_count: number;
+        };
+        /** ConflictList */
+        ConflictList: {
+            /** Reviewer */
+            reviewer: string | null;
+            stage: components["schemas"]["ScreeningStage"];
+            /** Items */
+            items: components["schemas"]["ConflictView"][];
+        };
+        /** ConflictView */
+        ConflictView: {
+            /** Paper Id */
+            paper_id: string;
+            /** Title */
+            title: string;
+            /** First Author */
+            first_author: string | null;
+            /** Author Count */
+            author_count: number;
+            /** Year */
+            year: number | null;
+            /** Venue */
+            venue: string | null;
+            owner: components["schemas"]["SideDecision"];
+            other: components["schemas"]["SideDecision"];
         };
         /** CriteriaOrder */
         CriteriaOrder: {
@@ -2704,6 +2800,16 @@ export interface components {
             /** Count */
             count: number;
         };
+        /** Reconciliation */
+        Reconciliation: {
+            /** Paper Id */
+            paper_id: string;
+            decision: components["schemas"]["ChosenDecision"];
+            /** Criterion Id */
+            criterion_id?: string | null;
+            /** Note */
+            note?: string | null;
+        };
         /**
          * RecordOrigin
          * @enum {string}
@@ -3046,6 +3152,16 @@ export interface components {
             /** Sources Email */
             sources_email?: string | null;
         };
+        /** SideDecision */
+        SideDecision: {
+            decision: components["schemas"]["Decision"];
+            /** Criterion Code */
+            criterion_code: string | null;
+            /** Criterion Text */
+            criterion_text: string | null;
+            /** Note */
+            note: string | null;
+        };
         /**
          * SinceLastImport
          * @description How a new import of a saved external search compares with its earlier imports.
@@ -3195,6 +3311,20 @@ export interface components {
          * @enum {string}
          */
         SourceState: "waiting" | "searching" | "rate_limited" | "done" | "partial" | "failed";
+        /** StageAgreementView */
+        StageAgreementView: {
+            stage: components["schemas"]["ScreeningStage"];
+            /** Compared */
+            compared: number;
+            /** Agreed */
+            agreed: number;
+            /** Percent */
+            percent: number | null;
+            /** Kappa */
+            kappa: number | null;
+            /** Conflicts */
+            conflicts: number;
+        };
         /**
          * StageCriterion
          * @description A criterion as one stage's screening shows it, with its key (for Task 31's service).
@@ -5960,6 +6090,190 @@ export interface operations {
                 };
                 content: {
                     "application/json": string[];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_agreement_reviews__review_id__decisions_agreement_get: {
+        parameters: {
+            query?: {
+                reviewer?: string | null;
+            };
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgreementView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_conflicts_reviews__review_id__decisions_conflicts__stage__get: {
+        parameters: {
+            query?: {
+                reviewer?: string | null;
+            };
+            header?: never;
+            path: {
+                review_id: string;
+                stage: components["schemas"]["ScreeningStage"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConflictList"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    reconcile_reviews__review_id__decisions_conflicts__stage__reconcile_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+                stage: components["schemas"]["ScreeningStage"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Reconciliation"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionView"];
                 };
             };
             /** @description Missing or invalid token */

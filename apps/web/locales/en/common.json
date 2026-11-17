@@ -1108,5 +1108,24 @@
       "not_in_review": "in the library but not in this review",
       "duplicate": "the same paper twice in the file"
     }
+  },
+  "conflicts": {
+    "title": "Conflicts",
+    "tab": "Conflicts",
+    "back": "Back to screening",
+    "noReview": "Choose a review first.",
+    "reviewer": "Reviewer",
+    "noColleague": "No colleague's decisions in this review yet. Import their decision file from the review panel.",
+    "toReview": "Go to the review panel",
+    "agreement": "Agreement",
+    "nothingCompared": "No record was decided by both of you.",
+    "summary": "Agreement {{percent}}% · Cohen's kappa {{kappa}}",
+    "counts": "Same decision on {{agreed}} of {{compared}} records; {{open}} open conflicts",
+    "none": "No open conflicts at this stage.",
+    "list": "Open conflicts",
+    "you": "You",
+    "etAl": "{{name}} et al.",
+    "reconcile": "Agreed decision:",
+    "reason": "Exclusion reason"
   }
 }

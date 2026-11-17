@@ -3656,6 +3656,298 @@
         }
       }
     },
+    "/reviews/{review_id}/decisions/agreement": {
+      "get": {
+        "tags": [
+          "dual screening"
+        ],
+        "summary": "Get Agreement",
+        "description": "Agreement between the owner and a colleague per stage: percent, Cohen's kappa and the\nconflicts still open. Without `reviewer`, the first colleague by name.",
+        "operationId": "get_agreement_reviews__review_id__decisions_agreement_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          },
+          {
+            "name": "reviewer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Reviewer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgreementView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{review_id}/decisions/conflicts/{stage}": {
+      "get": {
+        "tags": [
+          "dual screening"
+        ],
+        "summary": "Get Conflicts",
+        "description": "The stage's open conflicts, both decisions side by side.",
+        "operationId": "get_conflicts_reviews__review_id__decisions_conflicts__stage__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          },
+          {
+            "name": "stage",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ScreeningStage"
+            }
+          },
+          {
+            "name": "reviewer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Reviewer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConflictList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{review_id}/decisions/conflicts/{stage}/reconcile": {
+      "post": {
+        "tags": [
+          "dual screening"
+        ],
+        "summary": "Reconcile",
+        "description": "Resolve a conflict: the agreed decision is a new `consensus` row; the reviewers' own\ndecisions stay as they are.",
+        "operationId": "reconcile_reviews__review_id__decisions_conflicts__stage__reconcile_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          },
+          {
+            "name": "stage",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ScreeningStage"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Reconciliation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecisionView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/quality/catalog": {
       "get": {
         "tags": [
@@ -7500,6 +7792,42 @@
   },
   "components": {
     "schemas": {
+      "AgreementView": {
+        "properties": {
+          "reviewer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewer"
+          },
+          "reviewers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reviewers"
+          },
+          "stages": {
+            "items": {
+              "$ref": "#/components/schemas/StageAgreementView"
+            },
+            "type": "array",
+            "title": "Stages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reviewer",
+          "reviewers",
+          "stages"
+        ],
+        "title": "AgreementView"
+      },
       "AnswerPut": {
         "properties": {
           "answer": {
@@ -8112,6 +8440,105 @@
           "paper_count"
         ],
         "title": "CollectionView"
+      },
+      "ConflictList": {
+        "properties": {
+          "reviewer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewer"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/ScreeningStage"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ConflictView"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reviewer",
+          "stage",
+          "items"
+        ],
+        "title": "ConflictList"
+      },
+      "ConflictView": {
+        "properties": {
+          "paper_id": {
+            "type": "string",
+            "title": "Paper Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "first_author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Author"
+          },
+          "author_count": {
+            "type": "integer",
+            "title": "Author Count"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "venue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venue"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/SideDecision"
+          },
+          "other": {
+            "$ref": "#/components/schemas/SideDecision"
+          }
+        },
+        "type": "object",
+        "required": [
+          "paper_id",
+          "title",
+          "first_author",
+          "author_count",
+          "year",
+          "venue",
+          "owner",
+          "other"
+        ],
+        "title": "ConflictView"
       },
       "CriteriaOrder": {
         "properties": {
@@ -11579,6 +12006,47 @@
         ],
         "title": "ReasonCount"
       },
+      "Reconciliation": {
+        "properties": {
+          "paper_id": {
+            "type": "string",
+            "title": "Paper Id"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/ChosenDecision"
+          },
+          "criterion_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Criterion Id"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 10000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "paper_id",
+          "decision"
+        ],
+        "title": "Reconciliation"
+      },
       "RecordOrigin": {
         "type": "string",
         "enum": [
@@ -12652,6 +13120,54 @@
         "title": "SettingsPatch",
         "description": "Only the fields present are changed; null resets a field to its default."
       },
+      "SideDecision": {
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "criterion_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Criterion Code"
+          },
+          "criterion_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Criterion Text"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "decision",
+          "criterion_code",
+          "criterion_text",
+          "note"
+        ],
+        "title": "SideDecision"
+      },
       "SinceLastImport": {
         "properties": {
           "last_searched_at": {
@@ -13075,6 +13591,57 @@
           "failed"
         ],
         "title": "SourceState"
+      },
+      "StageAgreementView": {
+        "properties": {
+          "stage": {
+            "$ref": "#/components/schemas/ScreeningStage"
+          },
+          "compared": {
+            "type": "integer",
+            "title": "Compared"
+          },
+          "agreed": {
+            "type": "integer",
+            "title": "Agreed"
+          },
+          "percent": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Percent"
+          },
+          "kappa": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kappa"
+          },
+          "conflicts": {
+            "type": "integer",
+            "title": "Conflicts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "compared",
+          "agreed",
+          "percent",
+          "kappa",
+          "conflicts"
+        ],
+        "title": "StageAgreementView"
       },
       "StageCriterion": {
         "properties": {
