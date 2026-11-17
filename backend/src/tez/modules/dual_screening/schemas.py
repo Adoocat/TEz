@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from tez.modules.dual_screening.matching import MatchProblem
-from tez.modules.reviews.models import ScreeningStage
+from tez.modules.reviews.models import Decision, ScreeningStage
+from tez.modules.screening.schemas import ChosenDecision
 
 
 class DecisionImport(BaseModel):
@@ -43,3 +44,56 @@ class ImportReport(BaseModel):
     unmatched: list[UnmatchedRecord]
     unknown_criteria: list[UnknownCriterion]
     skipped: list[SkippedDecision]
+
+
+class StageAgreementView(BaseModel):
+    stage: ScreeningStage
+    # Records both reviewers decided at this stage (their own decisions, before reconciling).
+    compared: int
+    agreed: int
+    # 0-100; None with nothing to compare.
+    percent: float | None
+    # Cohen's kappa; None when undefined (nothing compared, or one category throughout).
+    kappa: float | None
+    # Disagreements nobody has reconciled yet.
+    conflicts: int
+
+
+class AgreementView(BaseModel):
+    # The colleague compared with the owner; None when no colleague's decisions are here.
+    reviewer: str | None
+    reviewers: list[str]
+    stages: list[StageAgreementView]
+
+
+class SideDecision(BaseModel):
+    decision: Decision
+    criterion_code: str | None
+    criterion_text: str | None
+    note: str | None
+
+
+class ConflictView(BaseModel):
+    paper_id: str
+    title: str
+    first_author: str | None
+    author_count: int
+    year: int | None
+    venue: str | None
+    owner: SideDecision
+    other: SideDecision
+
+
+class ConflictList(BaseModel):
+    reviewer: str | None
+    stage: ScreeningStage
+    items: list[ConflictView]
+
+
+class Reconciliation(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    paper_id: str
+    decision: ChosenDecision
+    criterion_id: str | None = None
+    note: str | None = Field(default=None, max_length=10_000)

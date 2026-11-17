@@ -4,6 +4,7 @@ import { useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import { createHashRouter, Navigate, RouterProvider } from "react-router";
 
+import { ConflictsPage } from "@/features/dual-screening/ConflictsPage";
 import { ExportPage } from "@/features/export/ExportPage";
 import { JobsPage } from "@/features/jobs/JobsPage";
 import { LibraryPage } from "@/features/library/LibraryPage";
@@ -37,6 +38,7 @@ function createRouter() {
         })),
         { path: "/review", element: <ReviewPanel /> },
         { path: "/screening", element: <ScreeningPage /> },
+        { path: "/screening/conflicts", element: <ConflictsPage /> },
         { path: "/prisma", element: <PrismaPage /> },
         { path: "/quality", element: <QualityPage /> },
         { path: "/export", element: <ExportPage /> },

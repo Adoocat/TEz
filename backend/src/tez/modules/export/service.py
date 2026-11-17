@@ -28,7 +28,7 @@ from tez.modules.library.models import CollectionPaper, IdentifierScheme, Paper
 from tez.modules.library.paper_service import PaperCard, PaperService
 from tez.modules.reviews import service as reviews_service
 from tez.modules.reviews.models import ScreeningStage
-from tez.modules.screening.service import ScreeningService
+from tez.modules.screening.service import RECONCILED, ScreeningService
 from tez.modules.search import queries as search_queries
 from tez.modules.search.models import RunMethod
 from tez.modules.search.queries import RunFacts
@@ -107,7 +107,9 @@ def _papers(
     with db.session() as session:
         if review_id is not None and included_only:
             # The review's included studies: included at full text (Task 31's decisions).
-            wanted = set(ScreeningService(session).included(review_id, ScreeningStage.FULL_TEXT))
+            wanted = set(
+                ScreeningService(session).included(review_id, ScreeningStage.FULL_TEXT, RECONCILED)
+            )
         papers = PaperService(session)
         if wanted is not None:
             cards = list(papers.cards(wanted).values())

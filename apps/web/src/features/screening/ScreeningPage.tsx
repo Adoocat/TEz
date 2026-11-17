@@ -253,6 +253,12 @@ function Screening({ reviewId }: { reviewId: string }) {
               {t(`reviews.panel.stage.${s}`)}
             </Link>
           ))}
+          <Link
+            to="/screening/conflicts"
+            className="rounded-md px-2.5 py-1 text-ui text-fg-muted hover:bg-hovered"
+          >
+            {t("conflicts.tab")}
+          </Link>
         </nav>
         {counts && (
           <p className="text-meta text-fg-muted tabular-nums" aria-live="polite">
