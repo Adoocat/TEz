@@ -3399,6 +3399,263 @@
         }
       }
     },
+    "/reviews/{review_id}/decisions/export": {
+      "get": {
+        "tags": [
+          "dual screening"
+        ],
+        "summary": "Export Decisions",
+        "description": "The owner's decisions in force as a decision file, under the name `reviewer`.",
+        "operationId": "export_decisions_reviews__review_id__decisions_export_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          },
+          {
+            "name": "reviewer",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Reviewer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecisionFile"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{review_id}/decisions/import": {
+      "post": {
+        "tags": [
+          "dual screening"
+        ],
+        "summary": "Import Decisions",
+        "description": "A colleague's decision file: matched records get their decisions, appended under the\nfile's reviewer name; the rest is reported. Importing the same file again adds nothing.",
+        "operationId": "import_decisions_reviews__review_id__decisions_import_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecisionImport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportReport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{review_id}/decisions/reviewers": {
+      "get": {
+        "tags": [
+          "dual screening"
+        ],
+        "summary": "List Reviewers",
+        "description": "Everyone who has decided in the review, the owner first.",
+        "operationId": "list_reviewers_reviews__review_id__decisions_reviewers_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Response List Reviewers Reviews  Review Id  Decisions Reviewers Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/quality/catalog": {
       "get": {
         "tags": [
@@ -8269,6 +8526,85 @@
         ],
         "title": "DecisionCreate"
       },
+      "DecisionFile": {
+        "properties": {
+          "format": {
+            "type": "string",
+            "const": "tez.screening-decisions",
+            "title": "Format",
+            "default": "tez.screening-decisions"
+          },
+          "version": {
+            "type": "integer",
+            "const": 1,
+            "title": "Version",
+            "default": 1
+          },
+          "exported_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Exported At"
+          },
+          "app_version": {
+            "type": "string",
+            "title": "App Version"
+          },
+          "reviewer": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Reviewer"
+          },
+          "review": {
+            "$ref": "#/components/schemas/FileReview"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/FileCriterion"
+            },
+            "type": "array",
+            "title": "Criteria"
+          },
+          "records": {
+            "items": {
+              "$ref": "#/components/schemas/FileRecord"
+            },
+            "type": "array",
+            "title": "Records"
+          },
+          "decisions": {
+            "items": {
+              "$ref": "#/components/schemas/FileDecision"
+            },
+            "type": "array",
+            "title": "Decisions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "exported_at",
+          "app_version",
+          "reviewer",
+          "review"
+        ],
+        "title": "DecisionFile"
+      },
+      "DecisionImport": {
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 50000000,
+            "minLength": 1,
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content"
+        ],
+        "title": "DecisionImport"
+      },
       "DecisionView": {
         "properties": {
           "id": {
@@ -8595,6 +8931,214 @@
           "last_retrieved"
         ],
         "title": "ExternalSearchView"
+      },
+      "FileAuthor": {
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Display Name"
+          },
+          "family": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Family"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "display_name"
+        ],
+        "title": "FileAuthor"
+      },
+      "FileCriterion": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 16,
+            "minLength": 1,
+            "title": "Code"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/CriterionKind"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "stage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ScreeningStage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "kind",
+          "text"
+        ],
+        "title": "FileCriterion"
+      },
+      "FileDecision": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Id"
+          },
+          "record": {
+            "type": "string",
+            "title": "Record"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/ScreeningStage"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "criterion": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Criterion"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Decided At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "record",
+          "stage",
+          "decision",
+          "decided_at"
+        ],
+        "title": "FileDecision"
+      },
+      "FileRecord": {
+        "properties": {
+          "ref": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Ref"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Title"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "first_author": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FileAuthor"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "venue_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venue Type"
+          },
+          "identifiers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Identifiers"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "ref",
+          "title"
+        ],
+        "title": "FileRecord"
+      },
+      "FileReview": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "method"
+        ],
+        "title": "FileReview"
       },
       "GreyEntry": {
         "properties": {
@@ -9208,6 +9752,73 @@
         ],
         "title": "ImportPreviewRequest"
       },
+      "ImportReport": {
+        "properties": {
+          "reviewer": {
+            "type": "string",
+            "title": "Reviewer"
+          },
+          "records": {
+            "type": "integer",
+            "title": "Records"
+          },
+          "matched": {
+            "type": "integer",
+            "title": "Matched"
+          },
+          "added": {
+            "type": "integer",
+            "title": "Added"
+          },
+          "corrected": {
+            "type": "integer",
+            "title": "Corrected"
+          },
+          "unchanged": {
+            "type": "integer",
+            "title": "Unchanged"
+          },
+          "withdrawn": {
+            "type": "integer",
+            "title": "Withdrawn"
+          },
+          "unmatched": {
+            "items": {
+              "$ref": "#/components/schemas/UnmatchedRecord"
+            },
+            "type": "array",
+            "title": "Unmatched"
+          },
+          "unknown_criteria": {
+            "items": {
+              "$ref": "#/components/schemas/UnknownCriterion"
+            },
+            "type": "array",
+            "title": "Unknown Criteria"
+          },
+          "skipped": {
+            "items": {
+              "$ref": "#/components/schemas/SkippedDecision"
+            },
+            "type": "array",
+            "title": "Skipped"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reviewer",
+          "records",
+          "matched",
+          "added",
+          "corrected",
+          "unchanged",
+          "withdrawn",
+          "unmatched",
+          "unknown_criteria",
+          "skipped"
+        ],
+        "title": "ImportReport"
+      },
       "ImportRequest": {
         "properties": {
           "file_name": {
@@ -9578,6 +10189,15 @@
           "new"
         ],
         "title": "MatchMethod"
+      },
+      "MatchProblem": {
+        "type": "string",
+        "enum": [
+          "not_found",
+          "not_in_review",
+          "duplicate"
+        ],
+        "title": "MatchProblem"
       },
       "OpenAccessQueued": {
         "properties": {
@@ -12052,6 +12672,28 @@
         "title": "SinceLastImport",
         "description": "How a new import of a saved external search compares with its earlier imports."
       },
+      "SkippedDecision": {
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "title": "Source Id"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/ScreeningStage"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_id",
+          "stage",
+          "code"
+        ],
+        "title": "SkippedDecision"
+      },
       "SnowballRoundView": {
         "properties": {
           "search_id": {
@@ -12875,6 +13517,46 @@
           "decision_id"
         ],
         "title": "UndoRequest"
+      },
+      "UnknownCriterion": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "decisions": {
+            "type": "integer",
+            "title": "Decisions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "decisions"
+        ],
+        "title": "UnknownCriterion"
+      },
+      "UnmatchedRecord": {
+        "properties": {
+          "ref": {
+            "type": "string",
+            "title": "Ref"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "problem": {
+            "$ref": "#/components/schemas/MatchProblem"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ref",
+          "title",
+          "problem"
+        ],
+        "title": "UnmatchedRecord"
       },
       "VenueType": {
         "type": "string",

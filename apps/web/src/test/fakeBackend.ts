@@ -251,6 +251,10 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
       if (request.method === "GET" && /^\/reviews\/[^/]+\/quality\/summary$/.test(path)) {
         return json({ enabled: false, questions: 0, papers: 0, assessed: 0, in_progress: 0 });
       }
+      // Two-reviewer screening (Task 41): only the owner unless a test wraps this backend.
+      if (request.method === "GET" && /^\/reviews\/[^/]+\/decisions\/reviewers$/.test(path)) {
+        return json(["owner"]);
+      }
       const overviewOf = /^\/reviews\/([^/]+)\/overview$/.exec(path)?.[1];
       if (overviewOf && request.method === "GET") {
         return json(

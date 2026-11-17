@@ -101,6 +101,9 @@ class ErrorCode(StrEnum):
     CLI_NO_REVIEW = "cli.no_review"
     CLI_LIBRARY_BUSY = "cli.library_busy"
     CLI_API_UNREACHABLE = "cli.api_unreachable"
+    DECISIONS_INVALID_FILE = "decisions.invalid_file"
+    DECISIONS_UNSUPPORTED_VERSION = "decisions.unsupported_version"
+    DECISIONS_RESERVED_REVIEWER = "decisions.reserved_reviewer"
 
 
 class TezError(Exception):

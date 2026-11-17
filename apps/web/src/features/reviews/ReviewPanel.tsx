@@ -11,6 +11,7 @@ import { useSearchHistory, type SearchOverview } from "@/features/search/api";
 import { useSearchView } from "@/features/search/store";
 
 import { useReviewOverview, useReviews, type ReviewView, type StageProgress } from "./api";
+import { ReviewersPanel } from "@/features/dual-screening/ReviewersPanel";
 import { GreyLiteraturePanel } from "@/features/greylit/GreyLiteraturePanel";
 import { usePrismaCounts } from "@/features/prisma/api";
 import { PrismaSummary } from "@/features/prisma/PrismaPage";
@@ -82,6 +83,7 @@ function Panel({ review }: { review: ReviewView }) {
       <CriteriaPanel reviewId={review.id} />
       <SnowballPanel reviewId={review.id} />
       <GreyLiteraturePanel reviewId={review.id} />
+      <ReviewersPanel reviewId={review.id} />
 
       <section aria-labelledby="review-stages" className="space-y-2">
         <h2 id="review-stages" className="text-h3">

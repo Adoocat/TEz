@@ -211,7 +211,10 @@
     "quality.scale_value_in_use": "Bazı çalışmalar kaldırdığınız bir seçenekle yanıtlanmış ({{values}}). Seçeneği tutun veya önce o yanıtları değiştirin.",
     "quality.answer_invalid": "Bu yanıt sorunun ölçeğinde yok.",
     "quality.paper_not_included": "Bu çalışma tam metinde dahil edilmemiş.",
-    "quality.order_mismatch": "Soru listesi bu arada değişti; yeniden deneyin."
+    "quality.order_mismatch": "Soru listesi bu arada değişti; yeniden deneyin.",
+    "decisions.invalid_file": "Bu bir TEz karar dosyası değil ya da bozuk.",
+    "decisions.unsupported_version": "Bu karar dosyası TEz'in daha yeni bir sürümünden; önce TEz'i güncelle.",
+    "decisions.reserved_reviewer": "Bu ad ayrılmış (owner, consensus); başka bir ad seç."
   },
   "reviews": {
     "active": "Etkin review",
@@ -1077,6 +1080,33 @@
         "partial": "yarım kaldı",
         "error": "hata"
       }
+    }
+  },
+  "dual": {
+    "title": "İki değerlendirici",
+    "hint": "Herkes kendi kütüphanesinde eler; kararlar bir dosyayla paylaşılır. Alınan kararlar meslektaşın adıyla eklenir, seninkilere dokunmaz.",
+    "name": "Dosyada görünecek adın",
+    "export": "Kararlarımı dışa aktar",
+    "import": "Meslektaşın kararlarını al",
+    "exported_one": "{{fileName}} kaydedildi ({{count}} karar).",
+    "exported_other": "{{fileName}} kaydedildi ({{count}} karar).",
+    "noColleagues": "Bu review'da henüz meslektaş kararı yok.",
+    "colleagues": "Kararları alınanlar: {{names}}",
+    "report": {
+      "summary": "{{reviewer}}: {{records}} kaydın {{matched}} tanesi bu review'da bulundu.",
+      "counts": "{{added}} karar eklendi, {{corrected}} düzeltildi, {{unchanged}} zaten aynıydı.",
+      "withdrawn_one": "Dosyada artık olmayan {{count}} karar olduğu gibi bırakıldı.",
+      "withdrawn_other": "Dosyada artık olmayan {{count}} karar olduğu gibi bırakıldı.",
+      "unmatched_one": "{{count}} kayıt eşlenemedi:",
+      "unmatched_other": "{{count}} kayıt eşlenemedi:",
+      "unknownCriteria": "Bu review'da olmayan kriter kodları (kararları alınmadı): {{codes}}",
+      "skipped_one": "{{count}} karar bu review'ın kurallarına uymadığı için alınmadı.",
+      "skipped_other": "{{count}} karar bu review'ın kurallarına uymadığı için alınmadı."
+    },
+    "problem": {
+      "not_found": "kütüphanede yok",
+      "not_in_review": "kütüphanede var ama bu review'da değil",
+      "duplicate": "dosyada aynı makale iki kez"
     }
   }
 }

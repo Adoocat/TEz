@@ -636,6 +636,67 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reviews/{review_id}/decisions/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Export Decisions
+         * @description The owner's decisions in force as a decision file, under the name `reviewer`.
+         */
+        get: operations["export_decisions_reviews__review_id__decisions_export_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/decisions/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Import Decisions
+         * @description A colleague's decision file: matched records get their decisions, appended under the
+         *     file's reviewer name; the rest is reported. Importing the same file again adds nothing.
+         */
+        post: operations["import_decisions_reviews__review_id__decisions_import_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reviews/{review_id}/decisions/reviewers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Reviewers
+         * @description Everyone who has decided in the review, the owner first.
+         */
+        get: operations["list_reviewers_reviews__review_id__decisions_reviewers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/quality/catalog": {
         parameters: {
             query?: never;
@@ -1713,6 +1774,42 @@ export interface components {
             /** Note */
             note?: string | null;
         };
+        /** DecisionFile */
+        DecisionFile: {
+            /**
+             * Format
+             * @default tez.screening-decisions
+             * @constant
+             */
+            format: "tez.screening-decisions";
+            /**
+             * Version
+             * @default 1
+             * @constant
+             */
+            version: 1;
+            /**
+             * Exported At
+             * Format: date-time
+             */
+            exported_at: string;
+            /** App Version */
+            app_version: string;
+            /** Reviewer */
+            reviewer: string;
+            review: components["schemas"]["FileReview"];
+            /** Criteria */
+            criteria?: components["schemas"]["FileCriterion"][];
+            /** Records */
+            records?: components["schemas"]["FileRecord"][];
+            /** Decisions */
+            decisions?: components["schemas"]["FileDecision"][];
+        };
+        /** DecisionImport */
+        DecisionImport: {
+            /** Content */
+            content: string;
+        };
         /** DecisionView */
         DecisionView: {
             /** Id */
@@ -1835,6 +1932,65 @@ export interface components {
             last_searched_at: string | null;
             /** Last Retrieved */
             last_retrieved: number | null;
+        };
+        /** FileAuthor */
+        FileAuthor: {
+            /** Display Name */
+            display_name: string;
+            /** Family */
+            family?: string | null;
+        };
+        /** FileCriterion */
+        FileCriterion: {
+            /** Code */
+            code: string;
+            kind: components["schemas"]["CriterionKind"];
+            /** Text */
+            text: string;
+            stage?: components["schemas"]["ScreeningStage"] | null;
+        };
+        /** FileDecision */
+        FileDecision: {
+            /** Id */
+            id: string;
+            /** Record */
+            record: string;
+            stage: components["schemas"]["ScreeningStage"];
+            decision: components["schemas"]["Decision"];
+            /** Criterion */
+            criterion?: string | null;
+            /** Note */
+            note?: string | null;
+            /**
+             * Decided At
+             * Format: date-time
+             */
+            decided_at: string;
+        };
+        /** FileRecord */
+        FileRecord: {
+            /** Ref */
+            ref: string;
+            /** Title */
+            title: string;
+            /** Year */
+            year?: number | null;
+            first_author?: components["schemas"]["FileAuthor"] | null;
+            /** Venue Type */
+            venue_type?: string | null;
+            /** Identifiers */
+            identifiers?: {
+                [key: string]: string;
+            };
+        };
+        /** FileReview */
+        FileReview: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Method */
+            method: string;
         };
         /**
          * GreyEntry
@@ -2020,6 +2176,29 @@ export interface components {
             /** Saved Search Id */
             saved_search_id?: string | null;
         };
+        /** ImportReport */
+        ImportReport: {
+            /** Reviewer */
+            reviewer: string;
+            /** Records */
+            records: number;
+            /** Matched */
+            matched: number;
+            /** Added */
+            added: number;
+            /** Corrected */
+            corrected: number;
+            /** Unchanged */
+            unchanged: number;
+            /** Withdrawn */
+            withdrawn: number;
+            /** Unmatched */
+            unmatched: components["schemas"]["UnmatchedRecord"][];
+            /** Unknown Criteria */
+            unknown_criteria: components["schemas"]["UnknownCriterion"][];
+            /** Skipped */
+            skipped: components["schemas"]["SkippedDecision"][];
+        };
         /** ImportRequest */
         ImportRequest: {
             /** File Name */
@@ -2137,6 +2316,11 @@ export interface components {
          * @enum {string}
          */
         MatchMethod: "doi" | "id" | "title_fuzzy" | "new";
+        /**
+         * MatchProblem
+         * @enum {string}
+         */
+        MatchProblem: "not_found" | "not_in_review" | "duplicate";
         /** OpenAccessQueued */
         OpenAccessQueued: {
             /** Job Ids */
@@ -2875,6 +3059,14 @@ export interface components {
             /** New */
             new: number;
         };
+        /** SkippedDecision */
+        SkippedDecision: {
+            /** Source Id */
+            source_id: string;
+            stage: components["schemas"]["ScreeningStage"];
+            /** Code */
+            code: string;
+        };
         /**
          * SnowballRoundView
          * @description One snowballing action and what it found. Every count is derived.
@@ -3151,6 +3343,21 @@ export interface components {
         UndoRequest: {
             /** Decision Id */
             decision_id: string;
+        };
+        /** UnknownCriterion */
+        UnknownCriterion: {
+            /** Code */
+            code: string;
+            /** Decisions */
+            decisions: number;
+        };
+        /** UnmatchedRecord */
+        UnmatchedRecord: {
+            /** Ref */
+            ref: string;
+            /** Title */
+            title: string;
+            problem: components["schemas"]["MatchProblem"];
         };
         /**
          * VenueType
@@ -5573,6 +5780,186 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DecisionView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    export_decisions_reviews__review_id__decisions_export_get: {
+        parameters: {
+            query: {
+                reviewer: string;
+            };
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DecisionFile"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    import_decisions_reviews__review_id__decisions_import_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionImport"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportReport"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_reviewers_reviews__review_id__decisions_reviewers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string[];
                 };
             };
             /** @description Missing or invalid token */
