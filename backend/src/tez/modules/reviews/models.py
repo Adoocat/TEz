@@ -61,6 +61,9 @@ class Review(TimestampMixin, Base):
     status: Mapped[ReviewStatus] = mapped_column(
         enum_type(ReviewStatus, "status"), default=ReviewStatus.ACTIVE
     )
+    # In the trash since then. Its searches and decisions are append-only (CLAUDE.md rule 3),
+    # so deleting a review hides it instead of removing them; it can be restored.
+    deleted_at: Mapped[datetime | None] = mapped_column(UtcDateTime)
     # The PRISMA diagram's box titles the user rewrote, by box (Task 35). Only the words are
     # kept: every number in the diagram is derived (CLAUDE.md rule 4).
     prisma_labels: Mapped[dict[str, str]] = mapped_column(

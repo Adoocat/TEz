@@ -319,6 +319,17 @@
       "keywords": "Highlight terms",
       "keywordsPlaceholder": "Terms to highlight, separated by commas",
       "keywordsHint": "Screening highlights these terms in titles and abstracts: green for inclusion, red underline for exclusion. Case and Turkish letters do not matter."
+    },
+    "trash": {
+      "delete": "Delete review",
+      "cancel": "Cancel",
+      "confirmTitle": "Delete “{{title}}”?",
+      "confirmText": "The review moves to the trash and leaves the lists. Its records, searches and screening decisions are not deleted; you can bring it back at any time.",
+      "title_one": "Deleted review ({{count}})",
+      "title_other": "Deleted reviews ({{count}})",
+      "hint": "A review you bring back carries on where it was.",
+      "restore": "Restore",
+      "restoreNamed": "Restore {{title}}"
     }
   },
   "search": {

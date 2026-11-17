@@ -19,6 +19,7 @@ import { QualityStageCard, QualityToggle } from "@/features/quality/QualityStage
 import { SnowballPanel } from "@/features/snowballing/SnowballPanel";
 
 import { CriteriaPanel } from "./CriteriaPanel";
+import { DeleteReviewButton, ReviewTrash } from "./ReviewTrash";
 import { ReviewWizard } from "./ReviewWizard";
 import { useActiveReview } from "./store";
 
@@ -35,6 +36,7 @@ export function ReviewPanel() {
         <h1 className="text-h1">{t("reviews.panel.title")}</h1>
         <p className="text-ui text-fg-muted">{t("reviews.panel.none")}</p>
         <ReviewWizard />
+        <ReviewTrash />
       </div>
     );
   }
@@ -54,6 +56,8 @@ function Panel({ review }: { review: ReviewView }) {
           <span className="rounded-xs border border-line px-1.5 text-meta text-fg-muted">
             {t(`reviews.methods.${review.method}`)}
           </span>
+          <span className="flex-1" />
+          <DeleteReviewButton review={review} />
         </div>
         {review.protocol && (
           <p className="max-w-prose text-ui whitespace-pre-line text-fg-muted">{review.protocol}</p>
@@ -113,6 +117,7 @@ function Panel({ review }: { review: ReviewView }) {
       <SnowballPanel reviewId={review.id} />
       <GreyLiteraturePanel reviewId={review.id} />
       <ReviewersPanel reviewId={review.id} />
+      <ReviewTrash />
     </div>
   );
 }

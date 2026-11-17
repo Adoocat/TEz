@@ -1895,17 +1895,35 @@
           "reviews"
         ],
         "summary": "List Reviews",
+        "description": "The reviews in use; `deleted=true` lists those in the trash.",
         "operationId": "list_reviews_reviews_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "deleted",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Deleted"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ReviewView"
                   },
-                  "type": "array",
                   "title": "Response List Reviews Reviews Get"
                 }
               }
@@ -1951,12 +1969,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -1964,15 +1977,20 @@
         ],
         "summary": "Create Review",
         "operationId": "create_review_reviews_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ReviewCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -2025,12 +2043,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/reviews/{review_id}": {
@@ -2040,6 +2053,152 @@
         ],
         "summary": "Get Review",
         "operationId": "get_review_reviews__review_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "reviews"
+        ],
+        "summary": "Delete Review",
+        "description": "Move the review to the trash; nothing recorded under it is removed.",
+        "operationId": "delete_review_reviews__review_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Review Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{review_id}/restore": {
+      "post": {
+        "tags": [
+          "reviews"
+        ],
+        "summary": "Restore Review",
+        "operationId": "restore_review_reviews__review_id__restore_post",
         "security": [
           {
             "HTTPBearer": []
@@ -12287,6 +12446,18 @@
             "type": "string",
             "format": "date-time",
             "title": "Created At"
+          },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deleted At"
           }
         },
         "type": "object",

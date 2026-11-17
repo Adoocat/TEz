@@ -22,8 +22,9 @@ LibraryDep = Annotated[Library, Depends(get_library)]
 
 
 @router.get("")
-def list_reviews(library: LibraryDep) -> list[ReviewView]:
-    return service.list_reviews(library.db)
+def list_reviews(library: LibraryDep, deleted: bool = False) -> list[ReviewView]:
+    """The reviews in use; `deleted=true` lists those in the trash."""
+    return service.list_reviews(library.db, deleted=deleted)
 
 
 @router.post("", status_code=201)
@@ -34,6 +35,17 @@ def create_review(body: ReviewCreate, library: LibraryDep) -> ReviewView:
 @router.get("/{review_id}")
 def get_review(review_id: str, library: LibraryDep) -> ReviewView:
     return service.get_review(library.db, review_id)
+
+
+@router.delete("/{review_id}", status_code=204)
+def delete_review(review_id: str, library: LibraryDep) -> None:
+    """Move the review to the trash; nothing recorded under it is removed."""
+    service.delete_review(library.db, review_id)
+
+
+@router.post("/{review_id}/restore")
+def restore_review(review_id: str, library: LibraryDep) -> ReviewView:
+    return service.restore_review(library.db, review_id)
 
 
 @router.get("/{review_id}/overview")

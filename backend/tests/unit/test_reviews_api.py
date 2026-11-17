@@ -132,3 +132,52 @@ def test_keeping_an_unknown_paper_is_not_found(client: TestClient) -> None:
 
 def test_an_empty_selection_is_rejected(client: TestClient) -> None:
     assert client.post("/library/papers", json={"paper_ids": []}).status_code == 422
+
+
+# --- deleting a review (to the trash) -------------------------------------------------------
+
+
+def test_a_deleted_review_leaves_the_list_and_comes_back(client: TestClient) -> None:
+    kept = client.post("/reviews", json={"title": "Kept"}).json()
+    gone = client.post("/reviews", json={"title": "Deneme"}).json()
+
+    deleted = client.delete(f"/reviews/{gone['id']}")
+    listed = client.get("/reviews").json()
+    trash = client.get("/reviews", params={"deleted": True}).json()
+
+    assert deleted.status_code == 204
+    assert [r["id"] for r in listed] == [kept["id"]]
+    assert [r["id"] for r in trash] == [gone["id"]]
+    assert trash[0]["deleted_at"] is not None
+    # Still reachable by its id, so it can be restored.
+    assert client.get(f"/reviews/{gone['id']}").json()["deleted_at"] is not None
+
+    restored = client.post(f"/reviews/{gone['id']}/restore")
+
+    assert restored.status_code == 200
+    assert restored.json()["deleted_at"] is None
+    assert [r["id"] for r in client.get("/reviews").json()] == [kept["id"], gone["id"]]
+    assert client.get("/reviews", params={"deleted": True}).json() == []
+
+
+def test_deleting_keeps_the_records_and_decisions(client: TestClient, library: Library) -> None:
+    # Searches and screening decisions are append-only (CLAUDE.md rule 3): the trash hides the
+    # review, it does not remove what was recorded under it.
+    review = client.post("/reviews", json={"title": "Deneme"}).json()
+    with library.db.write_session() as session:
+        paper = LibraryRepository(session).add_paper("Kaygı ölçekleri")
+        ReviewsRepository(session).add_record(review["id"], paper.id, RecordOrigin.MANUAL)
+
+    client.delete(f"/reviews/{review['id']}")
+    client.post(f"/reviews/{review['id']}/restore")
+
+    assert client.get(f"/reviews/{review['id']}/overview").json()["records"] == 1
+
+
+def test_deleting_twice_or_an_unknown_review(client: TestClient) -> None:
+    review = client.post("/reviews", json={"title": "Deneme"}).json()
+
+    assert client.delete(f"/reviews/{review['id']}").status_code == 204
+    assert client.delete(f"/reviews/{review['id']}").status_code == 204
+    assert client.delete("/reviews/missing").status_code == 404
+    assert client.post("/reviews/missing/restore").status_code == 404
