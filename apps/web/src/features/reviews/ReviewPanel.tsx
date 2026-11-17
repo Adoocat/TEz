@@ -80,11 +80,6 @@ function Panel({ review }: { review: ReviewView }) {
         )}
       </section>
 
-      <CriteriaPanel reviewId={review.id} />
-      <SnowballPanel reviewId={review.id} />
-      <GreyLiteraturePanel reviewId={review.id} />
-      <ReviewersPanel reviewId={review.id} />
-
       <section aria-labelledby="review-stages" className="space-y-2">
         <h2 id="review-stages" className="text-h3">
           {t("reviews.panel.stages")}
@@ -113,6 +108,11 @@ function Panel({ review }: { review: ReviewView }) {
           <PrismaBox reviewId={review.id} />
         </section>
       </div>
+
+      <CriteriaPanel reviewId={review.id} />
+      <SnowballPanel reviewId={review.id} />
+      <GreyLiteraturePanel reviewId={review.id} />
+      <ReviewersPanel reviewId={review.id} />
     </div>
   );
 }

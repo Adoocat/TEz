@@ -123,6 +123,19 @@ def test_only_web_links_are_kept(field: str, value: str) -> None:
     assert getattr(NormalizedRecord.model_validate(fields), field) is None
 
 
+@pytest.mark.parametrize(
+    ("given", "expected"),
+    [("eng", "en"), ("deu", "de"), ("ger", "de"), ("tur", "tr"), ("fre", "fr"), ("FRA", "fr")],
+)
+def test_three_letter_language_codes_become_two_letter(given: str, expected: str) -> None:
+    # PubMed and Europe PMC send ISO 639-2 codes, OpenAlex ISO 639-1: one code per language.
+    assert NormalizedRecord(title="x", language=given).language == expected
+
+
+def test_an_unknown_three_letter_code_is_kept() -> None:
+    assert NormalizedRecord(title="x", language="haw").language == "haw"
+
+
 def test_language_is_lower_case() -> None:
     assert NormalizedRecord(title="x", language="EN").language == "en"
 

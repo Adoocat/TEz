@@ -140,7 +140,8 @@ def test_a_record_is_mapped_field_by_field() -> None:
     assert record.venue_type is VenueType.JOURNAL
     assert (record.volume, record.issue, record.pages) == ("12", "3", "201-9")
     assert record.abstract == "AMAÇ: Kaygıyı incelemek. YÖNTEM: Tarama."
-    assert record.language == "tur"
+    # PubMed sends ISO 639-2 ("tur"); records keep one ISO 639-1 code per language.
+    assert record.language == "tr"
     assert record.is_retracted is True
     assert record.identifiers == {
         IdentifierScheme.PMID: "38000001",

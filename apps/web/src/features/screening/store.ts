@@ -33,7 +33,11 @@ export const useScreeningSession = create<SessionState>()((set, get) => ({
     const done = get().done;
     const index = done.findLastIndex((d) => d.reviewId === reviewId && d.stage === stage);
     if (index === -1) return undefined;
-    set({ done: done.filter((_, i) => i !== index) });
+    // An undone decision is no longer one this session made.
+    set((state) => ({
+      decided: Math.max(0, state.decided - 1),
+      done: done.filter((_, i) => i !== index),
+    }));
     return done[index];
   },
   setPendingNote: (paperId, note) => {

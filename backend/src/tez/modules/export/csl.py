@@ -108,6 +108,33 @@ def _language(value: str | None) -> str | None:
     return None
 
 
+# Lower-case words that belong to the family name ("van Beethoven", "de la Cruz").
+_PARTICLES = frozenset(
+    {"van", "von", "der", "den", "de", "del", "della", "di", "da", "du", "la", "le"}
+)
+
+
+def _split_name(display_name: str) -> dict[str, str]:
+    """A name known only as one string, split the way styles need it: family and given.
+
+    Search sources often send just the full name. Without a split, APA would print "Erdal Bay"
+    instead of "Bay, E.". A one-word name (an organisation) stays as written. PubMed and
+    Europe PMC send the parts themselves, so "family first, then initials" is not guessed here:
+    it would break short Turkish family names written in capitals ("Osman KOÇ").
+    """
+    name = " ".join(display_name.split())
+    if "," in name:
+        family, given = (part.strip() for part in name.split(",", 1))
+        return {"family": family, "given": given} if given else {"literal": family}
+    words = name.split(" ")
+    if len(words) < 2:
+        return {"literal": name}
+    first_of_family = len(words) - 1
+    while first_of_family > 1 and words[first_of_family - 1] in _PARTICLES:
+        first_of_family -= 1
+    return {"family": " ".join(words[first_of_family:]), "given": " ".join(words[:first_of_family])}
+
+
 def csl_item(paper: ExportPaper, locale: CslLocale, item_id: str) -> dict[str, Any]:
     """A paper as CSL-JSON."""
     item: dict[str, Any] = {
@@ -123,7 +150,7 @@ def csl_item(paper: ExportPaper, locale: CslLocale, item_id: str) -> dict[str, A
                 name["given"] = author.given
             authors.append(name)
         else:
-            authors.append({"literal": author.display_name})
+            authors.append(_split_name(author.display_name))
     if authors:
         item["author"] = authors
     if paper.year is not None:
