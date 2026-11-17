@@ -6,8 +6,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy import select
 
+from tests.conftest import AUTH, TOKEN
+from tez.core.config import Settings
 from tez.core.errors import ErrorCode, TezError
+from tez.main import create_app
 from tez.modules.dual_screening.building import (
     CriterionInfo,
     DecisionInfo,
@@ -40,10 +45,13 @@ from tez.modules.reviews.models import (
     Decision,
     RecordOrigin,
     ReviewMethod,
+    ScreeningDecision,
     ScreeningStage,
 )
 from tez.modules.reviews.repository import ReviewsRepository
+from tez.modules.screening.service import ScreeningService
 from tez.modules.search.models import MatchMethod
+from tez.modules.settings.secrets import MemorySecretStore
 
 SCHEMA_FILE = Path(__file__).parents[3] / "docs" / "formats" / "screening-decisions.v1.schema.json"
 WHEN = datetime(2026, 11, 14, 9, 30, tzinfo=UTC)
@@ -392,3 +400,106 @@ def test_a_criterion_this_review_lacks_is_reported_not_guessed(
     plan = _plan_into_demirkan(document, demirkan, {})
     assert plan.writes == []
     assert plan.unknown_criteria == {"E9": 2}
+
+
+# --- Acceptance: a round trip between two temporary libraries, through the API -----------------
+
+
+def _client(library: Library) -> TestClient:
+    app = create_app(
+        token=TOKEN, settings=Settings(), library=library, secret_store=MemorySecretStore()
+    )
+    return TestClient(app, headers=AUTH, raise_server_exceptions=False)
+
+
+def _decision_rows(library: Library, review_id: str) -> list[tuple[str, str, str, str]]:
+    with library.db.session() as session:
+        rows = session.scalars(
+            select(ScreeningDecision).where(ScreeningDecision.review_id == review_id)
+        )
+        return sorted((r.reviewer, r.paper_id, r.stage.value, r.decision.value) for r in rows)
+
+
+def test_decisions_make_a_round_trip_between_two_libraries(
+    ayse: tuple[Library, str, dict[str, str]], demirkan: tuple[Library, str, dict[str, str]]
+) -> None:
+    ayse_library, ayse_review, theirs = ayse
+    library, review_id, ours = demirkan
+    # Ayşe screens in her own library, as its owner.
+    with ayse_library.db.write_session() as session:
+        reviews = ReviewsRepository(session)
+        excluded = reviews.add_criterion(
+            ayse_review, CriterionKind.EXCLUSION, "E1", "Not empirical"
+        )
+        screening = ScreeningService(session)
+        screening.decide(ayse_review, theirs["doi"], TA, Decision.INCLUDE)
+        screening.decide(ayse_review, theirs["doi"], FT, Decision.INCLUDE, note="Strong design")
+        screening.decide(
+            ayse_review, theirs["arxiv"], TA, Decision.EXCLUDE, criterion_id=excluded.id
+        )
+        screening.decide(ayse_review, theirs["only_ayse"], TA, Decision.INCLUDE)
+    # Demirkan screens his copy too.
+    with library.db.write_session() as session:
+        ScreeningService(session).decide(review_id, ours["doi"], TA, Decision.MAYBE)
+        ScreeningService(session).decide(review_id, ours["title"], TA, Decision.INCLUDE)
+
+    with _client(ayse_library) as client:
+        exported = client.get(
+            f"/reviews/{ayse_review}/decisions/export", params={"reviewer": "Ayşe"}
+        )
+    assert exported.status_code == 200
+    content = exported.text
+
+    with _client(library) as client:
+        report = client.post(
+            f"/reviews/{review_id}/decisions/import", json={"content": content}
+        ).json()
+        rows_after_first = _decision_rows(library, review_id)
+        again = client.post(
+            f"/reviews/{review_id}/decisions/import", json={"content": content}
+        ).json()
+        reviewers = client.get(f"/reviews/{review_id}/decisions/reviewers").json()
+
+    assert (report["reviewer"], report["records"], report["matched"]) == ("Ayşe", 3, 2)
+    assert (report["added"], report["corrected"], report["unchanged"]) == (3, 0, 0)
+    assert [(u["title"], u["problem"]) for u in report["unmatched"]] == [
+        ("A Study Only Ayşe Found", "not_found")
+    ]
+    assert ("Ayşe", ours["doi"], "full_text", "include") in rows_after_first
+    assert ("Ayşe", ours["arxiv"], "title_abstract", "exclude") in rows_after_first
+    # The owner's own decision is untouched; Ayşe's are hers.
+    assert ("owner", ours["doi"], "title_abstract", "maybe") in rows_after_first
+    # Importing the same file again writes nothing.
+    assert (again["added"], again["corrected"], again["unchanged"]) == (0, 0, 3)
+    assert _decision_rows(library, review_id) == rows_after_first
+    assert reviewers == ["owner", "Ayşe"]
+
+    # And back: Demirkan's decisions reach Ayşe's library under his name.
+    with _client(library) as client:
+        back = client.get(
+            f"/reviews/{review_id}/decisions/export", params={"reviewer": "Demirkan"}
+        ).text
+    with _client(ayse_library) as client:
+        returned = client.post(
+            f"/reviews/{ayse_review}/decisions/import", json={"content": back}
+        ).json()
+    # The title-matched record finds Ayşe's paper; the DOI one does not, because this fixture
+    # keeps her DOI unnormalized (imports normalize it).
+    assert (returned["reviewer"], returned["added"]) == ("Demirkan", 1)
+    assert ("Demirkan", theirs["title"], "title_abstract", "include") in _decision_rows(
+        ayse_library, ayse_review
+    )
+
+
+def test_export_and_import_errors(demirkan: tuple[Library, str, dict[str, str]]) -> None:
+    library, review_id, _ = demirkan
+    with _client(library) as client:
+        reserved = client.get(
+            f"/reviews/{review_id}/decisions/export", params={"reviewer": "Owner"}
+        )
+        broken = client.post(f"/reviews/{review_id}/decisions/import", json={"content": "not json"})
+        missing = client.post("/reviews/nope/decisions/import", json={"content": "{}"})
+
+    assert reserved.json()["error"]["code"] == "decisions.reserved_reviewer"
+    assert broken.json()["error"]["code"] == "decisions.invalid_file"
+    assert missing.json()["error"]["code"] == "review.not_found"

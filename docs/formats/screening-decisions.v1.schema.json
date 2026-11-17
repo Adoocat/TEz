@@ -6,7 +6,7 @@
       "type": "string"
     },
     "Decision": {
-      "enum": ["include", "exclude", "maybe"],
+      "enum": ["include", "exclude", "maybe", "undecided", "not_retrieved"],
       "title": "Decision",
       "type": "string"
     },

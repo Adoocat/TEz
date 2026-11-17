@@ -211,7 +211,10 @@
     "quality.scale_value_in_use": "Some studies are answered with an option you removed ({{values}}). Keep it, or change those answers first.",
     "quality.answer_invalid": "This answer is not on the question's scale.",
     "quality.paper_not_included": "This study is not included at full text.",
-    "quality.order_mismatch": "The question list changed meanwhile; try again."
+    "quality.order_mismatch": "The question list changed meanwhile; try again.",
+    "decisions.invalid_file": "This is not a TEz decision file, or it is damaged.",
+    "decisions.unsupported_version": "This decision file comes from a newer TEz; update TEz first.",
+    "decisions.reserved_reviewer": "That name is reserved (owner, consensus); choose another."
   },
   "reviews": {
     "active": "Active review",
@@ -1077,6 +1080,33 @@
         "partial": "stopped early",
         "error": "failed"
       }
+    }
+  },
+  "dual": {
+    "title": "Two reviewers",
+    "hint": "Everyone screens in their own library and shares decisions as a file. Imported decisions are added under the colleague's name and never touch yours.",
+    "name": "Your name in the file",
+    "export": "Export my decisions",
+    "import": "Import a colleague's decisions",
+    "exported_one": "{{fileName}} saved ({{count}} decision).",
+    "exported_other": "{{fileName}} saved ({{count}} decisions).",
+    "noColleagues": "No colleague's decisions in this review yet.",
+    "colleagues": "Decisions imported from: {{names}}",
+    "report": {
+      "summary": "{{reviewer}}: {{matched}} of {{records}} records found in this review.",
+      "counts": "{{added}} decisions added, {{corrected}} corrected, {{unchanged}} already the same.",
+      "withdrawn_one": "{{count}} decision no longer in the file was left as it is.",
+      "withdrawn_other": "{{count}} decisions no longer in the file were left as they are.",
+      "unmatched_one": "{{count}} record could not be matched:",
+      "unmatched_other": "{{count}} records could not be matched:",
+      "unknownCriteria": "Criterion codes this review lacks (their decisions were not imported): {{codes}}",
+      "skipped_one": "{{count}} decision broke this review's rules and was not imported.",
+      "skipped_other": "{{count}} decisions broke this review's rules and were not imported."
+    },
+    "problem": {
+      "not_found": "not in the library",
+      "not_in_review": "in the library but not in this review",
+      "duplicate": "the same paper twice in the file"
     }
   }
 }
