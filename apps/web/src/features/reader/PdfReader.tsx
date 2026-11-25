@@ -11,6 +11,7 @@ import {
   Plus,
   ScanText,
   Search,
+  SquareDashed,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { useTranslation } from "react-i18next";
@@ -21,19 +22,31 @@ import { useLayoutStore } from "@/app/layout/uiStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAttachment } from "@/features/files/api";
+import { ApiError } from "@/lib/api/query";
 import { openPdf, type PdfDocument, type PdfPageSize } from "@/lib/pdf";
 import { toScreen, type PdfRect } from "@/lib/pdfGeometry";
 import { useShortcuts } from "@/lib/shortcuts/useShortcuts";
 import { ariaShortcut } from "@/lib/shortcuts/ShortcutKeys";
 
 import { AnchorFlash } from "./AnchorFlash";
-import type { AnchorView } from "./api";
+import { annotationAt, AreaTool, PageAnnotations } from "./Annotations";
+import {
+  useAnnotations,
+  useCreateAnnotation,
+  type AnchorView,
+  type AnnotationView,
+  type HighlightColor,
+} from "./api";
 import { DocumentPanel } from "./DocumentPanel";
 import { FindBar } from "./FindBar";
+import { HoverNote } from "./HoverNote";
 import { PageView } from "./PageView";
-import { useReaderPanel, useReaderTabs } from "./store";
+import { anchorOf, selectionInLayer } from "./selection";
+import { SelectionToolbar } from "./SelectionToolbar";
+import { useReaderPanel, useReaderSelection, useReaderTabs } from "./store";
 import { useAnchorTarget } from "./useAnchorTarget";
 import { useFindInDocument } from "./useFindInDocument";
+import { useTextSelection } from "./useTextSelection";
 
 const PAGE_GAP = 12;
 const ZOOM_STEPS = [0.5, 0.67, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
@@ -242,6 +255,52 @@ function OpenDocument({
   );
   const target = useAnchorTarget({ enabled: !embedded, ready: width > 0, goTo: goToAnchor });
 
+  // --- highlights ---
+  const annotations = useAnnotations(attachmentId);
+  const byPage = useMemo(() => {
+    const pages = new Map<number, AnnotationView[]>();
+    for (const annotation of annotations.data ?? []) {
+      const { page } = annotation.anchor;
+      pages.set(page, [...(pages.get(page) ?? []), annotation]);
+    }
+    return pages;
+  }, [annotations.data]);
+  const create = useCreateAnnotation(attachmentId);
+  const { selection, clear: clearSelection } = useTextSelection(scroller);
+  const { selectedId, color, select, setColor } = useReaderSelection();
+  const [areaTool, setAreaTool] = useState(false);
+  const [hovered, setHovered] = useState<AnnotationView | null>(null);
+  const openPanel = useLayoutStore((state) => state.openInspector);
+
+  /** The selection as an anchor; null when there is none. */
+  async function selectedAnchor() {
+    // What is selected now: the toolbar's copy can be a moment old.
+    const found = scroller.current && selectionInLayer(getSelection(), scroller.current);
+    if (!found) return null;
+    const { layer, range, page } = found;
+    return anchorOf(layer, range, page, await document.pageSize(page), scale);
+  }
+
+  async function highlight(chosen: HighlightColor, { comment = false } = {}) {
+    const anchor = await selectedAnchor();
+    if (!anchor) return;
+    setColor(chosen);
+    const made = await create.mutateAsync({ anchor, color: chosen, comment: "" });
+    clearSelection();
+    select(made.id, { edit: comment });
+    if (comment && !embedded) openPanel();
+  }
+
+  async function markArea(page: number, rect: PdfRect) {
+    setAreaTool(false);
+    const made = await create.mutateAsync({
+      anchor: { kind: "area", page, rects: [rect], quote: "", prefix: "", suffix: "" },
+      color,
+      comment: "",
+    });
+    select(made.id);
+  }
+
   // The page indicator follows the scroll; the address keeps the page for a reload or link.
   const items = virtualizer.getVirtualItems();
   const offset = virtualizer.scrollOffset ?? 0;
@@ -298,6 +357,9 @@ function OpenDocument({
       },
       focusMode: () => {
         setFocus(!focus);
+      },
+      highlight: () => {
+        void highlight(color);
       },
     },
     { enabled: !embedded },
@@ -399,6 +461,18 @@ function OpenDocument({
           >
             <Search />
           </Button>
+          <Button
+            variant={areaTool ? "secondary" : "ghost"}
+            size="icon"
+            aria-label={t("reader.areaTool")}
+            title={t("reader.areaToolHint")}
+            aria-pressed={areaTool}
+            onClick={() => {
+              setAreaTool(!areaTool);
+            }}
+          >
+            <SquareDashed />
+          </Button>
           {!embedded && (
             <Button
               variant={focus ? "secondary" : "ghost"}
@@ -435,6 +509,26 @@ function OpenDocument({
         >
           <ScanText aria-hidden className="size-4 shrink-0" />
           {t("reader.noText")}
+        </p>
+      )}
+      {selection && !areaTool && (
+        <SelectionToolbar
+          at={selection.at}
+          color={color}
+          onHighlight={(chosen) => {
+            void highlight(chosen);
+          }}
+          onComment={() => {
+            void highlight(color, { comment: true });
+          }}
+        />
+      )}
+      {create.error && (
+        <p role="alert" className="border-b border-line px-4 py-1.5 text-meta text-danger">
+          {t(`errors.${create.error instanceof ApiError ? create.error.code : "unknown"}`, {
+            ...(create.error instanceof ApiError ? create.error.params : {}),
+            defaultValue: t("errors.unknown"),
+          })}
         </p>
       )}
       {target.missing && (
@@ -490,7 +584,49 @@ function OpenDocument({
                     {...boxOf(page)}
                     onSize={onSize}
                     onText={find.onText}
+                    onPoint={(page, point) => {
+                      setHovered(
+                        point &&
+                          annotationAt(
+                            byPage.get(page) ?? [],
+                            sizes.get(page) ?? firstPage,
+                            scale,
+                            point,
+                          ),
+                      );
+                    }}
+                    onClick={(page, point) => {
+                      // A click that ends a selection is not a click on a highlight.
+                      if (areaTool || !(getSelection()?.isCollapsed ?? true)) return;
+                      const size = sizes.get(page) ?? firstPage;
+                      const hit = annotationAt(byPage.get(page) ?? [], size, scale, point);
+                      select(hit?.id ?? null);
+                      if (hit && !embedded) openPanel();
+                    }}
                   >
+                    <PageAnnotations
+                      annotations={byPage.get(page) ?? []}
+                      size={sizes.get(page) ?? firstPage}
+                      scale={scale}
+                      selectedId={selectedId}
+                    />
+                    {hovered?.anchor.page === page && hovered.comment !== "" && (
+                      <HoverNote
+                        annotation={hovered}
+                        size={sizes.get(page) ?? firstPage}
+                        scale={scale}
+                      />
+                    )}
+                    {areaTool && (
+                      <AreaTool
+                        label={t("reader.areaToolHint")}
+                        size={sizes.get(page) ?? firstPage}
+                        scale={scale}
+                        onArea={(rect) => {
+                          void markArea(page, rect);
+                        }}
+                      />
+                    )}
                     {target.flash?.page === page && (
                       <AnchorFlash
                         anchor={target.flash}

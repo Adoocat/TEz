@@ -219,7 +219,8 @@
     "quality.order_mismatch": "The question list changed meanwhile; try again.",
     "decisions.invalid_file": "This is not a TEz decision file, or it is damaged.",
     "decisions.unsupported_version": "This decision file comes from a newer TEz; update TEz first.",
-    "decisions.reserved_reviewer": "That name is reserved (owner, consensus); choose another."
+    "decisions.reserved_reviewer": "That name is reserved (owner, consensus); choose another.",
+    "annotation.not_found": "This highlight no longer exists."
   },
   "reviews": {
     "active": "Active review",
@@ -729,7 +730,35 @@
     },
     "anchorLost": "This passage is not in the current file any more:",
     "anchorChecking": "The file was replaced; this passage is being looked up in the new one:",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "areaTool": "Mark an area",
+    "areaToolHint": "Mark an area: drag a rectangle around a figure, a table or a scan",
+    "selection": {
+      "label": "Selected text",
+      "comment": "Add a comment",
+      "highlight": {
+        "yellow": "Highlight in yellow",
+        "green": "Highlight in green",
+        "blue": "Highlight in blue",
+        "pink": "Highlight in pink"
+      }
+    },
+    "highlights": {
+      "title": "Highlights ({{count}})",
+      "noDocument": "Open a document to see its highlights.",
+      "empty": "No highlights yet. Select text on a page, or mark an area.",
+      "none": "No highlight matches.",
+      "search": "Search highlights",
+      "area": "Marked area",
+      "copy": "Copy the quote",
+      "delete": "Delete the highlight",
+      "deleted": "Highlight deleted.",
+      "undo": "Undo",
+      "lost": "Not in the current file any more",
+      "checking": "Being looked up in the new file",
+      "comment": "Comment",
+      "commentPlaceholder": "Add a comment…"
+    }
   },
   "open": {
     "isLibrary": "This folder is a TEz library. Switching libraries is not possible yet; open it with tez-backend serve --library.",
@@ -769,7 +798,8 @@
         "nextPage": "Next page",
         "previousPage": "Previous page",
         "find": "Search in the document",
-        "focusMode": "Focus mode on or off"
+        "focusMode": "Focus mode on or off",
+        "highlight": "Highlight the selected text"
       },
       "list": {
         "down": "Next row",

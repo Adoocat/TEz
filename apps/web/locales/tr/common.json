@@ -219,7 +219,8 @@
     "quality.order_mismatch": "Soru listesi bu arada değişti; yeniden deneyin.",
     "decisions.invalid_file": "Bu bir TEz karar dosyası değil ya da bozuk.",
     "decisions.unsupported_version": "Bu karar dosyası TEz'in daha yeni bir sürümünden; önce TEz'i güncelle.",
-    "decisions.reserved_reviewer": "Bu ad ayrılmış (owner, consensus); başka bir ad seç."
+    "decisions.reserved_reviewer": "Bu ad ayrılmış (owner, consensus); başka bir ad seç.",
+    "annotation.not_found": "Bu vurgu artık yok."
   },
   "reviews": {
     "active": "Etkin review",
@@ -729,7 +730,35 @@
     },
     "anchorLost": "Bu alıntı artık bu dosyada bulunamıyor:",
     "anchorChecking": "Dosya değiştirildi; bu alıntı yeni dosyada aranıyor:",
-    "dismiss": "Kapat"
+    "dismiss": "Kapat",
+    "areaTool": "Alan işaretle",
+    "areaToolHint": "Alan işaretle: şekil, tablo veya taramanın çevresine dikdörtgen çizin",
+    "selection": {
+      "label": "Seçili metin",
+      "comment": "Yorum ekle",
+      "highlight": {
+        "yellow": "Sarıyla vurgula",
+        "green": "Yeşille vurgula",
+        "blue": "Maviyle vurgula",
+        "pink": "Pembeyle vurgula"
+      }
+    },
+    "highlights": {
+      "title": "Vurgular ({{count}})",
+      "noDocument": "Vurgularını görmek için bir belge açın.",
+      "empty": "Henüz vurgu yok. Sayfada metin seçin veya bir alan işaretleyin.",
+      "none": "Eşleşen vurgu yok.",
+      "search": "Vurgularda ara",
+      "area": "İşaretlenen alan",
+      "copy": "Alıntıyı kopyala",
+      "delete": "Vurguyu sil",
+      "deleted": "Vurgu silindi.",
+      "undo": "Geri al",
+      "lost": "Artık bu dosyada yok",
+      "checking": "Yeni dosyada aranıyor",
+      "comment": "Yorum",
+      "commentPlaceholder": "Yorum ekle…"
+    }
   },
   "open": {
     "isLibrary": "Bu klasör bir TEz kütüphanesi. Kütüphane değiştirme henüz yok; tez-backend serve --library ile açın.",
@@ -769,7 +798,8 @@
         "nextPage": "Sonraki sayfa",
         "previousPage": "Önceki sayfa",
         "find": "Belgede ara",
-        "focusMode": "Odak modunu aç/kapat"
+        "focusMode": "Odak modunu aç/kapat",
+        "highlight": "Seçili metni vurgula"
       },
       "list": {
         "down": "Sonraki satır",

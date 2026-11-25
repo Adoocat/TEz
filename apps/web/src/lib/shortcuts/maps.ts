@@ -37,6 +37,7 @@ export const shortcutMaps = {
   reader: [
     { id: "nextPage", keys: ["j"] },
     { id: "previousPage", keys: ["k"] },
+    { id: "highlight", keys: ["h"] },
     { id: "find", keys: ["$mod+f"] },
     { id: "focusMode", keys: ["f"] },
   ],
