@@ -2,6 +2,7 @@
 // drawn only while near the screen, with selectable text, zoom, search and `?page=` links.
 import { useVirtualizer } from "@tanstack/react-virtual";
 import {
+  MapPinOff,
   Maximize,
   Minimize,
   Minus,
@@ -21,13 +22,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAttachment } from "@/features/files/api";
 import { openPdf, type PdfDocument, type PdfPageSize } from "@/lib/pdf";
+import { toScreen, type PdfRect } from "@/lib/pdfGeometry";
 import { useShortcuts } from "@/lib/shortcuts/useShortcuts";
 import { ariaShortcut } from "@/lib/shortcuts/ShortcutKeys";
 
+import { AnchorFlash } from "./AnchorFlash";
+import type { AnchorView } from "./api";
 import { DocumentPanel } from "./DocumentPanel";
 import { FindBar } from "./FindBar";
 import { PageView } from "./PageView";
 import { useReaderPanel, useReaderTabs } from "./store";
+import { useAnchorTarget } from "./useAnchorTarget";
 import { useFindInDocument } from "./useFindInDocument";
 
 const PAGE_GAP = 12;
@@ -143,7 +148,7 @@ function OpenDocument({
   const [zoom, setZoom] = useState<Zoom>({ kind: "fit" });
   const [current, setCurrent] = useState(1);
   const [pageInput, setPageInput] = useState("1");
-  // Pages whose size is known and is not page 1's; the rest are assumed to be like page 1.
+  // Pages drawn so far; the rest are assumed to be like page 1.
   const [sizes, setSizes] = useState<ReadonlyMap<number, PdfPageSize>>(new Map());
 
   useEffect(() => {
@@ -188,8 +193,8 @@ function OpenDocument({
 
   const onSize = useCallback(
     (page: number, size: PdfPageSize) => {
-      if (size.width === firstPage.width && size.height === firstPage.height) return;
       setSizes((known) => (known.has(page) ? known : new Map(known).set(page, size)));
+      if (size.height === firstPage.height) return;
       // Keeps what is being read in place when a page above turns out taller or shorter.
       virtualizer.resizeItem(page - 1, Math.floor(size.height * scale) + PAGE_GAP);
     },
@@ -222,6 +227,21 @@ function OpenDocument({
     goToPage,
   });
 
+  const goToAnchor = useCallback(
+    (anchor: AnchorView) => {
+      void document.pageSize(anchor.page).then((size) => {
+        const [first] = anchor.rects;
+        const top = first ? toScreen(size.transform, scale, first as PdfRect).top : 0;
+        const start = virtualizer.getOffsetForIndex(anchor.page - 1, "start")?.[0] ?? 0;
+        // A third from the top: the passage with what leads to it.
+        const above = (scroller.current?.clientHeight ?? 0) / 3;
+        virtualizer.scrollToOffset(Math.max(0, start + top - above));
+      });
+    },
+    [document, scale, virtualizer],
+  );
+  const target = useAnchorTarget({ enabled: !embedded, ready: width > 0, goTo: goToAnchor });
+
   // The page indicator follows the scroll; the address keeps the page for a reload or link.
   const items = virtualizer.getVirtualItems();
   const offset = virtualizer.scrollOffset ?? 0;
@@ -240,8 +260,9 @@ function OpenDocument({
         (previous) => {
           const next = new URLSearchParams(previous);
           next.set("page", String(page));
-          // The search was asked for once; going back to this address should not start it again.
+          // These were asked for once; going back to this address should not repeat them.
           next.delete("find");
+          next.delete("anchor");
           return next;
         },
         { replace: true },
@@ -416,6 +437,23 @@ function OpenDocument({
           {t("reader.noText")}
         </p>
       )}
+      {target.missing && (
+        <div
+          role="alert"
+          className="flex items-center gap-2 border-b border-line bg-surface px-4 py-1.5 text-meta"
+        >
+          <MapPinOff aria-hidden className="size-4 shrink-0 text-danger" />
+          <p className="min-w-0 flex-1">
+            {t(target.missing.status === "lost" ? "reader.anchorLost" : "reader.anchorChecking")}{" "}
+            {target.missing.quote && (
+              <q className="font-serif text-fg-muted italic">{target.missing.quote}</q>
+            )}
+          </p>
+          <Button size="sm" variant="ghost" onClick={target.dismiss}>
+            {t("reader.dismiss")}
+          </Button>
+        </div>
+      )}
       <div className="flex min-h-0 flex-1">
         {showPanel && (
           <DocumentPanel
@@ -452,7 +490,15 @@ function OpenDocument({
                     {...boxOf(page)}
                     onSize={onSize}
                     onText={find.onText}
-                  />
+                  >
+                    {target.flash?.page === page && (
+                      <AnchorFlash
+                        anchor={target.flash}
+                        size={sizes.get(page) ?? firstPage}
+                        scale={scale}
+                      />
+                    )}
+                  </PageView>
                 </div>
               );
             })}

@@ -3,16 +3,16 @@
 import time
 from typing import Any
 
+from tez.modules.anchors.service import read_text
 from tez.modules.backup.service import BACKUP_JOB, backup_job
 from tez.modules.files.open_access import FETCH_JOB, fetch_open_access
 from tez.modules.files.service import EXTRACT_JOB, INSPECT_JOB, inspect_attachment
-from tez.modules.fulltext.service import extract_text
 from tez.modules.jobs.registry import JobContext, Registry
 from tez.modules.snowballing.service import SNOWBALL_JOB, snowball_job
 
 registry = Registry()
 registry.handler(INSPECT_JOB)(inspect_attachment)
-registry.handler(EXTRACT_JOB)(extract_text)
+registry.handler(EXTRACT_JOB)(read_text)
 registry.handler(FETCH_JOB)(fetch_open_access)
 registry.handler(BACKUP_JOB)(backup_job)
 registry.handler(SNOWBALL_JOB)(snowball_job)

@@ -383,7 +383,7 @@ Nov 25, 2026 · Onaylandı. Kapsam: kritik yolun son halkası (okuma → not →
 
 ### B. Konum ve vurgular
 
-- [ ] **46 · Anchor servisi:** PDF konumu (alıntı + önek/sonek + koordinat), doğrulama, yeniden konumlama, konuma atlama. *Kabul:* değişen PDF'te alıntı yeniden bulunur; bulunamazsa "kayıp" işaretlenir, yanlış yere gitmez.
+- [x] **46 · Anchor servisi:** PDF konumu (alıntı + önek/sonek + koordinat), doğrulama, yeniden konumlama, konuma atlama. *Kabul:* değişen PDF'te alıntı yeniden bulunur; bulunamazsa "kayıp" işaretlenir, yanlış yere gitmez.
 - [ ] **47 · Vurgular:** seçim kutusu, renkler, yorum, alan seçimi, vurgu listesi, `H`. *Kabul:* vurgu her yakınlaştırmada yerinde; E2E.
 
 ### C. Notlar

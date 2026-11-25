@@ -14,6 +14,7 @@ from tez.core.config import Settings
 from tez.core.errors import ERROR_RESPONSES, ErrorResponse, install_error_handlers
 from tez.core.logging import configure_logging
 from tez.core.requests import RequestContextMiddleware
+from tez.modules.anchors.router import router as anchors_router
 from tez.modules.backup.router import router as backup_router
 from tez.modules.dual_screening.router import router as dual_screening_router
 from tez.modules.export.router import router as export_router
@@ -99,6 +100,7 @@ def create_app(
     app.include_router(quality_router, dependencies=secured, responses=needs_library)
     app.include_router(search_router, dependencies=secured, responses=needs_library)
     app.include_router(imports_router, dependencies=secured, responses=needs_library)
+    app.include_router(anchors_router, dependencies=secured, responses=needs_library)
     app.include_router(fulltext_router, dependencies=secured, responses=needs_library)
     app.include_router(files_router, dependencies=secured, responses=needs_library)
     app.include_router(backup_router, dependencies=secured, responses=needs_library)

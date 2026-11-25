@@ -16,6 +16,7 @@ type FulltextPaper = components["schemas"]["FulltextPaper"];
 type PaperDetail = components["schemas"]["PaperDetail"];
 type AttachmentView = components["schemas"]["AttachmentView"];
 type FindResults = components["schemas"]["FindResults"];
+type AnchorView = components["schemas"]["AnchorView"];
 type ReviewView = components["schemas"]["ReviewView"];
 type ReviewOverview = components["schemas"]["ReviewOverview"];
 type CriterionView = components["schemas"]["CriterionView"];
@@ -66,6 +67,7 @@ export interface FakeBackend {
   attachments: Record<string, Partial<AttachmentView> | null>;
   /** What searching inside a document answers for each query; no match when missing. */
   findResults: Record<string, FindResults>;
+  anchors: Record<string, AnchorView>;
   /** What the next POST /pdfs answers, in order; "added" when empty. */
   pdfReplies: (
     | { status: "added" | "duplicate" }
@@ -107,6 +109,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     fulltextHits: {},
     attachments: {},
     findResults: {},
+    anchors: {},
     details: {},
     emitSource(searchId, update) {
       const data = {
@@ -385,6 +388,16 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
       if (/^\/attachments\/[^/]+\/find$/.test(path)) {
         const q = new URL(request.url, "http://test").searchParams.get("q") ?? "";
         return json(backend.findResults[q] ?? { text: "ready", pages: [], total: 0 });
+      }
+      const anchorOf = /^\/anchors\/([^/]+)$/.exec(path)?.[1];
+      if (anchorOf) {
+        const anchor = backend.anchors[anchorOf];
+        return anchor
+          ? json(anchor)
+          : json({ error: { code: "anchor.not_found", params: {} } }, 404);
+      }
+      if (/^\/attachments\/[^/]+\/file$/.test(path) && request.method === "PUT") {
+        return json(attachmentView({ text_status: "pending" }));
       }
       if (route === "POST /fulltext/search") {
         const { q, paper_ids, limit } = body as {
@@ -786,6 +799,29 @@ export function libraryPaper(overrides: Partial<LibraryPaperRow> = {}): LibraryP
     collection_ids: [],
     pdf: "none",
     added_at: "2026-11-11T10:00:00+00:00",
+    ...overrides,
+  };
+}
+
+export function anchorView(overrides: Partial<AnchorView> = {}): AnchorView {
+  return {
+    id: "anchor-1",
+    attachment_id: "att-1",
+    kind: "text",
+    status: "verified",
+    page: 1,
+    rects: [[100, 600, 300, 620]],
+    quote: "forty-two participants",
+    prefix: "We interviewed",
+    suffix: "in twelve schools.",
+    paper: {
+      id: "paper-1",
+      title: "First paper",
+      first_author: "Ada Lovelace",
+      author_count: 2,
+      year: 2024,
+      citekey: "lovelace2024first",
+    },
     ...overrides,
   };
 }

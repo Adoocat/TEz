@@ -2,9 +2,13 @@
 // the start-up bundle, and component tests can stand in a fake.
 import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist";
 
+import type { Matrix } from "./pdfGeometry";
+
 export interface PdfPageSize {
   width: number;
   height: number;
+  /** From PDF user space to CSS pixels at scale 1 (lib/pdfGeometry.ts). */
+  transform: Matrix;
 }
 
 export interface RenderedPage {
@@ -84,7 +88,11 @@ export const openPdf: PdfOpener = async ({ url, headers }) => {
     async pageSize(pageNumber) {
       const page = await document.getPage(pageNumber);
       const viewport = page.getViewport({ scale: 1 });
-      return { width: viewport.width, height: viewport.height };
+      return {
+        width: viewport.width,
+        height: viewport.height,
+        transform: viewport.transform as unknown as Matrix,
+      };
     },
     renderPage(pageNumber, { canvas, textLayer, scale }) {
       // An object, not a plain flag: the async body reads it after awaits.

@@ -3,6 +3,8 @@
 import logging
 import time
 
+from sqlalchemy.orm import Session
+
 from tez.core.db import Database
 from tez.modules.files import service as files_service
 from tez.modules.files.models import TextStatus
@@ -54,6 +56,20 @@ def extract_text(payload: dict[str, object], ctx: JobContext) -> None:
             FulltextRepository(session).replace(attachment_id, pages)
     ctx.report(1.0)
     logger.info("pdf text read", extra={"id": attachment_id, "pages": len(pages)})
+
+
+def page_text(session: Session, attachment_id: str, page_index: int) -> str | None:
+    """The stored text of one page of the file the attachment has now; None if not read yet."""
+    if not files_service.text_is_current(session, attachment_id):
+        return None
+    return FulltextRepository(session).page_text(attachment_id, page_index)
+
+
+def page_texts(session: Session, attachment_id: str) -> list[str] | None:
+    """Every page's stored text, in order; None if the file is not read yet."""
+    if not files_service.text_is_current(session, attachment_id):
+        return None
+    return [chunk.text for chunk in FulltextRepository(session).pages(attachment_id)]
 
 
 def search(db: Database, query: FulltextQuery) -> FulltextResults:
@@ -118,7 +134,7 @@ def find(db: Database, attachment_id: str, query: str) -> FindResults:
     needle = " ".join(fold(query).split())
     with db.session() as session:
         chunks = FulltextRepository(session).pages(attachment_id)
-        if not chunks:
+        if not chunks or not files_service.text_is_current(session, attachment_id):
             waiting = attachment.text_status in (TextStatus.PENDING, TextStatus.OK)
             return FindResults(text="pending" if waiting else "none", pages=[], total=0)
         if attachment.text_status is not TextStatus.OK or not needle:

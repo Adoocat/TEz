@@ -175,6 +175,9 @@
     "import.entry_duplicate_key": "repeats a key used earlier in the file",
     "import.entry_truncated": "is cut short (the file ends inside it)",
     "import.stray_text": "text outside any record",
+    "attachment.file_in_use": "{{file_name}} is already in the library, with another paper.",
+    "anchor.not_found": "This place no longer exists.",
+    "anchor.no_such_page": "The document has no page {{page}}.",
     "pdf.not_a_pdf": "{{file_name}} is not a PDF file.",
     "pdf.too_large": "{{file_name}} is too large to add.",
     "pdf.file_not_found": "File not found: {{path}}",
@@ -683,7 +686,9 @@
     "openNamed": "Open {{name}}",
     "filterType": "Publication type",
     "anyType": "Any type",
-    "exportSelected": "Export"
+    "exportSelected": "Export",
+    "replaceFile": "Replace with another version…",
+    "replacedFile": "Replaced. Highlights and quotes are looked up in the new file."
   },
   "reader": {
     "title": "Reader",
@@ -721,7 +726,10 @@
       "none": "No match",
       "pending": "The text of this PDF is still being read.",
       "noText": "This PDF has no text to search."
-    }
+    },
+    "anchorLost": "This passage is not in the current file any more:",
+    "anchorChecking": "The file was replaced; this passage is being looked up in the new one:",
+    "dismiss": "Dismiss"
   },
   "open": {
     "isLibrary": "This folder is a TEz library. Switching libraries is not possible yet; open it with tez-backend serve --library.",

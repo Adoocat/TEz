@@ -2,7 +2,7 @@
 // memory bounded. The numbers are printed so the progress log can record them.
 import { expect, test } from "@playwright/test";
 
-import { addPdf, makePdf, openApp } from "./helpers";
+import { addPdf, backend, makePdf, openApp } from "./helpers";
 
 test("a 300-page PDF streams, scrolls and stays light", async ({ page, request }) => {
   // About 6 MB: big enough that reading it in ranges shows.
@@ -173,4 +173,70 @@ test("pdf.js finds its fonts and decoders", async ({ page }) => {
   // GPL-2.0: not part of the app (docs/licenses.md).
   const left = await page.request.get("/pdfjs/standard_fonts/LiberationSans-Regular.ttf");
   expect(left.headers()["content-type"]).not.toBe("application/octet-stream");
+});
+
+test("a quote is shown in place, and found again when the PDF is replaced", async ({
+  page,
+  request,
+}) => {
+  const { api, headers } = backend();
+  const attachmentId = await addPdf(
+    request,
+    "heron.pdf",
+    makePdf(6, "Heron census of the northern lakes"),
+  );
+  const textRead = async () =>
+    (
+      (await (
+        await request.get(`${api}/attachments/${attachmentId}/find?q=heron`, { headers })
+      ).json()) as { text: string; total: number }
+    ).text;
+  await expect.poll(textRead, { timeout: 45_000 }).toBe("ready");
+  const made = await request.post(`${api}/attachments/${attachmentId}/anchors`, {
+    headers,
+    data: {
+      page: 5,
+      rects: [[72, 715, 500, 742]],
+      quote: "Heron census of the northern lakes page 5",
+    },
+  });
+  const anchor = (await made.json()) as { id: string; status: string };
+  expect(anchor.status).toBe("verified");
+
+  await openApp(page, `/reader/${attachmentId}?anchor=${anchor.id}`);
+  const reader = page.getByRole("document", { name: "heron.pdf" });
+  const onPage = async (n: number) => {
+    const flash = reader.getByTestId("anchor-flash");
+    await expect(flash).toBeVisible();
+    const line = reader
+      .getByRole("region", { name: `Page ${String(n)}`, exact: true })
+      .getByText("Heron census of the northern lakes page 5", { exact: true });
+    const [a, b] = [await flash.boundingBox(), await line.boundingBox()];
+    if (!a || !b) throw new Error("no box");
+    expect(Math.abs(a.x - b.x)).toBeLessThan(6);
+    expect(Math.abs(a.y + a.height / 2 - (b.y + b.height / 2))).toBeLessThan(10);
+  };
+  await onPage(5);
+
+  // A new version with a page before everything: the passage is now on page 6.
+  const pages = makePdf(8, "Heron census of the northern lakes", 0, { firstNumber: 0 });
+  const replaced = await request.put(
+    `${api}/attachments/${attachmentId}/file?file_name=heron-v2.pdf`,
+    { headers: { ...headers, "Content-Type": "application/pdf" }, data: pages },
+  );
+  expect(replaced.ok()).toBe(true);
+  const status = async () =>
+    (await (await request.get(`${api}/anchors/${anchor.id}`, { headers })).json()) as {
+      status: string;
+      page: number;
+    };
+  await expect.poll(async () => (await status()).status, { timeout: 45_000 }).toBe("verified");
+  expect((await status()).page).toBe(6);
+
+  await openApp(page, `/reader/${attachmentId}?anchor=${anchor.id}`);
+  await page.reload();
+  await openApp(page, `/reader/${attachmentId}?anchor=${anchor.id}`);
+  const again = page.getByRole("document", { name: "heron-v2.pdf" });
+  await expect(again.getByTestId("anchor-flash")).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Page" })).toHaveValue("6");
 });

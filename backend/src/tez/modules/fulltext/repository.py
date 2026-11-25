@@ -42,6 +42,13 @@ class FulltextRepository:
         )
         return {row: text for row, text in rows}
 
+    def page_text(self, attachment_id: str, page_index: int) -> str | None:
+        return self.session.scalar(
+            select(TextChunk.text).where(
+                TextChunk.attachment_id == attachment_id, TextChunk.page_index == page_index
+            )
+        )
+
     def pages(self, attachment_id: str) -> list[TextChunk]:
         return list(
             self.session.scalars(

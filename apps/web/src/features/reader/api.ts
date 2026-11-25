@@ -5,6 +5,7 @@ import { useApi } from "@/app/backend";
 import { unwrap } from "@/lib/api/query";
 
 export type FindResults = components["schemas"]["FindResults"];
+export type AnchorView = components["schemas"]["AnchorView"];
 
 /** Where a text is in one document. Off for an empty query. */
 export function useFind(attachmentId: string, query: string) {
@@ -21,6 +22,22 @@ export function useFind(attachmentId: string, query: string) {
       unwrap(
         await api.GET("/attachments/{attachment_id}/find", {
           params: { path: { attachment_id: attachmentId }, query: { q } },
+        }),
+      ),
+  });
+}
+
+export function useAnchor(anchorId: string | null) {
+  const api = useApi();
+  return useQuery({
+    queryKey: ["reader", "anchor", anchorId ?? ""] as const,
+    enabled: anchorId !== null,
+    // A replaced file's anchors are looked up again in the background.
+    refetchInterval: (state) => (state.state.data?.status === "checking" ? 1500 : false),
+    queryFn: async () =>
+      unwrap(
+        await api.GET("/anchors/{anchor_id}", {
+          params: { path: { anchor_id: anchorId ?? "" } },
         }),
       ),
   });

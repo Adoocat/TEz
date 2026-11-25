@@ -5941,6 +5941,250 @@
         ]
       }
     },
+    "/attachments/{attachment_id}/anchors": {
+      "post": {
+        "tags": [
+          "anchors"
+        ],
+        "summary": "Create Anchor",
+        "description": "Remember a place in a PDF. The same passage twice is the same anchor.",
+        "operationId": "create_anchor_attachments__attachment_id__anchors_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Attachment Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnchorCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnchorView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "anchors"
+        ],
+        "summary": "Attachment Anchors",
+        "operationId": "attachment_anchors_attachments__attachment_id__anchors_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Attachment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AnchorView"
+                  },
+                  "title": "Response Attachment Anchors Attachments  Attachment Id  Anchors Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/anchors/{anchor_id}": {
+      "get": {
+        "tags": [
+          "anchors"
+        ],
+        "summary": "Get Anchor",
+        "operationId": "get_anchor_anchors__anchor_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "anchor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Anchor Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnchorView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/fulltext/search": {
       "post": {
         "tags": [
@@ -6295,6 +6539,184 @@
         ]
       }
     },
+    "/attachments/{attachment_id}/file": {
+      "put": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Replace Attachment File",
+        "description": "Replace the PDF with another version of the same document, sent as the raw body. What\npoints into it (highlights, quotes, evidence) is looked up again in the new file.",
+        "operationId": "replace_attachment_file_attachments__attachment_id__file_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Attachment Id"
+            }
+          },
+          {
+            "name": "file_name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255,
+              "title": "File Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttachmentView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/pdf": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "files"
+        ],
+        "summary": "Attachment File",
+        "description": "The stored file. Supports `Range` requests, so the reader fetches only the pages it\nshows (pdf.js), and a 300-page scan is never loaded whole.",
+        "operationId": "attachment_file_attachments__attachment_id__file_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Attachment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The file",
+            "content": {
+              "application/pdf": {}
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "206": {
+            "content": {
+              "application/pdf": {}
+            },
+            "description": "A byte range of it"
+          }
+        }
+      }
+    },
     "/papers/{paper_id}/attachments": {
       "get": {
         "tags": [
@@ -6528,86 +6950,6 @@
             "HTTPBearer": []
           }
         ]
-      }
-    },
-    "/attachments/{attachment_id}/file": {
-      "get": {
-        "tags": [
-          "files"
-        ],
-        "summary": "Attachment File",
-        "description": "The stored file. Supports `Range` requests, so the reader fetches only the pages it\nshows (pdf.js), and a 300-page scan is never loaded whole.",
-        "operationId": "attachment_file_attachments__attachment_id__file_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "attachment_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Attachment Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The file",
-            "content": {
-              "application/pdf": {}
-            }
-          },
-          "401": {
-            "description": "Missing or invalid token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Invalid request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "No library is open",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "206": {
-            "content": {
-              "application/pdf": {}
-            },
-            "description": "A byte range of it"
-          }
-        }
       }
     },
     "/backups": {
@@ -8152,6 +8494,213 @@
           "stages"
         ],
         "title": "AgreementView"
+      },
+      "AnchorCreate": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/AnchorKind",
+            "default": "text"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Page"
+          },
+          "rects": {
+            "items": {
+              "items": {
+                "type": "number",
+                "maximum": 100000.0,
+                "minimum": -100000.0
+              },
+              "type": "array",
+              "maxItems": 4,
+              "minItems": 4
+            },
+            "type": "array",
+            "maxItems": 500,
+            "minItems": 1,
+            "title": "Rects"
+          },
+          "quote": {
+            "type": "string",
+            "maxLength": 20000,
+            "title": "Quote",
+            "default": ""
+          },
+          "prefix": {
+            "type": "string",
+            "maxLength": 500,
+            "title": "Prefix",
+            "default": ""
+          },
+          "suffix": {
+            "type": "string",
+            "maxLength": 500,
+            "title": "Suffix",
+            "default": ""
+          },
+          "occurrence": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Occurrence"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "page",
+          "rects"
+        ],
+        "title": "AnchorCreate",
+        "description": "A place the user selected in the reader."
+      },
+      "AnchorKind": {
+        "type": "string",
+        "enum": [
+          "text",
+          "area"
+        ],
+        "title": "AnchorKind"
+      },
+      "AnchorPaper": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "first_author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Author"
+          },
+          "author_count": {
+            "type": "integer",
+            "title": "Author Count"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "citekey": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citekey"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "first_author",
+          "author_count",
+          "year",
+          "citekey"
+        ],
+        "title": "AnchorPaper",
+        "description": "Enough of the paper for a source chip (\"Kim et al. 2024 · p. 7\")."
+      },
+      "AnchorView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "attachment_id": {
+            "type": "string",
+            "title": "Attachment Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/AnchorKind"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "unverified",
+              "checking",
+              "lost"
+            ],
+            "title": "Status"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "rects": {
+            "items": {
+              "items": {
+                "type": "number",
+                "maximum": 100000.0,
+                "minimum": -100000.0
+              },
+              "type": "array",
+              "maxItems": 4,
+              "minItems": 4
+            },
+            "type": "array",
+            "title": "Rects"
+          },
+          "quote": {
+            "type": "string",
+            "title": "Quote"
+          },
+          "prefix": {
+            "type": "string",
+            "title": "Prefix"
+          },
+          "suffix": {
+            "type": "string",
+            "title": "Suffix"
+          },
+          "paper": {
+            "$ref": "#/components/schemas/AnchorPaper"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "attachment_id",
+          "kind",
+          "status",
+          "page",
+          "rects",
+          "quote",
+          "prefix",
+          "suffix",
+          "paper"
+        ],
+        "title": "AnchorView"
       },
       "AnswerPut": {
         "properties": {

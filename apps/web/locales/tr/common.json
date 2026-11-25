@@ -175,6 +175,9 @@
     "import.entry_duplicate_key": "dosyada daha önce kullanılmış bir anahtarı tekrarlıyor",
     "import.entry_truncated": "yarıda kesilmiş (dosya kaydın ortasında bitiyor)",
     "import.stray_text": "hiçbir kayda ait olmayan metin",
+    "attachment.file_in_use": "{{file_name}} kütüphanede başka bir makaleye bağlı.",
+    "anchor.not_found": "Bu konum artık yok.",
+    "anchor.no_such_page": "Belgede {{page}}. sayfa yok.",
     "pdf.not_a_pdf": "{{file_name}} bir PDF dosyası değil.",
     "pdf.too_large": "{{file_name}} eklenemeyecek kadar büyük.",
     "pdf.file_not_found": "Dosya bulunamadı: {{path}}",
@@ -683,7 +686,9 @@
     "openNamed": "{{name}} aç",
     "filterType": "Yayın türü",
     "anyType": "Her tür",
-    "exportSelected": "Dışa aktar"
+    "exportSelected": "Dışa aktar",
+    "replaceFile": "Başka sürümle değiştir…",
+    "replacedFile": "Değiştirildi. Vurgular ve alıntılar yeni dosyada aranıyor."
   },
   "reader": {
     "title": "Okuyucu",
@@ -721,7 +726,10 @@
       "none": "Eşleşme yok",
       "pending": "Bu PDF'in metni hâlâ okunuyor.",
       "noText": "Bu PDF'te aranacak metin yok."
-    }
+    },
+    "anchorLost": "Bu alıntı artık bu dosyada bulunamıyor:",
+    "anchorChecking": "Dosya değiştirildi; bu alıntı yeni dosyada aranıyor:",
+    "dismiss": "Kapat"
   },
   "open": {
     "isLibrary": "Bu klasör bir TEz kütüphanesi. Kütüphane değiştirme henüz yok; tez-backend serve --library ile açın.",

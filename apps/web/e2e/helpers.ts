@@ -59,6 +59,8 @@ export function makePdf(
     page?: (page: number) => { size?: [number, number]; rotate?: number };
     /** Outline entries: a title and the page it points at. */
     outline?: [title: string, page: number][];
+    /** The number written on the first page (1). */
+    firstNumber?: number;
   } = {},
 ): Buffer {
   const objects: string[] = [
@@ -75,7 +77,7 @@ export function makePdf(
   }
   for (let index = 0; index < pages; index += 1) {
     const group = Math.floor(index / 10);
-    const text = `${label} page ${String(index + 1)}`;
+    const text = `${label} page ${String(index + (options.firstNumber ?? 1))}`;
     const { size = [612, 792], rotate = 0 } = options.page?.(index + 1) ?? {};
     // `padding` bytes of comment make a file as heavy as a real one without drawing more.
     const filler = padding > 0 ? `% ${"x".repeat(padding)}${NL}` : "";
