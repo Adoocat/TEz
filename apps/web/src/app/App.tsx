@@ -1,6 +1,6 @@
 // Composition root: i18n, server state (TanStack Query), backend connection, routing.
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import { createHashRouter, Navigate, RouterProvider } from "react-router";
 
@@ -23,7 +23,12 @@ import { BackendGate, type FetchLike } from "./backend";
 import { ComingSoon } from "./ComingSoon";
 import { AppShell } from "./layout/AppShell";
 
-const sections = ["notes", "matrix"] as const;
+// The notes editor (CodeMirror) is not part of the start-up bundle.
+const NotesPage = lazy(() =>
+  import("@/features/notes/NotesPage").then((module) => ({ default: module.NotesPage })),
+);
+
+const sections = ["matrix"] as const;
 
 function createRouter() {
   // Hash routing: works the same from Tauri's asset protocol and any static server.
@@ -44,6 +49,14 @@ function createRouter() {
         { path: "/export", element: <ExportPage /> },
         { path: "/library", element: <LibraryPage /> },
         { path: "/reader/:attachmentId?", element: <ReaderPage /> },
+        {
+          path: "/notes/:noteId?",
+          element: (
+            <Suspense fallback={null}>
+              <NotesPage />
+            </Suspense>
+          ),
+        },
         { path: "/search", element: <SearchPage /> },
         { path: "/jobs", element: <JobsPage /> },
         { path: "/settings/:section?", element: <SettingsPage /> },

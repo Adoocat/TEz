@@ -19,6 +19,9 @@ type FindResults = components["schemas"]["FindResults"];
 type AnchorView = components["schemas"]["AnchorView"];
 type AnnotationView = components["schemas"]["AnnotationView"];
 type AnnotationCreate = components["schemas"]["AnnotationCreate"];
+type NoteView = components["schemas"]["NoteView"];
+type LinkSuggestion = components["schemas"]["LinkSuggestion"];
+type Backlink = components["schemas"]["Backlink"];
 type ReviewView = components["schemas"]["ReviewView"];
 type ReviewOverview = components["schemas"]["ReviewOverview"];
 type CriterionView = components["schemas"]["CriterionView"];
@@ -70,6 +73,11 @@ export interface FakeBackend {
   /** What searching inside a document answers for each query; no match when missing. */
   findResults: Record<string, FindResults>;
   anchors: Record<string, AnchorView>;
+  notes: NoteView[];
+  /** What POST /notes/{id} (PATCH) answers next instead of saving. */
+  noteFailures: { status: number; code: string }[];
+  suggestions: LinkSuggestion[];
+  backlinks: Record<string, Backlink[]>;
   /** By attachment. */
   annotations: Record<string, AnnotationView[]>;
   /** What the next POST /pdfs answers, in order; "added" when empty. */
@@ -115,6 +123,10 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     findResults: {},
     anchors: {},
     annotations: {},
+    notes: [],
+    noteFailures: [],
+    suggestions: [],
+    backlinks: {},
     details: {},
     emitSource(searchId, update) {
       const data = {
@@ -393,6 +405,63 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
       if (/^\/attachments\/[^/]+\/find$/.test(path)) {
         const q = new URL(request.url, "http://test").searchParams.get("q") ?? "";
         return json(backend.findResults[q] ?? { text: "ready", pages: [], total: 0 });
+      }
+      if (route === "GET /notes") return json(backend.notes);
+      if (route === "POST /notes") {
+        const id = `note-${String(backend.notes.length + 1)}`;
+        const created = noteView({ id, ...(body as Partial<NoteView>) });
+        backend.notes.push(created);
+        return json(created, 201);
+      }
+      if (route === "GET /notes/suggest") return json(backend.suggestions);
+      if (route === "GET /notes/search") {
+        const q = new URL(request.url, "http://test").searchParams.get("q") ?? "";
+        return json(
+          backend.notes
+            .filter((n) => `${n.title} ${n.body}`.includes(q))
+            .map((n) => ({
+              note_id: n.id,
+              title: n.title,
+              passage: [{ text: n.body, hit: false }],
+            })),
+        );
+      }
+      const paperNotesOf = /^\/papers\/([^/]+)\/notes$/.exec(path)?.[1];
+      if (paperNotesOf) return json(backend.backlinks[paperNotesOf] ?? []);
+      const [, noteId, noteAction] = /^\/notes\/([^/]+)(?:\/(\w+))?$/.exec(path) ?? [];
+      if (noteId) {
+        if (noteAction === "backlinks") return json(backend.backlinks[noteId] ?? []);
+        const found = backend.notes.find((n) => n.id === noteId);
+        const missing = () => json({ error: { code: "note.not_found", params: {} } }, 404);
+        if (noteAction === "restore") {
+          const back = noteView({ id: noteId, title: "Restored" });
+          backend.notes.push(back);
+          return json(back);
+        }
+        if (!found) return missing();
+        if (noteAction === "append") {
+          found.body = `${found.body}\n\n${(body as { text: string }).text}`;
+          found.version += 1;
+          return json(found);
+        }
+        if (request.method === "DELETE") {
+          backend.notes = backend.notes.filter((n) => n !== found);
+          return new Response(null, { status: 204 });
+        }
+        if (request.method === "PATCH") {
+          const failure = backend.noteFailures.shift();
+          if (failure) {
+            return json({ error: { code: failure.code, params: {} } }, failure.status);
+          }
+          const { base_version: base, ...changes } = body as Partial<NoteView> & {
+            base_version?: number;
+          };
+          if (base !== undefined && base !== found.version) {
+            return json({ error: { code: "note.conflict", params: {} } }, 409);
+          }
+          Object.assign(found, changes, { version: found.version + 1 });
+        }
+        return json(found);
       }
       const annotationsOf = /^\/attachments\/([^/]+)\/annotations$/.exec(path)?.[1];
       if (annotationsOf) {
@@ -868,6 +937,22 @@ export function annotationView(overrides: Partial<AnnotationView> = {}): Annotat
     color: "yellow",
     comment: "",
     anchor: anchorView(),
+    created_at: "2026-11-25T10:00:00Z",
+    updated_at: "2026-11-25T10:00:00Z",
+    ...overrides,
+  };
+}
+
+export function noteView(overrides: Partial<NoteView> = {}): NoteView {
+  return {
+    id: "note-1",
+    title: "First note",
+    body: "",
+    parent_id: null,
+    paper_id: null,
+    review_id: null,
+    version: 1,
+    links: [],
     created_at: "2026-11-25T10:00:00Z",
     updated_at: "2026-11-25T10:00:00Z",
     ...overrides,
