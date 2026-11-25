@@ -1,7 +1,7 @@
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
-from tez.modules.files.models import Attachment, AttachmentKind
+from tez.modules.files.models import Attachment, AttachmentKind, TextStatus
 
 
 class FilesRepository:
@@ -48,3 +48,17 @@ class FilesRepository:
 
     def get(self, attachment_id: str) -> Attachment | None:
         return self.session.get(Attachment, attachment_id)
+
+    def without_text(self, version: int) -> list[str]:
+        """Files that open (not failed, not waiting) and whose text is missing or older."""
+        return list(
+            self.session.scalars(
+                select(Attachment.id)
+                .where(
+                    Attachment.kind == AttachmentKind.PDF,
+                    Attachment.text_status.in_([TextStatus.OK, TextStatus.NEEDS_OCR]),
+                    or_(Attachment.text_version.is_(None), Attachment.text_version < version),
+                )
+                .order_by(Attachment.created_at)
+            )
+        )

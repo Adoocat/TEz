@@ -8,7 +8,7 @@ down only the worker. A broken file is marked `failed`, with a reason, and nothi
 
 import json
 import logging
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path, PurePath
 
@@ -35,6 +35,11 @@ from tez.modules.library.paper_service import PaperService
 logger = logging.getLogger(__name__)
 
 INSPECT_JOB = "pdf.inspect"
+EXTRACT_JOB = "pdf.extract_text"
+# Raised when the extractor changes: files read by an older one are read again (Task 43).
+TEXT_VERSION = 1
+# Reading every page can wait for what the user is watching (new files, fetches).
+_EXTRACT_PRIORITY = -10
 MANUAL_SOURCE = "manual"
 # SQLite allows a limited number of query parameters; long id lists go in batches.
 _BATCH = 500
@@ -200,53 +205,93 @@ def get_attachment(db: Database, attachment_id: str) -> AttachmentView:
 # --- worker side ----------------------------------------------------------------------
 
 
-def _mark(
-    db: Database,
+def set_text_status(
+    session: Session,
     attachment_id: str,
     status: TextStatus,
     *,
     page_count: int | None = None,
+    text_version: int | None = None,
     error: TezError | None = None,
-) -> None:
+) -> bool:
+    """What is known about a file's text now. False if the attachment is gone."""
+    attachment = FilesRepository(session).get(attachment_id)
+    if attachment is None:
+        return False
+    attachment.text_status = status
+    if page_count is not None:
+        attachment.page_count = page_count
+    if text_version is not None:
+        attachment.text_version = text_version
+    attachment.error = (
+        json.dumps({"code": error.code.value, "params": error.params}) if error else None
+    )
+    return True
+
+
+def _mark_failed(db: Database, attachment_id: str, error: TezError) -> None:
     with db.write_session() as session:
-        attachment = FilesRepository(session).get(attachment_id)
-        if attachment is None:
-            return
-        attachment.text_status = status
-        if page_count is not None:
-            attachment.page_count = page_count
-        attachment.error = (
-            json.dumps({"code": error.code.value, "params": error.params}) if error else None
-        )
+        set_text_status(session, attachment_id, TextStatus.FAILED, error=error)
 
 
-def inspect_attachment(payload: dict[str, object], ctx: JobContext) -> None:
-    """The `pdf.inspect` job: page count and text layer, or the reason the file is broken."""
-    attachment_id = str(payload["attachment_id"])
+def open_in_worker[T](
+    attachment_id: str, ctx: JobContext, read: Callable[[Path], T | None]
+) -> T | None:
+    """Run `read` on an attachment's file, marking the file when it is missing, unreadable or
+    crashes this process. None when there was nothing to read."""
     with ctx.db.session() as session:
         attachment = FilesRepository(session).get(attachment_id)
         if attachment is None:
-            logger.warning("attachment gone before inspection", extra={"id": attachment_id})
-            return
-        path = ctx.library_path / attachment.rel_path
+            logger.warning("attachment gone before its job", extra={"id": attachment_id})
+            return None
+        rel_path = attachment.rel_path
     if ctx.last_attempt:
         # If PDFium takes this process down now, the file stays marked as the cause and is
         # skipped from then on (plan: three failures mark the file and move on).
         crashed = TezError(ErrorCode.PDF_CRASHED, {"attempts": ctx.attempt})
-        _mark(ctx.db, attachment_id, TextStatus.FAILED, error=crashed)
+        _mark_failed(ctx.db, attachment_id, crashed)
+    path = ctx.library_path / rel_path
     if not path.is_file():
-        missing = TezError(ErrorCode.PDF_MISSING, {"path": attachment.rel_path})
-        _mark(ctx.db, attachment_id, TextStatus.FAILED, error=missing)
-        return
+        _mark_failed(ctx.db, attachment_id, TezError(ErrorCode.PDF_MISSING, {"path": rel_path}))
+        return None
     try:
-        found = inspect_pdf(path)
+        return read(path)
     except TezError as error:
         logger.info("pdf unreadable", extra={"id": attachment_id, "params": error.params})
-        _mark(ctx.db, attachment_id, TextStatus.FAILED, error=error)
+        _mark_failed(ctx.db, attachment_id, error)
+        return None
+
+
+def inspect_attachment(payload: dict[str, object], ctx: JobContext) -> None:
+    """The `pdf.inspect` job: page count and text layer, or the reason the file is broken.
+    A file that opens has its text read next (`pdf.extract_text`)."""
+    attachment_id = str(payload["attachment_id"])
+    found = open_in_worker(attachment_id, ctx, inspect_pdf)
+    if found is None:
         return
     status = TextStatus.OK if found.has_text else TextStatus.NEEDS_OCR
-    _mark(ctx.db, attachment_id, status, page_count=found.page_count)
+    with ctx.db.write_session() as session:
+        if set_text_status(session, attachment_id, status, page_count=found.page_count):
+            queue_extraction(session, attachment_id)
     ctx.report(1.0)
+
+
+def queue_extraction(session: Session, attachment_id: str) -> str:
+    return jobs_service.enqueue(
+        session,
+        EXTRACT_JOB,
+        {"attachment_id": attachment_id},
+        dedupe_key=f"text:{attachment_id}",
+        priority=_EXTRACT_PRIORITY,
+    )
+
+
+def queue_missing_extractions(session: Session) -> int:
+    """Queue every file that opens but whose text was never read, or by an older extractor."""
+    found = FilesRepository(session).without_text(TEXT_VERSION)
+    for attachment_id in found:
+        queue_extraction(session, attachment_id)
+    return len(found)
 
 
 def pdf_states(session: Session, paper_ids: Iterable[str]) -> dict[str, TextStatus]:

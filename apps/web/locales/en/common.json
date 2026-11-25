@@ -50,6 +50,7 @@
     "types": {
       "diagnostics.sleep": "Diagnostics",
       "pdf.inspect": "PDF inspection",
+      "pdf.extract_text": "PDF text extraction",
       "pdf.fetch_open_access": "Open-access PDF download",
       "library.backup": "Library backup"
     },
@@ -178,6 +179,7 @@
     "pdf.too_large": "{{file_name}} is too large to add.",
     "pdf.file_not_found": "File not found: {{path}}",
     "pdf.unreadable": "The PDF is damaged and cannot be read.",
+    "pdf.encrypted": "The PDF is protected by a password.",
     "pdf.crashed": "Reading this PDF crashed the worker {{attempts}} times; it was skipped.",
     "pdf.missing": "The stored file is missing from the library folder.",
     "attachment.not_found": "This file no longer exists.",

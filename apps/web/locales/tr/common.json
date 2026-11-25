@@ -50,6 +50,7 @@
     "types": {
       "diagnostics.sleep": "Tanılama",
       "pdf.inspect": "PDF inceleme",
+      "pdf.extract_text": "PDF metin çıkarma",
       "pdf.fetch_open_access": "Açık erişim PDF indirme",
       "library.backup": "Kütüphane yedeği"
     },
@@ -178,6 +179,7 @@
     "pdf.too_large": "{{file_name}} eklenemeyecek kadar büyük.",
     "pdf.file_not_found": "Dosya bulunamadı: {{path}}",
     "pdf.unreadable": "PDF bozuk, okunamıyor.",
+    "pdf.encrypted": "PDF parolayla korunuyor.",
     "pdf.crashed": "Bu PDF'i okumak işçiyi {{attempts}} kez çökertti; atlandı.",
     "pdf.missing": "Saklanan dosya kütüphane klasöründe yok.",
     "attachment.not_found": "Bu dosya artık yok.",

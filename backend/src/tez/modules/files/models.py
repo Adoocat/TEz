@@ -43,3 +43,5 @@ class Attachment(TimestampMixin, Base):
         enum_type(TextStatus, "text_status"), default=TextStatus.PENDING
     )
     error: Mapped[str | None] = mapped_column(Text)
+    # The extractor version that wrote this file's `text_chunk` rows (Task 43); None: not yet.
+    text_version: Mapped[int | None] = mapped_column(Integer)
