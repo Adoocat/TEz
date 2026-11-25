@@ -2,13 +2,14 @@
 // actions (reading status, tags), identifiers, the editable citation key, and tabs for the
 // abstract and the files.
 import { BookOpen, Check, Copy, Pencil } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Segmented } from "@/components/ui/segmented";
+import { useReplaceFile } from "@/features/files/api";
 import { ApiError } from "@/lib/api/query";
 
 import {
@@ -292,6 +293,45 @@ function CitekeyEditor({ paper }: { paper: PaperDetail }) {
   );
 }
 
+function ReplaceFile({ attachmentId }: { attachmentId: string }) {
+  const { t } = useTranslation();
+  const replace = useReplaceFile();
+  const input = useRef<HTMLInputElement>(null);
+  return (
+    <>
+      <button
+        type="button"
+        className="text-primary hover:underline disabled:text-fg-muted"
+        disabled={replace.isPending}
+        onClick={() => input.current?.click()}
+      >
+        {t("library.replaceFile")}
+      </button>
+      <input
+        ref={input}
+        type="file"
+        accept="application/pdf,.pdf"
+        className="hidden"
+        aria-label={t("library.replaceFile")}
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+          event.target.value = "";
+          if (file) replace.mutate({ attachmentId, file });
+        }}
+      />
+      {replace.isSuccess && <p role="status">{t("library.replacedFile")}</p>}
+      {replace.error && (
+        <p role="alert" className="text-danger">
+          {t(`errors.${replace.error instanceof ApiError ? replace.error.code : "unknown"}`, {
+            ...(replace.error instanceof ApiError ? replace.error.params : {}),
+            defaultValue: t("errors.unknown"),
+          })}
+        </p>
+      )}
+    </>
+  );
+}
+
 function Files({ paper }: { paper: PaperDetail }) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -338,6 +378,7 @@ function Files({ paper }: { paper: PaperDetail }) {
                 })}
               </p>
             )}
+            {file.kind === "pdf" && <ReplaceFile attachmentId={file.id} />}
           </div>
         </li>
       ))}

@@ -55,6 +55,21 @@ def add_pdfs_from_paths(body: PdfPaths, library: LibraryDep) -> list[PdfPathResu
     return service.add_pdfs_from_paths(library.db, library.path, body.paths, paper_id=body.paper_id)
 
 
+@router.put("/attachments/{attachment_id}/file", openapi_extra=_PDF_BODY)
+async def replace_attachment_file(
+    attachment_id: str,
+    request: Request,
+    library: LibraryDep,
+    file_name: Annotated[str, Query(min_length=1, max_length=255)],
+) -> AttachmentView:
+    """Replace the PDF with another version of the same document, sent as the raw body. What
+    points into it (highlights, quotes, evidence) is looked up again in the new file."""
+    data = await request.body()
+    return await run_in_threadpool(
+        service.replace_file, library.db, library.path, attachment_id, data, file_name
+    )
+
+
 @router.get("/papers/{paper_id}/attachments")
 def paper_attachments(paper_id: str, library: LibraryDep) -> list[AttachmentView]:
     return service.attachments_of(library.db, paper_id)
@@ -94,5 +109,6 @@ def attachment_file(attachment_id: str, library: LibraryDep) -> FileResponse:
         media_type="application/pdf",
         filename=attachment.file_name or f"{attachment.sha256}.pdf",
         content_disposition_type="inline",
-        headers={"Cache-Control": "private, max-age=31536000, immutable"},
+        # Not immutable: the file behind an attachment can be replaced (Task 46).
+        headers={"Cache-Control": "private, no-cache"},
     )

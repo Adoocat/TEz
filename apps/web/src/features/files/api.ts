@@ -35,6 +35,28 @@ export function useUploadPdf() {
   });
 }
 
+/** Another version of the same document; what points into the old one is looked up again. */
+export function useReplaceFile() {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ attachmentId, file }: { attachmentId: string; file: File }) =>
+      unwrap(
+        await api.PUT("/attachments/{attachment_id}/file", {
+          params: { path: { attachment_id: attachmentId }, query: { file_name: file.name } },
+          body: file as unknown as string,
+          bodySerializer: (body: unknown) => body as BodyInit,
+          headers: { "Content-Type": "application/pdf" },
+        }),
+      ),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["library"] });
+      await queryClient.invalidateQueries({ queryKey: ["attachments"] });
+      await queryClient.invalidateQueries({ queryKey: ["reader"] });
+    },
+  });
+}
+
 export function useAttachments(paperId: string | null) {
   const api = useApi();
   return useQuery({

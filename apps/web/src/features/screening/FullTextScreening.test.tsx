@@ -18,7 +18,8 @@ vi.mock("@/lib/pdf", () => ({
   openPdf: (): Promise<PdfDocument> =>
     Promise.resolve({
       numPages: 3,
-      pageSize: () => Promise.resolve({ width: 600, height: 800 }),
+      pageSize: () =>
+        Promise.resolve({ width: 600, height: 800, transform: [1, 0, 0, -1, 0, 800] as const }),
       renderPage: () => ({ done: Promise.resolve(), dispose: () => undefined }),
       renderThumbnail: () => ({ done: Promise.resolve(), dispose: () => undefined }),
       outline: () => Promise.resolve([]),

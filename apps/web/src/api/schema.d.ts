@@ -1158,6 +1158,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/attachments/{attachment_id}/anchors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Attachment Anchors */
+        get: operations["attachment_anchors_attachments__attachment_id__anchors_get"];
+        put?: never;
+        /**
+         * Create Anchor
+         * @description Remember a place in a PDF. The same passage twice is the same anchor.
+         */
+        post: operations["create_anchor_attachments__attachment_id__anchors_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/anchors/{anchor_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Anchor */
+        get: operations["get_anchor_anchors__anchor_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/fulltext/search": {
         parameters: {
             query?: never;
@@ -1244,6 +1282,32 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/attachments/{attachment_id}/file": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Attachment File
+         * @description The stored file. Supports `Range` requests, so the reader fetches only the pages it
+         *     shows (pdf.js), and a 300-page scan is never loaded whole.
+         */
+        get: operations["attachment_file_attachments__attachment_id__file_get"];
+        /**
+         * Replace Attachment File
+         * @description Replace the PDF with another version of the same document, sent as the raw body. What
+         *     points into it (highlights, quotes, evidence) is looked up again in the new file.
+         */
+        put: operations["replace_attachment_file_attachments__attachment_id__file_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/papers/{paper_id}/attachments": {
         parameters: {
             query?: never;
@@ -1293,27 +1357,6 @@ export interface paths {
          *     per paper. The papers are kept in the library.
          */
         post: operations["find_open_access_pdfs_pdfs_open_access_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/attachments/{attachment_id}/file": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Attachment File
-         * @description The stored file. Supports `Range` requests, so the reader fetches only the pages it
-         *     shows (pdf.js), and a 300-page scan is never loaded whole.
-         */
-        get: operations["attachment_file_attachments__attachment_id__file_get"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1605,6 +1648,82 @@ export interface components {
             reviewers: string[];
             /** Stages */
             stages: components["schemas"]["StageAgreementView"][];
+        };
+        /**
+         * AnchorCreate
+         * @description A place the user selected in the reader.
+         */
+        AnchorCreate: {
+            /** @default text */
+            kind: components["schemas"]["AnchorKind"];
+            /** Page */
+            page: number;
+            /** Rects */
+            rects: number[][];
+            /**
+             * Quote
+             * @default
+             */
+            quote: string;
+            /**
+             * Prefix
+             * @default
+             */
+            prefix: string;
+            /**
+             * Suffix
+             * @default
+             */
+            suffix: string;
+            /** Occurrence */
+            occurrence?: number | null;
+        };
+        /**
+         * AnchorKind
+         * @enum {string}
+         */
+        AnchorKind: "text" | "area";
+        /**
+         * AnchorPaper
+         * @description Enough of the paper for a source chip ("Kim et al. 2024 · p. 7").
+         */
+        AnchorPaper: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** First Author */
+            first_author: string | null;
+            /** Author Count */
+            author_count: number;
+            /** Year */
+            year: number | null;
+            /** Citekey */
+            citekey: string | null;
+        };
+        /** AnchorView */
+        AnchorView: {
+            /** Id */
+            id: string;
+            /** Attachment Id */
+            attachment_id: string;
+            kind: components["schemas"]["AnchorKind"];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "verified" | "unverified" | "checking" | "lost";
+            /** Page */
+            page: number;
+            /** Rects */
+            rects: number[][];
+            /** Quote */
+            quote: string;
+            /** Prefix */
+            prefix: string;
+            /** Suffix */
+            suffix: string;
+            paper: components["schemas"]["AnchorPaper"];
         };
         /** AnswerPut */
         AnswerPut: {
@@ -7886,6 +8005,184 @@ export interface operations {
             };
         };
     };
+    attachment_anchors_attachments__attachment_id__anchors_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnchorView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_anchor_attachments__attachment_id__anchors_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnchorCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnchorView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_anchor_anchors__anchor_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                anchor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnchorView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     search_fulltext_fulltext_search_post: {
         parameters: {
             query?: never;
@@ -8129,6 +8426,137 @@ export interface operations {
             };
         };
     };
+    attachment_file_attachments__attachment_id__file_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The file */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": unknown;
+                };
+            };
+            /** @description A byte range of it */
+            206: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": unknown;
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    replace_attachment_file_attachments__attachment_id__file_put: {
+        parameters: {
+            query: {
+                file_name: string;
+            };
+            header?: never;
+            path: {
+                attachment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/pdf": string;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttachmentView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     paper_attachments_papers__paper_id__attachments_get: {
         parameters: {
             query?: never;
@@ -8265,73 +8693,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OpenAccessQueued"];
-                };
-            };
-            /** @description Missing or invalid token */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description No library is open */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Invalid request */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    attachment_file_attachments__attachment_id__file_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                attachment_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The file */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/pdf": unknown;
-                };
-            };
-            /** @description A byte range of it */
-            206: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/pdf": unknown;
                 };
             };
             /** @description Missing or invalid token */

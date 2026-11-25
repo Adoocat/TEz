@@ -8,7 +8,7 @@ import { App } from "@/app/App";
 import { useLayoutStore } from "@/app/layout/uiStore";
 import { useJobsStore } from "@/features/jobs/store";
 import type { OpenOptions, OutlineItem, PdfDocument } from "@/lib/pdf";
-import { fakeBackend, readyPlatform, type FakeBackend } from "@/test/fakeBackend";
+import { anchorView, fakeBackend, readyPlatform, type FakeBackend } from "@/test/fakeBackend";
 
 import { useReaderPanel, useReaderTabs } from "./store";
 
@@ -24,7 +24,8 @@ vi.mock("@/lib/pdf", () => ({
     if (failOpen) return Promise.reject(new Error("broken"));
     return Promise.resolve({
       numPages: 40,
-      pageSize: () => Promise.resolve({ width: 600, height: 800 }),
+      pageSize: () =>
+        Promise.resolve({ width: 600, height: 800, transform: [1, 0, 0, -1, 0, 800] as const }),
       renderPage: (page, { scale }) => {
         rendered.push({ page, scale });
         return { done: Promise.resolve(), dispose: () => undefined };
@@ -304,5 +305,39 @@ describe("the reader's tabs and focus mode", () => {
 
     await user.keyboard("{Escape}");
     expect(screen.getByRole("navigation", { name: "Main navigation" })).toBeInTheDocument();
+  });
+});
+
+describe("opening the reader at a place", () => {
+  it("jumps to the passage and shows it for a moment", async () => {
+    open("#/reader/att-1?anchor=a7", (backend) => {
+      backend.anchors.a7 = anchorView({ id: "a7", page: 1 });
+    });
+
+    const flash = await screen.findByTestId("anchor-flash");
+    // The fake page is 600 by 800 at scale 1: PDF y 620 is 180 pixels from the top.
+    expect(flash).toHaveStyle({ left: "100px", top: "180px", width: "200px", height: "20px" });
+    await waitFor(
+      () => {
+        expect(screen.queryByTestId("anchor-flash")).not.toBeInTheDocument();
+      },
+      { timeout: 4000 },
+    );
+  });
+
+  it("does not guess when the passage is gone from the file", async () => {
+    const user = userEvent.setup();
+    open("#/reader/att-1?anchor=a7", (backend) => {
+      backend.anchors.a7 = anchorView({ id: "a7", status: "lost", page: 30 });
+    });
+
+    const notice = await screen.findByRole("alert");
+    expect(notice).toHaveTextContent("This passage is not in the current file any more:");
+    expect(notice).toHaveTextContent("forty-two participants");
+    expect(screen.queryByTestId("anchor-flash")).not.toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Page" })).toHaveValue("1");
+
+    await user.click(screen.getByRole("button", { name: "Dismiss" }));
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 });

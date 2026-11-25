@@ -84,6 +84,14 @@ def _existing(db: Database, sha256: str) -> _Existing | None:
         return _Existing(found.paper_id, found.id) if found else None
 
 
+def _check_pdf(data: bytes, file_name: str) -> None:
+    if len(data) > MAX_PDF_BYTES:
+        params = {"file_name": file_name, "size": len(data)}
+        raise TezError(ErrorCode.PDF_TOO_LARGE, params, status=413)
+    if not storage.looks_like_pdf(data):
+        raise TezError(ErrorCode.PDF_NOT_A_PDF, {"file_name": file_name}, status=422)
+
+
 def add_pdf(
     db: Database,
     library_path: Path,
@@ -94,11 +102,7 @@ def add_pdf(
     source: str = MANUAL_SOURCE,
 ) -> PdfAdded:
     """Store a PDF once. The same bytes a second time change nothing (`duplicate`)."""
-    if len(data) > MAX_PDF_BYTES:
-        params = {"file_name": file_name, "size": len(data)}
-        raise TezError(ErrorCode.PDF_TOO_LARGE, params, status=413)
-    if not storage.looks_like_pdf(data):
-        raise TezError(ErrorCode.PDF_NOT_A_PDF, {"file_name": file_name}, status=422)
+    _check_pdf(data, file_name)
     sha256 = storage.sha256_of(data)
     if (existing := _existing(db, sha256)) is not None:
         return _duplicate(existing, file_name)
@@ -199,6 +203,67 @@ def get_attachment(db: Database, attachment_id: str) -> AttachmentView:
         if attachment is None:
             params = {"attachment_id": attachment_id}
             raise TezError(ErrorCode.ATTACHMENT_NOT_FOUND, params, status=404)
+        return view(attachment)
+
+
+@dataclass(frozen=True)
+class FileFacts:
+    """What other modules need to know about a stored file."""
+
+    paper_id: str
+    sha256: str
+    page_count: int | None
+
+
+def file_facts(session: Session, attachment_id: str) -> FileFacts:
+    attachment = FilesRepository(session).get(attachment_id)
+    if attachment is None:
+        params = {"attachment_id": attachment_id}
+        raise TezError(ErrorCode.ATTACHMENT_NOT_FOUND, params, status=404)
+    return FileFacts(attachment.paper_id, attachment.sha256, attachment.page_count)
+
+
+def text_is_current(session: Session, attachment_id: str) -> bool:
+    """Whether the stored text is this file's (not missing, not a replaced file's)."""
+    attachment = FilesRepository(session).get(attachment_id)
+    return attachment is not None and attachment.text_version is not None
+
+
+def replace_file(
+    db: Database, library_path: Path, attachment_id: str, data: bytes, file_name: str
+) -> AttachmentView:
+    """Another version of the same document (a preprint's published PDF, a corrected scan).
+
+    The attachment keeps its id, so everything that points at it stays; its text is read again
+    and its anchors look for their places in the new file (Task 46). The old file stays on disk.
+    """
+    _check_pdf(data, file_name)
+    sha256 = storage.sha256_of(data)
+    if (existing := _existing(db, sha256)) is not None:
+        if existing.attachment_id == attachment_id:
+            return get_attachment(db, attachment_id)
+        params = {"file_name": file_name, "paper_id": existing.paper_id}
+        raise TezError(ErrorCode.ATTACHMENT_FILE_IN_USE, params, status=409)
+    get_attachment(db, attachment_id)
+    relative = storage.store(library_path, data, sha256)
+    with db.write_session() as session:
+        attachment = FilesRepository(session).get(attachment_id)
+        if attachment is None:
+            params = {"attachment_id": attachment_id}
+            raise TezError(ErrorCode.ATTACHMENT_NOT_FOUND, params, status=404)
+        attachment.rel_path = relative
+        attachment.sha256 = sha256
+        attachment.file_name = file_name
+        attachment.size = len(data)
+        attachment.page_count = None
+        attachment.text_status = TextStatus.PENDING
+        attachment.text_version = None
+        attachment.error = None
+        session.flush()
+        jobs_service.enqueue(
+            session, INSPECT_JOB, {"attachment_id": attachment_id}, dedupe_key=attachment_id
+        )
+        logger.info("pdf replaced", extra={"attachment_id": attachment_id, "size": len(data)})
         return view(attachment)
 
 
