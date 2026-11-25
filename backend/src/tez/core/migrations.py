@@ -17,7 +17,7 @@ from tez.core.db import Database
 MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"
 
 # Tables that have no model: FTS5 virtual tables and the shadow tables FTS5 keeps for them.
-UNMODELLED_TABLE_PREFIXES = ("paper_fts", "chunk_fts")
+UNMODELLED_TABLE_PREFIXES = ("paper_fts", "chunk_fts", "note_fts")
 
 
 def include_name(name: str | None, type_: str, parent_names: object) -> bool:
