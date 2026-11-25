@@ -19,6 +19,8 @@ test("notes: write, link with [[, backlinks, rename, search", async ({ page, req
   await page.keyboard.type("## Recording\n\nAs in [[wetland birds");
   const option = page.getByRole("option", { name: new RegExp(PAPER) });
   await expect(option).toBeVisible();
+  // CodeMirror takes no key as a choice in the first 75 ms after the list opens.
+  await page.waitForTimeout(150);
   await page.keyboard.press("Enter");
   await page.keyboard.type(", and later [[Bittern calls");
   await page.getByRole("option", { name: "New note: Bittern calls" }).click();
