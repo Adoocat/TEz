@@ -156,6 +156,7 @@ def test_an_unknown_review_or_record_is_404(client: TestClient, library: Library
     assert missing.json()["error"]["code"] == "screening.record_not_found"
 
 
+@pytest.mark.timing
 def test_the_next_record_comes_within_50_ms_in_a_2000_record_review(library: Library) -> None:
     review, ids, e1 = make_review(library, 2000)
     with library.db.write_session() as session:

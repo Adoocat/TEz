@@ -1,5 +1,6 @@
 // The library (design 4.3): the papers of the chosen scope in a sortable, virtualized table,
-// with full-text search, filters and a bulk bar. Selecting a row fills the inspector.
+// with search (records, or inside PDFs), filters and a bulk bar. Selecting a row fills the
+// inspector.
 import type { SortingState } from "@tanstack/react-table";
 import { Search, X } from "lucide-react";
 import { useCallback, useDeferredValue, useMemo, useState } from "react";
@@ -8,6 +9,7 @@ import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Segmented } from "@/components/ui/segmented";
 import { useExportSelection } from "@/features/export/store";
 import { ApiError } from "@/lib/api/query";
 
@@ -30,11 +32,15 @@ import {
   type LibraryFilters,
   type PdfFilter,
 } from "./filters";
+import { FulltextResults } from "./FulltextResults";
 import { publicationTypes } from "./publicationType";
 import { PaperTable } from "./PaperTable";
 import { useLibraryView } from "./store";
 
 const DEFAULT_SORT: SortingState = [{ id: "added", desc: true }];
+
+/** What the search box looks in: the papers' records, or the text of their PDFs. */
+type SearchIn = "records" | "fulltext";
 
 function parseYear(text: string): number | null {
   const value = Number.parseInt(text, 10);
@@ -50,20 +56,23 @@ export function LibraryPage() {
   const collections = useCollections();
   const tags = useTags();
   const [query, setQuery] = useState("");
+  const [searchIn, setSearchIn] = useState<SearchIn>("records");
+  const fulltext = searchIn === "fulltext";
   // Typing stays responsive; the search follows the deferred text.
   const deferredQuery = useDeferredValue(query);
-  const search = useLibrarySearch(deferredQuery);
+  const search = useLibrarySearch(fulltext ? "" : deferredQuery);
   const [filters, setFilters] = useState<LibraryFilters>(noLibraryFilters);
   const [sorting, setSorting] = useState<SortingState>(DEFAULT_SORT);
   const [checked, setChecked] = useState<ReadonlySet<string>>(new Set());
 
   const rows = useMemo(() => papers.data ?? [], [papers.data]);
-  const searching = deferredQuery.trim() !== "";
+  const searching = !fulltext && deferredQuery.trim() !== "";
   const hitIds = search.data?.paper_ids;
   const visible = useMemo(
     () => applyFilters(rows, filters, searching ? (hitIds ?? []) : null),
     [rows, filters, searching, hitIds],
   );
+  const visibleIds = useMemo(() => visible.map((row) => row.id), [visible]);
   const tagsById = useMemo(
     () => new Map((tags.data ?? []).map((tag) => [tag.id, tag])),
     [tags.data],
@@ -117,6 +126,15 @@ export function LibraryPage() {
             : t("library.showing", { shown: number(visible.length), total: number(rows.length) })}
         </span>
         <div className="flex-1" />
+        <Segmented
+          aria-label={t("library.searchIn")}
+          value={searchIn}
+          options={[
+            { value: "records", label: t("library.searchInRecords") },
+            { value: "fulltext", label: t("library.searchInFulltext") },
+          ]}
+          onValueChange={setSearchIn}
+        />
         <div className="relative w-72 max-w-full">
           <Search
             aria-hidden
@@ -125,7 +143,7 @@ export function LibraryPage() {
           <Input
             type="search"
             aria-label={t("library.search")}
-            placeholder={t("library.searchPlaceholder")}
+            placeholder={t(fulltext ? "library.fulltext.placeholder" : "library.searchPlaceholder")}
             className="pl-8"
             value={query}
             onChange={(event) => {
@@ -138,7 +156,10 @@ export function LibraryPage() {
         </div>
       </header>
       <FilterBar filters={filters} onChange={setFilters} tags={tags.data ?? []} />
-      <div className="flex min-h-10 flex-wrap items-center gap-2 border-y border-line bg-surface px-4 py-1">
+      <div
+        className="flex min-h-10 flex-wrap items-center gap-2 border-y border-line bg-surface px-4 py-1"
+        hidden={fulltext}
+      >
         <input
           type="checkbox"
           className="size-4"
@@ -161,6 +182,8 @@ export function LibraryPage() {
         <p className="p-6 text-center text-ui text-fg-muted">
           {scope.kind === "all" ? t("library.emptyLibrary") : t("library.emptyScope")}
         </p>
+      ) : fulltext ? (
+        <FulltextResults query={deferredQuery} paperIds={visibleIds} onSelect={selectPaper} />
       ) : papers.isSuccess && visible.length === 0 ? (
         <p className="p-6 text-center text-ui text-fg-muted">{t("library.noMatches")}</p>
       ) : (

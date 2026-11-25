@@ -420,7 +420,8 @@ def test_append_only_triggers_exist(session: Session) -> None:
         session.execute(text("SELECT name FROM sqlite_master WHERE type = 'trigger'")).scalars()
     )
 
-    assert names == {
+    # The only other trigger keeps the full-text index in step (migration 0020).
+    assert names - {"tr_text_chunk_unindex"} == {
         f"{table}_append_only_{op}"
         for table in ("search_run", "search_result", "screening_decision")
         for op in ("update", "delete")

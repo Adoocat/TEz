@@ -21,6 +21,7 @@ from tez.core.errors import ErrorCode, TezError
 from tez.core.filelock import FileLock, is_locked
 from tez.core.private_file import write_private_text
 from tez.modules.files import service as files_service
+from tez.modules.fulltext import search_index as fulltext_index
 from tez.modules.library import search_index
 from tez.modules.library.paper_service import PaperService
 from tez.modules.library.schemas import ApiEndpoint, Instance, InstanceKind, LibraryInfo
@@ -148,6 +149,7 @@ def _upgrade_schema(path: Path, db: Database) -> None:
 def _bring_up_to_date(db: Database) -> None:
     """Data the app derives, filled in for libraries made before it existed (Task 19)."""
     search_index.ensure_complete(db)
+    fulltext_index.ensure_complete(db)
     with db.write_session() as session:
         if added := PaperService(session).backfill_citekeys():
             logger.info("citation keys added", extra={"papers": added})

@@ -20,7 +20,9 @@ const steps = [
   ["py", "ruff lint", ...uv("ruff", "check", "backend")],
   ["py", "ruff format", ...uv("ruff", "format", "--check", "backend")],
   ["py", "pyright", "pnpm", ["exec", "pyright", "-p", "backend"]],
-  ["py", "pytest", "uv", ["run", "pytest", "-n", "auto"], backend],
+  ["py", "pytest", "uv", ["run", "pytest", "-n", "auto", "-m", '"not timing"'], backend],
+  // Tests that measure how long something takes run alone, not beside eleven others.
+  ["py", "pytest (timing)", "uv", ["run", "pytest", "-m", "timing"], backend],
   // The generated TypeScript client must match the backend's OpenAPI schema.
   ["api", "client up to date", "node", ["scripts/gen-api.mjs", "--check"]],
   // The CSS variables must match docs/design/tokens.json.

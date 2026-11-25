@@ -12,6 +12,7 @@ type CollectionView = components["schemas"]["CollectionView"];
 type ExternalSearchView = components["schemas"]["ExternalSearchView"];
 type TagView = components["schemas"]["TagView"];
 type LibraryPaperRow = components["schemas"]["LibraryPaperRow"];
+type FulltextPaper = components["schemas"]["FulltextPaper"];
 type PaperDetail = components["schemas"]["PaperDetail"];
 type ReviewView = components["schemas"]["ReviewView"];
 type ReviewOverview = components["schemas"]["ReviewOverview"];
@@ -56,6 +57,8 @@ export interface FakeBackend {
   papers: LibraryPaperRow[];
   /** What GET /papers/search answers for each query (best first); none when missing. */
   searchHits: Record<string, string[]>;
+  /** What POST /fulltext/search answers for each query; nothing found when missing. */
+  fulltextHits: Record<string, FulltextPaper[]>;
   details: Record<string, PaperDetail>;
   /** What the next POST /pdfs answers, in order; "added" when empty. */
   pdfReplies: (
@@ -95,6 +98,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     tags: [],
     papers: [],
     searchHits: {},
+    fulltextHits: {},
     details: {},
     emitSource(searchId, update) {
       const data = {
@@ -361,6 +365,21 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
       if (route === "GET /papers/search") {
         const q = new URL(request.url, "http://test").searchParams.get("q") ?? "";
         return json({ paper_ids: backend.searchHits[q] ?? [], elapsed_ms: 1.2 });
+      }
+      if (route === "POST /fulltext/search") {
+        const { q, paper_ids, limit } = body as {
+          q: string;
+          paper_ids: string[];
+          limit: number;
+        };
+        const all = (backend.fulltextHits[q] ?? []).filter((p) => paper_ids.includes(p.paper_id));
+        return json({
+          papers: all.slice(0, limit),
+          total_papers: all.length,
+          total_pages: all.reduce((sum, p) => sum + p.page_hits, 0),
+          truncated: false,
+          elapsed_ms: 1.2,
+        });
       }
       const paperOf = /^\/papers\/([^/]+)$/.exec(path)?.[1];
       if (paperOf && paperOf !== "reading-status") {

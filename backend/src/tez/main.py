@@ -18,6 +18,7 @@ from tez.modules.backup.router import router as backup_router
 from tez.modules.dual_screening.router import router as dual_screening_router
 from tez.modules.export.router import router as export_router
 from tez.modules.files.router import router as files_router
+from tez.modules.fulltext.router import router as fulltext_router
 from tez.modules.greylit.router import router as greylit_router
 from tez.modules.importers.router import router as imports_router
 from tez.modules.jobs.router import router as jobs_router
@@ -98,6 +99,7 @@ def create_app(
     app.include_router(quality_router, dependencies=secured, responses=needs_library)
     app.include_router(search_router, dependencies=secured, responses=needs_library)
     app.include_router(imports_router, dependencies=secured, responses=needs_library)
+    app.include_router(fulltext_router, dependencies=secured, responses=needs_library)
     app.include_router(files_router, dependencies=secured, responses=needs_library)
     app.include_router(backup_router, dependencies=secured, responses=needs_library)
     app.include_router(export_router, dependencies=secured, responses=needs_library)

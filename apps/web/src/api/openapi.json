@@ -5941,6 +5941,83 @@
         ]
       }
     },
+    "/fulltext/search": {
+      "post": {
+        "tags": [
+          "fulltext"
+        ],
+        "summary": "Search Fulltext",
+        "description": "Search inside the PDFs of library papers, page by page.\n\nEvery word must be on the page, as a word or its beginning; \"quoted words\" must follow each\nother exactly. Turkish letters fold (\"isik\" = \"Işık\"). POST, because the list of papers to\nlook in does not fit in an address.",
+        "operationId": "search_fulltext_fulltext_search_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FulltextQuery"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FulltextResults"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/pdfs": {
       "post": {
         "tags": [
@@ -9726,6 +9803,166 @@
         ],
         "title": "FileReview"
       },
+      "FulltextPage": {
+        "properties": {
+          "attachment_id": {
+            "type": "string",
+            "title": "Attachment Id"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "snippet": {
+            "items": {
+              "$ref": "#/components/schemas/SnippetPart"
+            },
+            "type": "array",
+            "title": "Snippet"
+          }
+        },
+        "type": "object",
+        "required": [
+          "attachment_id",
+          "page",
+          "snippet"
+        ],
+        "title": "FulltextPage"
+      },
+      "FulltextPaper": {
+        "properties": {
+          "paper_id": {
+            "type": "string",
+            "title": "Paper Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "first_author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Author"
+          },
+          "author_count": {
+            "type": "integer",
+            "title": "Author Count"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "page_hits": {
+            "type": "integer",
+            "title": "Page Hits"
+          },
+          "pages": {
+            "items": {
+              "$ref": "#/components/schemas/FulltextPage"
+            },
+            "type": "array",
+            "title": "Pages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "paper_id",
+          "title",
+          "first_author",
+          "author_count",
+          "year",
+          "page_hits",
+          "pages"
+        ],
+        "title": "FulltextPaper"
+      },
+      "FulltextQuery": {
+        "properties": {
+          "q": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Q"
+          },
+          "paper_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 20000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paper Ids"
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 200.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "default": 30
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "q"
+        ],
+        "title": "FulltextQuery"
+      },
+      "FulltextResults": {
+        "properties": {
+          "papers": {
+            "items": {
+              "$ref": "#/components/schemas/FulltextPaper"
+            },
+            "type": "array",
+            "title": "Papers"
+          },
+          "total_papers": {
+            "type": "integer",
+            "title": "Total Papers"
+          },
+          "total_pages": {
+            "type": "integer",
+            "title": "Total Pages"
+          },
+          "truncated": {
+            "type": "boolean",
+            "title": "Truncated"
+          },
+          "elapsed_ms": {
+            "type": "number",
+            "title": "Elapsed Ms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "papers",
+          "total_papers",
+          "total_pages",
+          "truncated",
+          "elapsed_ms"
+        ],
+        "title": "FulltextResults"
+      },
       "GreyEntry": {
         "properties": {
           "search_id": {
@@ -13380,6 +13617,24 @@
           "code"
         ],
         "title": "SkippedDecision"
+      },
+      "SnippetPart": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "hit": {
+            "type": "boolean",
+            "title": "Hit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text",
+          "hit"
+        ],
+        "title": "SnippetPart"
       },
       "SnowballRoundView": {
         "properties": {
