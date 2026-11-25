@@ -1,7 +1,12 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { PdfDocument, PdfPageSize } from "@/lib/pdf";
+
+function pointIn(event: MouseEvent<HTMLElement>) {
+  const box = event.currentTarget.getBoundingClientRect();
+  return { x: event.clientX - box.left, y: event.clientY - box.top };
+}
 
 /** One drawn page: canvas, selectable text, and whatever lies on top (`children`). */
 export function PageView({
@@ -12,6 +17,8 @@ export function PageView({
   height,
   onSize,
   onText,
+  onPoint,
+  onClick,
   children,
 }: {
   document: PdfDocument;
@@ -23,6 +30,9 @@ export function PageView({
   onSize: (pageNumber: number, size: PdfPageSize) => void;
   /** The text layer is ready (null: gone again). */
   onText: (pageNumber: number, layer: HTMLElement | null) => void;
+  /** The pointer over the page, in CSS pixels from its corner; null when it leaves. */
+  onPoint?: (pageNumber: number, point: { x: number; y: number } | null) => void;
+  onClick?: (pageNumber: number, point: { x: number; y: number }) => void;
   children?: ReactNode;
 }) {
   const { t } = useTranslation();
@@ -81,6 +91,15 @@ export function PageView({
       className="relative mx-auto overflow-hidden bg-raised shadow-popover"
       // A page is paper whatever the theme; pdf.js paints its own white background.
       style={{ width, height, colorScheme: "light" }}
+      onPointerMove={(event) => {
+        onPoint?.(pageNumber, pointIn(event));
+      }}
+      onPointerLeave={() => {
+        onPoint?.(pageNumber, null);
+      }}
+      onClick={(event) => {
+        onClick?.(pageNumber, pointIn(event));
+      }}
     >
       <canvas ref={canvas} aria-hidden className="block" />
       <div ref={textLayer} className="textLayer" />

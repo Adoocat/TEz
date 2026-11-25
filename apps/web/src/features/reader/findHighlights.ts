@@ -3,59 +3,26 @@
 // without the API still jumps to the page; it only draws no marks.
 import { foldWithMap } from "@/lib/text";
 
+import { readLayer } from "./layerText";
+
 const FIND = "tez-find";
 const CURRENT = "tez-find-current";
-
-interface Place {
-  node: Text;
-  offset: number;
-}
 
 /** Where `query` is in a text layer. Case, accents, line ends and line-end hyphens do not
  * matter, as in the backend's search. */
 export function findRanges(layer: Element, query: string): Range[] {
   const needle = foldWithMap(query).folded.split(/\s+/).filter(Boolean).join(" ");
   if (needle === "") return [];
-  let text = "";
-  const places: Place[] = [];
-  const addSpace = (place: Place | undefined) => {
-    if (place && !text.endsWith(" ")) {
-      text += " ";
-      places.push(place);
-    }
-  };
-  const walker = layer.ownerDocument.createTreeWalker(
-    layer,
-    NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
-  );
-  while (walker.nextNode()) {
-    const node = walker.currentNode;
-    if (node instanceof Element) {
-      // pdf.js puts a <br> at the end of each line.
-      if (node.tagName !== "BR") continue;
-      if (/[\p{L}][-­‐]$/u.test(text)) {
-        text = text.slice(0, -1);
-        places.pop();
-      } else {
-        addSpace(places.at(-1));
-      }
-      continue;
-    }
-    const { folded, origin } = foldWithMap((node as Text).data);
-    for (let i = 0; i < folded.length; i += 1) {
-      const char = folded[i] ?? "";
-      const place = { node: node as Text, offset: origin[i] ?? 0 };
-      if (/\s/.test(char)) addSpace(place);
-      else {
-        text += char;
-        places.push(place);
-      }
-    }
-  }
+  const { text, places } = readLayer(layer);
+  const { folded, origin } = foldWithMap(text);
   const ranges: Range[] = [];
-  for (let at = text.indexOf(needle); at !== -1; at = text.indexOf(needle, at + needle.length)) {
-    const start = places[at];
-    const end = places[at + needle.length - 1];
+  for (
+    let at = folded.indexOf(needle);
+    at !== -1;
+    at = folded.indexOf(needle, at + needle.length)
+  ) {
+    const start = places[origin[at] ?? -1];
+    const end = places[origin[at + needle.length - 1] ?? -1];
     if (!start || !end) continue;
     const range = layer.ownerDocument.createRange();
     range.setStart(start.node, start.offset);

@@ -2,6 +2,8 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+import type { HighlightColor } from "./api";
+
 export interface ReaderTab {
   attachmentId: string;
   title: string;
@@ -80,3 +82,30 @@ export const useReaderPanel = create<ReaderPanel>()(
     { name: "tez.reader.panel", storage: createJSONStorage(() => localStorage) },
   ),
 );
+
+interface ReaderSelection {
+  /** The highlight chosen on the page or in the panel. */
+  selectedId: string | null;
+  /** Its comment should take the keyboard. */
+  editing: boolean;
+  /** The colour used last: what `H` marks with. */
+  color: HighlightColor;
+  select: (annotationId: string | null, options?: { edit?: boolean }) => void;
+  endEditing: () => void;
+  setColor: (color: HighlightColor) => void;
+}
+
+export const useReaderSelection = create<ReaderSelection>((set) => ({
+  selectedId: null,
+  editing: false,
+  color: "yellow",
+  select: (selectedId, { edit = false } = {}) => {
+    set({ selectedId, editing: edit });
+  },
+  endEditing: () => {
+    set({ editing: false });
+  },
+  setColor: (color) => {
+    set({ color });
+  },
+}));

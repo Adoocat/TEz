@@ -240,3 +240,114 @@ test("a quote is shown in place, and found again when the PDF is replaced", asyn
   await expect(again.getByTestId("anchor-flash")).toBeVisible();
   await expect(page.getByRole("textbox", { name: "Page" })).toHaveValue("6");
 });
+
+test("highlights: select, mark, comment, zoom, areas", async ({ page, request }) => {
+  const attachmentId = await addPdf(
+    request,
+    "stork.pdf",
+    makePdf(5, "Stork nesting sites", 0, { page: (n) => (n === 2 ? { rotate: 180 } : {}) }),
+  );
+  await openApp(page, `/reader/${attachmentId}`);
+  const reader = page.getByRole("document", { name: "stork.pdf" });
+
+  /** Drag over a line of text, as a reader would. */
+  const selectLine = async (n: number) => {
+    await page.getByRole("textbox", { name: "Page" }).fill(String(n));
+    await page.keyboard.press("Enter");
+    const line = reader
+      .getByRole("region", { name: `Page ${String(n)}`, exact: true })
+      .getByText(`Stork nesting sites page ${String(n)}`, { exact: true });
+    await expect(line).toBeVisible();
+    // Upside down, the line is at the foot of the page.
+    await line.scrollIntoViewIfNeeded();
+    const box = await line.boundingBox();
+    if (!box) throw new Error("no box");
+    const sideways = box.height > box.width;
+    const [x0, y0, x1, y1] = sideways
+      ? [box.x + box.width / 2, box.y + 1, box.x + box.width / 2, box.y + box.height - 1]
+      : [box.x + 1, box.y + box.height / 2, box.x + box.width - 1, box.y + box.height / 2];
+    await page.mouse.move(x0, y0);
+    await page.mouse.down();
+    await page.mouse.move((x0 + x1) / 2, (y0 + y1) / 2, { steps: 5 });
+    await page.mouse.move(x1, y1, { steps: 5 });
+    await page.mouse.up();
+    return line;
+  };
+  /** The marks of a page lie on its line of text. */
+  const onLine = async (n: number) => {
+    const region = reader.getByRole("region", { name: `Page ${String(n)}`, exact: true });
+    const line = region.getByText(`Stork nesting sites page ${String(n)}`, { exact: true });
+    const mark = region.getByTestId("annotation").first();
+    await expect(mark).toBeAttached();
+    const [a, b] = [await mark.boundingBox(), await line.boundingBox()];
+    if (!a || !b) throw new Error("no box");
+    for (const [one, other] of [
+      [a.x + a.width / 2, b.x + b.width / 2],
+      [a.y + a.height / 2, b.y + b.height / 2],
+    ] as const) {
+      expect(Math.abs(one - other)).toBeLessThan(6);
+    }
+    const [longA, longB] = [Math.max(a.width, a.height), Math.max(b.width, b.height)];
+    expect(Math.abs(longA - longB) / longB).toBeLessThan(0.08);
+  };
+
+  await selectLine(1);
+  const toolbar = page.getByRole("toolbar", { name: "Selected text" });
+  await toolbar.getByRole("button", { name: "Highlight in green" }).click();
+  await expect(toolbar).toBeHidden();
+  await onLine(1);
+  const panel = page.getByRole("region", { name: /Highlights/ });
+  await expect(panel.getByText("Stork nesting sites page 1")).toBeVisible();
+
+  // A page turned in the file, marked with the keyboard.
+  await selectLine(2);
+  await expect(toolbar).toBeVisible();
+  await page.keyboard.press("h");
+  await expect(panel.getByText("Stork nesting sites page 2")).toBeVisible();
+  await onLine(2);
+
+  // The comment is asked for at once, and shown over the highlight.
+  await selectLine(3);
+  await toolbar.getByRole("button", { name: "Add a comment" }).click();
+  const third = panel.getByRole("listitem").filter({ hasText: "Stork nesting sites page 3" });
+  await expect(third.getByRole("textbox", { name: "Comment" })).toBeFocused();
+  await page.keyboard.type("Nests on chimneys");
+  await page.keyboard.press("Escape");
+  const mark = reader
+    .getByRole("region", { name: "Page 3", exact: true })
+    .getByTestId("annotation");
+  const box = await mark.boundingBox();
+  if (!box) throw new Error("no box");
+  await page.mouse.move(box.x + 20, box.y + box.height / 2);
+  await expect(page.getByRole("tooltip")).toHaveText("Nests on chimneys");
+
+  // Every zoom puts the mark on its words.
+  for (let i = 0; i < 4; i += 1) {
+    await page.getByRole("button", { name: "Zoom in" }).click();
+    await expect(
+      reader
+        .getByRole("region", { name: "Page 3", exact: true })
+        .getByText("Stork nesting sites page 3", { exact: true }),
+    ).toBeVisible();
+    await onLine(3);
+  }
+  await page.getByRole("button", { name: "Fit to width" }).click();
+
+  // An area, drawn with the mouse.
+  await page.getByRole("button", { name: "Mark an area" }).click();
+  const tool = reader.getByRole("region", { name: "Page 3", exact: true }).getByRole("img");
+  const pageBox = await tool.boundingBox();
+  if (!pageBox) throw new Error("no page");
+  const top = Math.max(pageBox.y, 120);
+  await page.mouse.move(pageBox.x + 100, top + 150);
+  await page.mouse.down();
+  await page.mouse.move(pageBox.x + 300, top + 260, { steps: 5 });
+  await page.mouse.up();
+  await expect(panel.getByLabel("Marked area")).toBeVisible();
+
+  // All of it is there after a restart.
+  await page.reload();
+  await openApp(page, `/reader/${attachmentId}?page=3`);
+  await expect(page.getByRole("region", { name: "Highlights (4)" })).toBeVisible();
+  await onLine(3);
+});

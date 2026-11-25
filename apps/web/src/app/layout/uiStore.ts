@@ -10,6 +10,7 @@ interface LayoutState {
   setFocus: (focus: boolean) => void;
   toggleSidebar: () => void;
   toggleInspector: () => void;
+  openInspector: () => void;
 }
 
 export const useLayoutStore = create<LayoutState>()(
@@ -23,6 +24,9 @@ export const useLayoutStore = create<LayoutState>()(
       },
       toggleSidebar: () => {
         set((s) => ({ sidebarOpen: !s.sidebarOpen }));
+      },
+      openInspector: () => {
+        set({ inspectorOpen: true });
       },
       toggleInspector: () => {
         set((s) => ({ inspectorOpen: !s.inspectorOpen }));

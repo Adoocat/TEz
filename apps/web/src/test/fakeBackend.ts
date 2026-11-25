@@ -17,6 +17,8 @@ type PaperDetail = components["schemas"]["PaperDetail"];
 type AttachmentView = components["schemas"]["AttachmentView"];
 type FindResults = components["schemas"]["FindResults"];
 type AnchorView = components["schemas"]["AnchorView"];
+type AnnotationView = components["schemas"]["AnnotationView"];
+type AnnotationCreate = components["schemas"]["AnnotationCreate"];
 type ReviewView = components["schemas"]["ReviewView"];
 type ReviewOverview = components["schemas"]["ReviewOverview"];
 type CriterionView = components["schemas"]["CriterionView"];
@@ -68,6 +70,8 @@ export interface FakeBackend {
   /** What searching inside a document answers for each query; no match when missing. */
   findResults: Record<string, FindResults>;
   anchors: Record<string, AnchorView>;
+  /** By attachment. */
+  annotations: Record<string, AnnotationView[]>;
   /** What the next POST /pdfs answers, in order; "added" when empty. */
   pdfReplies: (
     | { status: "added" | "duplicate" }
@@ -110,6 +114,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     attachments: {},
     findResults: {},
     anchors: {},
+    annotations: {},
     details: {},
     emitSource(searchId, update) {
       const data = {
@@ -388,6 +393,36 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
       if (/^\/attachments\/[^/]+\/find$/.test(path)) {
         const q = new URL(request.url, "http://test").searchParams.get("q") ?? "";
         return json(backend.findResults[q] ?? { text: "ready", pages: [], total: 0 });
+      }
+      const annotationsOf = /^\/attachments\/([^/]+)\/annotations$/.exec(path)?.[1];
+      if (annotationsOf) {
+        const list = (backend.annotations[annotationsOf] ??= []);
+        if (request.method === "GET") return json(list);
+        const { anchor, color, comment } = body as AnnotationCreate;
+        const id = `annotation-${String(list.length + 1)}`;
+        const created = annotationView({
+          id,
+          color,
+          comment,
+          kind: anchor.kind === "area" ? "area" : "highlight",
+          anchor: anchorView({ id: `anchor-${id}`, attachment_id: annotationsOf, ...anchor }),
+        });
+        list.push(created);
+        return json(created, 201);
+      }
+      const annotationOf = /^\/annotations\/([^/]+)$/.exec(path)?.[1];
+      if (annotationOf) {
+        for (const [key, list] of Object.entries(backend.annotations)) {
+          const found = list.find((a) => a.id === annotationOf);
+          if (!found) continue;
+          if (request.method === "DELETE") {
+            backend.annotations[key] = list.filter((a) => a !== found);
+            return new Response(null, { status: 204 });
+          }
+          Object.assign(found, body);
+          return json(found);
+        }
+        return json({ error: { code: "annotation.not_found", params: {} } }, 404);
       }
       const anchorOf = /^\/anchors\/([^/]+)$/.exec(path)?.[1];
       if (anchorOf) {
@@ -822,6 +857,19 @@ export function anchorView(overrides: Partial<AnchorView> = {}): AnchorView {
       year: 2024,
       citekey: "lovelace2024first",
     },
+    ...overrides,
+  };
+}
+
+export function annotationView(overrides: Partial<AnnotationView> = {}): AnnotationView {
+  return {
+    id: "annotation-1",
+    kind: "highlight",
+    color: "yellow",
+    comment: "",
+    anchor: anchorView(),
+    created_at: "2026-11-25T10:00:00Z",
+    updated_at: "2026-11-25T10:00:00Z",
     ...overrides,
   };
 }

@@ -82,6 +82,7 @@ class ErrorCode(StrEnum):
     ATTACHMENT_FILE_IN_USE = "attachment.file_in_use"
     ANCHOR_NOT_FOUND = "anchor.not_found"
     ANCHOR_NO_SUCH_PAGE = "anchor.no_such_page"
+    ANNOTATION_NOT_FOUND = "annotation.not_found"
     PDF_NOT_A_PDF = "pdf.not_a_pdf"
     PDF_TOO_LARGE = "pdf.too_large"
     PDF_FILE_NOT_FOUND = "pdf.file_not_found"
