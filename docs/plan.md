@@ -373,7 +373,7 @@ Nov 25, 2026 · Onaylandı. Kapsam: kritik yolun son halkası (okuma → not →
 
 ### 0. Risk denemesi
 
-- [ ] **S2 · Metin konumu:** pypdfium2'nin çıkardığı metin, pdf.js'te seçilen metinle aynı yere düşüyor mu? İki sütun, tire bölünmesi, bitişik harf (ligatür), Türkçe karakter ve döndürülmüş sayfa denenir. *Kabul:* örnek PDF'lerde seçimlerin ≥ %95'i doğru yere oturur; sonuç ADR'de.
+- [x] **S2 · Metin konumu:** pypdfium2'nin çıkardığı metin, pdf.js'te seçilen metinle aynı yere düşüyor mu? İki sütun, tire bölünmesi, bitişik harf (ligatür), Türkçe karakter ve döndürülmüş sayfa denenir. *Kabul:* örnek PDF'lerde seçimlerin ≥ %95'i doğru yere oturur; sonuç ADR'de.
 
 ### A. Tam metin
 

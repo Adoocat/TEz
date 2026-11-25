@@ -1,0 +1,124 @@
+{
+  "chromium-tr.pdf": {
+    "selections": 41,
+    "found": 41,
+    "right_place": 40,
+    "ambiguous": 40,
+    "fuzzy": 1,
+    "ms_per_selection": 0.53,
+    "percent": 97.6
+  },
+  "chromium-two-cropped.pdf": {
+    "selections": 43,
+    "found": 43,
+    "right_place": 41,
+    "ambiguous": 35,
+    "fuzzy": 2,
+    "ms_per_selection": 0.66,
+    "percent": 95.3
+  },
+  "chromium-two-rot180.pdf": {
+    "selections": 43,
+    "found": 43,
+    "right_place": 41,
+    "ambiguous": 35,
+    "fuzzy": 2,
+    "ms_per_selection": 0.64,
+    "percent": 95.3
+  },
+  "chromium-two-rot270.pdf": {
+    "selections": 43,
+    "found": 43,
+    "right_place": 41,
+    "ambiguous": 35,
+    "fuzzy": 2,
+    "ms_per_selection": 0.66,
+    "percent": 95.3
+  },
+  "chromium-two-rot90.pdf": {
+    "selections": 43,
+    "found": 43,
+    "right_place": 41,
+    "ambiguous": 35,
+    "fuzzy": 2,
+    "ms_per_selection": 0.66,
+    "percent": 95.3
+  },
+  "chromium-two.pdf": {
+    "selections": 43,
+    "found": 43,
+    "right_place": 41,
+    "ambiguous": 35,
+    "fuzzy": 2,
+    "ms_per_selection": 0.64,
+    "percent": 95.3
+  },
+  "latex-ot1-two.pdf": {
+    "selections": 83,
+    "found": 83,
+    "right_place": 83,
+    "ambiguous": 73,
+    "fuzzy": 0,
+    "ms_per_selection": 0.29,
+    "percent": 100.0
+  },
+  "latex-t1-one.pdf": {
+    "selections": 156,
+    "found": 156,
+    "right_place": 156,
+    "ambiguous": 50,
+    "fuzzy": 0,
+    "ms_per_selection": 0.33,
+    "percent": 100.0
+  },
+  "latex-t1-two-cropped.pdf": {
+    "selections": 107,
+    "found": 107,
+    "right_place": 107,
+    "ambiguous": 88,
+    "fuzzy": 0,
+    "ms_per_selection": 0.31,
+    "percent": 100.0
+  },
+  "latex-t1-two-rot180.pdf": {
+    "selections": 107,
+    "found": 107,
+    "right_place": 107,
+    "ambiguous": 88,
+    "fuzzy": 0,
+    "ms_per_selection": 0.31,
+    "percent": 100.0
+  },
+  "latex-t1-two-rot270.pdf": {
+    "selections": 107,
+    "found": 107,
+    "right_place": 107,
+    "ambiguous": 88,
+    "fuzzy": 0,
+    "ms_per_selection": 0.3,
+    "percent": 100.0
+  },
+  "latex-t1-two-rot90.pdf": {
+    "selections": 107,
+    "found": 107,
+    "right_place": 107,
+    "ambiguous": 88,
+    "fuzzy": 0,
+    "ms_per_selection": 0.31,
+    "percent": 100.0
+  },
+  "latex-t1-two.pdf": {
+    "selections": 107,
+    "found": 107,
+    "right_place": 107,
+    "ambiguous": 88,
+    "fuzzy": 0,
+    "ms_per_selection": 0.3,
+    "percent": 100.0
+  },
+  "TOTAL": {
+    "selections": 1030,
+    "right_place": 1019,
+    "percent": 98.93
+  }
+}
