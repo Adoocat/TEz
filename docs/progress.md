@@ -56,11 +56,19 @@ Durum değerleri: bekliyor · sürüyor · incelemede · bitti · ertelendi
 | 47 · Vurgular | bitti | `task/47-highlights` | B · Yeni `modules/annotations`, migration 0022 (bir pasaj bir kez işaretlenir; yeniden işaretlemek rengi değiştirir). Okuyucuda seçim kutusu (4 renk; mor YZ'ye ayrıldığı için yok), `H`, yorum, alan işaretleme, üzerine gelince yorum; sağ panelde aranabilir vurgu listesi, silme + geri alma. E2E: her yakınlaştırmada ve ters sayfada vurgu sözcüklerin üstünde. Sayfa sınırını aşan seçim başladığı sayfada kesilir |
 | 48 · Not servisi | bitti | `task/48-notes` | C · Yeni `modules/notes`, migration 0023 (`note`, `note_link`, `note_fts`). Bağlantılar Markdown'da `tez:note/…`, `tez:paper/…`, `tez:anchor/…`; elle `[[ad]]` de yazılır. Her kayıtta yeniden okunur; hedefi silinen veya kaybolan bağlantı `broken`, hedef dönünce düzelir. Geri bağlantılar, öneriler, katlamalı arama, sürüm çakışması (`note.conflict`), çöp kutusu. Ayrıntı: ADR 0034 |
 | 49 · Notlar ekranı | bitti | `task/49-notes-screen` | C · `/notes` (tasarım 5.3): not ağacı, arama, CodeMirror 6 düzenleyici (bağlantılar çip), `[[` önerisi, iki yanlı önizleme, geri bağlantı ve anılanlar paneli, silme + geri getirme. Otomatik kayıt; her değişiklik önce cihazda saklanır, kayıt onaylanınca silinir; sürüm çakışmasında kullanıcı seçer. Yeni bağımlılıklar (MIT): CodeMirror 6, @lezer/highlight, react-markdown, remark-gfm |
+| 50 · Okuyucudan nota | bitti | `task/50-quote-to-note` | C · Seçim kutusunda ve vurgu listesinde "Nota alıntıla" (`⇧N`) ve "Kopyala (atıflı)"; not seçici (önce bu makalenin notları, "yeni not"), blok alıntı + kaynak çipi; okuma panelinde "Notlar" sekmesi. E2E: çip okuyucuyu o cümlede açar. Kaynak adı "Kim vd. 2024, s. 7" |
 
 Aşama 3 görevlerinin (S2, 43–57) ayrıntısı: `docs/plan.md` → "Aşama 3 görevleri". Aşama 2 görevlerinin (24–42) ayrıntısı ve kabul kriterleri: `docs/plan.md` → "Aşama 2 görevleri". Nottaki harf, plandaki grubu gösterir (A review temeli · B kaynaklar · C eleme · D PRISMA ve diğer yöntemler · E kalite · F çıktılar · G iki değerlendirici).
 
 ## Sonraya
 
+- (S2–50, 2026-11-25) GitHub Actions kapalı olduğu için bu görevler yalnız yerelde, birbirinin üstüne kurulu dallarda (`task/S2-…` → `task/50-…`) ve `pnpm check` + `pnpm e2e` yeşil. PR'lar sırayla açılıp birleştirilmeli.
+- (50) Atıf çipi ve "Kopyala (atıflı)" soyadını yazarın görünen adının son sözcüğünden alıyor; `family` alanı anchor yanıtına eklenirse çift soyadlar doğru çıkar. Not editörü açıkken okuyucudan alıntı eklenirse (ikinci pencere) sürüm çakışması sorulur.
+- (49) Notlarda etiket (#), sürükleyerek taşıma ve resim yok; tasarım 5.3'teki "Matris satırına ekle" Görev 53'te.
+- (47) Sayfa sınırını aşan seçim başladığı sayfada kesilir. `underline` türü şemada var, arayüzde yok.
+- (46) Değiştirilen PDF'in eski dosyası `files/` içinde kalır; çöp kutusuyla birlikte temizlenmeli. Anchor'lar silinmez (not veya hücre gösterebilir).
+- (45) Eşleşme sayısı PDFium metninden, işaretler pdf.js'ten gelir; ikisinin ayrıldığı sayfada sayılan bir eşleşme işaretlenmeyebilir.
+- (43) Taranmış PDF için OCR yok (Aşama 3 kararı); yalnız bilgi şeridi ve alan işaretleme.
 - (34) PRISMA sayıları yalnız `owner` kararlarıyla; Görev 42 uzlaşma (`consensus`) kararlarını önceliklendirecek. Review panelinin aşama kartları hâlâ kendi sayımını yapıyor (bkz. 31); PRISMA servisine bağlanabilir.
 - (37) Elle eklenen kaydı düzenleme veya silme yok (kayıtlar yalnız eklenir); yanlış girilen kayıt elemede hariç tutulur. Kayıt (sicil) ve web sayfası türleri `other` olarak saklanıyor; BibTeX/RIS'te `@misc`/`GEN` çıkar.
 - (36) Tasarım 4.4'teki denetçi "Atıflar" sekmesi (bir makalenin kaynakları ve atıf yapanları, "Tümünü tarama listesine ekle") yok; kartopu yalnız review panelinden. OpenAlex anahtarsız yalnız ilk sayfayı (200 kayıt) veriyor; çok atıf alan tohumlarda tur `partial` olur.

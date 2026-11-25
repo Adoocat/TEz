@@ -2,11 +2,14 @@
 // drawn only while near the screen, with selectable text, zoom, search and `?page=` links.
 import { useVirtualizer } from "@tanstack/react-virtual";
 import {
+  Check,
+  Copy,
   MapPinOff,
   Maximize,
   Minimize,
   Minus,
   MoveHorizontal,
+  NotebookPen,
   PanelLeft,
   Plus,
   ScanText,
@@ -15,7 +18,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 
 import { useBackend } from "@/app/backend";
 import { useLayoutStore } from "@/app/layout/uiStore";
@@ -32,6 +35,7 @@ import { AnchorFlash } from "./AnchorFlash";
 import { annotationAt, AreaTool, PageAnnotations } from "./Annotations";
 import {
   useAnnotations,
+  useCreateAnchor,
   useCreateAnnotation,
   type AnchorView,
   type AnnotationView,
@@ -41,14 +45,17 @@ import { DocumentPanel } from "./DocumentPanel";
 import { FindBar } from "./FindBar";
 import { HoverNote } from "./HoverNote";
 import { PageView } from "./PageView";
+import { quoteWithSource } from "./quote";
+import { QuoteToNote, type QuotedIn } from "./QuoteToNote";
 import { anchorOf, selectionInLayer } from "./selection";
 import { SelectionToolbar } from "./SelectionToolbar";
-import { useReaderPanel, useReaderSelection, useReaderTabs } from "./store";
+import { useReaderPanel, useReaderSelection, useReaderTabs, useReadingPanel } from "./store";
 import { useAnchorTarget } from "./useAnchorTarget";
 import { useFindInDocument } from "./useFindInDocument";
 import { useTextSelection } from "./useTextSelection";
 
 const PAGE_GAP = 12;
+const NOTICE_MS = 6000;
 const ZOOM_STEPS = [0.5, 0.67, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
 // Pages drawn beyond the visible ones, each way: enough to scroll without blanks, few enough
 // that a 300-page document keeps only a handful of canvases in memory.
@@ -266,6 +273,22 @@ function OpenDocument({
     return pages;
   }, [annotations.data]);
   const create = useCreateAnnotation(attachmentId);
+  const createAnchor = useCreateAnchor(attachmentId);
+  // The passage waiting for a note to go to.
+  const [quoting, setQuoting] = useState<AnchorView | null>(null);
+  const [notice, setNotice] = useState<
+    { kind: "copied" } | { kind: "quoted"; note: QuotedIn } | null
+  >(null);
+  useEffect(() => {
+    if (!notice) return;
+    const timer = setTimeout(() => {
+      setNotice(null);
+    }, NOTICE_MS);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [notice]);
+  const setReadingTab = useReadingPanel((state) => state.setTab);
   const { selection, clear: clearSelection } = useTextSelection(scroller);
   const { selectedId, color, select, setColor } = useReaderSelection();
   const [areaTool, setAreaTool] = useState(false);
@@ -289,6 +312,23 @@ function OpenDocument({
     clearSelection();
     select(made.id, { edit: comment });
     if (comment && !embedded) openPanel();
+  }
+
+  /** Remember the selected place, then do something with it. */
+  async function withAnchor(onAnchor: (anchor: AnchorView) => void) {
+    const selected = await selectedAnchor();
+    if (!selected) return;
+    const anchor = await createAnchor.mutateAsync(selected);
+    clearSelection();
+    onAnchor(anchor);
+  }
+
+  async function copyWithSource() {
+    await withAnchor((anchor) => {
+      void navigator.clipboard.writeText(quoteWithSource(anchor, t)).then(() => {
+        setNotice({ kind: "copied" });
+      });
+    });
   }
 
   async function markArea(page: number, rect: PdfRect) {
@@ -361,6 +401,14 @@ function OpenDocument({
       highlight: () => {
         void highlight(color);
       },
+      quote: () => {
+        if (selection) void withAnchor(setQuoting);
+        else {
+          // Nothing selected: the notes about this paper.
+          setReadingTab("notes");
+          openPanel();
+        }
+      },
     },
     { enabled: !embedded },
   );
@@ -386,6 +434,7 @@ function OpenDocument({
     () => new Intl.NumberFormat(i18n.language, { style: "percent" }).format(scale),
     [i18n.language, scale],
   );
+  const failure = create.error ?? createAnchor.error;
   const showPanel = panel.open && !embedded && !focus;
 
   return (
@@ -521,12 +570,56 @@ function OpenDocument({
           onComment={() => {
             void highlight(color, { comment: true });
           }}
+        >
+          <Button
+            size="sm"
+            variant="ghost"
+            aria-keyshortcuts={ariaShortcut("reader", "quote")}
+            onClick={() => void withAnchor(setQuoting)}
+          >
+            <NotebookPen aria-hidden />
+            {t("reader.quote.action")}
+          </Button>
+          <Button size="sm" variant="ghost" onClick={() => void copyWithSource()}>
+            <Copy aria-hidden />
+            {t("reader.quote.copy")}
+          </Button>
+        </SelectionToolbar>
+      )}
+      {quoting && (
+        <QuoteToNote
+          anchor={quoting}
+          onDone={(note) => {
+            setQuoting(null);
+            setNotice({ kind: "quoted", note });
+          }}
+          onCancel={() => {
+            setQuoting(null);
+          }}
         />
       )}
-      {create.error && (
+      {notice && (
+        <p
+          role="status"
+          className="flex items-center gap-2 border-b border-line bg-surface px-4 py-1.5 text-meta"
+        >
+          <Check aria-hidden className="size-4 text-success" />
+          {notice.kind === "copied" ? (
+            t("reader.quote.copied")
+          ) : (
+            <>
+              {t("reader.quote.done", { title: notice.note.title })}
+              <Link to={`/notes/${notice.note.id}`} className="text-primary hover:underline">
+                {t("reader.quote.open")}
+              </Link>
+            </>
+          )}
+        </p>
+      )}
+      {failure && (
         <p role="alert" className="border-b border-line px-4 py-1.5 text-meta text-danger">
-          {t(`errors.${create.error instanceof ApiError ? create.error.code : "unknown"}`, {
-            ...(create.error instanceof ApiError ? create.error.params : {}),
+          {t(`errors.${failure instanceof ApiError ? failure.code : "unknown"}`, {
+            ...(failure instanceof ApiError ? failure.params : {}),
             defaultValue: t("errors.unknown"),
           })}
         </p>

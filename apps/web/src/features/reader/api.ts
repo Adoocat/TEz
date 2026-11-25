@@ -125,3 +125,17 @@ export function useDeleteAnnotation(attachmentId: string) {
     onSuccess: invalidate,
   });
 }
+
+/** A place to point at from a note or a matrix cell, without marking it. */
+export function useCreateAnchor(attachmentId: string) {
+  const api = useApi();
+  return useMutation({
+    mutationFn: async (body: AnchorCreate) =>
+      unwrap(
+        await api.POST("/attachments/{attachment_id}/anchors", {
+          params: { path: { attachment_id: attachmentId } },
+          body,
+        }),
+      ),
+  });
+}
