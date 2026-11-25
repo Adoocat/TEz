@@ -761,6 +761,9 @@
       "checking": "Yeni dosyada aranıyor",
       "comment": "Yorum",
       "commentPlaceholder": "Yorum ekle…"
+    },
+    "citation": {
+      "many": "{{author}} vd."
     }
   },
   "open": {
@@ -1228,5 +1231,49 @@
     "etAl": "{{name}} vd.",
     "reconcile": "Uzlaşılan karar:",
     "reason": "Hariç tutma gerekçesi"
+  },
+  "notes": {
+    "new": "Yeni not",
+    "newInside": "{{title}} içinde yeni not",
+    "newNamed": "Yeni not: {{title}}",
+    "untitled": "Adsız not",
+    "search": "Notlarda ara",
+    "results": "Bulunan notlar",
+    "noResults": "Hiçbir notta bu sözcüklerin hepsi geçmiyor.",
+    "tree": "Not ağacı",
+    "none": "Henüz not yok.",
+    "nothingOpen": "Soldan bir not seçin veya yeni bir not başlatın.",
+    "inspectorEmpty": "Ona bağlananları görmek için bir not açın.",
+    "title": "Not başlığı",
+    "body": "Not metni",
+    "placeholder": "Markdown ile yazın. Not veya makale bağlamak için [[ yazın.",
+    "view": "Görünüm",
+    "edit": "Düzenle",
+    "both": "İki yanlı",
+    "preview": "Önizleme",
+    "place": "Ağaçtaki yeri",
+    "topLevel": "En üst düzey",
+    "delete": "Notu sil",
+    "deleted": "Bu not silindi.",
+    "restore": "Notu geri getir",
+    "words_one": "{{n}} sözcük",
+    "words_other": "{{n}} sözcük",
+    "state": {
+      "saved": "Kaydedildi",
+      "dirty": "Henüz kaydedilmedi",
+      "saving": "Kaydediliyor…",
+      "conflict": "Kaydedilmedi"
+    },
+    "saveFailed": "Kaydedilemedi. Metniniz bu cihazda saklanıyor.",
+    "retry": "Yeniden dene",
+    "conflict": "Not, burada açıldıktan sonra başka bir yerde değiştirildi.",
+    "draftLeft": "Önceki pencereden kaydedilmemiş metin var ve not o zamandan beri değişti.",
+    "keepMine": "Benim metnimi koru",
+    "useSaved": "Kayıtlı notu kullan",
+    "backlinks": "Bu nota bağlananlar ({{count}})",
+    "noBacklinks": "Başka hiçbir not buraya bağlanmıyor.",
+    "cited": "Burada anılanlar ({{count}})",
+    "openPaper": "Kütüphanede göster",
+    "broken": "Kırık bağlantılar ({{count}})"
   }
 }

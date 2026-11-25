@@ -22,3 +22,10 @@ The plan has `note` (title, Markdown body, paper, review) and `note_link`, fille
 - A name that is both a note's title and a paper's means the note.
 - `append` adds to a note without its editor open; it counts as a save, so an open editor with older text is told.
 - No new backend dependency.
+
+## The notes screen (Task 49)
+
+- **CodeMirror 6** (MIT) edits the Markdown; links are drawn as chips, and raw while the cursor is in them. `[[` asks the backend for suggestions, in its order. The screen is loaded when it is first opened, so the editor is not part of the start-up bundle.
+- **The preview is react-markdown** (MIT): it builds elements and never raw HTML, so a note cannot run code. Pictures are not loaded, because an address in a note must not reach the network (rule 1).
+- **Nothing typed is lost.** Every change is first written to this device (`localStorage`), then saved 0.7 s later, or at once when the note is left or the window hidden. The local copy goes only when the save is confirmed. A copy found at the next opening is saved if it fits the note's version; otherwise the user chooses between the two texts.
+- Not built: tags and folders of design 5.3 (the tree's notes do what folders would), and moving notes by dragging (a place selector does it).

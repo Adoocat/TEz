@@ -40,6 +40,9 @@ TEz is MIT-licensed. Every dependency that ships with the app has a licence comp
 | zustand | 5.0 | MIT |
 | openapi-fetch | 0.17 | MIT |
 | pdfjs-dist | 6.5 | Apache-2.0 |
+| @codemirror/state, view, commands, language, lang-markdown, autocomplete | 6.x | MIT |
+| @lezer/highlight | 1.x | MIT |
+| react-markdown, remark-gfm | 10.1, 4.0 | MIT |
 | lucide-react | 1.66 | ISC |
 | clsx, tailwind-merge | 2.1, 3.7 | MIT |
 | class-variance-authority | 0.7 | Apache-2.0 |

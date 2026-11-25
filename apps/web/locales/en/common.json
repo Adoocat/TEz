@@ -761,6 +761,9 @@
       "checking": "Being looked up in the new file",
       "comment": "Comment",
       "commentPlaceholder": "Add a comment…"
+    },
+    "citation": {
+      "many": "{{author}} et al."
     }
   },
   "open": {
@@ -1228,5 +1231,49 @@
     "etAl": "{{name}} et al.",
     "reconcile": "Agreed decision:",
     "reason": "Exclusion reason"
+  },
+  "notes": {
+    "new": "New note",
+    "newInside": "New note inside {{title}}",
+    "newNamed": "New note: {{title}}",
+    "untitled": "Untitled note",
+    "search": "Search notes",
+    "results": "Notes found",
+    "noResults": "No note has all of these words.",
+    "tree": "Note tree",
+    "none": "No notes yet.",
+    "nothingOpen": "Choose a note on the left, or start a new one.",
+    "inspectorEmpty": "Open a note to see what links to it.",
+    "title": "Note title",
+    "body": "Note text",
+    "placeholder": "Write in Markdown. Type [[ to link a note or a paper.",
+    "view": "View",
+    "edit": "Edit",
+    "both": "Side by side",
+    "preview": "Preview",
+    "place": "Place in the tree",
+    "topLevel": "Top level",
+    "delete": "Delete the note",
+    "deleted": "This note was deleted.",
+    "restore": "Restore the note",
+    "words_one": "{{n}} word",
+    "words_other": "{{n}} words",
+    "state": {
+      "saved": "Saved",
+      "dirty": "Not saved yet",
+      "saving": "Saving…",
+      "conflict": "Not saved"
+    },
+    "saveFailed": "Could not be saved. Your text is kept on this device.",
+    "retry": "Try again",
+    "conflict": "The note was changed somewhere else since it was opened here.",
+    "draftLeft": "There is unsaved text from an earlier window, and the note was changed since.",
+    "keepMine": "Keep my text",
+    "useSaved": "Use the saved note",
+    "backlinks": "Links to this note ({{count}})",
+    "noBacklinks": "No other note links here.",
+    "cited": "Cited here ({{count}})",
+    "openPaper": "Show in the library",
+    "broken": "Broken links ({{count}})"
   }
 }

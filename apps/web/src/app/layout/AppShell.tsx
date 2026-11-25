@@ -27,6 +27,8 @@ import { useJobEvents } from "@/features/jobs/useJobEvents";
 import { useOpenRequests } from "@/features/open/useOpenRequests";
 import { LibraryInspector } from "@/features/library/LibraryInspector";
 import { LibrarySidebar } from "@/features/library/LibrarySidebar";
+import { NotesInspector } from "@/features/notes/NotesInspector";
+import { NotesSidebar } from "@/features/notes/NotesSidebar";
 import { ReaderInspector } from "@/features/reader/ReaderInspector";
 import { ReviewPicker } from "@/features/reviews/ReviewPicker";
 import { SearchInspector } from "@/features/search/SearchInspector";
@@ -100,6 +102,8 @@ export function AppShell() {
                 <SettingsNav />
               ) : pathname.startsWith("/library") ? (
                 <LibrarySidebar />
+              ) : pathname.startsWith("/notes") ? (
+                <NotesSidebar />
               ) : (
                 <SidebarPlaceholder />
               )}
@@ -225,6 +229,8 @@ function Inspector({ route }: { route: string }) {
         <LibraryInspector />
       ) : route.startsWith("/reader") ? (
         <ReaderInspector />
+      ) : route.startsWith("/notes") ? (
+        <NotesInspector />
       ) : (
         <>
           <h2 className="mb-2 text-h3">{t("shell.inspectorTitle")}</h2>
