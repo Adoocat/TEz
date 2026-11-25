@@ -312,14 +312,27 @@ test("highlights: select, mark, comment, zoom, areas", async ({ page, request })
   const third = panel.getByRole("listitem").filter({ hasText: "Stork nesting sites page 3" });
   await expect(third.getByRole("textbox", { name: "Comment" })).toBeFocused();
   await page.keyboard.type("Nests on chimneys");
+  // A slow save: the pointer is over the highlight before its comment is stored.
+  let letSave: () => void = () => undefined;
+  const held = new Promise<void>((resolve) => {
+    letSave = resolve;
+  });
+  await page.route("**/annotations/*", async (route) => {
+    if (route.request().method() === "PATCH") await held;
+    await route.continue();
+  });
+  const saving = page.waitForRequest((sent) => sent.method() === "PATCH");
   await page.keyboard.press("Escape");
+  await saving;
   const mark = reader
     .getByRole("region", { name: "Page 3", exact: true })
     .getByTestId("annotation");
   const box = await mark.boundingBox();
   if (!box) throw new Error("no box");
   await page.mouse.move(box.x + 20, box.y + box.height / 2);
+  letSave();
   await expect(page.getByRole("tooltip")).toHaveText("Nests on chimneys");
+  await page.unrouteAll();
 
   // Every zoom puts the mark on its words.
   for (let i = 0; i < 4; i += 1) {
