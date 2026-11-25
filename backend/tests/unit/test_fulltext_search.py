@@ -22,13 +22,14 @@ from tez.modules.files.repository import FilesRepository
 from tez.modules.fulltext import service as fulltext_service
 from tez.modules.fulltext.extraction import PageText
 from tez.modules.fulltext.repository import FulltextRepository
-from tez.modules.fulltext.search_index import Segment, parse, snippet
+from tez.modules.fulltext.search_index import snippet
 from tez.modules.jobs.registry import JobContext
 from tez.modules.library.models import Paper
 from tez.modules.library.paper_service import PaperService
 from tez.modules.library.service import Library, open_library
 from tez.modules.settings.secrets import MemorySecretStore
 from tez.shared.text import fold, fold_with_map
+from tez.shared.textsearch import Segment, parse
 
 
 @pytest.fixture

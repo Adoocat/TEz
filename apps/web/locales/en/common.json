@@ -220,6 +220,9 @@
     "decisions.invalid_file": "This is not a TEz decision file, or it is damaged.",
     "decisions.unsupported_version": "This decision file comes from a newer TEz; update TEz first.",
     "decisions.reserved_reviewer": "That name is reserved (owner, consensus); choose another.",
+    "note.not_found": "This note no longer exists.",
+    "note.conflict": "The note was changed somewhere else since it was opened here.",
+    "note.cycle": "A note cannot be moved into itself.",
     "annotation.not_found": "This highlight no longer exists."
   },
   "reviews": {

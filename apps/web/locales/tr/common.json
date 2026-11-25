@@ -220,6 +220,9 @@
     "decisions.invalid_file": "Bu bir TEz karar dosyası değil ya da bozuk.",
     "decisions.unsupported_version": "Bu karar dosyası TEz'in daha yeni bir sürümünden; önce TEz'i güncelle.",
     "decisions.reserved_reviewer": "Bu ad ayrılmış (owner, consensus); başka bir ad seç.",
+    "note.not_found": "Bu not artık yok.",
+    "note.conflict": "Not, burada açıldıktan sonra başka bir yerde değiştirildi.",
+    "note.cycle": "Bir not kendi içine taşınamaz.",
     "annotation.not_found": "Bu vurgu artık yok."
   },
   "reviews": {

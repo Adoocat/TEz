@@ -146,6 +146,13 @@ def by_id(session: Session, anchor_ids: Iterable[str]) -> dict[str, AnchorView]:
     return {view.id: view for view in views(session, found)}
 
 
+def ids_in_paper(session: Session, paper_id: str) -> list[str]:
+    """Every anchor in a paper's files."""
+    attachments = [a.id for a in files_service.attachments_in(session, paper_id)]
+    repository = AnchorsRepository(session)
+    return [anchor.id for a in attachments for anchor in repository.of_attachment(a)]
+
+
 # --- worker side ----------------------------------------------------------------------
 
 

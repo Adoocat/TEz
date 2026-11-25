@@ -23,6 +23,7 @@ from tez.modules.fulltext.schemas import (
 from tez.modules.jobs.registry import JobContext
 from tez.modules.library.paper_service import PaperService
 from tez.shared.text import fold
+from tez.shared.textsearch import parse
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +76,7 @@ def page_texts(session: Session, attachment_id: str) -> list[str] | None:
 def search(db: Database, query: FulltextQuery) -> FulltextResults:
     """Papers by their best matching page, each with its best pages and a passage of each."""
     started = time.perf_counter()
-    terms = search_index.parse(query.q)
+    terms = parse(query.q)
     if not terms:
         return FulltextResults(
             papers=[], total_papers=0, total_pages=0, truncated=False, elapsed_ms=0.0
