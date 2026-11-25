@@ -268,7 +268,7 @@ describe("a note as it reads", () => {
     expect(within(inspector).getByText("see Method")).toBeInTheDocument();
     expect(within(inspector).getByText("Cited here (1)")).toBeInTheDocument();
     expect(
-      within(inspector).getByRole("button", { name: "Lovelace 2024 · p. 7" }),
+      within(inspector).getByRole("button", { name: "Lovelace et al. 2024 · p. 7" }),
     ).toBeInTheDocument();
 
     await user.click(await screen.findByRole("link", { name: "Lovelace 2024, p. 7" }));

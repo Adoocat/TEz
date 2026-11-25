@@ -753,17 +753,39 @@
       "none": "Eşleşen vurgu yok.",
       "search": "Vurgularda ara",
       "area": "İşaretlenen alan",
-      "copy": "Alıntıyı kopyala",
+      "copy": "Kopyala (atıflı)",
       "delete": "Vurguyu sil",
       "deleted": "Vurgu silindi.",
       "undo": "Geri al",
       "lost": "Artık bu dosyada yok",
       "checking": "Yeni dosyada aranıyor",
       "comment": "Yorum",
-      "commentPlaceholder": "Yorum ekle…"
+      "commentPlaceholder": "Yorum ekle…",
+      "tab": "Vurgular"
     },
     "citation": {
       "many": "{{author}} vd."
+    },
+    "panelTabs": "Okuma paneli",
+    "notes": {
+      "tab": "Notlar",
+      "title": "Bu makaleyle ilgili notlar",
+      "new": "Bu makale için yeni not",
+      "none": "Bu makaleyle ilgili henüz not yok."
+    },
+    "quote": {
+      "action": "Nota alıntıla",
+      "copy": "Kopyala (atıflı)",
+      "copied": "Kaynağıyla birlikte kopyalandı.",
+      "title": "Nota alıntıla",
+      "filter": "Notlarda ara",
+      "notes": "Notlar",
+      "newNote": "Bu makale için yeni not",
+      "about": "bu makaleyle ilgili",
+      "more_one": "{{count}} not daha; bulmak için yazın.",
+      "more_other": "{{count}} not daha; bulmak için yazın.",
+      "done": "{{title}} notuna alıntılandı.",
+      "open": "Notu aç"
     }
   },
   "open": {
@@ -805,7 +827,8 @@
         "previousPage": "Önceki sayfa",
         "find": "Belgede ara",
         "focusMode": "Odak modunu aç/kapat",
-        "highlight": "Seçili metni vurgula"
+        "highlight": "Seçili metni vurgula",
+        "quote": "Seçimi bir nota alıntıla"
       },
       "list": {
         "down": "Sonraki satır",

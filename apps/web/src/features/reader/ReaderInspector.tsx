@@ -1,11 +1,12 @@
 // The reading panel, right of the document (design 4.5): its highlights with their comments.
-import { Copy, MapPinOff, Search, SquareDashed, Trash2 } from "lucide-react";
+import { Copy, MapPinOff, NotebookPen, Search, SquareDashed, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useMatch } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Segmented } from "@/components/ui/segmented";
 import { cn } from "@/lib/cn";
 import { fold } from "@/lib/text";
 
@@ -18,15 +19,36 @@ import {
   useUpdateAnnotation,
   type AnnotationView,
 } from "./api";
-import { useReaderSelection } from "./store";
+import { quoteWithSource } from "./quote";
+import { PaperNotes } from "./PaperNotes";
+import { QuoteToNote } from "./QuoteToNote";
+import { useReaderSelection, useReadingPanel } from "./store";
 
 export function ReaderInspector() {
   const { t } = useTranslation();
   const attachmentId = useMatch("/reader/:attachmentId")?.params.attachmentId;
+  const { tab, setTab } = useReadingPanel();
   if (!attachmentId) {
     return <p className="text-meta text-fg-muted">{t("reader.highlights.noDocument")}</p>;
   }
-  return <Highlights key={attachmentId} attachmentId={attachmentId} />;
+  return (
+    <div className="space-y-3">
+      <Segmented
+        aria-label={t("reader.panelTabs")}
+        value={tab}
+        options={[
+          { value: "highlights", label: t("reader.highlights.tab") },
+          { value: "notes", label: t("reader.notes.tab") },
+        ]}
+        onValueChange={setTab}
+      />
+      {tab === "highlights" ? (
+        <Highlights key={attachmentId} attachmentId={attachmentId} />
+      ) : (
+        <PaperNotes key={attachmentId} attachmentId={attachmentId} />
+      )}
+    </div>
+  );
 }
 
 function Highlights({ attachmentId }: { attachmentId: string }) {
@@ -136,6 +158,7 @@ function Highlight({
   const { anchor } = annotation;
   const lost = anchor.status === "lost" || anchor.status === "checking";
   const update = useUpdateAnnotation(attachmentId);
+  const [quoting, setQuoting] = useState(false);
   useEffect(() => {
     if (selected) item.current?.scrollIntoView({ block: "nearest" });
   }, [selected]);
@@ -181,6 +204,17 @@ function Highlight({
             />
           </button>
         ))}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-6"
+          aria-label={t("reader.quote.action")}
+          onClick={() => {
+            setQuoting(true);
+          }}
+        >
+          <NotebookPen />
+        </Button>
         {anchor.quote && (
           <Button
             variant="ghost"
@@ -188,7 +222,7 @@ function Highlight({
             className="size-6"
             aria-label={t("reader.highlights.copy")}
             onClick={() => {
-              void navigator.clipboard.writeText(anchor.quote);
+              void navigator.clipboard.writeText(quoteWithSource(anchor, t));
             }}
           >
             <Copy />
@@ -217,6 +251,17 @@ function Highlight({
           <MapPinOff aria-hidden className="size-3" />
           {t(anchor.status === "lost" ? "reader.highlights.lost" : "reader.highlights.checking")}
         </p>
+      )}
+      {quoting && (
+        <QuoteToNote
+          anchor={anchor}
+          onDone={() => {
+            setQuoting(false);
+          }}
+          onCancel={() => {
+            setQuoting(false);
+          }}
+        />
       )}
       <Comment
         // The saved comment is the editor's starting point.

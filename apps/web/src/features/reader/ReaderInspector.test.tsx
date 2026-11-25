@@ -6,9 +6,15 @@ import { App } from "@/app/App";
 import { useLayoutStore } from "@/app/layout/uiStore";
 import { useJobsStore } from "@/features/jobs/store";
 import type { PdfDocument } from "@/lib/pdf";
-import { anchorView, annotationView, fakeBackend, readyPlatform } from "@/test/fakeBackend";
+import {
+  anchorView,
+  annotationView,
+  fakeBackend,
+  noteView,
+  readyPlatform,
+} from "@/test/fakeBackend";
 
-import { useReaderSelection, useReaderTabs } from "./store";
+import { useReaderSelection, useReaderTabs, useReadingPanel } from "./store";
 
 vi.mock("@/lib/pdf", () => ({
   openPdf: (): Promise<PdfDocument> => Promise.reject(new Error("not drawn in this test")),
@@ -19,6 +25,7 @@ beforeEach(() => {
   useJobsStore.setState({ jobs: {} });
   useLayoutStore.setState({ sidebarOpen: true, inspectorOpen: true, focus: false });
   useReaderTabs.setState({ tabs: [], activeId: null });
+  useReadingPanel.setState({ tab: "highlights" });
   useReaderSelection.setState({ selectedId: null, editing: false, color: "yellow" });
 });
 
@@ -118,5 +125,65 @@ describe("the highlights panel", () => {
     expect(await screen.findByText("forty-two participants")).toBeInTheDocument();
     const restored = backend.annotations["att-1"]?.at(-1);
     expect([restored?.comment, restored?.anchor.page]).toEqual(["check this", 4]);
+  });
+});
+
+describe("from a highlight to a note", () => {
+  it("offers notes about the paper first, and adds the quote with its chip", async () => {
+    const { backend, user } = open();
+    backend.notes = [
+      noteView({ id: "n1", title: "Something else" }),
+      noteView({ id: "n2", title: "Reading Lovelace", body: "Start." }),
+    ];
+    backend.backlinks["paper-1"] = [{ note_id: "n2", title: "Reading Lovelace", passage: "" }];
+    const [first] = within(await panel()).getAllByRole("listitem");
+    if (!first) throw new Error("no highlight");
+
+    await user.click(within(first).getByRole("button", { name: "Quote in a note" }));
+    const dialog = await screen.findByRole("dialog", { name: "Quote in a note" });
+    const choices = within(dialog).getByRole("list", { name: "Notes" });
+    await within(choices).findByText("about this paper");
+    expect(
+      within(choices)
+        .getAllByRole("button")
+        .map((b) => b.textContent),
+    ).toEqual(["New note about this paper", "Reading Lovelaceabout this paper", "Something else"]);
+    await user.click(within(choices).getByRole("button", { name: /Reading Lovelace/ }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+    expect(backend.notes[1]?.body).toBe(
+      "Start.\n\n> forty-two participants\n>\n> [Lovelace et al. 2024, p. 4](tez:anchor/a1)",
+    );
+  });
+
+  it("starts a new note about the paper", async () => {
+    const { backend, user } = open();
+    const [first] = within(await panel()).getAllByRole("listitem");
+    if (!first) throw new Error("no highlight");
+    await user.click(within(first).getByRole("button", { name: "Quote in a note" }));
+    await user.click(await screen.findByRole("button", { name: "New note about this paper" }));
+
+    await waitFor(() => {
+      expect(backend.notes).toHaveLength(1);
+    });
+    expect(backend.notes[0]).toMatchObject({ title: "First paper", paper_id: "paper-1" });
+  });
+
+  it("lists the notes about the paper in its own tab", async () => {
+    const { backend, user } = open();
+    backend.backlinks["paper-1"] = [
+      { note_id: "n2", title: "Reading Lovelace", passage: "as she says" },
+    ];
+    await panel();
+    await user.click(screen.getByRole("radio", { name: "Notes" }));
+
+    const notes = await screen.findByRole("region", { name: "Notes about this paper" });
+    expect(await within(notes).findByRole("link", { name: "Reading Lovelace" })).toHaveAttribute(
+      "href",
+      "#/notes/n2",
+    );
+    expect(within(notes).getByText("as she says")).toBeInTheDocument();
   });
 });

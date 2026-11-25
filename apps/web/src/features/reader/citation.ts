@@ -7,7 +7,7 @@ export function citationOf(paper: AnchorView["paper"], t: TFunction): string {
   const family = paper.first_author?.split(" ").at(-1);
   const author = !family
     ? paper.title
-    : paper.author_count > 2
+    : paper.author_count > 1
       ? t("reader.citation.many", { author: family })
       : family;
   return [author, paper.year].filter(Boolean).join(" ");

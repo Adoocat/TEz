@@ -2,7 +2,7 @@
 // when the window closes.
 import { expect, test } from "@playwright/test";
 
-import { importPapers, openApp } from "./helpers";
+import { addPdf, importPapers, makePdf, openApp } from "./helpers";
 
 const PAPER = "Listening to Wetland Birds at Night";
 
@@ -19,6 +19,8 @@ test("notes: write, link with [[, backlinks, rename, search", async ({ page, req
   await page.keyboard.type("## Recording\n\nAs in [[wetland birds");
   const option = page.getByRole("option", { name: new RegExp(PAPER) });
   await expect(option).toBeVisible();
+  // CodeMirror takes no key as a choice in the first 75 ms after the list opens.
+  await page.waitForTimeout(150);
   await page.keyboard.press("Enter");
   await page.keyboard.type(", and later [[Bittern calls");
   await page.getByRole("option", { name: "New note: Bittern calls" }).click();
@@ -80,4 +82,62 @@ test("text typed a moment before the window closes is there again", async ({ pag
   await openApp(again, "/notes");
   await again.getByRole("link", { name: "Short notice" }).click();
   await expect(again.getByRole("article", { name: "Preview" })).toContainText("The last sentence.");
+});
+
+test("a quote goes from the reader to a note, and its chip leads back to the sentence", async ({
+  page,
+  request,
+  context,
+}) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  const attachmentId = await addPdf(request, "avocet.pdf", makePdf(6, "Avocet feeding grounds"));
+  await openApp(page, `/reader/${attachmentId}?page=4`);
+  const reader = page.getByRole("document", { name: "avocet.pdf" });
+  const line = reader
+    .getByRole("region", { name: "Page 4", exact: true })
+    .getByText("Avocet feeding grounds page 4", { exact: true });
+  const selectLine = async () => {
+    await expect(line).toBeVisible();
+    const box = await line.boundingBox();
+    if (!box) throw new Error("no box");
+    await page.mouse.move(box.x + 1, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width - 1, box.y + box.height / 2, { steps: 8 });
+    await page.mouse.up();
+    await expect(page.getByRole("toolbar", { name: "Selected text" })).toBeVisible();
+  };
+
+  // With the keyboard, into a new note.
+  await selectLine();
+  await page.keyboard.press("Shift+N");
+  const dialog = page.getByRole("dialog", { name: "Quote in a note" });
+  await dialog.getByRole("button", { name: "New note about this paper" }).click();
+  await expect(page.getByText("Quoted in avocet.")).toBeVisible();
+
+  // With the mouse, into the same note, and to the clipboard.
+  await selectLine();
+  await page
+    .getByRole("toolbar", { name: "Selected text" })
+    .getByRole("button", { name: "Copy with source" })
+    .click();
+  await expect(page.getByText("Copied with its source.")).toBeVisible();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    "\u201cAvocet feeding grounds page 4\u201d (avocet, p. 4)",
+  );
+  await page.getByRole("radio", { name: "Notes" }).click();
+  await page
+    .getByRole("region", { name: "Notes about this paper" })
+    .getByRole("link", { name: "avocet" })
+    .click();
+
+  // The note has the words and a chip; the chip opens the reader at the sentence.
+  const preview = page.getByRole("article", { name: "Preview" });
+  await expect(preview.getByRole("blockquote")).toContainText("Avocet feeding grounds page 4");
+  await preview.getByRole("link", { name: "avocet, p. 4" }).click();
+  const flash = reader.getByTestId("anchor-flash");
+  await expect(flash).toBeVisible();
+  const [a, b] = [await flash.boundingBox(), await line.boundingBox()];
+  if (!a || !b) throw new Error("no box");
+  expect(Math.abs(a.x - b.x)).toBeLessThan(6);
+  expect(Math.abs(a.y + a.height / 2 - (b.y + b.height / 2))).toBeLessThan(10);
 });

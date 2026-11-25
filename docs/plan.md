@@ -390,7 +390,7 @@ Nov 25, 2026 · Onaylandı. Kapsam: kritik yolun son halkası (okuma → not →
 
 - [x] **48 · Not servisi:** `note`, `note_link`, not araması, geri bağlantılar. *Kabul:* bağlantılar kayıtta güncellenir; hedef silinirse kırık diye işaretlenir.
 - [x] **49 · Notlar ekranı:** not ağacı, Markdown düzenleyici, `[[` önerisi, geri bağlantı paneli, otomatik kayıt (tasarım 5.3). *Kabul:* E2E; kapanınca yazı kaybolmaz.
-- [ ] **50 · Okuyucudan nota:** "Nota alıntıla", "Kopyala (atıflı)", kaynak çipi, `⇧N`. *Kabul:* çip okuyucuyu o cümlede açar.
+- [x] **50 · Okuyucudan nota:** "Nota alıntıla", "Kopyala (atıflı)", kaynak çipi, `⇧N`. *Kabul:* çip okuyucuyu o cümlede açar.
 
 ### D. Literatür matrisi
 

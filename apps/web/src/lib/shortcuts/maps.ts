@@ -38,6 +38,7 @@ export const shortcutMaps = {
     { id: "nextPage", keys: ["j"] },
     { id: "previousPage", keys: ["k"] },
     { id: "highlight", keys: ["h"] },
+    { id: "quote", keys: ["Shift+n"] },
     { id: "find", keys: ["$mod+f"] },
     { id: "focusMode", keys: ["f"] },
   ],

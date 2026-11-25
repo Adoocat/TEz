@@ -753,17 +753,39 @@
       "none": "No highlight matches.",
       "search": "Search highlights",
       "area": "Marked area",
-      "copy": "Copy the quote",
+      "copy": "Copy with source",
       "delete": "Delete the highlight",
       "deleted": "Highlight deleted.",
       "undo": "Undo",
       "lost": "Not in the current file any more",
       "checking": "Being looked up in the new file",
       "comment": "Comment",
-      "commentPlaceholder": "Add a comment…"
+      "commentPlaceholder": "Add a comment…",
+      "tab": "Highlights"
     },
     "citation": {
       "many": "{{author}} et al."
+    },
+    "panelTabs": "Reading panel",
+    "notes": {
+      "tab": "Notes",
+      "title": "Notes about this paper",
+      "new": "New note about this paper",
+      "none": "No note about this paper yet."
+    },
+    "quote": {
+      "action": "Quote in a note",
+      "copy": "Copy with source",
+      "copied": "Copied with its source.",
+      "title": "Quote in a note",
+      "filter": "Search notes",
+      "notes": "Notes",
+      "newNote": "New note about this paper",
+      "about": "about this paper",
+      "more_one": "{{count}} more note; type to find it.",
+      "more_other": "{{count}} more notes; type to find one.",
+      "done": "Quoted in {{title}}.",
+      "open": "Open the note"
     }
   },
   "open": {
@@ -805,7 +827,8 @@
         "previousPage": "Previous page",
         "find": "Search in the document",
         "focusMode": "Focus mode on or off",
-        "highlight": "Highlight the selected text"
+        "highlight": "Highlight the selected text",
+        "quote": "Quote the selection in a note"
       },
       "list": {
         "down": "Next row",
