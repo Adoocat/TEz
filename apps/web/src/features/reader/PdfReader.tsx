@@ -292,7 +292,9 @@ function OpenDocument({
   const { selection, clear: clearSelection } = useTextSelection(scroller);
   const { selectedId, color, select, setColor } = useReaderSelection();
   const [areaTool, setAreaTool] = useState(false);
-  const [hovered, setHovered] = useState<AnnotationView | null>(null);
+  // Its id, not a copy: the comment may be saved, or deleted, under a pointer that stays.
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const hovered = annotations.data?.find((annotation) => annotation.id === hoveredId);
   const openPanel = useLayoutStore((state) => state.openInspector);
 
   /** The selection as an anchor; null when there is none. */
@@ -678,15 +680,15 @@ function OpenDocument({
                     onSize={onSize}
                     onText={find.onText}
                     onPoint={(page, point) => {
-                      setHovered(
+                      const under =
                         point &&
-                          annotationAt(
-                            byPage.get(page) ?? [],
-                            sizes.get(page) ?? firstPage,
-                            scale,
-                            point,
-                          ),
-                      );
+                        annotationAt(
+                          byPage.get(page) ?? [],
+                          sizes.get(page) ?? firstPage,
+                          scale,
+                          point,
+                        );
+                      setHoveredId(under?.id ?? null);
                     }}
                     onClick={(page, point) => {
                       // A click that ends a selection is not a click on a highlight.
