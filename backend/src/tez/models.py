@@ -6,6 +6,7 @@ autogenerate and the models-match-migrations test.
 
 from tez.core.db import Base
 from tez.modules.files import models as files_models
+from tez.modules.fulltext import models as fulltext_models
 from tez.modules.jobs import models as jobs_models
 from tez.modules.library import models as library_models
 from tez.modules.quality import models as quality_models
@@ -16,6 +17,7 @@ from tez.modules.settings import models as settings_models
 __all__ = [
     "Base",
     "files_models",
+    "fulltext_models",
     "jobs_models",
     "library_models",
     "quality_models",

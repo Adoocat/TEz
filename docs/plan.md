@@ -377,7 +377,7 @@ Nov 25, 2026 · Onaylandı. Kapsam: kritik yolun son halkası (okuma → not →
 
 ### A. Tam metin
 
-- [ ] **43 · Metin çıkarma:** PDF'ler işçide sayfa sayfa okunur (`text_chunk`); eski PDF'ler de işlenir. *Kabul:* bozuk, şifreli ve taranmış PDF çökertmez, işaretlenir; aynı iş iki kez çalışınca tekrar oluşmaz.
+- [x] **43 · Metin çıkarma:** PDF'ler işçide sayfa sayfa okunur (`text_chunk`); eski PDF'ler de işlenir. *Kabul:* bozuk, şifreli ve taranmış PDF çökertmez, işaretlenir; aynı iş iki kez çalışınca tekrar oluşmaz.
 - [ ] **44 · Tam metin arama:** `chunk_fts`, Türkçe katlamayla; sonuçta makale, sayfa ve alıntı. *Kabul:* İ/ı testleri geçer; 2000 makalede < 200 ms; sonuç doğru sayfayı açar.
 - [ ] **45 · Okuyucu geliştirmeleri:** belge içi arama, ana hat ve küçük resimler, farklı sayfa boyutları, eksik yazı tipi ayarları, belge sekmeleri, odak modu (tasarım 4.5). *Kabul:* 300 sayfada akıcı; E2E.
 

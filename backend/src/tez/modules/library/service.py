@@ -20,6 +20,7 @@ from tez.core.db import Database
 from tez.core.errors import ErrorCode, TezError
 from tez.core.filelock import FileLock, is_locked
 from tez.core.private_file import write_private_text
+from tez.modules.files import service as files_service
 from tez.modules.library import search_index
 from tez.modules.library.paper_service import PaperService
 from tez.modules.library.schemas import ApiEndpoint, Instance, InstanceKind, LibraryInfo
@@ -150,6 +151,8 @@ def _bring_up_to_date(db: Database) -> None:
     with db.write_session() as session:
         if added := PaperService(session).backfill_citekeys():
             logger.info("citation keys added", extra={"papers": added})
+        if queued := files_service.queue_missing_extractions(session):
+            logger.info("text extraction queued", extra={"files": queued})
 
 
 def _backup(path: Path, revision: str) -> Path:

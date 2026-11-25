@@ -83,6 +83,7 @@ class ErrorCode(StrEnum):
     PDF_TOO_LARGE = "pdf.too_large"
     PDF_FILE_NOT_FOUND = "pdf.file_not_found"
     PDF_UNREADABLE = "pdf.unreadable"
+    PDF_ENCRYPTED = "pdf.encrypted"
     PDF_CRASHED = "pdf.crashed"
     PDF_MISSING = "pdf.missing"
     ATTACHMENT_NOT_FOUND = "attachment.not_found"
