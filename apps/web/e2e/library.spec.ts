@@ -2,7 +2,7 @@
 // against the real backend.
 import { expect, test } from "@playwright/test";
 
-import { importPapers, openApp } from "./helpers";
+import { addPdf, importPapers, makePdf, openApp } from "./helpers";
 
 const FIRST = "Automated Code Review with Large Language Models";
 const SECOND = "Reviewer Recommendation in Practice";
@@ -81,4 +81,25 @@ test("the library is searched by metadata, Turkish letters folded", async ({ pag
       name: "Işık Kaynaklarının Kod İncelemesine Etkisi",
     }),
   ).toBeVisible();
+});
+
+test("full-text search finds a passage and opens the reader on its page", async ({
+  page,
+  request,
+}) => {
+  await addPdf(request, "fulltext-paper.pdf", makePdf(4, "Ethnography zeppelin"));
+  await openApp(page, "/library");
+  await page.getByRole("radio", { name: "Full text" }).click();
+  // The worker reads the PDF in the background.
+  await expect(async () => {
+    await page.getByRole("searchbox", { name: "Search the library" }).fill("");
+    await page.getByRole("searchbox", { name: "Search the library" }).fill("zeppelin page 3");
+    await expect(page.getByRole("link", { name: /p\. 3/ })).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 45_000 });
+
+  await page.getByRole("link", { name: /p\. 3/ }).click();
+
+  const reader = page.getByRole("document", { name: "fulltext-paper.pdf" });
+  await expect(reader.getByRole("region", { name: "Page 3" })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Page" })).toHaveValue("3");
 });

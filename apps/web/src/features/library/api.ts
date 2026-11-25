@@ -10,6 +10,8 @@ export type LibraryPaperRow = components["schemas"]["LibraryPaperRow"];
 export type ReadingStatus = components["schemas"]["ReadingStatus"];
 export type ChangeCount = components["schemas"]["ChangeCount"];
 export type PaperDetail = components["schemas"]["PaperDetail"];
+export type FulltextPaper = components["schemas"]["FulltextPaper"];
+export type SnippetPart = components["schemas"]["SnippetPart"];
 
 export const readingStatuses: ReadingStatus[] = ["unread", "reading", "read"];
 // Tag colours are design-token names (--color-highlight-<name>), never raw values.
@@ -76,6 +78,19 @@ export function useLibrarySearch(query: string) {
     enabled: q !== "",
     placeholderData: (previous) => previous,
     queryFn: async () => unwrap(await api.GET("/papers/search", { params: { query: { q } } })),
+  });
+}
+
+/** Search inside the PDFs of these papers (Task 44). Off for an empty query. */
+export function useFulltextSearch(query: string, paperIds: string[], limit: number) {
+  const api = useApi();
+  const q = query.trim();
+  return useQuery({
+    queryKey: ["library", "fulltext", q, limit, paperIds] as const,
+    enabled: q !== "",
+    placeholderData: (previous) => previous,
+    queryFn: async () =>
+      unwrap(await api.POST("/fulltext/search", { body: { q, paper_ids: paperIds, limit } })),
   });
 }
 

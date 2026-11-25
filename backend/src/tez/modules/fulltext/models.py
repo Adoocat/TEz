@@ -1,4 +1,4 @@
-from sqlalchemy import CheckConstraint, ForeignKey, Integer, Text, UniqueConstraint
+from sqlalchemy import CheckConstraint, ForeignKey, Index, Integer, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from tez.core.db import Base, TimestampMixin
@@ -15,6 +15,8 @@ class TextChunk(TimestampMixin, Base):
     __tablename__ = "text_chunk"
     __table_args__ = (
         UniqueConstraint("attachment_id", "ord"),
+        # Everything a search needs about a page, without reading the row and its text.
+        Index("ix_text_chunk_search", "search_row", "attachment_id", "page_index"),
         CheckConstraint("page_index >= 0", name="page_index"),
         CheckConstraint("char_end >= char_start", name="char_range"),
     )
@@ -26,3 +28,5 @@ class TextChunk(TimestampMixin, Base):
     text: Mapped[str] = mapped_column(Text)
     char_start: Mapped[int] = mapped_column(Integer)
     char_end: Mapped[int] = mapped_column(Integer)
+    # The page's rowid in `chunk_fts` (search_index.py).
+    search_row: Mapped[int] = mapped_column(Integer, unique=True)

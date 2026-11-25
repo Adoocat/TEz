@@ -134,6 +134,16 @@ class PaperService:
     def existing_ids(self, paper_ids: Iterable[str]) -> set[str]:
         return set(self._session.scalars(select(Paper.id).where(Paper.id.in_(set(paper_ids)))))
 
+    def library_ids(self) -> set[str]:
+        """Papers that count: kept in the library and not in the trash."""
+        return set(
+            self._session.scalars(
+                select(Paper.id).where(
+                    Paper.library_added_at.is_not(None), Paper.deleted_at.is_(None)
+                )
+            )
+        )
+
     def keep(self, paper_ids: Iterable[str]) -> tuple[int, int]:
         """Put papers in the library; returns (added, already there). The first date stays."""
         wanted = set(paper_ids)

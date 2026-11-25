@@ -1158,6 +1158,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/fulltext/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Search Fulltext
+         * @description Search inside the PDFs of library papers, page by page.
+         *
+         *     Every word must be on the page, as a word or its beginning; "quoted words" must follow each
+         *     other exactly. Turkish letters fold ("isik" = "Işık"). POST, because the list of papers to
+         *     look in does not fit in an address.
+         */
+        post: operations["search_fulltext_fulltext_search_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/pdfs": {
         parameters: {
             query?: never;
@@ -2111,6 +2135,57 @@ export interface components {
             title: string;
             /** Method */
             method: string;
+        };
+        /** FulltextPage */
+        FulltextPage: {
+            /** Attachment Id */
+            attachment_id: string;
+            /** Page */
+            page: number;
+            /** Snippet */
+            snippet: components["schemas"]["SnippetPart"][];
+        };
+        /** FulltextPaper */
+        FulltextPaper: {
+            /** Paper Id */
+            paper_id: string;
+            /** Title */
+            title: string;
+            /** First Author */
+            first_author: string | null;
+            /** Author Count */
+            author_count: number;
+            /** Year */
+            year: number | null;
+            /** Page Hits */
+            page_hits: number;
+            /** Pages */
+            pages: components["schemas"]["FulltextPage"][];
+        };
+        /** FulltextQuery */
+        FulltextQuery: {
+            /** Q */
+            q: string;
+            /** Paper Ids */
+            paper_ids?: string[] | null;
+            /**
+             * Limit
+             * @default 30
+             */
+            limit: number;
+        };
+        /** FulltextResults */
+        FulltextResults: {
+            /** Papers */
+            papers: components["schemas"]["FulltextPaper"][];
+            /** Total Papers */
+            total_papers: number;
+            /** Total Pages */
+            total_pages: number;
+            /** Truncated */
+            truncated: boolean;
+            /** Elapsed Ms */
+            elapsed_ms: number;
         };
         /**
          * GreyEntry
@@ -3208,6 +3283,13 @@ export interface components {
             stage: components["schemas"]["ScreeningStage"];
             /** Code */
             code: string;
+        };
+        /** SnippetPart */
+        SnippetPart: {
+            /** Text */
+            text: string;
+            /** Hit */
+            hit: boolean;
         };
         /**
          * SnowballRoundView
@@ -7724,6 +7806,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ImportOutcome"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    search_fulltext_fulltext_search_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FulltextQuery"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FulltextResults"];
                 };
             };
             /** @description Missing or invalid token */

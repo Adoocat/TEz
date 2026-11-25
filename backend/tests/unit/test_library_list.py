@@ -250,6 +250,7 @@ def demo(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return path
 
 
+@pytest.mark.timing
 def test_task_19_acceptance_search_in_2000_papers_under_100_ms(demo: Path) -> None:
     library = open_library(demo)
     with make_client(library) as client:
