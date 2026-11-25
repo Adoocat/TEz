@@ -365,6 +365,49 @@ Numaralar Aşama 1'den devam eder (branch adları çakışmasın diye). Her adı
 
 Aşama 2'ye bilerek alınmayanlar: DOAJ, ERIC, CORE ve DergiPark sağlayıcıları (PubMed ve Europe PMC'den sonra, sırayla, her biri ayrı onayla); harici aramalar için yenileme hatırlatması ve kayıtlı sorgu uyarıları (Aşama 4); PDF tam metin indeksleme, notlar ve literatür matrisi (Aşama 3); tarayıcı bağlayıcısı (Aşama 6 sonrası, onay + ADR).
 
+## Aşama 3 görevleri
+
+Nov 25, 2026 · Onaylandı. Kapsam: kritik yolun son halkası (okuma → not → matris). 2. aşamadaki gibi her adım tek PR'dır ve numaralar devam eder.
+
+**Alınan kararlar (Nov 25, 2026):** Docling ile otomatik tablo çıkarma ve OCR bu aşamada yok (paket boyutu); tablolar ve şekiller elle seçilen alandan gelir, taranmış PDF'te bilgi şeridi çıkar. GROBID yalnız `localhost` adresinde (1. kural). Not düzenleyici CodeMirror 6 + önizleme; WYSIWYG yok. YZ öğeleri Aşama 5'e kadar gizli.
+
+### 0. Risk denemesi
+
+- [ ] **S2 · Metin konumu:** pypdfium2'nin çıkardığı metin, pdf.js'te seçilen metinle aynı yere düşüyor mu? İki sütun, tire bölünmesi, bitişik harf (ligatür), Türkçe karakter ve döndürülmüş sayfa denenir. *Kabul:* örnek PDF'lerde seçimlerin ≥ %95'i doğru yere oturur; sonuç ADR'de.
+
+### A. Tam metin
+
+- [ ] **43 · Metin çıkarma:** PDF'ler işçide sayfa sayfa okunur (`text_chunk`); eski PDF'ler de işlenir. *Kabul:* bozuk, şifreli ve taranmış PDF çökertmez, işaretlenir; aynı iş iki kez çalışınca tekrar oluşmaz.
+- [ ] **44 · Tam metin arama:** `chunk_fts`, Türkçe katlamayla; sonuçta makale, sayfa ve alıntı. *Kabul:* İ/ı testleri geçer; 2000 makalede < 200 ms; sonuç doğru sayfayı açar.
+- [ ] **45 · Okuyucu geliştirmeleri:** belge içi arama, ana hat ve küçük resimler, farklı sayfa boyutları, eksik yazı tipi ayarları, belge sekmeleri, odak modu (tasarım 4.5). *Kabul:* 300 sayfada akıcı; E2E.
+
+### B. Konum ve vurgular
+
+- [ ] **46 · Anchor servisi:** PDF konumu (alıntı + önek/sonek + koordinat), doğrulama, yeniden konumlama, konuma atlama. *Kabul:* değişen PDF'te alıntı yeniden bulunur; bulunamazsa "kayıp" işaretlenir, yanlış yere gitmez.
+- [ ] **47 · Vurgular:** seçim kutusu, renkler, yorum, alan seçimi, vurgu listesi, `H`. *Kabul:* vurgu her yakınlaştırmada yerinde; E2E.
+
+### C. Notlar
+
+- [ ] **48 · Not servisi:** `note`, `note_link`, not araması, geri bağlantılar. *Kabul:* bağlantılar kayıtta güncellenir; hedef silinirse kırık diye işaretlenir.
+- [ ] **49 · Notlar ekranı:** not ağacı, Markdown düzenleyici, `[[` önerisi, geri bağlantı paneli, otomatik kayıt (tasarım 5.3). *Kabul:* E2E; kapanınca yazı kaybolmaz.
+- [ ] **50 · Okuyucudan nota:** "Nota alıntıla", "Kopyala (atıflı)", kaynak çipi, `⇧N`. *Kabul:* çip okuyucuyu o cümlede açar.
+
+### D. Literatür matrisi
+
+- [ ] **51 · Matris servisi:** matris, sütun türleri (metin, sayı, seçenek, çoklu seçenek, evet/hayır), satırlar dahil edilenlerden türetilir. *Kabul:* tür değişince veri sessizce kaybolmaz; hariç tutulanın hücreleri saklanır.
+- [ ] **52 · Matris ızgarası:** sabit başlıklar, klavyeyle düzenleme, filtre, gruplama, geri alma (tasarım 5.4). *Kabul:* 100 × 15 akıcı; E2E.
+- [ ] **53 · Hücre kanıtı:** "Matris hücresine bağla", kanıt paneli, okuyucuda Matris sekmesi, kanıt kapsamı yüzdesi. *Kabul:* hücre → PDF cümlesi → hücre gidiş-dönüşü; E2E.
+- [ ] **54 · Matris çıktısı:** CSV, Excel, Markdown (kanıt ve sayfayla), kalite puanı sütunu, review panelinde "Veri çıkarma" aşaması. *Kabul:* Türkçe karakterler Excel'de doğru.
+
+### E. Belge yapısı
+
+- [ ] **55 · Şekil ve tablo galerisi:** okuyucuda seçilen alan kaynağıyla kaydedilir; galeri, yan yana karşılaştırma, dışa aktarma (tasarım 5.5). *Kabul:* öğeden PDF'teki yere dönülür.
+- [ ] **56 · GROBID (isteğe bağlı):** bölümler ve kaynakça; kapalıyken arayüzde görünmez. *Kabul:* testler kayıtlı yanıtla; GROBID yokken hiçbir şey bozulmaz.
+
+### F. Kapanış
+
+- [ ] **57 · Kapanış:** uçtan uca deneme (Aşama 2'de denenmeyen akışlar dahil), demo verisi, README. *Kabul:* arama → eleme → okuma → matris tek oturumda tamamlanır.
+
 ## Riskler, eksikler ve alternatifler
 
 En büyük risk teknik değil: aracın kendisi tez taramasını geciktirebilir. Bu yüzden önce taramanın kritik yolunu (arama → eleme → okuma → matris) uçtan uca çalışır hale getirmeyi, gerisini ihtiyaç doğdukça eklemeyi öneriyorum.
