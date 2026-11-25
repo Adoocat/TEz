@@ -46,6 +46,8 @@ TEz is MIT-licensed. Every dependency that ships with the app has a licence comp
 | @tauri-apps/api | 2.12 | Apache-2.0 or MIT |
 | @fontsource/inter, @fontsource/jetbrains-mono | 5.3 | SIL Open Font License 1.1 |
 
+pdf.js's data files are copied into the app as they are (`apps/web/vite.config.ts`): the Foxit standard fonts (BSD-3-Clause), the OpenJPEG (BSD-2-Clause), JBIG2 (BSD-3-Clause) and qcms (MIT) decoders, Adobe's character maps (BSD-3-Clause) and a colour profile (CC0). The Liberation fonts in the same package are GPL-2.0 with a font exception and are **left out**; pdf.js falls back to the system's Arial or Helvetica.
+
 The reader's text-layer CSS (`apps/web/src/styles/index.css`) is adapted from pdf.js's `web/pdf_viewer.css` (Apache-2.0).
 
 ## Desktop shell (Rust)

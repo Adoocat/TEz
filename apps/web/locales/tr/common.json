@@ -696,7 +696,32 @@
     "zoomOut": "Uzaklaştır",
     "fitWidth": "Genişliğe sığdır",
     "pageLabel": "Sayfa {{page}}",
-    "pageFailed": "Bu sayfa çizilemedi."
+    "pageFailed": "Bu sayfa çizilemedi.",
+    "tabs": "Açık belgeler",
+    "closeTab": "{{title}} belgesini kapat",
+    "gone": "Bu belge artık kütüphanede değil.",
+    "noText": "Bu PDF metin içermiyor, taranmış. İçinde aranamaz ve metin seçilemez.",
+    "panel": "Belge paneli",
+    "togglePanel": "Ana hat ve sayfalar",
+    "outline": "Ana hat",
+    "pages": "Sayfalar",
+    "noOutline": "Bu belgenin ana hattı yok.",
+    "goToPage": "{{page}}. sayfaya git",
+    "pageShort": "s. {{page}}",
+    "focus": "Odak modu",
+    "focusHint": "Odak modu (çıkmak için Esc)",
+    "find": {
+      "open": "Bu belgede ara",
+      "label": "Bu belgede ara",
+      "placeholder": "Bu belgede ara…",
+      "next": "Sonraki eşleşme",
+      "previous": "Önceki eşleşme",
+      "close": "Aramayı kapat",
+      "position": "{{current}} / {{total}}",
+      "none": "Eşleşme yok",
+      "pending": "Bu PDF'in metni hâlâ okunuyor.",
+      "noText": "Bu PDF'te aranacak metin yok."
+    }
   },
   "open": {
     "isLibrary": "Bu klasör bir TEz kütüphanesi. Kütüphane değiştirme henüz yok; tez-backend serve --library ile açın.",
@@ -734,7 +759,9 @@
       },
       "reader": {
         "nextPage": "Sonraki sayfa",
-        "previousPage": "Önceki sayfa"
+        "previousPage": "Önceki sayfa",
+        "find": "Belgede ara",
+        "focusMode": "Odak modunu aç/kapat"
       },
       "list": {
         "down": "Sonraki satır",

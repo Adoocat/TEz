@@ -696,7 +696,32 @@
     "zoomOut": "Zoom out",
     "fitWidth": "Fit to width",
     "pageLabel": "Page {{page}}",
-    "pageFailed": "This page could not be drawn."
+    "pageFailed": "This page could not be drawn.",
+    "tabs": "Open documents",
+    "closeTab": "Close {{title}}",
+    "gone": "This document is not in the library any more.",
+    "noText": "This PDF has no text: it is a scan. It cannot be searched, and text cannot be selected.",
+    "panel": "Document panel",
+    "togglePanel": "Outline and pages",
+    "outline": "Outline",
+    "pages": "Pages",
+    "noOutline": "This document has no outline.",
+    "goToPage": "Go to page {{page}}",
+    "pageShort": "p. {{page}}",
+    "focus": "Focus mode",
+    "focusHint": "Focus mode (Esc to leave)",
+    "find": {
+      "open": "Search in this document",
+      "label": "Search in this document",
+      "placeholder": "Search in this document…",
+      "next": "Next match",
+      "previous": "Previous match",
+      "close": "Close search",
+      "position": "{{current}} of {{total}}",
+      "none": "No match",
+      "pending": "The text of this PDF is still being read.",
+      "noText": "This PDF has no text to search."
+    }
   },
   "open": {
     "isLibrary": "This folder is a TEz library. Switching libraries is not possible yet; open it with tez-backend serve --library.",
@@ -734,7 +759,9 @@
       },
       "reader": {
         "nextPage": "Next page",
-        "previousPage": "Previous page"
+        "previousPage": "Previous page",
+        "find": "Search in the document",
+        "focusMode": "Focus mode on or off"
       },
       "list": {
         "down": "Next row",

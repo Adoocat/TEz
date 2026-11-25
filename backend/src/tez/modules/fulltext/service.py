@@ -7,9 +7,11 @@ from tez.core.db import Database
 from tez.modules.files import service as files_service
 from tez.modules.files.models import TextStatus
 from tez.modules.fulltext import search_index
-from tez.modules.fulltext.extraction import extract_pages
+from tez.modules.fulltext.extraction import extract_pages, readable
 from tez.modules.fulltext.repository import FulltextRepository
 from tez.modules.fulltext.schemas import (
+    FindPage,
+    FindResults,
     FulltextPage,
     FulltextPaper,
     FulltextQuery,
@@ -18,6 +20,7 @@ from tez.modules.fulltext.schemas import (
 )
 from tez.modules.jobs.registry import JobContext
 from tez.modules.library.paper_service import PaperService
+from tez.shared.text import fold
 
 logger = logging.getLogger(__name__)
 
@@ -107,3 +110,26 @@ def search(db: Database, query: FulltextQuery) -> FulltextResults:
         truncated=len(found) >= search_index.MAX_PAGES,
         elapsed_ms=round((time.perf_counter() - started) * 1000, 1),
     )
+
+
+def find(db: Database, attachment_id: str, query: str) -> FindResults:
+    """Every page of one document that has the text of `query`, in page order."""
+    attachment = files_service.get_attachment(db, attachment_id)
+    needle = " ".join(fold(query).split())
+    with db.session() as session:
+        chunks = FulltextRepository(session).pages(attachment_id)
+        if not chunks:
+            waiting = attachment.text_status in (TextStatus.PENDING, TextStatus.OK)
+            return FindResults(text="pending" if waiting else "none", pages=[], total=0)
+        if attachment.text_status is not TextStatus.OK or not needle:
+            return FindResults(
+                text="ready" if attachment.text_status is TextStatus.OK else "none",
+                pages=[],
+                total=0,
+            )
+        pages: list[FindPage] = []
+        for chunk in chunks:
+            matches = fold(readable(chunk.text).replace("\n", " ")).count(needle)
+            if matches:
+                pages.append(FindPage(page=chunk.page_index + 1, matches=matches))
+    return FindResults(text="ready", pages=pages, total=sum(page.matches for page in pages))

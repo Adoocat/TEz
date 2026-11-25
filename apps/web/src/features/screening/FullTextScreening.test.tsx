@@ -20,6 +20,8 @@ vi.mock("@/lib/pdf", () => ({
       numPages: 3,
       pageSize: () => Promise.resolve({ width: 600, height: 800 }),
       renderPage: () => ({ done: Promise.resolve(), dispose: () => undefined }),
+      renderThumbnail: () => ({ done: Promise.resolve(), dispose: () => undefined }),
+      outline: () => Promise.resolve([]),
       destroy: () => Promise.resolve(),
     }),
 }));

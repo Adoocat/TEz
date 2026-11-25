@@ -117,6 +117,9 @@
   transform-origin: 0 0;
   forced-color-adjust: none;
   --min-font-size: 1;
+  /* pdf.js rounds the layer's size to these steps; without them it has none. */
+  --scale-round-x: 1px;
+  --scale-round-y: 1px;
   --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
   --min-font-size-inv: calc(1 / var(--min-font-size));
 }
@@ -138,6 +141,23 @@
 }
 .textLayer .markedContent {
   display: contents;
+}
+/* A rotated page: the layer keeps the page's own size and is turned into place. */
+.textLayer[data-main-rotation="90"] {
+  transform: rotate(90deg) translateY(-100%);
+}
+.textLayer[data-main-rotation="180"] {
+  transform: rotate(180deg) translate(-100%, -100%);
+}
+.textLayer[data-main-rotation="270"] {
+  transform: rotate(270deg) translateX(-100%);
+}
+/* Matches of the reader's search (features/reader/findHighlights.ts). */
+::highlight(tez-find) {
+  background-color: color-mix(in srgb, var(--color-highlight-yellow) 55%, transparent);
+}
+::highlight(tez-find-current) {
+  background-color: color-mix(in srgb, var(--color-highlight-pink) 75%, transparent);
 }
 .textLayer ::selection {
   background: color-mix(in srgb, var(--color-accent-default) 30%, transparent);

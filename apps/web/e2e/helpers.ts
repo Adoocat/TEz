@@ -50,7 +50,17 @@ const NL = "\n";
  * hang from a balanced tree of ten per node, its nodes written together as real producers do:
  * a reader then finds any page after reading a few small parts of the file.
  */
-export function makePdf(pages: number, label = "TEz e2e", padding = 0): Buffer {
+export function makePdf(
+  pages: number,
+  label = "TEz e2e",
+  padding = 0,
+  options: {
+    /** Page attributes by page number (from 1): a size in points, a rotation. */
+    page?: (page: number) => { size?: [number, number]; rotate?: number };
+    /** Outline entries: a title and the page it points at. */
+    outline?: [title: string, page: number][];
+  } = {},
+): Buffer {
   const objects: string[] = [
     "<< /Type /Catalog /Pages 2 0 R >>",
     "",
@@ -66,13 +76,15 @@ export function makePdf(pages: number, label = "TEz e2e", padding = 0): Buffer {
   for (let index = 0; index < pages; index += 1) {
     const group = Math.floor(index / 10);
     const text = `${label} page ${String(index + 1)}`;
+    const { size = [612, 792], rotate = 0 } = options.page?.(index + 1) ?? {};
     // `padding` bytes of comment make a file as heavy as a real one without drawing more.
     const filler = padding > 0 ? `% ${"x".repeat(padding)}${NL}` : "";
-    const stream = `${filler}BT /F1 24 Tf 72 720 Td (${text}) Tj ET`;
+    const stream = `${filler}BT /F1 24 Tf 72 ${String(size[1] - 72)} Td (${text}) Tj ET`;
     objects.push(`<< /Length ${String(stream.length)} >>${NL}stream${NL}${stream}${NL}endstream`);
     const content = objects.length;
     objects.push(
-      `<< /Type /Page /Parent ${String(firstGroup + group)} 0 R /MediaBox [0 0 612 792] ` +
+      `<< /Type /Page /Parent ${String(firstGroup + group)} 0 R ` +
+        `/MediaBox [0 0 ${size.map(String).join(" ")}] /Rotate ${String(rotate)} ` +
         `/Resources << /Font << /F1 3 0 R >> >> /Contents ${String(content)} 0 R >>`,
     );
     groups[group]?.push(objects.length);
@@ -86,6 +98,24 @@ export function makePdf(pages: number, label = "TEz e2e", padding = 0): Buffer {
   objects[1] =
     `<< /Type /Pages /Kids [${groups.map((_, group) => ref(firstGroup + group)).join(" ")}] ` +
     `/Count ${String(pages)} >>`;
+  if (options.outline?.length) {
+    const root = objects.length + 1;
+    const entries = options.outline;
+    objects.push(
+      `<< /Type /Outlines /First ${ref(root + 1)} /Last ${ref(root + entries.length)} ` +
+        `/Count ${String(entries.length)} >>`,
+    );
+    entries.forEach(([title, page], index) => {
+      const next = index + 1 < entries.length ? ` /Next ${ref(root + index + 2)}` : "";
+      const previous = index > 0 ? ` /Prev ${ref(root + index)}` : "";
+      const target = groups.flat()[page - 1] ?? 0;
+      objects.push(
+        `<< /Title (${title}) /Parent ${ref(root)}${next}${previous} ` +
+          `/Dest [${ref(target)} /Fit] >>`,
+      );
+    });
+    objects[0] = `<< /Type /Catalog /Pages 2 0 R /Outlines ${ref(root)} >>`;
+  }
   let out = `%PDF-1.4${NL}`;
   const offsets: number[] = [];
   objects.forEach((body, index) => {

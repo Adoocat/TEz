@@ -17,6 +17,20 @@ export function fold(text: string): string {
     .replace(COMBINING, "");
 }
 
+/** `fold(text)` with, for each folded character, the index in `text` it came from. */
+export function foldWithMap(text: string): { folded: string; origin: number[] } {
+  let folded = "";
+  const origin: number[] = [];
+  let index = 0;
+  for (const ch of text) {
+    const piece = fold(ch);
+    origin.push(...Array.from({ length: piece.length }, () => index));
+    folded += piece;
+    index += ch.length;
+  }
+  return { folded, origin };
+}
+
 export interface Segment<T> {
   text: string;
   /** The term this piece matched, or undefined for plain text. */
@@ -33,16 +47,7 @@ export function highlight<T>(
   text: string,
   terms: readonly { term: string; value: T }[],
 ): Segment<T>[] {
-  // Fold character by character, remembering where each folded character came from.
-  let folded = "";
-  const origin: number[] = [];
-  let index = 0;
-  for (const ch of text) {
-    const piece = fold(ch);
-    origin.push(...Array.from({ length: piece.length }, () => index));
-    folded += piece;
-    index += ch.length;
-  }
+  const { folded, origin } = foldWithMap(text);
   origin.push(text.length);
 
   const wanted = terms
