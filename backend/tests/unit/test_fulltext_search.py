@@ -207,6 +207,40 @@ def test_an_index_that_does_not_cover_the_text_is_rebuilt_on_open(tmp_path: Path
         assert search(client, "findable")["papers"][0]["pages"][0]["page"] == 2
 
 
+def find(client: TestClient, attachment: str, q: str) -> dict[str, Any]:
+    response = client.get(f"/attachments/{attachment}/find", params={"q": q})
+    assert response.status_code == 200, response.text
+    return response.json()
+
+
+def test_find_in_one_document_counts_per_page(client: TestClient, library: Library) -> None:
+    _, attachment = add(
+        library, "doc.pdf", ["Işık and ışık", "then the long"], ["nothing"], ["sentence IŞIK."]
+    )
+
+    assert find(client, attachment, "isik") == {
+        "text": "ready",
+        "pages": [{"page": 1, "matches": 2}, {"page": 3, "matches": 1}],
+        "total": 3,
+    }
+    # A match may run over the end of a line.
+    assert find(client, attachment, "IŞIK  then the")["total"] == 1
+    assert find(client, attachment, "zzz") == {"text": "ready", "pages": [], "total": 0}
+
+
+def test_find_says_when_there_is_no_text_yet_or_at_all(
+    client: TestClient, library: Library
+) -> None:
+    waiting = files_service.add_pdf(
+        library.db, library.path, make_text_pdf([["soon"]]), "new.pdf"
+    ).attachment_id
+    _, scan = add(library, "scan.pdf", [])
+
+    assert find(client, waiting, "soon")["text"] == "pending"
+    assert find(client, scan, "soon")["text"] == "none"
+    assert client.get("/attachments/nope/find", params={"q": "x"}).status_code == 404
+
+
 def test_parse_splits_words_and_phrases() -> None:
     parsed = [(term.words, term.phrase) for term in parse('Peer-review "Işık Hızı" open')]
 

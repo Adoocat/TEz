@@ -95,3 +95,82 @@ test("the reader opens from the library inspector at page 1", async ({ page, req
     "false",
   );
 });
+
+test("outline, thumbnails, search and page sizes", async ({ page, request }) => {
+  const pdf = makePdf(30, "Pelican survey", 0, {
+    // A landscape page, and pages turned in the file.
+    page: (n) =>
+      n === 2 ? { size: [1000, 500] } : n === 3 ? { rotate: 90 } : n === 4 ? { rotate: 180 } : {},
+    outline: [
+      ["Opening", 1],
+      ["Findings", 20],
+    ],
+  });
+  const attachmentId = await addPdf(request, "pelican.pdf", pdf);
+  await openApp(page, `/reader/${attachmentId}`);
+  const reader = page.getByRole("document", { name: "pelican.pdf" });
+  await expect(reader.getByRole("region", { name: "Page 1", exact: true })).toBeVisible();
+
+  // Each page has its own shape, and its text lies on it, turned pages included.
+  for (const n of [2, 3, 4]) {
+    await page.getByRole("textbox", { name: "Page" }).fill(String(n));
+    await page.keyboard.press("Enter");
+    const section = reader.getByRole("region", { name: `Page ${String(n)}`, exact: true });
+    const line = section.getByText(`Pelican survey page ${String(n)}`, { exact: true });
+    await expect(line).toBeVisible();
+    const box = await section.boundingBox();
+    const text = await line.boundingBox();
+    if (!box || !text) throw new Error("no box");
+    expect(box.width > box.height).toBe(n !== 4);
+    expect(text.x).toBeGreaterThanOrEqual(box.x - 1);
+    expect(text.x + text.width).toBeLessThanOrEqual(box.x + box.width + 1);
+    expect(text.y).toBeGreaterThanOrEqual(box.y - 1);
+    expect(text.y + text.height).toBeLessThanOrEqual(box.y + box.height + 1);
+    // The line runs down a page turned by 90 degrees.
+    expect(text.height > text.width).toBe(n === 3);
+  }
+
+  await page.getByRole("button", { name: "Outline and pages" }).click();
+  await page.getByRole("navigation", { name: "Outline" }).getByText("Findings").click();
+  await expect(page.getByRole("textbox", { name: "Page" })).toHaveValue("20");
+  await page.getByRole("radio", { name: "Pages" }).click();
+  await page.getByRole("button", { name: "Go to page 21" }).click();
+  await expect(page.getByRole("textbox", { name: "Page" })).toHaveValue("21");
+
+  // Ctrl+F searches the document, not the few pages in the DOM.
+  await page.keyboard.press("ControlOrMeta+f");
+  await page.getByRole("searchbox", { name: "Search in this document" }).fill("PELİCAN survey");
+  await expect(page.getByText("21 of 30")).toBeVisible({ timeout: 45_000 });
+  const marked = () =>
+    page.evaluate(() =>
+      [...(CSS.highlights.get("tez-find-current") ?? [])].map((range) =>
+        (range as Range).toString(),
+      ),
+    );
+  await expect.poll(marked).toEqual(["Pelican survey"]);
+  await page.getByRole("button", { name: "Next match" }).click();
+  await expect(page.getByText("22 of 30")).toBeVisible();
+  await expect(reader.getByRole("region", { name: "Page 22" })).toBeVisible();
+
+  // Focus mode: only the document is left.
+  await page.keyboard.press("Escape");
+  await page.keyboard.press("f");
+  await expect(page.getByRole("navigation", { name: "Main navigation" })).toBeHidden();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("navigation", { name: "Main navigation" })).toBeVisible();
+});
+
+test("pdf.js finds its fonts and decoders", async ({ page }) => {
+  for (const file of [
+    "standard_fonts/FoxitSerif.pfb",
+    "wasm/openjpeg.wasm",
+    "cmaps/UniJIS-UTF16-H.bcmap",
+  ]) {
+    const response = await page.request.get(`/pdfjs/${file}`);
+    expect(response.status(), file).toBe(200);
+    expect((await response.body()).length, file).toBeGreaterThan(1000);
+  }
+  // GPL-2.0: not part of the app (docs/licenses.md).
+  const left = await page.request.get("/pdfjs/standard_fonts/LiberationSans-Regular.ttf");
+  expect(left.headers()["content-type"]).not.toBe("application/octet-stream");
+});

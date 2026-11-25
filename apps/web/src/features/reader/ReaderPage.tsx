@@ -1,382 +1,123 @@
-// The PDF reader (design 4.5): pages streamed from the backend with range requests, drawn
-// only while near the screen, with a selectable text layer, zoom and `?page=` deep links.
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { BookOpen, Minus, MoveHorizontal, Plus } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
+// The reader screen (design 4.5): the open documents as tabs, and the one being read.
+import { BookOpen, X } from "lucide-react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams, useSearchParams } from "react-router";
+import { Navigate, NavLink, useNavigate, useParams } from "react-router";
 
-import { useBackend } from "@/app/backend";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useLayoutStore } from "@/app/layout/uiStore";
 import { useAttachment } from "@/features/files/api";
-import { openPdf, type PdfDocument, type PdfPageSize } from "@/lib/pdf";
-import { useShortcuts } from "@/lib/shortcuts/useShortcuts";
+import { ApiError } from "@/lib/api/query";
+import { cn } from "@/lib/cn";
 
-const PAGE_GAP = 12;
-const ZOOM_STEPS = [0.5, 0.67, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
-// Pages drawn beyond the visible ones, each way: enough to scroll without blanks, few enough
-// that a 300-page document keeps only a handful of canvases in memory.
-const OVERSCAN = 2;
+import { PdfReader } from "./PdfReader";
+import { useReaderTabs, type ReaderTab } from "./store";
 
-type Zoom = { kind: "fit" } | { kind: "scale"; value: number };
+function addressOf(tab: ReaderTab | null): string {
+  if (!tab) return "/reader";
+  return `/reader/${tab.attachmentId}${tab.page > 1 ? `?page=${String(tab.page)}` : ""}`;
+}
 
 export function ReaderPage() {
   const { t } = useTranslation();
   const { attachmentId } = useParams();
-  if (!attachmentId) {
-    return (
-      <div className="grid h-full place-items-center p-6 text-center">
-        <div className="max-w-sm space-y-2">
-          <BookOpen aria-hidden className="mx-auto size-6 text-fg-muted" />
-          <h1 className="text-h2">{t("reader.title")}</h1>
-          <p className="text-ui text-fg-muted">{t("reader.nothingOpen")}</p>
-        </div>
+  const { tabs, activeId } = useReaderTabs();
+  const setFocus = useLayoutStore((state) => state.setFocus);
+  useEffect(
+    () => () => {
+      setFocus(false);
+    },
+    [setFocus],
+  );
+
+  if (attachmentId) return <OpenReader key={attachmentId} attachmentId={attachmentId} />;
+  // The navigation's "Reader" goes back to what was being read.
+  const last = tabs.find((tab) => tab.attachmentId === activeId) ?? tabs[0];
+  if (last) return <Navigate to={addressOf(last)} replace />;
+  return (
+    <div className="grid h-full place-items-center p-6 text-center">
+      <div className="max-w-sm space-y-2">
+        <BookOpen aria-hidden className="mx-auto size-6 text-fg-muted" />
+        <h1 className="text-h2">{t("reader.title")}</h1>
+        <p className="text-ui text-fg-muted">{t("reader.nothingOpen")}</p>
       </div>
-    );
-  }
-  return <PdfReader key={attachmentId} attachmentId={attachmentId} />;
+    </div>
+  );
 }
 
-function usePdf(attachmentId: string) {
-  const { connection } = useBackend();
-  const [state, setState] = useState<
-    | { status: "loading" }
-    | { status: "ready"; document: PdfDocument; firstPage: PdfPageSize }
-    | { status: "failed" }
-  >({ status: "loading" });
-
-  useEffect(() => {
-    let document: PdfDocument | null = null;
-    let stopped = false;
-    const url = `${connection.baseUrl}/attachments/${encodeURIComponent(attachmentId)}/file`;
-    const headers: Record<string, string> = connection.token
-      ? { Authorization: `Bearer ${connection.token}` }
-      : {};
-    openPdf({ url, headers })
-      .then(async (opened) => {
-        document = opened;
-        const firstPage = await opened.pageSize(1);
-        if (!stopped) setState({ status: "ready", document: opened, firstPage });
-      })
-      .catch(() => {
-        if (!stopped) setState({ status: "failed" });
-      });
-    return () => {
-      stopped = true;
-      void document?.destroy();
-    };
-  }, [attachmentId, connection]);
-
-  return state;
-}
-
-/** A PDF with its toolbar. `embedded` (full-text screening, Task 33) leaves the address and
- * the J/K keys alone: the screen around it owns them. */
-export function PdfReader({
-  attachmentId,
-  embedded = false,
-}: {
-  attachmentId: string;
-  embedded?: boolean;
-}) {
+function OpenReader({ attachmentId }: { attachmentId: string }) {
   const { t } = useTranslation();
   const attachment = useAttachment(attachmentId);
-  const pdf = usePdf(attachmentId);
-  const title = attachment.data?.file_name ?? t("reader.title");
-  const Heading = embedded ? "h2" : "h1";
+  const openTab = useReaderTabs((state) => state.open);
+  const closeTab = useReaderTabs((state) => state.close);
+  const focus = useLayoutStore((state) => state.focus);
+  const name = attachment.data?.file_name;
+  const gone =
+    attachment.error instanceof ApiError && attachment.error.code === "attachment.not_found";
+
+  useEffect(() => {
+    if (attachment.isSuccess) openTab(attachmentId, name ?? t("reader.title"));
+  }, [attachment.isSuccess, attachmentId, name, openTab, t]);
+  // A tab remembered from another library, or of a deleted file.
+  useEffect(() => {
+    if (gone) closeTab(attachmentId);
+  }, [gone, attachmentId, closeTab]);
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      {pdf.status === "ready" ? (
-        <PageList
-          document={pdf.document}
-          firstPage={pdf.firstPage}
-          title={title}
-          embedded={embedded}
-        />
+      {!focus && <Tabs current={attachmentId} />}
+      {gone ? (
+        <p role="alert" className="p-6 text-ui text-fg-muted">
+          {t("reader.gone")}
+        </p>
       ) : (
-        <>
-          <header className="border-b border-line px-4 py-2">
-            <Heading className="truncate text-h3">{title}</Heading>
-          </header>
-          <p
-            role={pdf.status === "failed" ? "alert" : "status"}
-            className={
-              pdf.status === "failed" ? "p-6 text-ui text-danger" : "p-6 text-ui text-fg-muted"
-            }
-          >
-            {pdf.status === "failed" ? t("reader.failed") : t("reader.loading")}
-          </p>
-        </>
+        <div className="min-h-0 flex-1">
+          <PdfReader attachmentId={attachmentId} />
+        </div>
       )}
     </div>
   );
 }
 
-function PageList({
-  document,
-  firstPage,
-  title,
-  embedded,
-}: {
-  document: PdfDocument;
-  firstPage: PdfPageSize;
-  title: string;
-  embedded: boolean;
-}) {
-  // Embedded, the file name is a section heading under the screen's own title.
-  const Heading = embedded ? "h2" : "h1";
-  const { t, i18n } = useTranslation();
-  const [params, setParams] = useSearchParams();
-  const scroller = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(0);
-  const [zoom, setZoom] = useState<Zoom>({ kind: "fit" });
-  const [current, setCurrent] = useState(1);
-  const [pageInput, setPageInput] = useState("1");
-
-  useEffect(() => {
-    const element = scroller.current;
-    if (!element) return;
-    const measure = () => {
-      setWidth(element.clientWidth);
-    };
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(element);
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  // Fit width leaves a margin either side; papers are mostly one page size, so page 1 sets it.
-  const fitScale = width > 0 ? Math.max(0.25, (width - 48) / firstPage.width) : 1;
-  const scale = zoom.kind === "fit" ? fitScale : zoom.value;
-  const pageHeight = Math.floor(firstPage.height * scale);
-  const pageWidth = Math.floor(firstPage.width * scale);
-
-  // eslint-disable-next-line react-hooks/incompatible-library -- only skips memoizing this component
-  const virtualizer = useVirtualizer({
-    count: document.numPages,
-    getScrollElement: () => scroller.current,
-    estimateSize: () => pageHeight + PAGE_GAP,
-    overscan: OVERSCAN,
-    paddingStart: PAGE_GAP,
-  });
-
-  // The size of every page changes with the zoom: measure again.
-  useEffect(() => {
-    virtualizer.measure();
-  }, [virtualizer, pageHeight]);
-
-  // A deep link (?page=12) opens at that page once the pages have their size.
-  const requested = embedded ? 1 : Number.parseInt(params.get("page") ?? "1", 10);
-  const opened = useRef(false);
-  useEffect(() => {
-    if (opened.current || width === 0) return;
-    opened.current = true;
-    const page = Math.min(Math.max(Number.isNaN(requested) ? 1 : requested, 1), document.numPages);
-    if (page > 1) virtualizer.scrollToIndex(page - 1, { align: "start" });
-  }, [width, requested, document.numPages, virtualizer]);
-
-  // The page indicator follows the scroll; the address keeps the page for a reload or link.
-  const items = virtualizer.getVirtualItems();
-  const offset = virtualizer.scrollOffset ?? 0;
-  const visible = items.find(
-    (item) => item.end > offset + (scroller.current?.clientHeight ?? 0) / 3,
-  );
-  const visibleIndex = visible?.index ?? 0;
-  useEffect(() => {
-    const page = visibleIndex + 1;
-    setCurrent(page);
-    setPageInput(String(page));
-    if (!opened.current || embedded) return;
-    const timer = setTimeout(() => {
-      setParams(
-        (previous) => {
-          const next = new URLSearchParams(previous);
-          next.set("page", String(page));
-          return next;
-        },
-        { replace: true },
-      );
-    }, 300);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [visibleIndex, setParams, embedded]);
-
-  function goTo(event: SyntheticEvent) {
-    event.preventDefault();
-    const page = Number.parseInt(pageInput, 10);
-    if (Number.isNaN(page)) return;
-    virtualizer.scrollToIndex(Math.min(Math.max(page, 1), document.numPages) - 1, {
-      align: "start",
-    });
-  }
-
-  function step(direction: 1 | -1) {
-    const index = ZOOM_STEPS.findIndex((value) => value >= scale - 0.001);
-    const from = index === -1 ? ZOOM_STEPS.length - 1 : index;
-    const next = ZOOM_STEPS[Math.min(Math.max(from + direction, 0), ZOOM_STEPS.length - 1)];
-    if (next !== undefined) setZoom({ kind: "scale", value: next });
-  }
-
-  // J / K turn the page (design-prompt §6, reader context).
-  useShortcuts(
-    "reader",
-    {
-      nextPage: () => {
-        turnPage(1);
-      },
-      previousPage: () => {
-        turnPage(-1);
-      },
-    },
-    { enabled: !embedded },
-  );
-
-  function turnPage(by: 1 | -1) {
-    const page = Math.min(Math.max(current + by, 1), document.numPages);
-    virtualizer.scrollToIndex(page - 1, { align: "start" });
-  }
-
-  const percent = useMemo(
-    () => new Intl.NumberFormat(i18n.language, { style: "percent" }).format(scale),
-    [i18n.language, scale],
-  );
-
-  return (
-    <>
-      <header className="flex flex-wrap items-center gap-2 border-b border-line px-4 py-1.5">
-        <Heading className="min-w-0 flex-1 truncate text-h3">{title}</Heading>
-        <form onSubmit={goTo} className="flex items-center gap-1 text-meta text-fg-muted">
-          <Input
-            aria-label={t("reader.page")}
-            className="h-7 w-14 text-center"
-            inputMode="numeric"
-            value={pageInput}
-            onChange={(event) => {
-              setPageInput(event.target.value);
-            }}
-          />
-          <span aria-live="polite">{t("reader.of", { total: document.numPages, current })}</span>
-        </form>
-        <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={t("reader.zoomOut")}
-            onClick={() => {
-              step(-1);
-            }}
-          >
-            <Minus />
-          </Button>
-          <span className="w-12 text-center text-meta tabular-nums">{percent}</span>
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={t("reader.zoomIn")}
-            onClick={() => {
-              step(1);
-            }}
-          >
-            <Plus />
-          </Button>
-          <Button
-            variant={zoom.kind === "fit" ? "secondary" : "ghost"}
-            size="icon"
-            aria-label={t("reader.fitWidth")}
-            aria-pressed={zoom.kind === "fit"}
-            onClick={() => {
-              setZoom({ kind: "fit" });
-            }}
-          >
-            <MoveHorizontal />
-          </Button>
-        </div>
-      </header>
-      <div
-        ref={scroller}
-        role="document"
-        aria-label={title}
-        data-testid="reader-scroller"
-        className="min-h-0 flex-1 overflow-auto bg-surface"
-      >
-        <div
-          className="relative mx-auto"
-          style={{ height: virtualizer.getTotalSize(), width: Math.max(pageWidth, 1) }}
-        >
-          {items.map((item) => (
-            <div
-              key={item.key}
-              className="absolute top-0 left-0"
-              style={{ transform: `translateY(${String(item.start)}px)` }}
-            >
-              <PageView
-                document={document}
-                pageNumber={item.index + 1}
-                scale={scale}
-                width={pageWidth}
-                height={pageHeight}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-}
-
-function PageView({
-  document,
-  pageNumber,
-  scale,
-  width,
-  height,
-}: {
-  document: PdfDocument;
-  pageNumber: number;
-  scale: number;
-  width: number;
-  height: number;
-}) {
+function Tabs({ current }: { current: string }) {
   const { t } = useTranslation();
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const textLayer = useRef<HTMLDivElement>(null);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    if (!canvas.current || !textLayer.current) return;
-    const rendered = document.renderPage(pageNumber, {
-      canvas: canvas.current,
-      textLayer: textLayer.current,
-      scale,
-    });
-    rendered.done.catch(() => {
-      setFailed(true);
-    });
-    return () => {
-      rendered.dispose();
-    };
-  }, [document, pageNumber, scale]);
-
+  const navigate = useNavigate();
+  const { tabs, close } = useReaderTabs();
+  if (tabs.length === 0) return null;
   return (
-    <section
-      aria-label={t("reader.pageLabel", { page: pageNumber })}
-      data-page={pageNumber}
-      className="relative overflow-hidden bg-raised shadow-popover"
-      // A page is paper whatever the theme; pdf.js paints its own white background.
-      style={{ width, height, colorScheme: "light" }}
+    <nav
+      aria-label={t("reader.tabs")}
+      className="flex shrink-0 overflow-x-auto border-b border-line bg-surface"
     >
-      <canvas ref={canvas} aria-hidden className="block" />
-      <div ref={textLayer} className="textLayer" />
-      {failed && (
-        <p role="alert" className="absolute inset-0 grid place-items-center text-meta text-danger">
-          {t("reader.pageFailed")}
-        </p>
-      )}
-    </section>
+      {tabs.map((tab) => (
+        <div
+          key={tab.attachmentId}
+          className={cn(
+            "flex max-w-60 min-w-0 items-center gap-1 border-r border-line pr-1",
+            tab.attachmentId === current
+              ? "border-t-2 border-t-primary bg-canvas"
+              : "border-t-2 border-t-transparent",
+          )}
+        >
+          <NavLink
+            to={addressOf(tab)}
+            className="min-w-0 truncate py-1.5 pl-3 text-ui text-fg hover:underline"
+            title={tab.title}
+          >
+            {tab.title}
+          </NavLink>
+          <button
+            type="button"
+            aria-label={t("reader.closeTab", { title: tab.title })}
+            className="grid size-6 shrink-0 place-items-center rounded-xs text-fg-muted hover:bg-hovered hover:text-fg [&_svg]:size-3"
+            onClick={() => {
+              const next = close(tab.attachmentId);
+              if (tab.attachmentId === current) void navigate(addressOf(next));
+            }}
+          >
+            <X aria-hidden />
+          </button>
+        </div>
+      ))}
+    </nav>
   );
 }

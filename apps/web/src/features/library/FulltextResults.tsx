@@ -121,7 +121,8 @@ function Result({
             <Link
               to={`/reader/${page.attachment_id}?${new URLSearchParams({
                 page: String(page.page),
-                find: query.trim(),
+                // The words as they are on the page, for the reader to mark.
+                find: page.snippet.find((part) => part.hit)?.text ?? query.trim(),
               }).toString()}`}
               className="flex items-start gap-2 rounded-md px-2 py-1 hover:bg-hovered"
             >

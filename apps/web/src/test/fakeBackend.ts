@@ -14,6 +14,8 @@ type TagView = components["schemas"]["TagView"];
 type LibraryPaperRow = components["schemas"]["LibraryPaperRow"];
 type FulltextPaper = components["schemas"]["FulltextPaper"];
 type PaperDetail = components["schemas"]["PaperDetail"];
+type AttachmentView = components["schemas"]["AttachmentView"];
+type FindResults = components["schemas"]["FindResults"];
 type ReviewView = components["schemas"]["ReviewView"];
 type ReviewOverview = components["schemas"]["ReviewOverview"];
 type CriterionView = components["schemas"]["CriterionView"];
@@ -60,6 +62,10 @@ export interface FakeBackend {
   /** What POST /fulltext/search answers for each query; nothing found when missing. */
   fulltextHits: Record<string, FulltextPaper[]>;
   details: Record<string, PaperDetail>;
+  /** GET /attachments/{id}: what is special about a file; null means it is gone. */
+  attachments: Record<string, Partial<AttachmentView> | null>;
+  /** What searching inside a document answers for each query; no match when missing. */
+  findResults: Record<string, FindResults>;
   /** What the next POST /pdfs answers, in order; "added" when empty. */
   pdfReplies: (
     | { status: "added" | "duplicate" }
@@ -99,6 +105,8 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     papers: [],
     searchHits: {},
     fulltextHits: {},
+    attachments: {},
+    findResults: {},
     details: {},
     emitSource(searchId, update) {
       const data = {
@@ -365,6 +373,18 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
       if (route === "GET /papers/search") {
         const q = new URL(request.url, "http://test").searchParams.get("q") ?? "";
         return json({ paper_ids: backend.searchHits[q] ?? [], elapsed_ms: 1.2 });
+      }
+      const attachmentOf = /^\/attachments\/([^/]+)$/.exec(path)?.[1];
+      if (attachmentOf) {
+        const special = backend.attachments[attachmentOf];
+        if (special === null) {
+          return json({ error: { code: "attachment.not_found", params: {} } }, 404);
+        }
+        return json(attachmentView({ id: attachmentOf, ...special }));
+      }
+      if (/^\/attachments\/[^/]+\/find$/.test(path)) {
+        const q = new URL(request.url, "http://test").searchParams.get("q") ?? "";
+        return json(backend.findResults[q] ?? { text: "ready", pages: [], total: 0 });
       }
       if (route === "POST /fulltext/search") {
         const { q, paper_ids, limit } = body as {
@@ -766,6 +786,23 @@ export function libraryPaper(overrides: Partial<LibraryPaperRow> = {}): LibraryP
     collection_ids: [],
     pdf: "none",
     added_at: "2026-11-11T10:00:00+00:00",
+    ...overrides,
+  };
+}
+
+export function attachmentView(overrides: Partial<AttachmentView> = {}): AttachmentView {
+  return {
+    id: "att-1",
+    paper_id: "paper-1",
+    kind: "pdf",
+    file_name: `${overrides.id ?? "att-1"}.pdf`,
+    sha256: "0".repeat(64),
+    size: 1000,
+    page_count: 40,
+    text_status: "ok",
+    error: null,
+    source: "manual",
+    created_at: "2026-11-25T10:00:00Z",
     ...overrides,
   };
 }

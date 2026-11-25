@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useFindOpenAccess } from "@/features/files/api";
 import { useJobsStore } from "@/features/jobs/store";
 import { readablePdf } from "@/features/library/api";
-import { PdfReader } from "@/features/reader/ReaderPage";
+import { PdfReader } from "@/features/reader/PdfReader";
 
 import { screeningKeys, type ScreeningRecord } from "./api";
 

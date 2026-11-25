@@ -6018,6 +6018,95 @@
         ]
       }
     },
+    "/attachments/{attachment_id}/find": {
+      "get": {
+        "tags": [
+          "fulltext"
+        ],
+        "summary": "Find In Document",
+        "description": "Where a text is in one PDF: the pages with it, and how often. Case, accents, line breaks\nand hyphens at line ends do not matter.",
+        "operationId": "find_in_document_attachments__attachment_id__find_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Attachment Id"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindResults"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/pdfs": {
       "post": {
         "tags": [
@@ -9802,6 +9891,55 @@
           "method"
         ],
         "title": "FileReview"
+      },
+      "FindPage": {
+        "properties": {
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "matches": {
+            "type": "integer",
+            "title": "Matches"
+          }
+        },
+        "type": "object",
+        "required": [
+          "page",
+          "matches"
+        ],
+        "title": "FindPage"
+      },
+      "FindResults": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "pending",
+              "none"
+            ],
+            "title": "Text"
+          },
+          "pages": {
+            "items": {
+              "$ref": "#/components/schemas/FindPage"
+            },
+            "type": "array",
+            "title": "Pages"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text",
+          "pages",
+          "total"
+        ],
+        "title": "FindResults"
       },
       "FulltextPage": {
         "properties": {

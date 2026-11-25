@@ -1182,6 +1182,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/attachments/{attachment_id}/find": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Find In Document
+         * @description Where a text is in one PDF: the pages with it, and how often. Case, accents, line breaks
+         *     and hyphens at line ends do not matter.
+         */
+        get: operations["find_in_document_attachments__attachment_id__find_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/pdfs": {
         parameters: {
             query?: never;
@@ -2135,6 +2156,25 @@ export interface components {
             title: string;
             /** Method */
             method: string;
+        };
+        /** FindPage */
+        FindPage: {
+            /** Page */
+            page: number;
+            /** Matches */
+            matches: number;
+        };
+        /** FindResults */
+        FindResults: {
+            /**
+             * Text
+             * @enum {string}
+             */
+            text: "ready" | "pending" | "none";
+            /** Pages */
+            pages: components["schemas"]["FindPage"][];
+            /** Total */
+            total: number;
         };
         /** FulltextPage */
         FulltextPage: {
@@ -7866,6 +7906,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FulltextResults"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    find_in_document_attachments__attachment_id__find_get: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path: {
+                attachment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FindResults"];
                 };
             };
             /** @description Missing or invalid token */

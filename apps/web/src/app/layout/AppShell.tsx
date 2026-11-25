@@ -76,8 +76,12 @@ const bottomNav: NavItem[] = [
 export function AppShell() {
   useJobEvents();
   useOpenRequests();
-  const { sidebarOpen, inspectorOpen } = useLayoutStore();
+  const { sidebarOpen, inspectorOpen, focus } = useLayoutStore();
   const { pathname } = useLocation();
+  // Focus mode belongs to the reader; another screen always has its shell.
+  const focused = focus && pathname.startsWith("/reader");
+  // The reader has its own left panel (outline, pages).
+  const hasSidebar = !pathname.startsWith("/reader");
   const settingsRoute = pathname.startsWith("/settings");
 
   return (
@@ -86,10 +90,10 @@ export function AppShell() {
       <PdfDrop />
       <ShortcutOverlay />
       <div className="grid h-full grid-cols-[minmax(0,1fr)] grid-rows-[auto_minmax(0,1fr)_auto] bg-canvas text-fg">
-        <TopBar />
+        {focused ? <div /> : <TopBar />}
         <div className="flex min-h-0">
-          <NavRail />
-          {sidebarOpen && (
+          {!focused && <NavRail />}
+          {sidebarOpen && hasSidebar && (
             <aside className="w-sidebar shrink-0 overflow-y-auto border-r border-line bg-surface">
               {settingsRoute ? (
                 <SettingsNav />
@@ -104,11 +108,11 @@ export function AppShell() {
             <Outlet />
           </main>
           {/* Screening has its own right-hand panel: the criteria. */}
-          {inspectorOpen && !settingsRoute && !pathname.startsWith("/screening") && (
+          {inspectorOpen && !focused && !settingsRoute && !pathname.startsWith("/screening") && (
             <Inspector route={pathname} />
           )}
         </div>
-        <StatusBar />
+        {!focused && <StatusBar />}
       </div>
     </TooltipProvider>
   );

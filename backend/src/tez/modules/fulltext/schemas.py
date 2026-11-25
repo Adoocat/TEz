@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -42,3 +44,16 @@ class FulltextResults(BaseModel):
     # Only the best pages were looked at; the totals are lower bounds.
     truncated: bool
     elapsed_ms: float
+
+
+class FindPage(BaseModel):
+    # Counts from 1.
+    page: int
+    matches: int
+
+
+class FindResults(BaseModel):
+    # pending: the text is not read yet; none: the PDF has no text (or cannot be read).
+    text: Literal["ready", "pending", "none"]
+    pages: list[FindPage]
+    total: int
