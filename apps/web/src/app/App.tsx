@@ -8,6 +8,7 @@ import { ConflictsPage } from "@/features/dual-screening/ConflictsPage";
 import { ExportPage } from "@/features/export/ExportPage";
 import { JobsPage } from "@/features/jobs/JobsPage";
 import { LibraryPage } from "@/features/library/LibraryPage";
+import { MatrixPage } from "@/features/matrix/MatrixPage";
 import { ReaderPage } from "@/features/reader/ReaderPage";
 import { ReviewPanel } from "@/features/reviews/ReviewPanel";
 import { PrismaPage } from "@/features/prisma/PrismaPage";
@@ -20,15 +21,12 @@ import { detectPlatform, type Platform } from "@/lib/platform";
 import { applyTheme, cachedLanguage, cachedTheme, resolveLanguage } from "@/lib/preferences";
 
 import { BackendGate, type FetchLike } from "./backend";
-import { ComingSoon } from "./ComingSoon";
 import { AppShell } from "./layout/AppShell";
 
 // The notes editor (CodeMirror) is not part of the start-up bundle.
 const NotesPage = lazy(() =>
   import("@/features/notes/NotesPage").then((module) => ({ default: module.NotesPage })),
 );
-
-const sections = ["matrix"] as const;
 
 function createRouter() {
   // Hash routing: works the same from Tauri's asset protocol and any static server.
@@ -37,10 +35,7 @@ function createRouter() {
       element: <AppShell />,
       children: [
         { index: true, element: <Navigate to="/library" replace /> },
-        ...sections.map((section) => ({
-          path: `/${section}`,
-          element: <ComingSoon section={section} />,
-        })),
+        { path: "/matrix", element: <MatrixPage /> },
         { path: "/review", element: <ReviewPanel /> },
         { path: "/screening", element: <ScreeningPage /> },
         { path: "/screening/conflicts", element: <ConflictsPage /> },

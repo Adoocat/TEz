@@ -323,9 +323,17 @@ def _options_for_change(
 
 
 def put_cell(
-    db: Database, matrix_id: str, paper_id: str, column_id: str, value: Any
+    db: Database,
+    matrix_id: str,
+    paper_id: str,
+    column_id: str,
+    value: Any,
+    kept_text: str | None = None,
 ) -> CellView | None:
-    """Set or clear a cell of an included paper. Returns None once it is empty."""
+    """Set or clear a cell of an included paper. Returns None once it is empty.
+
+    `kept_text` (with no value) puts back text a type change kept, so undoing an edit over
+    such a cell loses nothing."""
     with db.write_session() as session:
         repository = MatrixRepository(session)
         matrix = _require_matrix(repository, matrix_id)
@@ -339,9 +347,11 @@ def put_cell(
                 ErrorCode.MATRIX_VALUE_INVALID,
                 {"column_id": column_id, "data_type": column.data_type.value, "reason": str(error)},
             ) from error
-        row = repository.row_for(matrix_id, paper_id, create=stored is not None)
+        row = repository.row_for(
+            matrix_id, paper_id, create=stored is not None or kept_text is not None
+        )
         cell = row and repository.get_cell(row.id, column_id)
-        if stored is None:
+        if stored is None and kept_text is None:
             if cell is not None:
                 repository.delete(cell)
             return None
@@ -349,7 +359,7 @@ def put_cell(
         if cell is None:
             cell = repository.add_cell(MatrixCell(row_id=row.id, column_id=column_id))
         cell.value_json = stored
-        cell.value_text = None
+        cell.value_text = kept_text if stored is None else None
         cell.origin = CellOrigin.MANUAL
         session.flush()
         return _cell_view(cell)

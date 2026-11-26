@@ -28,6 +28,10 @@ type CriterionView = components["schemas"]["CriterionView"];
 type SearchOverview = components["schemas"]["SearchOverview"];
 type SearchResultRow = components["schemas"]["SearchResultRow"];
 type SourceProgress = components["schemas"]["SourceProgress"];
+type MatrixView = components["schemas"]["MatrixView"];
+type MatrixRowView = components["schemas"]["RowView"];
+type MatrixColumnView = components["schemas"]["ColumnView"];
+type MatrixCellView = components["schemas"]["CellView"];
 
 export interface FakeBackend {
   fetch: FetchLike;
@@ -80,6 +84,8 @@ export interface FakeBackend {
   backlinks: Record<string, Backlink[]>;
   /** By attachment. */
   annotations: Record<string, AnnotationView[]>;
+  /** Literature matrices (Tasks 51–52); type changes convert nothing here. */
+  matrices: MatrixView[];
   /** What the next POST /pdfs answers, in order; "added" when empty. */
   pdfReplies: (
     | { status: "added" | "duplicate" }
@@ -123,6 +129,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     findResults: {},
     anchors: {},
     annotations: {},
+    matrices: [],
     notes: [],
     noteFailures: [],
     suggestions: [],
@@ -406,6 +413,8 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
         const q = new URL(request.url, "http://test").searchParams.get("q") ?? "";
         return json(backend.findResults[q] ?? { text: "ready", pages: [], total: 0 });
       }
+      const matrixReply = matrixRoute(backend, request.method, path, body);
+      if (matrixReply) return matrixReply;
       if (route === "GET /notes") return json(backend.notes);
       if (route === "POST /notes") {
         const id = `note-${String(backend.notes.length + 1)}`;
@@ -1010,6 +1019,150 @@ export function paperDetail(overrides: Partial<PaperDetail> = {}): PaperDetail {
     collection_ids: [],
     attachments: [],
     related: [],
+    ...overrides,
+  };
+}
+
+const notFound = (code: string) => json({ error: { code, params: {} } }, 404);
+
+/** The matrix endpoints, on `backend.matrices`. */
+function matrixRoute(
+  backend: FakeBackend,
+  method: string,
+  path: string,
+  body: unknown,
+): Response | null {
+  const listOf = /^\/reviews\/([^/]+)\/matrices$/.exec(path)?.[1];
+  if (listOf && method === "GET") {
+    return json(
+      backend.matrices
+        .filter((m) => m.review_id === listOf)
+        .map((m) => ({
+          id: m.id,
+          review_id: m.review_id,
+          name: m.name,
+          columns: m.columns.length,
+          created_at: "2026-11-26T10:00:00Z",
+        })),
+    );
+  }
+  if (listOf && method === "POST") {
+    const made = matrixView({
+      id: `matrix-${String(backend.matrices.length + 1)}`,
+      review_id: listOf,
+      name: (body as { name: string }).name,
+    });
+    backend.matrices.push(made);
+    return json(made, 201);
+  }
+  const [, matrixId, rest = ""] = /^\/matrices\/([^/]+)(.*)$/.exec(path) ?? [];
+  if (!matrixId) return null;
+  const matrix = backend.matrices.find((m) => m.id === matrixId);
+  if (!matrix) return notFound("matrix.not_found");
+  if (rest === "" && method === "GET") return json(matrix);
+  if (rest === "/columns" && method === "POST") {
+    const given = body as { name: string; data_type: MatrixColumnView["data_type"] } & {
+      instruction?: string | null;
+      options?: { label: string }[];
+    };
+    const column = matrixColumn({
+      id: `column-${String(matrix.columns.length + 1)}`,
+      name: given.name,
+      instruction: given.instruction ?? null,
+      data_type: given.data_type,
+      options: (given.options ?? []).map((o, i) => ({
+        id: `option-${String(i + 1)}`,
+        label: o.label,
+      })),
+      sort_order: matrix.columns.length,
+    });
+    matrix.columns.push(column);
+    return json(column, 201);
+  }
+  const cellOf = /^\/cells\/([^/]+)\/([^/]+)$/.exec(rest);
+  if (cellOf && method === "PUT") {
+    const [, paperId, columnId] = cellOf;
+    const row = matrix.rows.find((r) => r.paper_id === paperId);
+    if (!row) return notFound("matrix.paper_not_included");
+    const { value, kept_text: kept = null } = body as {
+      value: MatrixCellView["value"];
+      kept_text?: string | null;
+    };
+    row.cells = row.cells.filter((c) => c.column_id !== columnId);
+    if (value === null && kept === null) return json(null);
+    const cell = {
+      column_id: columnId ?? "",
+      value,
+      kept_text: kept,
+      origin: "manual" as const,
+      updated_at: "2026-11-26T10:00:00Z",
+    };
+    row.cells.push(cell);
+    return json(cell);
+  }
+  const [, columnId, action] = /^\/columns\/([^/]+)(?:\/(\w+))?$/.exec(rest) ?? [];
+  const column = matrix.columns.find((c) => c.id === columnId);
+  if (columnId && !column) return notFound("matrix.column_not_found");
+  if (column && method === "PATCH") {
+    const patch = body as { name?: string; instruction?: string };
+    if (patch.name !== undefined) column.name = patch.name;
+    if (patch.instruction !== undefined) column.instruction = patch.instruction || null;
+    return json(column);
+  }
+  if (column && method === "DELETE") {
+    matrix.columns = matrix.columns.filter((c) => c !== column);
+    for (const row of matrix.rows) row.cells = row.cells.filter((c) => c.column_id !== column.id);
+    return new Response(null, { status: 204 });
+  }
+  if (column && action === "type") {
+    const change = body as { data_type: MatrixColumnView["data_type"]; dry_run: boolean };
+    const cells = matrix.rows.flatMap((r) => r.cells.filter((c) => c.column_id === column.id));
+    if (!change.dry_run) column.data_type = change.data_type;
+    return json({
+      column,
+      applied: !change.dry_run,
+      cells: cells.length,
+      converted: cells.length,
+      kept: [],
+    });
+  }
+  return null;
+}
+
+export function matrixView(overrides: Partial<MatrixView> = {}): MatrixView {
+  return {
+    id: "matrix-1",
+    review_id: "review-1",
+    name: "Matrix",
+    columns: [],
+    rows: [],
+    ...overrides,
+  };
+}
+
+export function matrixColumn(overrides: Partial<MatrixColumnView> = {}): MatrixColumnView {
+  return {
+    id: "column-1",
+    name: "Method",
+    instruction: null,
+    data_type: "text",
+    options: [],
+    sort_order: 0,
+    ...overrides,
+  };
+}
+
+export function matrixRow(overrides: Partial<MatrixRowView> = {}): MatrixRowView {
+  return {
+    paper_id: "paper-1",
+    title: "A paper",
+    year: 2024,
+    venue: null,
+    first_author: "Kim",
+    author_count: 1,
+    reading_status: "unread",
+    included: true,
+    cells: [],
     ...overrides,
   };
 }

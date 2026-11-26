@@ -109,6 +109,14 @@ class CellPut(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     value: CellValue
+    # With a null value: put back text a type change kept (undo of an edit over it).
+    kept_text: Annotated[str, StringConstraints(min_length=1, max_length=10_000)] | None = None
+
+    @model_validator(mode="after")
+    def _one_of(self) -> Self:
+        if self.value is not None and self.kept_text is not None:
+            raise ValueError("a value or kept text, not both")
+        return self
 
 
 class ColumnView(BaseModel):

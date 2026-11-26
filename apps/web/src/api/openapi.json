@@ -11517,6 +11517,19 @@
               }
             ],
             "title": "Value"
+          },
+          "kept_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 10000,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kept Text"
           }
         },
         "additionalProperties": false,

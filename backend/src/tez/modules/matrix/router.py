@@ -91,4 +91,4 @@ def put_cell(
     matrix_id: str, paper_id: str, column_id: str, body: CellPut, library: LibraryDep
 ) -> CellView | None:
     """Set a cell; null clears it (the response is then null)."""
-    return service.put_cell(library.db, matrix_id, paper_id, column_id, body.value)
+    return service.put_cell(library.db, matrix_id, paper_id, column_id, body.value, body.kept_text)
