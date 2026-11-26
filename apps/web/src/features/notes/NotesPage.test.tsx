@@ -2,7 +2,7 @@
 // real one is checked by e2e/notes.spec.ts.
 import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App } from "@/app/App";
 import { useLayoutStore } from "@/app/layout/uiStore";
@@ -29,6 +29,12 @@ vi.mock("./MarkdownEditor", () => ({
     />
   ),
 }));
+
+// The screen is loaded on demand (App.tsx). Loaded here first, its first build is not paid
+// inside the first test's wait for the page; on a busy machine that took longer than the wait.
+beforeAll(async () => {
+  await import("./NotesPage");
+}, 60_000);
 
 beforeEach(() => {
   localStorage.clear();

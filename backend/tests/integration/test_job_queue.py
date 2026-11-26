@@ -23,6 +23,10 @@ from tez.modules.jobs.models import JobStatus
 from tez.modules.jobs.repository import JobsRepository
 from tez.modules.library.service import create_library
 
+# Each test starts the backend as a process and waits for it against a deadline: run alone
+# (`pnpm check`), not beside eleven other test processes.
+pytestmark = pytest.mark.timing
+
 TOKEN = "integration-token-0123456789"
 LEASE_ENV = {"TEZ_JOB_LEASE_SECONDS": "1", "TEZ_WORKER_POLL_SECONDS": "0.1"}
 # ~4 s of work in 40 steps: long enough to kill the worker in the middle.
