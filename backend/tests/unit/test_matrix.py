@@ -143,6 +143,12 @@ def test_a_type_change_loses_nothing_without_a_word(grid: Grid, review: Review) 
 
     # Fixing a kept cell is writing a value; back to text, everything is there.
     ok(grid.put(b, size, 1420))
+    # Undo of that edit puts the kept text back as it was.
+    restored = grid.client.put(
+        f"{grid.base}/cells/{b}/{size}", json={"value": None, "kept_text": "1.420"}
+    )
+    assert (ok(restored)["value"], ok(restored)["kept_text"]) == (None, "1.420")
+    ok(grid.put(b, size, 1420))
     grid.change(size, data_type="text")
     assert grid.cells(size) == {a: ("120", None), b: ("1420", None), c: ("yaklaşık 30", None)}
 

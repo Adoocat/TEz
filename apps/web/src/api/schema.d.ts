@@ -2260,6 +2260,8 @@ export interface components {
         CellPut: {
             /** Value */
             value: boolean | number | string | string[] | null;
+            /** Kept Text */
+            kept_text?: string | null;
         };
         /** CellView */
         CellView: {
