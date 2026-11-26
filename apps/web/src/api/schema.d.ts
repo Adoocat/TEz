@@ -1389,6 +1389,139 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reviews/{review_id}/matrices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Matrices */
+        get: operations["list_matrices_reviews__review_id__matrices_get"];
+        put?: never;
+        /** Create Matrix */
+        post: operations["create_matrix_reviews__review_id__matrices_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matrices/{matrix_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Matrix
+         * @description Columns and rows: the included papers, then excluded ones whose cells are kept.
+         */
+        get: operations["get_matrix_matrices__matrix_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Matrix */
+        delete: operations["delete_matrix_matrices__matrix_id__delete"];
+        options?: never;
+        head?: never;
+        /** Rename Matrix */
+        patch: operations["rename_matrix_matrices__matrix_id__patch"];
+        trace?: never;
+    };
+    "/matrices/{matrix_id}/columns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Column */
+        post: operations["add_column_matrices__matrix_id__columns_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matrices/{matrix_id}/columns/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Reorder Columns */
+        put: operations["reorder_columns_matrices__matrix_id__columns_order_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matrices/{matrix_id}/columns/{column_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Column */
+        delete: operations["delete_column_matrices__matrix_id__columns__column_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Column */
+        patch: operations["update_column_matrices__matrix_id__columns__column_id__patch"];
+        trace?: never;
+    };
+    "/matrices/{matrix_id}/columns/{column_id}/type": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Change Column Type
+         * @description New type or options. Cells that cannot be converted keep their text, marked, and are
+         *     listed; with `dry_run` nothing changes.
+         */
+        put: operations["change_column_type_matrices__matrix_id__columns__column_id__type_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matrices/{matrix_id}/cells/{paper_id}/{column_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Put Cell
+         * @description Set a cell; null clears it (the response is then null).
+         */
+        put: operations["put_cell_matrices__matrix_id__cells__paper_id___column_id__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/fulltext/search": {
         parameters: {
             query?: never;
@@ -2118,6 +2251,31 @@ export interface components {
             /** Html */
             html: string;
         };
+        /**
+         * CellOrigin
+         * @enum {string}
+         */
+        CellOrigin: "manual" | "ai_accepted";
+        /** CellPut */
+        CellPut: {
+            /** Value */
+            value: boolean | number | string | string[] | null;
+        };
+        /** CellView */
+        CellView: {
+            /** Column Id */
+            column_id: string;
+            /** Value */
+            value: boolean | number | string | string[] | null;
+            /** Kept Text */
+            kept_text: string | null;
+            origin: components["schemas"]["CellOrigin"];
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
         /** ChangeCount */
         ChangeCount: {
             /** Changed */
@@ -2162,6 +2320,43 @@ export interface components {
             is_system: boolean;
             /** Paper Count */
             paper_count: number;
+        };
+        /** ColumnCreate */
+        ColumnCreate: {
+            /** Name */
+            name: string;
+            /** Instruction */
+            instruction?: string | null;
+            /** @default text */
+            data_type: components["schemas"]["DataType"];
+            /** Options */
+            options?: components["schemas"]["OptionIn"][];
+        };
+        /** ColumnOrder */
+        ColumnOrder: {
+            /** Column Ids */
+            column_ids: string[];
+        };
+        /** ColumnPatch */
+        ColumnPatch: {
+            /** Name */
+            name?: string | null;
+            /** Instruction */
+            instruction?: string | null;
+        };
+        /** ColumnView */
+        ColumnView: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Instruction */
+            instruction: string | null;
+            data_type: components["schemas"]["DataType"];
+            /** Options */
+            options: components["schemas"]["OptionView"][];
+            /** Sort Order */
+            sort_order: number;
         };
         /** ConflictList */
         ConflictList: {
@@ -2268,6 +2463,11 @@ export interface components {
          * @enum {string}
          */
         CslStyle: "apa" | "mla" | "chicago-author-date" | "chicago-notes" | "vancouver" | "ieee";
+        /**
+         * DataType
+         * @enum {string}
+         */
+        DataType: "text" | "number" | "enum" | "multi_enum" | "bool";
         /** DatabasesBranch */
         DatabasesBranch: {
             /** Identified */
@@ -2874,6 +3074,13 @@ export interface components {
              */
             updated_at: string;
         };
+        /** KeptCell */
+        KeptCell: {
+            /** Paper Id */
+            paper_id: string;
+            /** Text */
+            text: string;
+        };
         /** LibraryInfo */
         LibraryInfo: {
             /** Path */
@@ -2953,6 +3160,45 @@ export interface components {
          * @enum {string}
          */
         MatchProblem: "not_found" | "not_in_review" | "duplicate";
+        /** MatrixCreate */
+        MatrixCreate: {
+            /** Name */
+            name: string;
+        };
+        /** MatrixPatch */
+        MatrixPatch: {
+            /** Name */
+            name: string;
+        };
+        /** MatrixSummary */
+        MatrixSummary: {
+            /** Id */
+            id: string;
+            /** Review Id */
+            review_id: string;
+            /** Name */
+            name: string;
+            /** Columns */
+            columns: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** MatrixView */
+        MatrixView: {
+            /** Id */
+            id: string;
+            /** Review Id */
+            review_id: string;
+            /** Name */
+            name: string;
+            /** Columns */
+            columns: components["schemas"]["ColumnView"][];
+            /** Rows */
+            rows: components["schemas"]["RowView"][];
+        };
         /**
          * NoteAppend
          * @description Add to the end of a note without opening it (a quote from the reader).
@@ -3097,6 +3343,23 @@ export interface components {
         OpenAccessRequest: {
             /** Paper Ids */
             paper_ids: string[];
+        };
+        /**
+         * OptionIn
+         * @description An option as the user edits it: with its id when it already exists.
+         */
+        OptionIn: {
+            /** Id */
+            id?: string | null;
+            /** Label */
+            label: string;
+        };
+        /** OptionView */
+        OptionView: {
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
         };
         /**
          * OtherMethodCount
@@ -3575,6 +3838,26 @@ export interface components {
             created_at: string;
             /** Deleted At */
             deleted_at?: string | null;
+        };
+        /** RowView */
+        RowView: {
+            /** Paper Id */
+            paper_id: string;
+            /** Title */
+            title: string;
+            /** Year */
+            year: number | null;
+            /** Venue */
+            venue: string | null;
+            /** First Author */
+            first_author: string | null;
+            /** Author Count */
+            author_count: number;
+            reading_status: components["schemas"]["ReadingStatus"];
+            /** Included */
+            included: boolean;
+            /** Cells */
+            cells: components["schemas"]["CellView"][];
         };
         /**
          * RunMethod
@@ -4145,6 +4428,42 @@ export interface components {
          * @enum {string}
          */
         ThesisType: "masters" | "doctoral";
+        /**
+         * TypeChange
+         * @description A new type or new options for a column; the cells are converted, none dropped.
+         */
+        TypeChange: {
+            data_type: components["schemas"]["DataType"];
+            /** Options */
+            options?: components["schemas"]["OptionIn"][] | null;
+            /**
+             * Dry Run
+             * @default false
+             */
+            dry_run: boolean;
+            /**
+             * True Text
+             * @default yes
+             */
+            true_text: string;
+            /**
+             * False Text
+             * @default no
+             */
+            false_text: string;
+        };
+        /** TypeChangeReport */
+        TypeChangeReport: {
+            column: components["schemas"]["ColumnView"];
+            /** Applied */
+            applied: boolean;
+            /** Cells */
+            cells: number;
+            /** Converted */
+            converted: number;
+            /** Kept */
+            kept: components["schemas"]["KeptCell"][];
+        };
         /** UndoRequest */
         UndoRequest: {
             /** Decision Id */
@@ -9434,6 +9753,673 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Backlink"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    list_matrices_reviews__review_id__matrices_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatrixSummary"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    create_matrix_reviews__review_id__matrices_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MatrixCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatrixView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_matrix_matrices__matrix_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatrixView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_matrix_matrices__matrix_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    rename_matrix_matrices__matrix_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MatrixPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatrixView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    add_column_matrices__matrix_id__columns_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ColumnCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ColumnView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    reorder_columns_matrices__matrix_id__columns_order_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ColumnOrder"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ColumnView"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    delete_column_matrices__matrix_id__columns__column_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+                column_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    update_column_matrices__matrix_id__columns__column_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+                column_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ColumnPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ColumnView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    change_column_type_matrices__matrix_id__columns__column_id__type_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+                column_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TypeChange"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TypeChangeReport"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    put_cell_matrices__matrix_id__cells__paper_id___column_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+                paper_id: string;
+                column_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CellPut"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CellView"] | null;
                 };
             };
             /** @description Missing or invalid token */
