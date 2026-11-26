@@ -18,6 +18,10 @@ from tests.integration.sidecar import (
     run_sidecar,
 )
 
+# Each test starts the backend as a process and waits for it against a deadline: run alone
+# (`pnpm check`), not beside eleven other test processes.
+pytestmark = pytest.mark.timing
+
 TOKEN = "integration-token-0123456789"
 
 

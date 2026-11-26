@@ -223,6 +223,12 @@
     "note.not_found": "Bu not artık yok.",
     "note.conflict": "Not, burada açıldıktan sonra başka bir yerde değiştirildi.",
     "note.cycle": "Bir not kendi içine taşınamaz.",
+    "matrix.not_found": "Matris bulunamadı.",
+    "matrix.column_not_found": "Sütun bulunamadı.",
+    "matrix.option_unknown": "Sütunda böyle bir seçenek yok.",
+    "matrix.order_mismatch": "Sütun sırası her sütunu bir kez içermeli.",
+    "matrix.paper_not_included": "Matriste yalnız tam metinde dahil edilen makaleler var.",
+    "matrix.value_invalid": "Değer sütunun türüne uymuyor.",
     "annotation.not_found": "Bu vurgu artık yok."
   },
   "reviews": {

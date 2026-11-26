@@ -11,6 +11,7 @@ from tez.modules.files import models as files_models
 from tez.modules.fulltext import models as fulltext_models
 from tez.modules.jobs import models as jobs_models
 from tez.modules.library import models as library_models
+from tez.modules.matrix import models as matrix_models
 from tez.modules.notes import models as notes_models
 from tez.modules.quality import models as quality_models
 from tez.modules.reviews import models as reviews_models
@@ -25,6 +26,7 @@ __all__ = [
     "fulltext_models",
     "jobs_models",
     "library_models",
+    "matrix_models",
     "notes_models",
     "quality_models",
     "reviews_models",

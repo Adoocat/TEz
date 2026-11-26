@@ -21,8 +21,6 @@ const steps = [
   ["py", "ruff format", ...uv("ruff", "format", "--check", "backend")],
   ["py", "pyright", "pnpm", ["exec", "pyright", "-p", "backend"]],
   ["py", "pytest", "uv", ["run", "pytest", "-n", "auto", "-m", '"not timing"'], backend],
-  // Tests that measure how long something takes run alone, not beside eleven others.
-  ["py", "pytest (timing)", "uv", ["run", "pytest", "-m", "timing"], backend],
   // The generated TypeScript client must match the backend's OpenAPI schema.
   ["api", "client up to date", "node", ["scripts/gen-api.mjs", "--check"]],
   // The CSS variables must match docs/design/tokens.json.
@@ -41,8 +39,12 @@ const steps = [
   ],
 ];
 
+// Tests that measure how long something takes, or wait for a process against a deadline: run
+// after every other step, with nothing beside them.
+const alone = [["py", "pytest (timing)", "uv", ["run", "pytest", "-m", "timing"], backend]];
+
 const groups = process.argv.slice(2);
-const unknown = groups.filter((g) => !steps.some(([group]) => group === g));
+const unknown = groups.filter((g) => ![...steps, ...alone].some(([group]) => group === g));
 if (unknown.length > 0) {
   console.error(`unknown group(s): ${unknown.join(", ")}; use py, api, web, rust, format`);
   process.exit(2);
@@ -66,24 +68,28 @@ function runQuiet(cmd, args, cwd = root) {
   });
 }
 
-const chosen = steps.filter(([group]) => groups.length === 0 || groups.includes(group));
+const wanted = ([group]) => groups.length === 0 || groups.includes(group);
+const chosen = steps.filter(wanted);
 const lanes = [...new Set(chosen.map(([group]) => group))];
 const startedAll = Date.now();
 const results = [];
 
+async function runStep([group, title, cmd, args, cwd]) {
+  const started = Date.now();
+  const { code, output } = await runQuiet(cmd, args, cwd);
+  const seconds = (Date.now() - started) / 1000;
+  const result = { title: `[${group}] ${title}`, ok: code === 0, seconds };
+  results.push(result);
+  console.log(`${result.ok ? "PASS" : "FAIL"}  ${result.title}  (${seconds.toFixed(1)} s)`);
+  if (!result.ok) console.log(`\n== ${result.title} output\n${output.trimEnd()}\n`);
+}
+
 await Promise.all(
   lanes.map(async (lane) => {
-    for (const [group, title, cmd, args, cwd] of chosen.filter(([g]) => g === lane)) {
-      const started = Date.now();
-      const { code, output } = await runQuiet(cmd, args, cwd);
-      const seconds = (Date.now() - started) / 1000;
-      const result = { title: `[${group}] ${title}`, ok: code === 0, seconds };
-      results.push(result);
-      console.log(`${result.ok ? "PASS" : "FAIL"}  ${result.title}  (${seconds.toFixed(1)} s)`);
-      if (!result.ok) console.log(`\n== ${result.title} output\n${output.trimEnd()}\n`);
-    }
+    for (const step of chosen.filter(([g]) => g === lane)) await runStep(step);
   }),
 );
+for (const step of alone.filter(wanted)) await runStep(step);
 
 const failed = results.filter((r) => !r.ok);
 const total = ((Date.now() - startedAll) / 1000).toFixed(1);

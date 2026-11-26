@@ -223,6 +223,12 @@
     "note.not_found": "This note no longer exists.",
     "note.conflict": "The note was changed somewhere else since it was opened here.",
     "note.cycle": "A note cannot be moved into itself.",
+    "matrix.not_found": "The matrix was not found.",
+    "matrix.column_not_found": "The column was not found.",
+    "matrix.option_unknown": "The column has no such option.",
+    "matrix.order_mismatch": "The column order must name every column once.",
+    "matrix.paper_not_included": "Only papers included at full text are in the matrix.",
+    "matrix.value_invalid": "The value does not fit the column's type.",
     "annotation.not_found": "This highlight no longer exists."
   },
   "reviews": {

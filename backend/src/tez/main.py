@@ -27,6 +27,7 @@ from tez.modules.jobs.router import router as jobs_router
 from tez.modules.jobs.supervisor import WorkerSupervisor
 from tez.modules.library.router import router as library_router
 from tez.modules.library.service import Library, open_library
+from tez.modules.matrix.router import router as matrix_router
 from tez.modules.notes.router import router as notes_router
 from tez.modules.prisma.router import router as prisma_router
 from tez.modules.quality.router import router as quality_router
@@ -105,6 +106,7 @@ def create_app(
     app.include_router(anchors_router, dependencies=secured, responses=needs_library)
     app.include_router(annotations_router, dependencies=secured, responses=needs_library)
     app.include_router(notes_router, dependencies=secured, responses=needs_library)
+    app.include_router(matrix_router, dependencies=secured, responses=needs_library)
     app.include_router(fulltext_router, dependencies=secured, responses=needs_library)
     app.include_router(files_router, dependencies=secured, responses=needs_library)
     app.include_router(backup_router, dependencies=secured, responses=needs_library)
