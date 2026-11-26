@@ -7,6 +7,7 @@ import { Link, useMatch } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Segmented } from "@/components/ui/segmented";
+import { PaperCells } from "@/features/matrix/PaperCells";
 import { cn } from "@/lib/cn";
 import { fold } from "@/lib/text";
 
@@ -39,13 +40,16 @@ export function ReaderInspector() {
         options={[
           { value: "highlights", label: t("reader.highlights.tab") },
           { value: "notes", label: t("reader.notes.tab") },
+          { value: "matrix", label: t("matrix.reader.tab") },
         ]}
         onValueChange={setTab}
       />
       {tab === "highlights" ? (
         <Highlights key={attachmentId} attachmentId={attachmentId} />
-      ) : (
+      ) : tab === "notes" ? (
         <PaperNotes key={attachmentId} attachmentId={attachmentId} />
+      ) : (
+        <PaperCells key={attachmentId} attachmentId={attachmentId} />
       )}
     </div>
   );

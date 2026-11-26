@@ -92,6 +92,8 @@ class ErrorCode(StrEnum):
     MATRIX_ORDER_MISMATCH = "matrix.order_mismatch"
     MATRIX_PAPER_NOT_INCLUDED = "matrix.paper_not_included"
     MATRIX_VALUE_INVALID = "matrix.value_invalid"
+    MATRIX_EVIDENCE_OTHER_PAPER = "matrix.evidence_other_paper"
+    MATRIX_EVIDENCE_NOT_FOUND = "matrix.evidence_not_found"
     PDF_NOT_A_PDF = "pdf.not_a_pdf"
     PDF_TOO_LARGE = "pdf.too_large"
     PDF_FILE_NOT_FOUND = "pdf.file_not_found"

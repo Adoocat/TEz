@@ -1522,6 +1522,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/matrices/{matrix_id}/cells/{paper_id}/{column_id}/evidence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Link Evidence
+         * @description Link a passage of the paper's PDF (an anchor) to the cell.
+         */
+        post: operations["link_evidence_matrices__matrix_id__cells__paper_id___column_id__evidence_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/matrices/{matrix_id}/cells/{paper_id}/{column_id}/evidence/{anchor_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Unlink Evidence
+         * @description Take a passage off the cell; null when the cell is left with nothing.
+         */
+        delete: operations["unlink_evidence_matrices__matrix_id__cells__paper_id___column_id__evidence__anchor_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/papers/{paper_id}/matrices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Paper Matrices
+         * @description The matrices the paper is a row of, with its cells.
+         */
+        get: operations["paper_matrices_papers__paper_id__matrices_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/fulltext/search": {
         parameters: {
             query?: never;
@@ -2277,6 +2337,8 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+            /** Evidence */
+            evidence: components["schemas"]["EvidenceView"][];
         };
         /** ChangeCount */
         ChangeCount: {
@@ -2384,6 +2446,20 @@ export interface components {
             venue: string | null;
             owner: components["schemas"]["SideDecision"];
             other: components["schemas"]["SideDecision"];
+        };
+        /**
+         * Coverage
+         * @description How much of the included papers' content rests on a passage (derived).
+         */
+        Coverage: {
+            /** Filled */
+            filled: number;
+            /** Sourced */
+            sourced: number;
+            /** Rows */
+            rows: number;
+            /** Rows Sourced */
+            rows_sourced: number;
         };
         /** CriteriaOrder */
         CriteriaOrder: {
@@ -2594,6 +2670,32 @@ export interface components {
         /** ErrorResponse */
         ErrorResponse: {
             error: components["schemas"]["ErrorDetail"];
+        };
+        /** EvidenceCreate */
+        EvidenceCreate: {
+            /** Anchor Id */
+            anchor_id: string;
+            /**
+             * Fill
+             * @default false
+             */
+            fill: boolean;
+        };
+        /**
+         * EvidenceView
+         * @description A passage a cell rests on, enough to show it and to go there.
+         */
+        EvidenceView: {
+            /** Anchor Id */
+            anchor_id: string;
+            /** Attachment Id */
+            attachment_id: string;
+            /** Page */
+            page: number;
+            /** Quote */
+            quote: string;
+            /** Status */
+            status: string;
         };
         /**
          * ExportFormat
@@ -3200,6 +3302,7 @@ export interface components {
             columns: components["schemas"]["ColumnView"][];
             /** Rows */
             rows: components["schemas"]["RowView"][];
+            coverage: components["schemas"]["Coverage"];
         };
         /**
          * NoteAppend
@@ -3469,6 +3572,22 @@ export interface components {
         PaperIds: {
             /** Paper Ids */
             paper_ids: string[];
+        };
+        /**
+         * PaperMatrix
+         * @description A matrix a paper is a row of, with that row's cells (the reader's Matrix tab).
+         */
+        PaperMatrix: {
+            /** Matrix Id */
+            matrix_id: string;
+            /** Matrix Name */
+            matrix_name: string;
+            /** Review Id */
+            review_id: string;
+            /** Columns */
+            columns: components["schemas"]["ColumnView"][];
+            /** Cells */
+            cells: components["schemas"]["CellView"][];
         };
         /** PaperPatch */
         PaperPatch: {
@@ -10422,6 +10541,189 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CellView"] | null;
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    link_evidence_matrices__matrix_id__cells__paper_id___column_id__evidence_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+                paper_id: string;
+                column_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EvidenceCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CellView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    unlink_evidence_matrices__matrix_id__cells__paper_id___column_id__evidence__anchor_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+                paper_id: string;
+                column_id: string;
+                anchor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CellView"] | null;
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    paper_matrices_papers__paper_id__matrices_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                paper_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaperMatrix"][];
                 };
             };
             /** @description Missing or invalid token */

@@ -8,6 +8,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import {
   AlertTriangle,
   ChevronDown,
+  Link2,
   CircleDot,
   Hash,
   ListChecks,
@@ -74,6 +75,10 @@ interface GridProps {
   onSort: (columnId: string, direction: SortDirection) => void;
   onEditColumn: (column: ColumnView) => void;
   onDeleteColumn: (column: ColumnView) => void;
+  /** The cell to start on, e.g. one the reader linked back to. */
+  initial?: { paperId: string; columnId: string } | null;
+  /** Told whenever the active cell changes. */
+  onActive?: (cell: { paperId: string; columnId: string } | null) => void;
 }
 
 interface Position {
@@ -94,10 +99,15 @@ export function MatrixGrid({
   onSort,
   onEditColumn,
   onDeleteColumn,
+  initial = null,
+  onActive,
 }: GridProps) {
   const { t, i18n } = useTranslation();
   const scroller = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState<Position | null>(null);
+  const [active, setActive] = useState<Position | null>(() => {
+    const column = columns.findIndex((c) => c.id === initial?.columnId);
+    return initial && column !== -1 ? { paperId: initial.paperId, column } : null;
+  });
   const [editing, setEditing] = useState<{ start: string | null } | null>(null);
 
   const { rows, rowIndex, itemIndex } = useMemo(() => {
@@ -136,6 +146,23 @@ export function MatrixGrid({
     active && rowIndex.has(active.paperId) && active.column < columns.length ? active : null;
   const currentRow = current ? rows[rowIndex.get(current.paperId) ?? 0] : undefined;
   const currentColumn = current ? columns[current.column] : undefined;
+  const activePaper = currentRow?.paper_id;
+  const activeColumnId = currentColumn?.id;
+  useEffect(() => {
+    onActive?.(
+      activePaper && activeColumnId ? { paperId: activePaper, columnId: activeColumnId } : null,
+    );
+  }, [activePaper, activeColumnId, onActive]);
+  // A cell asked for from elsewhere is brought into view once the rows are there.
+  const shown = useRef(false);
+  useEffect(() => {
+    if (shown.current || !initial) return;
+    const index = itemIndex.get(`row-${initial.paperId}`);
+    if (index === undefined) return;
+    shown.current = true;
+    virtualizer.scrollToIndex(index, { align: "center" });
+    scroller.current?.focus();
+  }, [initial, itemIndex, virtualizer]);
 
   function moveTo(paperId: string, column: number) {
     setActive({ paperId, column });
@@ -556,6 +583,7 @@ function Cell({
 }) {
   const kept = cell?.kept_text != null;
   const text = cellText(column, cell, t, locale);
+  const sources = cell?.evidence.length ?? 0;
   return (
     <div
       id={id}
@@ -584,6 +612,12 @@ function Cell({
         <AlertTriangle aria-label={t("matrix.kept")} className="size-3.5 shrink-0 text-warning" />
       )}
       <span className={cn(wide ? "line-clamp-3" : "truncate")}>{text}</span>
+      {sources > 0 && (
+        <Link2
+          aria-label={t("matrix.evidence.sources", { count: sources })}
+          className="absolute top-1 right-1 size-3 text-primary"
+        />
+      )}
       {children}
     </div>
   );

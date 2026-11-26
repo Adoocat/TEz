@@ -2,15 +2,15 @@
 // columns. A spreadsheet: edit in place, filter, group by a choice, sort, undo.
 import { Plus, Redo2, Undo2 } from "lucide-react";
 import type { TFunction } from "i18next";
-import { useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm";
 import { Input } from "@/components/ui/input";
 import { Segmented } from "@/components/ui/segmented";
-import { useActiveReview } from "@/features/reviews/store";
+import { useActiveReview, useActiveReviewStore } from "@/features/reviews/store";
 import { ApiError } from "@/lib/api/query";
 
 import {
@@ -26,6 +26,7 @@ import {
   type RowView,
 } from "./api";
 import { ColumnDialog } from "./ColumnDialog";
+import { useMatrixSelection } from "./store";
 import {
   MatrixGrid,
   type Density,
@@ -41,6 +42,14 @@ const UNDO_DEPTH = 200;
 export function MatrixPage() {
   const { t } = useTranslation();
   const review = useActiveReview();
+  // A link to a cell (from the reader) names its matrix; its review becomes the active one.
+  const [params] = useSearchParams();
+  const linked = useMatrix(params.get("matrix"));
+  const setActiveReview = useActiveReviewStore((state) => state.setActiveReview);
+  const linkedReview = linked.data?.review_id;
+  useEffect(() => {
+    if (linkedReview && linkedReview !== review?.id) setActiveReview(linkedReview);
+  }, [linkedReview, review?.id, setActiveReview]);
   if (!review) {
     return (
       <div className="mx-auto max-w-lg space-y-2 p-6">
@@ -59,7 +68,10 @@ function Matrices({ reviewId }: { reviewId: string }) {
   const { t } = useTranslation();
   const matrices = useMatrices(reviewId);
   const create = useCreateMatrix(reviewId);
-  const [chosen, setChosen] = useState<string | null>(null);
+  const [params] = useSearchParams();
+  const [chosen, setChosen] = useState<string | null>(() => params.get("matrix"));
+  const paper = params.get("paper");
+  const column = params.get("column");
   if (!matrices.data) return null;
   const list = matrices.data;
   const current = list.find((m) => m.id === chosen) ?? list[0];
@@ -89,6 +101,11 @@ function Matrices({ reviewId }: { reviewId: string }) {
     <Matrix
       key={current.id}
       matrixId={current.id}
+      initial={
+        current.id === params.get("matrix") && paper && column
+          ? { paperId: paper, columnId: column }
+          : null
+      }
       others={
         list.length > 1 ? (
           <Segmented
@@ -110,7 +127,15 @@ interface Change {
   after: { value: CellValue; keptText: string | null };
 }
 
-function Matrix({ matrixId, others }: { matrixId: string; others: ReactNode }) {
+function Matrix({
+  matrixId,
+  others,
+  initial,
+}: {
+  matrixId: string;
+  others: ReactNode;
+  initial: { paperId: string; columnId: string } | null;
+}) {
   const { t, i18n } = useTranslation();
   const matrix = useMatrix(matrixId);
   const put = usePutCell(matrixId);
@@ -122,6 +147,13 @@ function Matrix({ matrixId, others }: { matrixId: string; others: ReactNode }) {
   const [sort, setSort] = useState<{ columnId: string; direction: SortDirection } | null>(null);
   const [dialog, setDialog] = useState<{ column: ColumnView | null } | null>(null);
   const [deleting, setDeleting] = useState<ColumnView | null>(null);
+  const setCell = useMatrixSelection((state) => state.setCell);
+  const onActive = useCallback(
+    (cell: { paperId: string; columnId: string } | null) => {
+      setCell(cell && { matrixId, ...cell });
+    },
+    [matrixId, setCell],
+  );
   const [history, setHistory] = useState<{ undo: Change[]; redo: Change[] }>({
     undo: [],
     redo: [],
@@ -194,8 +226,20 @@ function Matrix({ matrixId, others }: { matrixId: string; others: ReactNode }) {
       <header className="flex flex-wrap items-center gap-2 border-b border-line px-4 py-2">
         <h1 className="mr-2 text-h2">{data.name}</h1>
         <span className="text-meta text-fg-muted">
-          {t("matrix.counts", { papers: included.length, columns: data.columns.length })}
+          {t("matrix.papers", { count: included.length })} ·{" "}
+          {t("matrix.columns", { count: data.columns.length })}
         </span>
+        {data.coverage.filled > 0 && (
+          <span className="text-meta text-fg-muted" title={t("matrix.coverageHint")}>
+            {t("matrix.coverage", {
+              percent: Math.round((100 * data.coverage.sourced) / data.coverage.filled),
+              sourced: data.coverage.sourced,
+              filled: data.coverage.filled,
+              rows: data.coverage.rows_sourced,
+              of: data.coverage.rows,
+            })}
+          </span>
+        )}
         {others}
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <Button
@@ -288,6 +332,8 @@ function Matrix({ matrixId, others }: { matrixId: string; others: ReactNode }) {
         <p className="p-6 text-ui text-fg-muted">{t("matrix.noRows")}</p>
       ) : (
         <MatrixGrid
+          initial={initial}
+          onActive={onActive}
           columns={data.columns}
           items={items}
           density={density}

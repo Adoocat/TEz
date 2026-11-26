@@ -8337,6 +8337,307 @@
         }
       }
     },
+    "/matrices/{matrix_id}/cells/{paper_id}/{column_id}/evidence": {
+      "post": {
+        "tags": [
+          "matrix"
+        ],
+        "summary": "Link Evidence",
+        "description": "Link a passage of the paper's PDF (an anchor) to the cell.",
+        "operationId": "link_evidence_matrices__matrix_id__cells__paper_id___column_id__evidence_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "matrix_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Matrix Id"
+            }
+          },
+          {
+            "name": "paper_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Paper Id"
+            }
+          },
+          {
+            "name": "column_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Column Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvidenceCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CellView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/matrices/{matrix_id}/cells/{paper_id}/{column_id}/evidence/{anchor_id}": {
+      "delete": {
+        "tags": [
+          "matrix"
+        ],
+        "summary": "Unlink Evidence",
+        "description": "Take a passage off the cell; null when the cell is left with nothing.",
+        "operationId": "unlink_evidence_matrices__matrix_id__cells__paper_id___column_id__evidence__anchor_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "matrix_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Matrix Id"
+            }
+          },
+          {
+            "name": "paper_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Paper Id"
+            }
+          },
+          {
+            "name": "column_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Column Id"
+            }
+          },
+          {
+            "name": "anchor_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Anchor Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/CellView"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Unlink Evidence Matrices  Matrix Id  Cells  Paper Id   Column Id  Evidence  Anchor Id  Delete"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/papers/{paper_id}/matrices": {
+      "get": {
+        "tags": [
+          "matrix"
+        ],
+        "summary": "Paper Matrices",
+        "description": "The matrices the paper is a row of, with its cells.",
+        "operationId": "paper_matrices_papers__paper_id__matrices_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "paper_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Paper Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaperMatrix"
+                  },
+                  "title": "Response Paper Matrices Papers  Paper Id  Matrices Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/fulltext/search": {
       "post": {
         "tags": [
@@ -11589,6 +11890,13 @@
             "type": "string",
             "format": "date-time",
             "title": "Updated At"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceView"
+            },
+            "type": "array",
+            "title": "Evidence"
           }
         },
         "type": "object",
@@ -11597,7 +11905,8 @@
           "value",
           "kept_text",
           "origin",
-          "updated_at"
+          "updated_at",
+          "evidence"
         ],
         "title": "CellView"
       },
@@ -11969,6 +12278,35 @@
           "other"
         ],
         "title": "ConflictView"
+      },
+      "Coverage": {
+        "properties": {
+          "filled": {
+            "type": "integer",
+            "title": "Filled"
+          },
+          "sourced": {
+            "type": "integer",
+            "title": "Sourced"
+          },
+          "rows": {
+            "type": "integer",
+            "title": "Rows"
+          },
+          "rows_sourced": {
+            "type": "integer",
+            "title": "Rows Sourced"
+          }
+        },
+        "type": "object",
+        "required": [
+          "filled",
+          "sourced",
+          "rows",
+          "rows_sourced"
+        ],
+        "title": "Coverage",
+        "description": "How much of the included papers' content rests on a passage (derived)."
       },
       "CriteriaOrder": {
         "properties": {
@@ -12586,6 +12924,59 @@
           "error"
         ],
         "title": "ErrorResponse"
+      },
+      "EvidenceCreate": {
+        "properties": {
+          "anchor_id": {
+            "type": "string",
+            "title": "Anchor Id"
+          },
+          "fill": {
+            "type": "boolean",
+            "title": "Fill",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "anchor_id"
+        ],
+        "title": "EvidenceCreate"
+      },
+      "EvidenceView": {
+        "properties": {
+          "anchor_id": {
+            "type": "string",
+            "title": "Anchor Id"
+          },
+          "attachment_id": {
+            "type": "string",
+            "title": "Attachment Id"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "quote": {
+            "type": "string",
+            "title": "Quote"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "anchor_id",
+          "attachment_id",
+          "page",
+          "quote",
+          "status"
+        ],
+        "title": "EvidenceView",
+        "description": "A passage a cell rests on, enough to show it and to go there."
       },
       "ExportFormat": {
         "type": "string",
@@ -14436,6 +14827,9 @@
             },
             "type": "array",
             "title": "Rows"
+          },
+          "coverage": {
+            "$ref": "#/components/schemas/Coverage"
           }
         },
         "type": "object",
@@ -14444,7 +14838,8 @@
           "review_id",
           "name",
           "columns",
-          "rows"
+          "rows",
+          "coverage"
         ],
         "title": "MatrixView"
       },
@@ -15355,6 +15750,46 @@
           "paper_ids"
         ],
         "title": "PaperIds"
+      },
+      "PaperMatrix": {
+        "properties": {
+          "matrix_id": {
+            "type": "string",
+            "title": "Matrix Id"
+          },
+          "matrix_name": {
+            "type": "string",
+            "title": "Matrix Name"
+          },
+          "review_id": {
+            "type": "string",
+            "title": "Review Id"
+          },
+          "columns": {
+            "items": {
+              "$ref": "#/components/schemas/ColumnView"
+            },
+            "type": "array",
+            "title": "Columns"
+          },
+          "cells": {
+            "items": {
+              "$ref": "#/components/schemas/CellView"
+            },
+            "type": "array",
+            "title": "Cells"
+          }
+        },
+        "type": "object",
+        "required": [
+          "matrix_id",
+          "matrix_name",
+          "review_id",
+          "columns",
+          "cells"
+        ],
+        "title": "PaperMatrix",
+        "description": "A matrix a paper is a row of, with that row's cells (the reader's Matrix tab)."
       },
       "PaperPatch": {
         "properties": {

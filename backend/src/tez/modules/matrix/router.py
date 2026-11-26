@@ -12,10 +12,12 @@ from tez.modules.matrix.schemas import (
     ColumnOrder,
     ColumnPatch,
     ColumnView,
+    EvidenceCreate,
     MatrixCreate,
     MatrixPatch,
     MatrixSummary,
     MatrixView,
+    PaperMatrix,
     TypeChange,
     TypeChangeReport,
 )
@@ -92,3 +94,30 @@ def put_cell(
 ) -> CellView | None:
     """Set a cell; null clears it (the response is then null)."""
     return service.put_cell(library.db, matrix_id, paper_id, column_id, body.value, body.kept_text)
+
+
+_CELL = f"{_MATRIX}/cells/{{paper_id}}/{{column_id}}"
+
+
+@router.post(f"{_CELL}/evidence", status_code=201)
+def link_evidence(
+    matrix_id: str, paper_id: str, column_id: str, body: EvidenceCreate, library: LibraryDep
+) -> CellView:
+    """Link a passage of the paper's PDF (an anchor) to the cell."""
+    return service.link_evidence(
+        library.db, matrix_id, paper_id, column_id, body.anchor_id, body.fill
+    )
+
+
+@router.delete(f"{_CELL}/evidence/{{anchor_id}}")
+def unlink_evidence(
+    matrix_id: str, paper_id: str, column_id: str, anchor_id: str, library: LibraryDep
+) -> CellView | None:
+    """Take a passage off the cell; null when the cell is left with nothing."""
+    return service.unlink_evidence(library.db, matrix_id, paper_id, column_id, anchor_id)
+
+
+@router.get("/papers/{paper_id}/matrices")
+def paper_matrices(paper_id: str, library: LibraryDep) -> list[PaperMatrix]:
+    """The matrices the paper is a row of, with its cells."""
+    return service.paper_matrices(library.db, paper_id)

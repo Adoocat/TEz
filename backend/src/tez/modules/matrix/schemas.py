@@ -128,6 +128,17 @@ class ColumnView(BaseModel):
     sort_order: int
 
 
+class EvidenceView(BaseModel):
+    """A passage a cell rests on, enough to show it and to go there."""
+
+    anchor_id: str
+    attachment_id: str
+    page: int
+    quote: str
+    # verified / unverified / checking / lost (ADR 0033)
+    status: str
+
+
 class CellView(BaseModel):
     column_id: str
     value: CellValue
@@ -135,6 +146,24 @@ class CellView(BaseModel):
     kept_text: str | None
     origin: CellOrigin
     updated_at: datetime
+    evidence: list[EvidenceView]
+
+
+class EvidenceCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    anchor_id: str
+    # Write the passage into the cell when it is an empty text cell.
+    fill: bool = False
+
+
+class Coverage(BaseModel):
+    """How much of the included papers' content rests on a passage (derived)."""
+
+    filled: int
+    sourced: int
+    rows: int
+    rows_sourced: int
 
 
 class RowView(BaseModel):
@@ -165,6 +194,17 @@ class MatrixView(BaseModel):
     columns: list[ColumnView]
     # The included papers in screening order, then excluded ones that have cells.
     rows: list[RowView]
+    coverage: Coverage
+
+
+class PaperMatrix(BaseModel):
+    """A matrix a paper is a row of, with that row's cells (the reader's Matrix tab)."""
+
+    matrix_id: str
+    matrix_name: str
+    review_id: str
+    columns: list[ColumnView]
+    cells: list[CellView]
 
 
 class KeptCell(BaseModel):

@@ -187,10 +187,15 @@ export function usePutCell(matrixId: string) {
 
 function withCell(matrix: MatrixView, write: CellWrite, saved?: CellView | null): MatrixView {
   const empty = write.value === null && !write.keptText;
+  const before = matrix.rows
+    .find((row) => row.paper_id === write.paperId)
+    ?.cells.find((c) => c.column_id === write.columnId);
+  // Passages stay with the cell whatever its value (Task 53); the server says the same.
+  const evidence = before?.evidence ?? [];
   const cell: CellView | null =
     saved !== undefined
       ? saved
-      : empty
+      : empty && evidence.length === 0
         ? null
         : {
             column_id: write.columnId,
@@ -198,6 +203,7 @@ function withCell(matrix: MatrixView, write: CellWrite, saved?: CellView | null)
             kept_text: write.value === null ? (write.keptText ?? null) : null,
             origin: "manual",
             updated_at: new Date().toISOString(),
+            evidence,
           };
   return {
     ...matrix,
@@ -221,4 +227,84 @@ export function snapshotOf(cell: CellView | undefined): {
   keptText: string | null;
 } {
   return { value: cell?.value ?? null, keptText: cell?.kept_text ?? null };
+}
+
+export type EvidenceView = CellView["evidence"][number];
+export type PaperMatrix = components["schemas"]["PaperMatrix"];
+export type Coverage = MatrixView["coverage"];
+
+export const paperMatricesKey = (paperId: string) => ["papers", paperId, "matrices"] as const;
+
+/** The matrices a paper is a row of, with its cells: the reader's Matrix tab. */
+export function usePaperMatrices(paperId: string | null) {
+  const api = useApi();
+  return useQuery({
+    queryKey: paperMatricesKey(paperId ?? ""),
+    enabled: paperId !== null,
+    queryFn: async () =>
+      unwrap(
+        await api.GET("/papers/{paper_id}/matrices", {
+          params: { path: { paper_id: paperId ?? "" } },
+        }),
+      ),
+  });
+}
+
+interface EvidenceTarget {
+  matrixId: string;
+  paperId: string;
+  columnId: string;
+}
+
+const cellPath = ({ matrixId, paperId, columnId }: EvidenceTarget) => ({
+  matrix_id: matrixId,
+  paper_id: paperId,
+  column_id: columnId,
+});
+
+/** After linking or unlinking, both the matrix and the reader's list are out of date. */
+function useEvidenceRefresh() {
+  const queryClient = useQueryClient();
+  return async ({ matrixId, paperId }: EvidenceTarget) => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: matrixKeys.one(matrixId) }),
+      queryClient.invalidateQueries({ queryKey: paperMatricesKey(paperId) }),
+    ]);
+  };
+}
+
+export function useLinkEvidence() {
+  const api = useApi();
+  const refresh = useEvidenceRefresh();
+  return useMutation({
+    mutationFn: async ({
+      anchorId,
+      fill,
+      ...target
+    }: EvidenceTarget & { anchorId: string; fill: boolean }) =>
+      unwrap(
+        await api.POST("/matrices/{matrix_id}/cells/{paper_id}/{column_id}/evidence", {
+          params: { path: cellPath(target) },
+          body: { anchor_id: anchorId, fill },
+        }),
+      ),
+    onSuccess: (_cell, target) => refresh(target),
+  });
+}
+
+export function useUnlinkEvidence() {
+  const api = useApi();
+  const refresh = useEvidenceRefresh();
+  return useMutation({
+    mutationFn: async ({ anchorId, ...target }: EvidenceTarget & { anchorId: string }) =>
+      unwrap(
+        await api.DELETE(
+          "/matrices/{matrix_id}/cells/{paper_id}/{column_id}/evidence/{anchor_id}",
+          {
+            params: { path: { ...cellPath(target), anchor_id: anchorId } },
+          },
+        ),
+      ),
+    onSuccess: (_cell, target) => refresh(target),
+  });
 }

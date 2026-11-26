@@ -1350,7 +1350,6 @@
     "changeAnyway": "Change, keeping those as text",
     "save": "Save",
     "cancel": "Cancel",
-    "counts": "{{papers}} papers · {{columns}} columns",
     "filter": "Filter rows",
     "groupBy": "Group by",
     "noGrouping": "No grouping",
@@ -1363,6 +1362,39 @@
     "showExcluded_other": "Show {{count}} excluded papers whose cells are kept",
     "noColumns": "No columns yet. Add the first one: what do you want to compare across the papers?",
     "noRows": "No paper is included at full text yet. Rows appear as papers are included.",
-    "emptyGroup": "Empty"
+    "emptyGroup": "Empty",
+    "evidence": {
+      "title": "Cell evidence",
+      "pickCell": "Pick a cell to see the passages it rests on.",
+      "value": "Value",
+      "passages_one": "{{count}} passage",
+      "passages_other": "{{count}} passages",
+      "none": "No passage backs this cell yet.",
+      "page": "p. {{page}}",
+      "lost": "Not found in the current file",
+      "open": "Open in the PDF",
+      "unlink": "Take this passage off the cell",
+      "how": "To add one: select a passage in the PDF and choose “Link to a matrix cell”.",
+      "sources_one": "{{count}} source",
+      "sources_other": "{{count}} sources"
+    },
+    "reader": {
+      "tab": "Matrix",
+      "none": "This paper is in no matrix yet: it is not included at full text in a review with a matrix.",
+      "openCell": "Open {{name}} in the matrix"
+    },
+    "link": {
+      "action": "Link to a matrix cell",
+      "title": "Link to a matrix cell",
+      "fill": "Write the passage into the cell if it is an empty text cell",
+      "done": "Linked to {{name}}.",
+      "open": "Open in the matrix"
+    },
+    "coverage": "{{percent}}% backed by passages ({{sourced}} of {{filled}} cells; {{rows}} of {{of}} rows fully)",
+    "coverageHint": "Filled cells of included papers that rest on a passage in the PDF.",
+    "papers_one": "{{count}} paper",
+    "papers_other": "{{count}} papers",
+    "columns_one": "{{count}} column",
+    "columns_other": "{{count}} columns"
   }
 }

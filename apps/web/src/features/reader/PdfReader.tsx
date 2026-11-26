@@ -15,6 +15,7 @@ import {
   ScanText,
   Search,
   SquareDashed,
+  Table2,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { useTranslation } from "react-i18next";
@@ -47,6 +48,8 @@ import { HoverNote } from "./HoverNote";
 import { PageView } from "./PageView";
 import { quoteWithSource } from "./quote";
 import { QuoteToNote, type QuotedIn } from "./QuoteToNote";
+import { LinkToCell, type LinkedCell } from "@/features/matrix/LinkToCell";
+import { matrixCellPath } from "@/features/matrix/store";
 import { anchorOf, selectionInLayer } from "./selection";
 import { SelectionToolbar } from "./SelectionToolbar";
 import { useReaderPanel, useReaderSelection, useReaderTabs, useReadingPanel } from "./store";
@@ -276,8 +279,13 @@ function OpenDocument({
   const createAnchor = useCreateAnchor(attachmentId);
   // The passage waiting for a note to go to.
   const [quoting, setQuoting] = useState<AnchorView | null>(null);
+  // The passage waiting for a matrix cell to back.
+  const [linking, setLinking] = useState<AnchorView | null>(null);
   const [notice, setNotice] = useState<
-    { kind: "copied" } | { kind: "quoted"; note: QuotedIn } | null
+    | { kind: "copied" }
+    | { kind: "quoted"; note: QuotedIn }
+    | { kind: "linked"; cell: LinkedCell }
+    | null
   >(null);
   useEffect(() => {
     if (!notice) return;
@@ -586,7 +594,23 @@ function OpenDocument({
             <Copy aria-hidden />
             {t("reader.quote.copy")}
           </Button>
+          <Button size="sm" variant="ghost" onClick={() => void withAnchor(setLinking)}>
+            <Table2 aria-hidden />
+            {t("matrix.link.action")}
+          </Button>
         </SelectionToolbar>
+      )}
+      {linking && (
+        <LinkToCell
+          anchor={linking}
+          onDone={(cell) => {
+            setLinking(null);
+            setNotice({ kind: "linked", cell });
+          }}
+          onCancel={() => {
+            setLinking(null);
+          }}
+        />
       )}
       {quoting && (
         <QuoteToNote
@@ -608,6 +632,13 @@ function OpenDocument({
           <Check aria-hidden className="size-4 text-success" />
           {notice.kind === "copied" ? (
             t("reader.quote.copied")
+          ) : notice.kind === "linked" ? (
+            <>
+              {t("matrix.link.done", { name: notice.cell.columnName })}
+              <Link to={matrixCellPath(notice.cell)} className="text-primary hover:underline">
+                {t("matrix.link.open")}
+              </Link>
+            </>
           ) : (
             <>
               {t("reader.quote.done", { title: notice.note.title })}

@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 
 from tez.core.db import Database
 from tez.core.errors import ErrorCode, TezError
+from tez.modules.anchors import service as anchors
 from tez.modules.library.paper_service import PaperService
 from tez.modules.matrix import values
 from tez.modules.matrix.models import CellOrigin, Matrix, MatrixCell, MatrixColumn
@@ -22,11 +23,14 @@ from tez.modules.matrix.schemas import (
     ColumnCreate,
     ColumnPatch,
     ColumnView,
+    Coverage,
+    EvidenceView,
     KeptCell,
     MatrixSummary,
     MatrixView,
     OptionIn,
     OptionView,
+    PaperMatrix,
     RowView,
     TypeChange,
     TypeChangeReport,
@@ -97,14 +101,55 @@ def _column_view(column: MatrixColumn) -> ColumnView:
     )
 
 
-def _cell_view(cell: MatrixCell) -> CellView:
+def _cell_view(cell: MatrixCell, evidence: Sequence[EvidenceView] = ()) -> CellView:
     return CellView(
         column_id=cell.column_id,
         value=cell.value_json,
         kept_text=cell.value_text,
         origin=cell.origin,
         updated_at=cell.updated_at,
+        evidence=list(evidence),
     )
+
+
+def _cell_views(session: Session, cells: Sequence[MatrixCell]) -> dict[str, CellView]:
+    """Cells with their evidence, by cell id."""
+    links = MatrixRepository(session).evidence_of(cell.id for cell in cells)
+    found = anchors.by_id(session, [a for ids in links.values() for a in ids])
+    views: dict[str, CellView] = {}
+    for cell in cells:
+        evidence = [
+            EvidenceView(
+                anchor_id=anchor.id,
+                attachment_id=anchor.attachment_id,
+                page=anchor.page,
+                quote=anchor.quote,
+                status=anchor.status,
+            )
+            for anchor_id in links.get(cell.id, [])
+            if (anchor := found.get(anchor_id)) is not None
+        ]
+        views[cell.id] = _cell_view(cell, evidence)
+    return views
+
+
+def _filled(cell: CellView) -> bool:
+    return cell.value is not None or cell.kept_text is not None
+
+
+def _coverage(rows: Sequence[RowView]) -> Coverage:
+    filled = sourced = with_content = rows_sourced = 0
+    for row in rows:
+        if not row.included:
+            continue
+        cells = [cell for cell in row.cells if _filled(cell)]
+        backed = sum(1 for cell in cells if cell.evidence)
+        filled += len(cells)
+        sourced += backed
+        if cells:
+            with_content += 1
+            rows_sourced += backed == len(cells)
+    return Coverage(filled=filled, sourced=sourced, rows=with_content, rows_sourced=rows_sourced)
 
 
 def _summary(matrix: Matrix, columns: int) -> MatrixSummary:
@@ -121,9 +166,11 @@ def _matrix_view(session: Session, matrix: Matrix) -> MatrixView:
     repository = MatrixRepository(session)
     columns = repository.columns(matrix.id)
     included = _included(session, matrix.review_id)
+    cells_of = repository.cells(matrix.id)
+    views = _cell_views(session, [cell for cell, _ in cells_of])
     by_paper: dict[str, list[CellView]] = {}
-    for cell, paper_id in repository.cells(matrix.id):
-        by_paper.setdefault(paper_id, []).append(_cell_view(cell))
+    for cell, paper_id in cells_of:
+        by_paper.setdefault(paper_id, []).append(views[cell.id])
     shown = set(included)
     hidden = [paper_id for paper_id in by_paper if paper_id not in shown]
     cards = PaperService(session).cards([*included, *hidden])
@@ -153,6 +200,7 @@ def _matrix_view(session: Session, matrix: Matrix) -> MatrixView:
         name=matrix.name,
         columns=[_column_view(column) for column in columns],
         rows=rows,
+        coverage=_coverage(rows),
     )
 
 
@@ -273,8 +321,14 @@ def change_type(db: Database, matrix_id: str, column_id: str, body: TypeChange) 
         if not body.dry_run:
             column.data_type = body.data_type
             column.options_json = [dict(o) for o in options]
+            linked = repository.evidence_of(cell.id for cell, _ in cells)
             for (cell, _), converted in zip(cells, after, strict=True):
-                if converted.value is None and converted.kept_text is None:
+                # An emptied cell goes, unless passages are linked to it.
+                if (
+                    converted.value is None
+                    and converted.kept_text is None
+                    and cell.id not in linked
+                ):
                     repository.delete(cell)
                 else:
                     cell.value_json = converted.value
@@ -352,9 +406,11 @@ def put_cell(
         )
         cell = row and repository.get_cell(row.id, column_id)
         if stored is None and kept_text is None:
-            if cell is not None:
+            if cell is None:
+                return None
+            if not repository.evidence_of([cell.id]):
                 repository.delete(cell)
-            return None
+                return None
         assert row is not None
         if cell is None:
             cell = repository.add_cell(MatrixCell(row_id=row.id, column_id=column_id))
@@ -362,4 +418,87 @@ def put_cell(
         cell.value_text = kept_text if stored is None else None
         cell.origin = CellOrigin.MANUAL
         session.flush()
-        return _cell_view(cell)
+        return _cell_views(session, [cell])[cell.id]
+
+
+# --- evidence -------------------------------------------------------------------------------
+
+
+def link_evidence(
+    db: Database, matrix_id: str, paper_id: str, column_id: str, anchor_id: str, fill: bool
+) -> CellView:
+    """Link a passage of the paper's PDF to a cell. With `fill`, an empty text cell gets the
+    passage as its value."""
+    with db.write_session() as session:
+        repository = MatrixRepository(session)
+        matrix = _require_matrix(repository, matrix_id)
+        column = _require_column(repository, matrix_id, column_id)
+        if paper_id not in _included(session, matrix.review_id):
+            raise TezError(ErrorCode.MATRIX_PAPER_NOT_INCLUDED, {"paper_id": paper_id}, status=409)
+        anchor = anchors.by_id(session, [anchor_id]).get(anchor_id)
+        if anchor is None:
+            raise TezError(ErrorCode.ANCHOR_NOT_FOUND, {"anchor_id": anchor_id}, status=404)
+        if anchor.paper.id != paper_id:
+            raise TezError(ErrorCode.MATRIX_EVIDENCE_OTHER_PAPER, {"anchor_id": anchor_id})
+        row = repository.row_for(matrix_id, paper_id, create=True)
+        assert row is not None
+        cell = repository.get_cell(row.id, column_id) or repository.add_cell(
+            MatrixCell(row_id=row.id, column_id=column_id)
+        )
+        empty = cell.value_json is None and cell.value_text is None
+        if fill and empty and column.data_type is DataType.TEXT:
+            cell.value_json = anchor.quote.strip()[: values.MAX_TEXT] or None
+        repository.add_evidence(cell.id, anchor_id)
+        session.flush()
+        return _cell_views(session, [cell])[cell.id]
+
+
+def unlink_evidence(
+    db: Database, matrix_id: str, paper_id: str, column_id: str, anchor_id: str
+) -> CellView | None:
+    """Take a passage off a cell. The passage stays (anchors are never deleted); a cell left
+    with nothing goes. Returns None then."""
+    with db.write_session() as session:
+        repository = MatrixRepository(session)
+        _require_matrix(repository, matrix_id)
+        _require_column(repository, matrix_id, column_id)
+        row = repository.row_for(matrix_id, paper_id, create=False)
+        cell = row and repository.get_cell(row.id, column_id)
+        evidence = cell and repository.get_evidence(cell.id, anchor_id)
+        if cell is None or evidence is None:
+            raise TezError(
+                ErrorCode.MATRIX_EVIDENCE_NOT_FOUND, {"anchor_id": anchor_id}, status=404
+            )
+        repository.remove_evidence(evidence)
+        empty = cell.value_json is None and cell.value_text is None
+        if empty and not repository.evidence_of([cell.id]):
+            repository.delete(cell)
+            return None
+        return _cell_views(session, [cell])[cell.id]
+
+
+def paper_matrices(db: Database, paper_id: str) -> list[PaperMatrix]:
+    """The matrices the paper is a row of (its review includes it at full text), with its
+    cells: the reader's Matrix tab."""
+    with db.session() as session:
+        repository = MatrixRepository(session)
+        found: list[PaperMatrix] = []
+        included: dict[str, bool] = {}
+        for matrix in repository.all_matrices():
+            if matrix.review_id not in included:
+                included[matrix.review_id] = paper_id in _included(session, matrix.review_id)
+            if not included[matrix.review_id]:
+                continue
+            row = repository.row_for(matrix.id, paper_id, create=False)
+            cells = [cell for cell, owner in repository.cells(matrix.id) if owner == paper_id]
+            views = _cell_views(session, cells) if row else {}
+            found.append(
+                PaperMatrix(
+                    matrix_id=matrix.id,
+                    matrix_name=matrix.name,
+                    review_id=matrix.review_id,
+                    columns=[_column_view(c) for c in repository.columns(matrix.id)],
+                    cells=list(views.values()),
+                )
+            )
+        return found
