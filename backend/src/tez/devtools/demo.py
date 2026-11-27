@@ -1,6 +1,9 @@
 """A demo library of made-up papers, for trying the app and for performance checks (Task 19).
 
     uv run --project backend python -m tez.devtools.demo "C:/TEz Demo" --papers 2000
+    uv run --project backend python -m tez.devtools.demo "C:/TEz Demo" --review
+
+With `--review` the library also gets a demo review, screened and tabulated (Task 57).
 
 Everything is generated from fixed word lists with a fixed seed, so the same command gives the
 same library. Titles, names and DOIs are fictional (DOIs use the 10.5555 test prefix).
@@ -12,6 +15,7 @@ import sys
 from pathlib import Path
 
 from tez.core.db import Database
+from tez.devtools.demo_review import make_review
 from tez.modules.library.models import IdentifierScheme, ReadingStatus, VenueType
 from tez.modules.library.paper_service import PaperService
 from tez.modules.library.repository import AuthorInput, LibraryRepository
@@ -116,11 +120,13 @@ _TAGS = [
 ]
 
 
-def make_library(path: Path, papers: int, *, seed: int = 2026) -> None:
+def make_library(path: Path, papers: int, *, seed: int = 2026, review: bool = False) -> None:
     rng = random.Random(seed)
     library = open_library(path, create=True)
     try:
         _fill(library.db, papers, rng)
+        if review:
+            make_review(library.db, library.path)
     finally:
         library.close()
 
@@ -177,9 +183,13 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Make a demo TEz library of fictional papers.")
     parser.add_argument("folder", type=Path, help="a new or empty folder")
     parser.add_argument("--papers", type=int, default=2000)
+    parser.add_argument(
+        "--review", action="store_true", help="add a demo review, screened and tabulated"
+    )
     args = parser.parse_args(argv)
-    make_library(args.folder, args.papers)
-    print(f"demo library with {args.papers} papers: {args.folder.absolute()}")
+    make_library(args.folder, args.papers, review=args.review)
+    with_review = " and a demo review" if args.review else ""
+    print(f"demo library with {args.papers} papers{with_review}: {args.folder.absolute()}")
     return 0
 
 
