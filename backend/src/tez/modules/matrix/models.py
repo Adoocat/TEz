@@ -12,7 +12,7 @@ from typing import Any
 from sqlalchemy import JSON, ForeignKey, Integer, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
-from tez.core.db import Base, TimestampMixin, enum_type
+from tez.core.db import Base, CreatedMixin, TimestampMixin, enum_type
 from tez.modules.matrix.values import DataType
 
 
@@ -65,3 +65,14 @@ class MatrixCell(TimestampMixin, Base):
     origin: Mapped[CellOrigin] = mapped_column(
         enum_type(CellOrigin, "matrix_cell_origin"), default=CellOrigin.MANUAL
     )
+
+
+class CellEvidence(CreatedMixin, Base):
+    """A passage in a PDF that a cell's value rests on (Task 53). A cell can have several."""
+
+    __tablename__ = "cell_evidence"
+    __table_args__ = (UniqueConstraint("cell_id", "anchor_id"),)
+
+    cell_id: Mapped[str] = mapped_column(ForeignKey("matrix_cell.id", ondelete="CASCADE"))
+    # Anchors are never deleted (ADR 0033): a lost one stays visible as lost.
+    anchor_id: Mapped[str] = mapped_column(ForeignKey("anchor.id", ondelete="RESTRICT"), index=True)

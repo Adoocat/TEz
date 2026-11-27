@@ -97,6 +97,7 @@ function cell(column: string, value: unknown, kept: string | null = null) {
     kept_text: kept,
     origin: "manual" as const,
     updated_at: "2026-11-26T10:00:00Z",
+    evidence: [],
   };
 }
 

@@ -1096,6 +1096,7 @@ function matrixRoute(
       kept_text: kept,
       origin: "manual" as const,
       updated_at: "2026-11-26T10:00:00Z",
+      evidence: [],
     };
     row.cells.push(cell);
     return json(cell);
@@ -1136,6 +1137,7 @@ export function matrixView(overrides: Partial<MatrixView> = {}): MatrixView {
     name: "Matrix",
     columns: [],
     rows: [],
+    coverage: { filled: 0, sourced: 0, rows: 0, rows_sourced: 0 },
     ...overrides,
   };
 }

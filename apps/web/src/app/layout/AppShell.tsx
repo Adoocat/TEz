@@ -27,6 +27,7 @@ import { useJobEvents } from "@/features/jobs/useJobEvents";
 import { useOpenRequests } from "@/features/open/useOpenRequests";
 import { LibraryInspector } from "@/features/library/LibraryInspector";
 import { LibrarySidebar } from "@/features/library/LibrarySidebar";
+import { MatrixInspector } from "@/features/matrix/MatrixInspector";
 import { NotesInspector } from "@/features/notes/NotesInspector";
 import { NotesSidebar } from "@/features/notes/NotesSidebar";
 import { ReaderInspector } from "@/features/reader/ReaderInspector";
@@ -231,6 +232,8 @@ function Inspector({ route }: { route: string }) {
         <ReaderInspector />
       ) : route.startsWith("/notes") ? (
         <NotesInspector />
+      ) : route.startsWith("/matrix") ? (
+        <MatrixInspector />
       ) : (
         <>
           <h2 className="mb-2 text-h3">{t("shell.inspectorTitle")}</h2>

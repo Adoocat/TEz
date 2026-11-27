@@ -396,7 +396,7 @@ Nov 25, 2026 · Onaylandı. Kapsam: kritik yolun son halkası (okuma → not →
 
 - [x] **51 · Matris servisi:** matris, sütun türleri (metin, sayı, seçenek, çoklu seçenek, evet/hayır), satırlar dahil edilenlerden türetilir. *Kabul:* tür değişince veri sessizce kaybolmaz; hariç tutulanın hücreleri saklanır.
 - [x] **52 · Matris ızgarası:** sabit başlıklar, klavyeyle düzenleme, filtre, gruplama, geri alma (tasarım 5.4). *Kabul:* 100 × 15 akıcı; E2E.
-- [ ] **53 · Hücre kanıtı:** "Matris hücresine bağla", kanıt paneli, okuyucuda Matris sekmesi, kanıt kapsamı yüzdesi. *Kabul:* hücre → PDF cümlesi → hücre gidiş-dönüşü; E2E.
+- [x] **53 · Hücre kanıtı:** "Matris hücresine bağla", kanıt paneli, okuyucuda Matris sekmesi, kanıt kapsamı yüzdesi. *Kabul:* hücre → PDF cümlesi → hücre gidiş-dönüşü; E2E.
 - [ ] **54 · Matris çıktısı:** CSV, Excel, Markdown (kanıt ve sayfayla), kalite puanı sütunu, review panelinde "Veri çıkarma" aşaması. *Kabul:* Türkçe karakterler Excel'de doğru.
 
 ### E. Belge yapısı

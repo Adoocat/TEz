@@ -1350,7 +1350,6 @@
     "changeAnyway": "Değiştir, bunları metin olarak sakla",
     "save": "Kaydet",
     "cancel": "Vazgeç",
-    "counts": "{{papers}} makale · {{columns}} sütun",
     "filter": "Satırları süz",
     "groupBy": "Grupla",
     "noGrouping": "Gruplama yok",
@@ -1363,6 +1362,39 @@
     "showExcluded_other": "Hücreleri saklı {{count}} hariç tutulan makaleyi göster",
     "noColumns": "Henüz sütun yok. İlkini ekleyin: makaleler arasında neyi karşılaştırmak istiyorsunuz?",
     "noRows": "Tam metinde dahil edilen makale henüz yok. Makaleler dahil edildikçe satırlar gelir.",
-    "emptyGroup": "Boş"
+    "emptyGroup": "Boş",
+    "evidence": {
+      "title": "Hücre kanıtı",
+      "pickCell": "Dayandığı pasajları görmek için bir hücre seçin.",
+      "value": "Değer",
+      "passages_one": "{{count}} pasaj",
+      "passages_other": "{{count}} pasaj",
+      "none": "Bu hücreye henüz bir pasaj bağlanmadı.",
+      "page": "s. {{page}}",
+      "lost": "Güncel dosyada bulunamadı",
+      "open": "PDF'te aç",
+      "unlink": "Bu pasajı hücreden kaldır",
+      "how": "Eklemek için: PDF'te bir pasaj seçip “Matris hücresine bağla”yı seçin.",
+      "sources_one": "{{count}} kaynak",
+      "sources_other": "{{count}} kaynak"
+    },
+    "reader": {
+      "tab": "Matris",
+      "none": "Bu makale henüz hiçbir matriste değil: matrisi olan bir review'da tam metinde dahil edilmemiş.",
+      "openCell": "{{name}} hücresini matriste aç"
+    },
+    "link": {
+      "action": "Matris hücresine bağla",
+      "title": "Matris hücresine bağla",
+      "fill": "Hücre boş bir metin hücresiyse pasajı içine yaz",
+      "done": "{{name}} hücresine bağlandı.",
+      "open": "Matriste aç"
+    },
+    "coverage": "%{{percent}} kanıta dayalı ({{filled}} hücreden {{sourced}}; {{of}} satırdan {{rows}} tam)",
+    "coverageHint": "Dahil edilen makalelerin dolu hücrelerinden PDF'teki bir pasaja dayananlar.",
+    "papers_one": "{{count}} makale",
+    "papers_other": "{{count}} makale",
+    "columns_one": "{{count}} sütun",
+    "columns_other": "{{count}} sütun"
   }
 }

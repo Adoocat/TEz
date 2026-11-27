@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from tez.modules.matrix.models import Matrix, MatrixCell, MatrixColumn, MatrixRow
+from tez.modules.matrix.models import CellEvidence, Matrix, MatrixCell, MatrixColumn, MatrixRow
 
 
 class MatrixRepository:
@@ -114,3 +114,36 @@ class MatrixRepository:
         self.session.add(cell)
         self.session.flush()
         return cell
+
+    # --- evidence ------------------------------------------------------------------------
+
+    def evidence_of(self, cell_ids: Iterable[str]) -> dict[str, list[str]]:
+        """Each cell's anchors, oldest link first."""
+        found: dict[str, list[str]] = {}
+        rows = self.session.execute(
+            select(CellEvidence.cell_id, CellEvidence.anchor_id)
+            .where(CellEvidence.cell_id.in_(list(cell_ids)))
+            .order_by(CellEvidence.created_at, CellEvidence.id)
+        )
+        for cell_id, anchor_id in rows:
+            found.setdefault(cell_id, []).append(anchor_id)
+        return found
+
+    def get_evidence(self, cell_id: str, anchor_id: str) -> CellEvidence | None:
+        return self.session.scalars(
+            select(CellEvidence).where(
+                CellEvidence.cell_id == cell_id, CellEvidence.anchor_id == anchor_id
+            )
+        ).one_or_none()
+
+    def add_evidence(self, cell_id: str, anchor_id: str) -> None:
+        if self.get_evidence(cell_id, anchor_id) is None:
+            self.session.add(CellEvidence(cell_id=cell_id, anchor_id=anchor_id))
+            self.session.flush()
+
+    def remove_evidence(self, evidence: CellEvidence) -> None:
+        self.session.delete(evidence)
+        self.session.flush()
+
+    def all_matrices(self) -> list[Matrix]:
+        return list(self.session.scalars(select(Matrix).order_by(Matrix.created_at, Matrix.id)))

@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-11-26
-- **Tasks:** 51 (matrix service)
+- **Tasks:** 51 (matrix service), 52 (grid), 53 (cell evidence)
 
 ## Context
 
@@ -18,6 +18,13 @@ The plan has `matrix` and `matrix_column` (name, instruction, `data_type` text/n
 - **Yes/no becomes text in the user's words** (`true_text` and `false_text`, sent by the app in its language).
 - **A column that becomes a choice column without options gets the choices written in its cells**, in the order first met.
 - **Deleting a column or a matrix deletes its cells.** The user asks for it by name; the app asks before it (Task 52).
+
+## Evidence (Task 53)
+
+- **`cell_evidence` links a cell to anchors** (ADR 0033), several per cell. A passage can only back a cell in its own paper's row.
+- **A passage keeps its cell:** clearing the value or a type change that empties it leaves the cell with its passages. Taking off the last passage of an empty cell removes the cell; the anchor itself stays.
+- **Linking can fill an empty text cell with the passage** when asked (the reader's dialog asks by default). It never overwrites a value.
+- **Coverage is derived** on every read: of the included papers' filled cells, how many rest on a passage, and how many rows rest wholly on passages. It is not stored (as PRISMA counts are not).
 
 ## Consequences
 
