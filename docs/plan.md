@@ -406,7 +406,7 @@ Nov 25, 2026 · Onaylandı. Kapsam: kritik yolun son halkası (okuma → not →
 
 ### F. Kapanış
 
-- [ ] **57 · Kapanış:** uçtan uca deneme (Aşama 2'de denenmeyen akışlar dahil), demo verisi, README. *Kabul:* arama → eleme → okuma → matris tek oturumda tamamlanır.
+- [x] **57 · Kapanış:** uçtan uca deneme (Aşama 2'de denenmeyen akışlar dahil), demo verisi, README. *Kabul:* arama → eleme → okuma → matris tek oturumda tamamlanır.
 
 ## Riskler, eksikler ve alternatifler
 
