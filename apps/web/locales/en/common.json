@@ -14,7 +14,8 @@
     "jobs": "Jobs",
     "settings": "Settings",
     "review": "Review",
-    "export": "Export"
+    "export": "Export",
+    "gallery": "Figures"
   },
   "shell": {
     "toggleSidebar": "Toggle sidebar",
@@ -227,7 +228,10 @@
     "matrix.order_mismatch": "The column order must name every column once.",
     "matrix.paper_not_included": "Only papers included at full text are in the matrix.",
     "matrix.value_invalid": "The value does not fit the column's type.",
-    "annotation.not_found": "This highlight no longer exists."
+    "annotation.not_found": "This highlight no longer exists.",
+    "asset.not_found": "The figure or table was not found.",
+    "asset.image_invalid": "The picture must be a PNG of at most 10 MB.",
+    "asset.image_missing": "The picture is missing from the library folder."
   },
   "reviews": {
     "active": "Active review",
@@ -1415,6 +1419,56 @@
       "none": "No matrix yet: compare the included papers in a literature matrix.",
       "filled": "{{filled}} of {{cells}} cells filled",
       "sourced": "{{percent}}% of them backed by passages"
+    }
+  },
+  "gallery": {
+    "title": "Figures and tables",
+    "none": "Nothing kept yet. In the reader, choose “Keep a figure or table” and draw around one.",
+    "all": "All",
+    "kind": "Kind",
+    "kinds": {
+      "figure": "Figure",
+      "table": "Table",
+      "figures": "Figures",
+      "tables": "Tables"
+    },
+    "filter": "Filter by label, caption or paper",
+    "chosen_one": "{{count}} chosen",
+    "chosen_other": "{{count}} chosen",
+    "choose": "Choose {{label}}",
+    "compare": "Compare",
+    "compareHint": "Choose 2 to {{max}} to see side by side",
+    "comparing": "Comparing {{count}}",
+    "back": "Back to the gallery",
+    "export": "Export",
+    "saved": "Saved as {{fileName}}.",
+    "fileName": "figures-and-tables.html",
+    "source": "{{citation}}, p. {{page}}",
+    "untitled": "Untitled",
+    "lost": "Not found in the current file",
+    "open": "Open in the PDF",
+    "edit": "Edit {{label}}",
+    "editTitle": "Edit figure or table",
+    "deleteNamed": "Delete {{label}}",
+    "deleteTitle": "Delete “{{label}}”?",
+    "deleteText": "Its picture is deleted. Its place in the PDF stays.",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "saveChanges": "Save",
+    "label": "Label, as the paper has it",
+    "labelHint": {
+      "figure": "Figure 3",
+      "table": "Table 2"
+    },
+    "caption": "Caption",
+    "tool": "Keep a figure or table",
+    "toolHint": "Draw around a figure or table to keep it",
+    "kept": "{{label}} kept.",
+    "toGallery": "Open the gallery",
+    "save": {
+      "title": "Keep a figure or table",
+      "preview": "The marked area",
+      "action": "Keep"
     }
   }
 }

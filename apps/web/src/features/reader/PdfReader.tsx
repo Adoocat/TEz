@@ -4,6 +4,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import {
   Check,
   Copy,
+  ImagePlus,
   MapPinOff,
   Maximize,
   Minimize,
@@ -48,6 +49,7 @@ import { HoverNote } from "./HoverNote";
 import { PageView } from "./PageView";
 import { quoteWithSource } from "./quote";
 import { QuoteToNote, type QuotedIn } from "./QuoteToNote";
+import { cutOut, SaveAsset, type MarkedArea } from "@/features/gallery/SaveAsset";
 import { LinkToCell, type LinkedCell } from "@/features/matrix/LinkToCell";
 import { matrixCellPath } from "@/features/matrix/store";
 import { anchorOf, selectionInLayer } from "./selection";
@@ -285,6 +287,7 @@ function OpenDocument({
     | { kind: "copied" }
     | { kind: "quoted"; note: QuotedIn }
     | { kind: "linked"; cell: LinkedCell }
+    | { kind: "kept"; label: string }
     | null
   >(null);
   useEffect(() => {
@@ -300,6 +303,9 @@ function OpenDocument({
   const { selection, clear: clearSelection } = useTextSelection(scroller);
   const { selectedId, color, select, setColor } = useReaderSelection();
   const [areaTool, setAreaTool] = useState(false);
+  // Marking an area to keep as a figure or table (Task 55), and the one just marked.
+  const [assetTool, setAssetTool] = useState(false);
+  const [marked, setMarked] = useState<MarkedArea | null>(null);
   // Its id, not a copy: the comment may be saved, or deleted, under a pointer that stays.
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const hovered = annotations.data?.find((annotation) => annotation.id === hoveredId);
@@ -528,9 +534,23 @@ function OpenDocument({
             aria-pressed={areaTool}
             onClick={() => {
               setAreaTool(!areaTool);
+              setAssetTool(false);
             }}
           >
             <SquareDashed />
+          </Button>
+          <Button
+            variant={assetTool ? "secondary" : "ghost"}
+            size="icon"
+            aria-label={t("gallery.tool")}
+            title={t("gallery.toolHint")}
+            aria-pressed={assetTool}
+            onClick={() => {
+              setAssetTool(!assetTool);
+              setAreaTool(false);
+            }}
+          >
+            <ImagePlus />
           </Button>
           {!embedded && (
             <Button
@@ -600,6 +620,19 @@ function OpenDocument({
           </Button>
         </SelectionToolbar>
       )}
+      {marked && (
+        <SaveAsset
+          attachmentId={attachmentId}
+          area={marked}
+          onDone={(asset) => {
+            setMarked(null);
+            setNotice({ kind: "kept", label: asset.label || t("gallery.untitled") });
+          }}
+          onCancel={() => {
+            setMarked(null);
+          }}
+        />
+      )}
       {linking && (
         <LinkToCell
           anchor={linking}
@@ -632,6 +665,13 @@ function OpenDocument({
           <Check aria-hidden className="size-4 text-success" />
           {notice.kind === "copied" ? (
             t("reader.quote.copied")
+          ) : notice.kind === "kept" ? (
+            <>
+              {t("gallery.kept", { label: notice.label })}
+              <Link to="/gallery" className="text-primary hover:underline">
+                {t("gallery.toGallery")}
+              </Link>
+            </>
           ) : notice.kind === "linked" ? (
             <>
               {t("matrix.link.done", { name: notice.cell.columnName })}
@@ -750,6 +790,23 @@ function OpenDocument({
                         scale={scale}
                         onArea={(rect) => {
                           void markArea(page, rect);
+                        }}
+                      />
+                    )}
+                    {assetTool && (
+                      <AreaTool
+                        label={t("gallery.toolHint")}
+                        size={sizes.get(page) ?? firstPage}
+                        scale={scale}
+                        onArea={(rect) => {
+                          setAssetTool(false);
+                          const size = sizes.get(page) ?? firstPage;
+                          const canvas = scroller.current?.querySelector<HTMLCanvasElement>(
+                            `section[data-page="${String(page)}"] canvas`,
+                          );
+                          const image =
+                            canvas && cutOut(canvas, toScreen(size.transform, scale, rect));
+                          if (image) setMarked({ page, rect, image });
                         }}
                       />
                     )}

@@ -7,6 +7,7 @@ autogenerate and the models-match-migrations test.
 from tez.core.db import Base
 from tez.modules.anchors import models as anchors_models
 from tez.modules.annotations import models as annotations_models
+from tez.modules.assets import models as assets_models
 from tez.modules.files import models as files_models
 from tez.modules.fulltext import models as fulltext_models
 from tez.modules.jobs import models as jobs_models
@@ -22,6 +23,7 @@ __all__ = [
     "Base",
     "anchors_models",
     "annotations_models",
+    "assets_models",
     "files_models",
     "fulltext_models",
     "jobs_models",

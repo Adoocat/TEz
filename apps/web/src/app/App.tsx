@@ -7,6 +7,7 @@ import { createHashRouter, Navigate, RouterProvider } from "react-router";
 import { ConflictsPage } from "@/features/dual-screening/ConflictsPage";
 import { ExportPage } from "@/features/export/ExportPage";
 import { JobsPage } from "@/features/jobs/JobsPage";
+import { GalleryPage } from "@/features/gallery/GalleryPage";
 import { LibraryPage } from "@/features/library/LibraryPage";
 import { MatrixPage } from "@/features/matrix/MatrixPage";
 import { ReaderPage } from "@/features/reader/ReaderPage";
@@ -36,6 +37,7 @@ function createRouter() {
       children: [
         { index: true, element: <Navigate to="/library" replace /> },
         { path: "/matrix", element: <MatrixPage /> },
+        { path: "/gallery", element: <GalleryPage /> },
         { path: "/review", element: <ReviewPanel /> },
         { path: "/screening", element: <ScreeningPage /> },
         { path: "/screening/conflicts", element: <ConflictsPage /> },

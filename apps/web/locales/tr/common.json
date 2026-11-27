@@ -14,7 +14,8 @@
     "jobs": "İşler",
     "settings": "Ayarlar",
     "review": "Review",
-    "export": "Dışa aktarma"
+    "export": "Dışa aktarma",
+    "gallery": "Şekiller"
   },
   "shell": {
     "toggleSidebar": "Kenar çubuğunu aç/kapat",
@@ -227,7 +228,10 @@
     "matrix.order_mismatch": "Sütun sırası her sütunu bir kez içermeli.",
     "matrix.paper_not_included": "Matriste yalnız tam metinde dahil edilen makaleler var.",
     "matrix.value_invalid": "Değer sütunun türüne uymuyor.",
-    "annotation.not_found": "Bu vurgu artık yok."
+    "annotation.not_found": "Bu vurgu artık yok.",
+    "asset.not_found": "Şekil ya da tablo bulunamadı.",
+    "asset.image_invalid": "Resim en çok 10 MB'lık bir PNG olmalı.",
+    "asset.image_missing": "Resim kütüphane klasöründe yok."
   },
   "reviews": {
     "active": "Etkin review",
@@ -1415,6 +1419,56 @@
       "none": "Henüz matris yok: dahil edilen makaleleri bir literatür matrisinde karşılaştırın.",
       "filled": "{{cells}} hücreden {{filled}} dolu",
       "sourced": "Bunların %{{percent}}'i pasajlara dayalı"
+    }
+  },
+  "gallery": {
+    "title": "Şekiller ve tablolar",
+    "none": "Henüz bir şey saklanmadı. Okuyucuda “Şekil ya da tablo sakla”yı seçip birinin çevresini çizin.",
+    "all": "Tümü",
+    "kind": "Tür",
+    "kinds": {
+      "figure": "Şekil",
+      "table": "Tablo",
+      "figures": "Şekiller",
+      "tables": "Tablolar"
+    },
+    "filter": "Etiket, açıklama ya da makaleye göre süz",
+    "chosen_one": "{{count}} seçili",
+    "chosen_other": "{{count}} seçili",
+    "choose": "{{label}} seç",
+    "compare": "Karşılaştır",
+    "compareHint": "Yan yana görmek için 2 ile {{max}} arası seçin",
+    "comparing": "{{count}} öğe karşılaştırılıyor",
+    "back": "Galeriye dön",
+    "export": "Dışa aktar",
+    "saved": "{{fileName}} olarak kaydedildi.",
+    "fileName": "sekiller-ve-tablolar.html",
+    "source": "{{citation}}, s. {{page}}",
+    "untitled": "Adsız",
+    "lost": "Güncel dosyada bulunamadı",
+    "open": "PDF'te aç",
+    "edit": "{{label}} düzenle",
+    "editTitle": "Şekli ya da tabloyu düzenle",
+    "deleteNamed": "{{label}} sil",
+    "deleteTitle": "“{{label}}” silinsin mi?",
+    "deleteText": "Resmi silinir. PDF'teki yeri kalır.",
+    "delete": "Sil",
+    "cancel": "Vazgeç",
+    "saveChanges": "Kaydet",
+    "label": "Etiket, makaledeki gibi",
+    "labelHint": {
+      "figure": "Şekil 3",
+      "table": "Tablo 2"
+    },
+    "caption": "Açıklama",
+    "tool": "Şekil ya da tablo sakla",
+    "toolHint": "Saklamak için bir şeklin ya da tablonun çevresini çizin",
+    "kept": "{{label}} saklandı.",
+    "toGallery": "Galeriyi aç",
+    "save": {
+      "title": "Şekil ya da tablo sakla",
+      "preview": "İşaretlenen alan",
+      "action": "Sakla"
     }
   }
 }
