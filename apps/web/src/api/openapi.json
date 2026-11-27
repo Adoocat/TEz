@@ -8638,6 +8638,94 @@
         }
       }
     },
+    "/matrices/{matrix_id}/export": {
+      "post": {
+        "tags": [
+          "matrix"
+        ],
+        "summary": "Export Matrix",
+        "description": "The included rows as CSV (UTF-8 with BOM), Excel or Markdown, with passages and pages.",
+        "operationId": "export_matrix_matrices__matrix_id__export_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "matrix_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Matrix Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MatrixExport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatrixExportFile"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/fulltext/search": {
       "post": {
         "tags": [
@@ -12986,6 +13074,77 @@
         ],
         "title": "ExportFormat"
       },
+      "ExportLabels": {
+        "properties": {
+          "paper": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Paper",
+            "default": "Paper"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Title",
+            "default": "Title"
+          },
+          "year": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Year",
+            "default": "Year"
+          },
+          "quality": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Quality",
+            "default": "Quality"
+          },
+          "evidence": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Evidence",
+            "default": "Evidence"
+          },
+          "page": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Page",
+            "default": "p."
+          },
+          "et_al": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Et Al",
+            "default": "et al."
+          },
+          "yes": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Yes",
+            "default": "yes"
+          },
+          "no": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "No",
+            "default": "no"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ExportLabels",
+        "description": "The words of an exported file, in the user's language."
+      },
       "ExportRequest": {
         "properties": {
           "format": {
@@ -14750,6 +14909,46 @@
         ],
         "title": "MatrixCreate"
       },
+      "MatrixExport": {
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "csv",
+              "xlsx",
+              "md"
+            ],
+            "title": "Format"
+          },
+          "labels": {
+            "$ref": "#/components/schemas/ExportLabels"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "format"
+        ],
+        "title": "MatrixExport"
+      },
+      "MatrixExportFile": {
+        "properties": {
+          "mime_type": {
+            "type": "string",
+            "title": "Mime Type"
+          },
+          "content_base64": {
+            "type": "string",
+            "title": "Content Base64"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mime_type",
+          "content_base64"
+        ],
+        "title": "MatrixExportFile"
+      },
       "MatrixPatch": {
         "properties": {
           "name": {
@@ -14788,6 +14987,13 @@
             "type": "string",
             "format": "date-time",
             "title": "Created At"
+          },
+          "rows": {
+            "type": "integer",
+            "title": "Rows"
+          },
+          "coverage": {
+            "$ref": "#/components/schemas/Coverage"
           }
         },
         "type": "object",
@@ -14796,7 +15002,9 @@
           "review_id",
           "name",
           "columns",
-          "created_at"
+          "created_at",
+          "rows",
+          "coverage"
         ],
         "title": "MatrixSummary"
       },

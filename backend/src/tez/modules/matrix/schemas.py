@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, Self
+from typing import Annotated, Literal, Self
 
 from pydantic import (
     BaseModel,
@@ -185,6 +185,9 @@ class MatrixSummary(BaseModel):
     name: str
     columns: int
     created_at: datetime
+    # The included papers, the cells they fill, and how many rest on passages (derived).
+    rows: int
+    coverage: "Coverage"
 
 
 class MatrixView(BaseModel):
@@ -219,3 +222,31 @@ class TypeChangeReport(BaseModel):
     converted: int
     # Cells whose value could not be read as the new type: kept as text, marked.
     kept: list[KeptCell]
+
+
+class ExportLabels(BaseModel):
+    """The words of an exported file, in the user's language."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    paper: Word = "Paper"
+    title: Word = "Title"
+    year: Word = "Year"
+    quality: Word = "Quality"
+    evidence: Word = "Evidence"
+    page: Word = "p."
+    et_al: Word = "et al."
+    yes: Word = "yes"
+    no: Word = "no"
+
+
+class MatrixExport(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    format: Literal["csv", "xlsx", "md"]
+    labels: ExportLabels = Field(default_factory=ExportLabels)
+
+
+class MatrixExportFile(BaseModel):
+    mime_type: str
+    content_base64: str

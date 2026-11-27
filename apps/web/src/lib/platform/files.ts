@@ -16,7 +16,15 @@ export async function copyToClipboard(text: string, html?: string): Promise<void
   await navigator.clipboard.writeText(text);
 }
 
-export function saveTextFile(fileName: string, content: string, mimeType: string): Promise<void> {
-  saveBlob(fileName, new Blob([content], { type: `${mimeType};charset=utf-8` }));
+export function saveTextFile(
+  fileName: string,
+  content: string | Uint8Array,
+  mimeType: string,
+): Promise<void> {
+  const blob =
+    typeof content === "string"
+      ? new Blob([content], { type: `${mimeType};charset=utf-8` })
+      : new Blob([new Uint8Array(content)], { type: mimeType });
+  saveBlob(fileName, blob);
   return Promise.resolve();
 }

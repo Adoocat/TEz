@@ -9,3 +9,11 @@ export async function fileToBase64(file: Blob): Promise<string> {
   }
   return btoa(binary);
 }
+
+/** Bytes the server sent as base64 (an exported file). */
+export function base64ToBytes(text: string): Uint8Array {
+  const binary = atob(text);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}

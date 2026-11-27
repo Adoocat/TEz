@@ -209,3 +209,35 @@ test("100 papers × 15 columns: drawn as they come into view, scrolled smoothly"
   await page.keyboard.press("Enter");
   await expect(grid.getByRole("gridcell", { name: "Last one" })).toBeVisible();
 });
+
+test("exported for Excel, Turkish letters intact", async ({ page, request }) => {
+  const { reviewId, papers } = await includedPapers(
+    request,
+    `Matrix export ${String(Date.now())}`,
+    1,
+  );
+  const matrix = await api<{ id: string }>(request, "post", `/reviews/${reviewId}/matrices`, {
+    name: "Sentez",
+  });
+  const column = await api<{ id: string }>(request, "post", `/matrices/${matrix.id}/columns`, {
+    name: "Bulgu",
+  });
+  const paper = papers[0];
+  if (!paper) throw new Error("no paper");
+  await api(request, "put", `/matrices/${matrix.id}/cells/${paper.paper_id}/${column.id}`, {
+    value: "Işık, ğüşöç İĞÜŞÖÇ",
+  });
+  await open(page, reviewId);
+  await page.getByRole("button", { name: "Export" }).click();
+  const download = page.waitForEvent("download");
+  await page.getByRole("menuitem", { name: "CSV (.csv)" }).click();
+  const file = await download;
+  expect(file.suggestedFilename()).toBe("Sentez.csv");
+  const path = await file.path();
+  const { readFile } = await import("node:fs/promises");
+  const data = await readFile(path);
+  expect([...data.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
+  const text = data.subarray(3).toString("utf8");
+  expect(text.split("\r\n")[0]).toBe("Paper,Title,Year,Bulgu");
+  expect(text).toContain("Işık, ğüşöç İĞÜŞÖÇ");
+});

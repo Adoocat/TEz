@@ -1395,6 +1395,26 @@
     "papers_one": "{{count}} makale",
     "papers_other": "{{count}} makale",
     "columns_one": "{{count}} sütun",
-    "columns_other": "{{count}} sütun"
+    "columns_other": "{{count}} sütun",
+    "export": {
+      "action": "Dışa aktar",
+      "xlsx": "Excel (.xlsx)",
+      "csv": "CSV (.csv)",
+      "md": "Markdown (.md)",
+      "saved": "{{fileName}} olarak kaydedildi.",
+      "paper": "Makale",
+      "title": "Başlık",
+      "year": "Yıl",
+      "quality": "Kalite",
+      "evidence": "Kanıt",
+      "page": "s.",
+      "etAl": "vd."
+    },
+    "stage": {
+      "name": "Veri çıkarma",
+      "none": "Henüz matris yok: dahil edilen makaleleri bir literatür matrisinde karşılaştırın.",
+      "filled": "{{cells}} hücreden {{filled}} dolu",
+      "sourced": "Bunların %{{percent}}'i pasajlara dayalı"
+    }
   }
 }

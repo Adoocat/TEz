@@ -1582,6 +1582,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/matrices/{matrix_id}/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Export Matrix
+         * @description The included rows as CSV (UTF-8 with BOM), Excel or Markdown, with passages and pages.
+         */
+        post: operations["export_matrix_matrices__matrix_id__export_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/fulltext/search": {
         parameters: {
             query?: never;
@@ -2702,6 +2722,57 @@ export interface components {
          * @enum {string}
          */
         ExportFormat: "bibtex" | "ris";
+        /**
+         * ExportLabels
+         * @description The words of an exported file, in the user's language.
+         */
+        ExportLabels: {
+            /**
+             * Paper
+             * @default Paper
+             */
+            paper: string;
+            /**
+             * Title
+             * @default Title
+             */
+            title: string;
+            /**
+             * Year
+             * @default Year
+             */
+            year: string;
+            /**
+             * Quality
+             * @default Quality
+             */
+            quality: string;
+            /**
+             * Evidence
+             * @default Evidence
+             */
+            evidence: string;
+            /**
+             * Page
+             * @default p.
+             */
+            page: string;
+            /**
+             * Et Al
+             * @default et al.
+             */
+            et_al: string;
+            /**
+             * Yes
+             * @default yes
+             */
+            yes: string;
+            /**
+             * No
+             * @default no
+             */
+            no: string;
+        };
         /** ExportRequest */
         ExportRequest: {
             /**
@@ -3269,6 +3340,22 @@ export interface components {
             /** Name */
             name: string;
         };
+        /** MatrixExport */
+        MatrixExport: {
+            /**
+             * Format
+             * @enum {string}
+             */
+            format: "csv" | "xlsx" | "md";
+            labels?: components["schemas"]["ExportLabels"];
+        };
+        /** MatrixExportFile */
+        MatrixExportFile: {
+            /** Mime Type */
+            mime_type: string;
+            /** Content Base64 */
+            content_base64: string;
+        };
         /** MatrixPatch */
         MatrixPatch: {
             /** Name */
@@ -3289,6 +3376,9 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
+            /** Rows */
+            rows: number;
+            coverage: components["schemas"]["Coverage"];
         };
         /** MatrixView */
         MatrixView: {
@@ -10724,6 +10814,68 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaperMatrix"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    export_matrix_matrices__matrix_id__export_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                matrix_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MatrixExport"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatrixExportFile"];
                 };
             };
             /** @description Missing or invalid token */

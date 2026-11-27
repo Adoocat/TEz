@@ -61,7 +61,7 @@ const METHOD = matrixColumn({
 const SIZE = matrixColumn({ id: "size", name: "Sample", data_type: "number", sort_order: 1 });
 const NOTES = matrixColumn({ id: "notes", name: "Findings", sort_order: 2 });
 
-function setUp(prepare?: (backend: FakeBackend) => void) {
+function setUp(prepare?: (backend: FakeBackend) => void, platform = readyPlatform) {
   window.location.hash = "#/matrix";
   const backend = fakeBackend({ language: "en" });
   backend.reviews.push(review());
@@ -86,7 +86,7 @@ function setUp(prepare?: (backend: FakeBackend) => void) {
     }),
   );
   prepare?.(backend);
-  render(<App platform={readyPlatform} fetch={backend.fetch} />);
+  render(<App platform={platform} fetch={backend.fetch} />);
   return { backend, user: userEvent.setup() };
 }
 
@@ -303,6 +303,53 @@ describe("the matrix", () => {
     await waitFor(() => {
       expect(backend.matrices[0]?.columns.map((c) => c.id)).toEqual(["method", "size"]);
     });
+  });
+});
+
+describe("export", () => {
+  it("saves the file the backend makes, named after the matrix", async () => {
+    const saveFile = vi.fn(() => Promise.resolve());
+    const { backend, user } = setUp(
+      (b) => {
+        const matrix = b.matrices[0];
+        if (matrix) matrix.name = "Sentez: ilk/tur";
+      },
+      { ...readyPlatform, saveFile },
+    );
+    await grid();
+    await user.click(screen.getByRole("button", { name: "Export" }));
+    await user.click(await screen.findByRole("menuitem", { name: "Excel (.xlsx)" }));
+    await waitFor(() => {
+      expect(saveFile).toHaveBeenCalledWith(
+        "Sentez ilk tur.xlsx",
+        new Uint8Array([0xef, 0xbb, 0xbf, ...new TextEncoder().encode("Matrix")]),
+        "application/zip",
+      );
+    });
+    expect(screen.getByRole("status")).toHaveTextContent("Saved as Sentez ilk tur.xlsx.");
+    // The file's words are the app's.
+    expect(backend.requests.find((r) => r.path.endsWith("/export"))?.body).toMatchObject({
+      format: "xlsx",
+      labels: { paper: "Paper", page: "p.", et_al: "et al.", yes: "Yes" },
+    });
+  });
+
+  it("shows the data extraction stage on the review panel", async () => {
+    setUp((b) => {
+      const matrix = b.matrices[0];
+      if (!matrix) return;
+      matrix.coverage = { filled: 3, sourced: 1, rows: 2, rows_sourced: 0 };
+      window.location.hash = "#/review";
+    });
+    const card = (await screen.findByRole("heading", { name: "Data extraction" })).closest("li");
+    if (!card) throw new Error("no card");
+    // 3 included papers × 3 columns.
+    expect(card).toHaveTextContent("3 of 9 cells filled");
+    expect(card).toHaveTextContent("33% of them backed by passages");
+    expect(within(card).getByRole("link", { name: /Data extraction/ })).toHaveAttribute(
+      "href",
+      "#/matrix",
+    );
   });
 });
 

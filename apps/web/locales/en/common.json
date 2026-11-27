@@ -1395,6 +1395,26 @@
     "papers_one": "{{count}} paper",
     "papers_other": "{{count}} papers",
     "columns_one": "{{count}} column",
-    "columns_other": "{{count}} columns"
+    "columns_other": "{{count}} columns",
+    "export": {
+      "action": "Export",
+      "xlsx": "Excel (.xlsx)",
+      "csv": "CSV (.csv)",
+      "md": "Markdown (.md)",
+      "saved": "Saved as {{fileName}}.",
+      "paper": "Paper",
+      "title": "Title",
+      "year": "Year",
+      "quality": "Quality",
+      "evidence": "Evidence",
+      "page": "p.",
+      "etAl": "et al."
+    },
+    "stage": {
+      "name": "Data extraction",
+      "none": "No matrix yet: compare the included papers in a literature matrix.",
+      "filled": "{{filled}} of {{cells}} cells filled",
+      "sourced": "{{percent}}% of them backed by passages"
+    }
   }
 }

@@ -15,6 +15,7 @@ import { ReviewersPanel } from "@/features/dual-screening/ReviewersPanel";
 import { GreyLiteraturePanel } from "@/features/greylit/GreyLiteraturePanel";
 import { usePrismaCounts } from "@/features/prisma/api";
 import { PrismaSummary } from "@/features/prisma/PrismaPage";
+import { MatrixStageCard } from "@/features/matrix/MatrixStage";
 import { QualityStageCard, QualityToggle } from "@/features/quality/QualityStage";
 import { SnowballPanel } from "@/features/snowballing/SnowballPanel";
 
@@ -94,6 +95,7 @@ function Panel({ review }: { review: ReviewView }) {
             <ScreeningStageCard key={stage.stage} progress={stage} />
           ))}
           <QualityStageCard reviewId={review.id} />
+          <MatrixStageCard reviewId={review.id} />
         </ol>
         <QualityToggle reviewId={review.id} />
         {overview.isError && (

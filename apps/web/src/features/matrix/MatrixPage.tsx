@@ -26,6 +26,7 @@ import {
   type RowView,
 } from "./api";
 import { ColumnDialog } from "./ColumnDialog";
+import { ExportMenu } from "./ExportMenu";
 import { useMatrixSelection } from "./store";
 import {
   MatrixGrid,
@@ -147,6 +148,7 @@ function Matrix({
   const [sort, setSort] = useState<{ columnId: string; direction: SortDirection } | null>(null);
   const [dialog, setDialog] = useState<{ column: ColumnView | null } | null>(null);
   const [deleting, setDeleting] = useState<ColumnView | null>(null);
+  const [saved, setSaved] = useState<string | null>(null);
   const setCell = useMatrixSelection((state) => state.setCell);
   const onActive = useCallback(
     (cell: { paperId: string; columnId: string } | null) => {
@@ -305,6 +307,7 @@ function Matrix({
           >
             <Redo2 aria-hidden />
           </Button>
+          <ExportMenu matrixId={matrixId} name={data.name} onSaved={setSaved} />
         </div>
       </header>
       {excluded > 0 && (
@@ -318,6 +321,11 @@ function Matrix({
           />
           {t("matrix.showExcluded", { count: excluded })}
         </label>
+      )}
+      {saved && (
+        <p role="status" className="border-b border-line px-4 py-1.5 text-meta text-fg-muted">
+          {t("matrix.export.saved", { fileName: saved })}
+        </p>
       )}
       {put.error && (
         <p role="alert" className="border-b border-line px-4 py-1.5 text-meta text-danger">
