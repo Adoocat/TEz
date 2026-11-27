@@ -34,7 +34,7 @@ Everything lives in a folder on your own computer. The only network traffic goes
 - [What it does](#what-it-does)
 - [Principles](#principles)
 - [Getting started](#getting-started)
-- [Your first review in ten minutes](#your-first-review-in-ten-minutes)
+- [Your first review in fifteen minutes](#your-first-review-in-fifteen-minutes)
 - [Keyboard shortcuts](#keyboard-shortcuts)
 - [The `tez` command](#the-tez-command)
 - [Architecture](#architecture)
@@ -49,11 +49,11 @@ Everything lives in a folder on your own computer. The only network traffic goes
 TEz follows a review from start to finish:
 
 ```text
- Search ──► Screen (title/abstract) ──► Screen (full text) ──► Appraise ──► Report
-   │              │                           │                    │            │
- 6 APIs +     keyboard-first,            PDF beside the      quality      PRISMA 2020,
- file imports criteria & reasons         decision bar        checklists   bibliography,
- deduplicated append-only decisions      "not retrieved"     and scores   search strategy
+ Search ──► Screen (title/abstract) ──► Screen (full text) ──► Read & extract ──► Report
+   │              │                           │                     │                 │
+ 6 APIs +     keyboard-first,            PDF beside the       highlights, notes,  PRISMA 2020,
+ file imports criteria & reasons         decision bar         a matrix whose      bibliography,
+ deduplicated append-only decisions      "not retrieved"      cells cite the PDF  matrix export
 ```
 
 ### Search and import
@@ -114,6 +114,19 @@ TEz follows a review from start to finish:
 - **Backups** as one zip with checksums; restore is verified before the library opens.
 - **Reviews** can be moved to the trash and restored; what was recorded under them is never lost.
 
+### Reading, notes and the matrix
+
+Everything taken from a PDF stays tied to the place it came from: a quote with its page, the text before and after it, and its position. Each item can open the PDF at that sentence, and if a new version of the file moves the passage, TEz finds it again or marks it as lost rather than pointing at the wrong place.
+
+- **Full-text search.** PDFs are read page by page in the worker, so you can search their text. A hit opens the right page. Broken, encrypted and scanned files are flagged instead of stopping the queue.
+- **The reader** has in-document search, the outline, page thumbnails, tabs for several documents and a focus mode, and stays smooth at 300 pages.
+- **Highlights** come in colours, with comments, and can also cover an area such as a figure (`H`).
+- **Notes** are Markdown with `[[links]]` to papers and other notes, and show backlinks. They save as you type. **Quote to note** (`⇧N`) adds a source chip that reopens the reader at that sentence.
+- **The literature matrix** has a row for every study included at full text and typed columns (text, number, choice, several choices, yes/no). You edit it from the keyboard and can undo. A type change never drops a value it cannot convert.
+- **Cell evidence.** **Link to a matrix cell** backs a cell with a sentence of the PDF. The matrix shows how much of it rests on passages. You can export it to Excel, CSV or Markdown, with the passages and their pages.
+- **Figure and table gallery:** areas cut from the reader, kept with their source. You can compare two to four side by side and export them to one HTML file.
+- **GROBID (optional).** With a GROBID running on this computer, the reader lists a paper's sections and references and marks the references already in your library. Without it, nothing of it shows.
+
 ## Principles
 
 | | |
@@ -155,16 +168,24 @@ For the desktop app instead of the browser (the first build takes a few minutes)
 pnpm dev:desktop
 ```
 
-To try the library with plenty of data, make a demo library of 2,000 fictional papers:
+To try TEz with data, make a demo library of fictional papers. `--review` adds a demo review that has already been searched, screened and tabulated:
 
 ```bash
-uv run --project backend python -m tez.devtools.demo <empty-folder> --papers 2000
+uv run --project backend python -m tez.devtools.demo <empty-folder> --papers 2000 --review
 uv run --project backend tez-backend serve --library <empty-folder>
 ```
 
 The second command prints a local address with a token; open it in your browser.
 
-## Your first review in ten minutes
+The demo review, *LLM assistants in code review*, has:
+- two database searches (Scopus and IEEE Xplore, one record found by both);
+- title-abstract and full-text decisions with their reasons, and one report not retrieved;
+- generated PDFs for the reports;
+- a data extraction matrix whose findings are each linked to a sentence in the PDF.
+
+Its PRISMA diagram, matrix and exports are ready to look at. Every name and DOI in it is made up.
+
+## Your first review in fifteen minutes
 
 1. **Create a review.** Click **+** in the title bar, give it a title and a research question. The method defaults to PRISMA 2020.
 2. **Write your criteria.** In the review panel, add an inclusion criterion (`I1`) and a few exclusion reasons (`E1`, `E2`). Add highlight terms to have them marked in abstracts.
@@ -173,7 +194,8 @@ The second command prints a local address with a token; open it in your browser.
 5. **Screen full texts.** Switch to the **Full text** tab. Use **Find PDFs** for free copies, read them beside the decision bar, or mark a report as not retrieved.
 6. **Look at PRISMA.** In the review panel, **Open the diagram**. Rename boxes if your journal wants different wording, switch to black and white, save as SVG or PNG.
 7. **Appraise (optional).** Turn on quality assessment, pick a checklist or write your own, and score each included study.
-8. **Write it up.** Open **Export**: copy the bibliography of the included studies in your style and language, and save the search strategy table for your methods chapter.
+8. **Read and extract.** Open an included study in the reader, highlight what matters, and in **Matrix** create a matrix with a column for each thing you extract (method, sample, finding…). Select a sentence and choose **Link to a matrix cell**: the cell gets the sentence, and the sentence stays one click away.
+9. **Write it up.** Open **Export**: copy the bibliography of the included studies in your style and language, and save the search strategy table for your methods chapter. Export the matrix from **Matrix** as Excel, CSV or Markdown.
 
 ## Keyboard shortcuts
 
@@ -184,6 +206,8 @@ The second command prints a local address with a token; open it in your browser.
 | Screening | `→` · `U` · `N` | Skip · undo · note |
 | Screening | `J` · `K` | Next · previous record, without deciding |
 | Screening | `1`–`9` | The criterion with that number |
+| Reader | `J` · `K` · `Ctrl+F` · `F` | Next · previous page · find in the document · focus mode |
+| Reader | `H` · `⇧N` | Highlight the selection · quote it to a note |
 
 Every shortcut is also a visible button; the `?` overlay is generated from the same map, so it is always complete.
 
@@ -291,8 +315,10 @@ TEz/
 │  │  ├─ core/             configuration, database, errors, auth, logging
 │  │  ├─ shared/           outbound HTTP, identifiers, Turkish-safe text folding
 │  │  ├─ modules/          library, search (+ providers/), importers, files, reviews, screening,
-│  │  │                    prisma, snowballing, greylit, quality, export, dual_screening, jobs, …
+│  │  │                    prisma, snowballing, greylit, quality, export, dual_screening, jobs,
+│  │  │                    fulltext, anchors, annotations, notes, matrix, assets, structure, …
 │  │  ├─ migrations/       Alembic migrations, applied by the app itself
+│  │  ├─ devtools/         the demo library and demo review
 │  │  └─ cli/              the tez command
 │  └─ tests/               unit and integration tests, fixtures, recorded cassettes
 ├─ docs/                   plan, architecture, ADRs, design system, progress, licenses
@@ -305,8 +331,8 @@ TEz/
 | --- | --- | --- |
 | **1** | Library, federated search, deduplication, BibTeX/RIS import and export, PDFs, reader, backups, `tez` command | ✅ Done |
 | **2** | Review wizard, criteria, two-stage screening, PRISMA 2020, snowballing, grey literature, quality assessment, CSL bibliographies, export screen, two reviewers, PubMed and Europe PMC, import presets | ✅ Done |
-| **3** | Full-text extraction and search, notes with backlinks, the literature matrix with evidence linked to PDF passages, optional GROBID | ⏳ Next |
-| **4** | Saved-search alerts, refresh reminders for external searches, citation graph | Planned |
+| **3** | Full-text extraction and search, highlights, notes with backlinks, the literature matrix with evidence linked to PDF passages, figure and table gallery, optional GROBID | ✅ Done |
+| **4** | Saved-search alerts, refresh reminders for external searches, citation graph | ⏳ Next |
 | **5** | Optional AI assistance whose every claim is checked against a verified quote in the source | Planned |
 | **6** | Installers for Windows, macOS and Linux, `tez` on the PATH, "Open with TEz", Zotero export | Planned |
 
