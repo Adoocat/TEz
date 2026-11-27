@@ -14,6 +14,8 @@ from tez.modules.matrix.schemas import (
     ColumnView,
     EvidenceCreate,
     MatrixCreate,
+    MatrixExport,
+    MatrixExportFile,
     MatrixPatch,
     MatrixSummary,
     MatrixView,
@@ -121,3 +123,9 @@ def unlink_evidence(
 def paper_matrices(paper_id: str, library: LibraryDep) -> list[PaperMatrix]:
     """The matrices the paper is a row of, with its cells."""
     return service.paper_matrices(library.db, paper_id)
+
+
+@router.post(f"{_MATRIX}/export")
+def export_matrix(matrix_id: str, body: MatrixExport, library: LibraryDep) -> MatrixExportFile:
+    """The included rows as CSV (UTF-8 with BOM), Excel or Markdown, with passages and pages."""
+    return service.export_matrix(library.db, matrix_id, body)

@@ -1043,6 +1043,8 @@ function matrixRoute(
           name: m.name,
           columns: m.columns.length,
           created_at: "2026-11-26T10:00:00Z",
+          rows: m.rows.filter((r) => r.included).length,
+          coverage: m.coverage,
         })),
     );
   }
@@ -1060,6 +1062,12 @@ function matrixRoute(
   const matrix = backend.matrices.find((m) => m.id === matrixId);
   if (!matrix) return notFound("matrix.not_found");
   if (rest === "" && method === "GET") return json(matrix);
+  if (rest === "/export" && method === "POST") {
+    const { format } = body as { format: "csv" | "xlsx" | "md" };
+    const mime = { csv: "text/csv", xlsx: "application/zip", md: "text/markdown" }[format];
+    // "Matrix" in UTF-8 with a mark, as the real export starts.
+    return json({ mime_type: mime, content_base64: "77u/TWF0cml4" });
+  }
   if (rest === "/columns" && method === "POST") {
     const given = body as { name: string; data_type: MatrixColumnView["data_type"] } & {
       instruction?: string | null;

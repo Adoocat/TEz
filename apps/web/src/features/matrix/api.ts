@@ -308,3 +308,20 @@ export function useUnlinkEvidence() {
     onSuccess: (_cell, target) => refresh(target),
   });
 }
+
+export type ExportFormat = components["schemas"]["MatrixExport"]["format"];
+export type ExportLabels = components["schemas"]["ExportLabels"];
+
+/** The matrix as a file: CSV, Excel or Markdown, with passages and pages (Task 54). */
+export function useExportMatrix(matrixId: string) {
+  const api = useApi();
+  return useMutation({
+    mutationFn: async ({ format, labels }: { format: ExportFormat; labels: ExportLabels }) =>
+      unwrap(
+        await api.POST("/matrices/{matrix_id}/export", {
+          params: { path: { matrix_id: matrixId } },
+          body: { format, labels },
+        }),
+      ),
+  });
+}

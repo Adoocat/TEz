@@ -44,6 +44,9 @@ export interface Platform {
   openExternal(url: string): Promise<void>;
   /** Put text on the clipboard; with `html` also as rich text, which pastes into Word formatted. */
   copyText(text: string, html?: string): Promise<void>;
-  /** Save a file the app made (a bibliography, a table) where the user's downloads go. */
-  saveFile(fileName: string, content: string, mimeType: string): Promise<void>;
+  /**
+   * Save a file the app made (a bibliography, a table) where the user's downloads go. Text is
+   * saved as UTF-8; bytes (an Excel file) as they are.
+   */
+  saveFile(fileName: string, content: string | Uint8Array, mimeType: string): Promise<void>;
 }

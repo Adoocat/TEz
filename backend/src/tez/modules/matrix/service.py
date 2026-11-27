@@ -15,6 +15,7 @@ from tez.core.db import Database
 from tez.core.errors import ErrorCode, TezError
 from tez.modules.anchors import service as anchors
 from tez.modules.library.paper_service import PaperService
+from tez.modules.matrix import export as matrix_export
 from tez.modules.matrix import values
 from tez.modules.matrix.models import CellOrigin, Matrix, MatrixCell, MatrixColumn
 from tez.modules.matrix.repository import MatrixRepository
@@ -26,6 +27,8 @@ from tez.modules.matrix.schemas import (
     Coverage,
     EvidenceView,
     KeptCell,
+    MatrixExport,
+    MatrixExportFile,
     MatrixSummary,
     MatrixView,
     OptionIn,
@@ -36,6 +39,7 @@ from tez.modules.matrix.schemas import (
     TypeChangeReport,
 )
 from tez.modules.matrix.values import DataType, Option
+from tez.modules.quality import service as quality
 from tez.modules.reviews import service as reviews
 from tez.modules.reviews.models import ScreeningStage
 from tez.modules.screening.service import RECONCILED, ScreeningService
@@ -152,13 +156,15 @@ def _coverage(rows: Sequence[RowView]) -> Coverage:
     return Coverage(filled=filled, sourced=sourced, rows=with_content, rows_sourced=rows_sourced)
 
 
-def _summary(matrix: Matrix, columns: int) -> MatrixSummary:
+def _summary(matrix: Matrix, columns: int, rows: int, coverage: Coverage) -> MatrixSummary:
     return MatrixSummary(
         id=matrix.id,
         review_id=matrix.review_id,
         name=matrix.name,
         columns=columns,
         created_at=matrix.created_at,
+        rows=rows,
+        coverage=coverage,
     )
 
 
@@ -213,7 +219,12 @@ def list_matrices(db: Database, review_id: str) -> list[MatrixSummary]:
         repository = MatrixRepository(session)
         matrices = repository.matrices(review_id)
         counts = repository.column_counts(m.id for m in matrices)
-        return [_summary(matrix, counts.get(matrix.id, 0)) for matrix in matrices]
+        found: list[MatrixSummary] = []
+        for matrix in matrices:
+            view = _matrix_view(session, matrix)
+            rows = sum(1 for row in view.rows if row.included)
+            found.append(_summary(matrix, counts.get(matrix.id, 0), rows, view.coverage))
+        return found
 
 
 def create_matrix(db: Database, review_id: str, name: str) -> MatrixView:
@@ -502,3 +513,20 @@ def paper_matrices(db: Database, paper_id: str) -> list[PaperMatrix]:
                 )
             )
         return found
+
+
+# --- export ---------------------------------------------------------------------------------
+
+
+def export_matrix(db: Database, matrix_id: str, body: MatrixExport) -> MatrixExportFile:
+    """The matrix as CSV, Excel or Markdown, with passages and pages; with the quality total
+    while the review's quality stage is on."""
+    view = get_matrix(db, matrix_id)
+    scores: dict[str, matrix_export.Score] | None = None
+    if quality.summary(db, view.review_id).enabled:
+        scores = {
+            row.paper_id: matrix_export.Score(row.score, row.max_score)
+            for row in quality.papers(db, view.review_id)
+            if row.score is not None and row.max_score is not None
+        }
+    return matrix_export.to_file(view, scores, body.labels, body.format)
