@@ -402,7 +402,7 @@ Nov 25, 2026 · Onaylandı. Kapsam: kritik yolun son halkası (okuma → not →
 ### E. Belge yapısı
 
 - [x] **55 · Şekil ve tablo galerisi:** okuyucuda seçilen alan kaynağıyla kaydedilir; galeri, yan yana karşılaştırma, dışa aktarma (tasarım 5.5). *Kabul:* öğeden PDF'teki yere dönülür.
-- [ ] **56 · GROBID (isteğe bağlı):** bölümler ve kaynakça; kapalıyken arayüzde görünmez. *Kabul:* testler kayıtlı yanıtla; GROBID yokken hiçbir şey bozulmaz.
+- [x] **56 · GROBID (isteğe bağlı):** bölümler ve kaynakça; kapalıyken arayüzde görünmez. *Kabul:* testler kayıtlı yanıtla; GROBID yokken hiçbir şey bozulmaz.
 
 ### F. Kapanış
 

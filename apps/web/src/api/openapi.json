@@ -10777,6 +10777,226 @@
         }
       }
     },
+    "/grobid": {
+      "get": {
+        "tags": [
+          "structure"
+        ],
+        "summary": "Grobid Status",
+        "description": "Whether a GROBID address is set; while not, the app shows nothing that needs it.",
+        "operationId": "grobid_status_grobid_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrobidStatus"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/attachments/{attachment_id}/structure": {
+      "post": {
+        "tags": [
+          "structure"
+        ],
+        "summary": "Read Structure",
+        "description": "Have GROBID read the file's sections and references (a worker job).",
+        "operationId": "read_structure_attachments__attachment_id__structure_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Attachment Id"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StructureQueued"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "structure"
+        ],
+        "summary": "Get Structure",
+        "operationId": "get_structure_attachments__attachment_id__structure_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Attachment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StructureView"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No library is open",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/reviews/{review_id}/grey-literature": {
       "post": {
         "tags": [
@@ -11885,6 +12105,19 @@
               }
             ],
             "title": "Sources Email"
+          },
+          "grobid_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "pattern": "^https?://(localhost|127\\.0\\.0\\.1|\\[::1\\])(:\\d{1,5})?/?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grobid Url"
           }
         },
         "type": "object",
@@ -14575,6 +14808,20 @@
         ],
         "title": "GreyRecordCreate",
         "description": "One record entered by hand: a thesis, a report, a register record or a web page."
+      },
+      "GrobidStatus": {
+        "properties": {
+          "configured": {
+            "type": "boolean",
+            "title": "Configured"
+          }
+        },
+        "type": "object",
+        "required": [
+          "configured"
+        ],
+        "title": "GrobidStatus",
+        "description": "Whether GROBID is set up; everything that needs it is hidden while it is not."
       },
       "Health": {
         "properties": {
@@ -17578,6 +17825,92 @@
         "title": "RecordWarning",
         "description": "A record was read, but a field the user would expect is missing or unusable."
       },
+      "ReferenceView": {
+        "properties": {
+          "ord": {
+            "type": "integer",
+            "title": "Ord"
+          },
+          "raw_text": {
+            "type": "string",
+            "title": "Raw Text"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "authors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Authors"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "doi": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doi"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page"
+          },
+          "matched_paper_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Matched Paper Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ord",
+          "raw_text",
+          "title",
+          "authors",
+          "year",
+          "doi",
+          "page",
+          "matched_paper_id"
+        ],
+        "title": "ReferenceView"
+      },
       "RelatedPaper": {
         "properties": {
           "paper_id": {
@@ -18635,6 +18968,48 @@
         ],
         "title": "SecretValue"
       },
+      "SectionView": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "heading": {
+            "type": "string",
+            "title": "Heading"
+          },
+          "page_start": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Start"
+          },
+          "page_end": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page End"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "heading",
+          "page_start",
+          "page_end"
+        ],
+        "title": "SectionView"
+      },
       "SelectionResult": {
         "properties": {
           "added": {
@@ -18698,6 +19073,19 @@
               }
             ],
             "title": "Sources Email"
+          },
+          "grobid_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "pattern": "^https?://(localhost|127\\.0\\.0\\.1|\\[::1\\])(:\\d{1,5})?/?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grobid Url"
           }
         },
         "additionalProperties": false,
@@ -19459,6 +19847,69 @@
           "status"
         ],
         "title": "StrategyRow"
+      },
+      "StructureQueued": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id"
+        ],
+        "title": "StructureQueued"
+      },
+      "StructureView": {
+        "properties": {
+          "read_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Read At"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/SectionView"
+            },
+            "type": "array",
+            "title": "Sections"
+          },
+          "references": {
+            "items": {
+              "$ref": "#/components/schemas/ReferenceView"
+            },
+            "type": "array",
+            "title": "References"
+          }
+        },
+        "type": "object",
+        "required": [
+          "read_at",
+          "error",
+          "sections",
+          "references"
+        ],
+        "title": "StructureView",
+        "description": "What GROBID read from a file; empty lists until it was read."
       },
       "TagCreate": {
         "properties": {

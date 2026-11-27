@@ -41,7 +41,7 @@ def client(library: Library, store: MemorySecretStore) -> Generator[TestClient]:
 def test_defaults(client: TestClient) -> None:
     body = client.get("/settings", headers=AUTH).json()
 
-    assert body == {"language": None, "theme": "system", "sources_email": None}
+    assert body == {"language": None, "theme": "system", "sources_email": None, "grobid_url": None}
 
 
 def test_changes_persist_across_restarts(tmp_path: Path, store: MemorySecretStore) -> None:
@@ -63,7 +63,7 @@ def test_changes_persist_across_restarts(tmp_path: Path, store: MemorySecretStor
     with TestClient(second) as c:
         body = c.get("/settings", headers=AUTH).json()
 
-    assert body == {"language": "en", "theme": "dark", "sources_email": None}
+    assert body == {"language": "en", "theme": "dark", "sources_email": None, "grobid_url": None}
 
 
 def test_patch_changes_only_what_is_sent(client: TestClient) -> None:
@@ -71,7 +71,12 @@ def test_patch_changes_only_what_is_sent(client: TestClient) -> None:
 
     body = client.patch("/settings", headers=AUTH, json={"language": "tr"}).json()
 
-    assert body == {"language": "tr", "theme": "dark", "sources_email": "a@b.org"}
+    assert body == {
+        "language": "tr",
+        "theme": "dark",
+        "sources_email": "a@b.org",
+        "grobid_url": None,
+    }
 
 
 def test_null_resets_to_the_default(client: TestClient) -> None:
@@ -79,7 +84,12 @@ def test_null_resets_to_the_default(client: TestClient) -> None:
 
     body = client.patch("/settings", headers=AUTH, json={"language": None, "sources_email": None})
 
-    assert body.json() == {"language": None, "theme": "system", "sources_email": None}
+    assert body.json() == {
+        "language": None,
+        "theme": "system",
+        "sources_email": None,
+        "grobid_url": None,
+    }
 
 
 @pytest.mark.parametrize(

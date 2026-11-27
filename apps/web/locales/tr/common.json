@@ -120,7 +120,10 @@
       "restoreTitle": "Geri yükleme",
       "restoreText": "Yedek yeni ve boş bir klasöre geri yüklenir; klasör sonra kütüphane olarak açılır. Her dosya yedekteki sağlama değerleriyle denetlenir. Bu sürümde geri yükleme terminalden yapılır:",
       "newFolder": "yeni klasör"
-    }
+    },
+    "grobid": "GROBID adresi (isteğe bağlı)",
+    "grobidHelp": "GROBID bir makalenin bölümlerini ve kaynakçasını okur. Bu bilgisayarda çalıştırın (örneğin Docker ile) ve adresini girin; makaleler yalnız oraya gönderilir. Boşsa ona bağlı her şey gizlenir.",
+    "grobidInvalid": "Yalnız bu bilgisayardaki bir adres: http://localhost:8070 ya da http://127.0.0.1:8070."
   },
   "errors": {
     "unknown": "Beklenmeyen bir hata oluştu.",
@@ -231,7 +234,10 @@
     "annotation.not_found": "Bu vurgu artık yok.",
     "asset.not_found": "Şekil ya da tablo bulunamadı.",
     "asset.image_invalid": "Resim en çok 10 MB'lık bir PNG olmalı.",
-    "asset.image_missing": "Resim kütüphane klasöründe yok."
+    "asset.image_missing": "Resim kütüphane klasöründe yok.",
+    "grobid.off": "GROBID kurulu değil. Adresini Ayarlar → Kaynaklar'a girin.",
+    "grobid.unreachable": "GROBID, Ayarlar'daki adreste yanıt vermiyor. Çalışıyor mu?",
+    "grobid.failed": "GROBID bu makaleyi okuyamadı."
   },
   "reviews": {
     "active": "Etkin review",
@@ -1469,6 +1475,26 @@
       "title": "Şekil ya da tablo sakla",
       "preview": "İşaretlenen alan",
       "action": "Sakla"
+    }
+  },
+  "structure": {
+    "tab": "Yapı",
+    "read": "Bölümleri ve kaynakçayı oku (GROBID)",
+    "readAgain": "Yeniden oku",
+    "reading": "GROBID makaleyi okuyor…",
+    "notRead": "GROBID bu makaleyi henüz okumadı.",
+    "sections": "Bölümler",
+    "references_one": "{{count}} kaynak",
+    "references_other": "{{count}} kaynak",
+    "page": "s. {{page}}",
+    "inLibrary": "kütüphanenizde",
+    "types": {
+      "abstract": "Özet",
+      "intro": "Giriş",
+      "method": "Yöntem",
+      "results": "Bulgular",
+      "discussion": "Tartışma",
+      "other": ""
     }
   }
 }

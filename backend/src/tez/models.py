@@ -18,6 +18,7 @@ from tez.modules.quality import models as quality_models
 from tez.modules.reviews import models as reviews_models
 from tez.modules.search import models as search_models
 from tez.modules.settings import models as settings_models
+from tez.modules.structure import models as structure_models
 
 __all__ = [
     "Base",
@@ -34,4 +35,5 @@ __all__ = [
     "reviews_models",
     "search_models",
     "settings_models",
+    "structure_models",
 ]

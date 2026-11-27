@@ -120,7 +120,10 @@
       "restoreTitle": "Restoring",
       "restoreText": "A backup is restored into a new, empty folder, which then opens as a library. Every file is checked against the backup's checksums. In this version, restore from a terminal:",
       "newFolder": "new folder"
-    }
+    },
+    "grobid": "GROBID address (optional)",
+    "grobidHelp": "GROBID reads a paper's sections and references. Run it on this computer (for example with Docker) and give its address; papers are sent only there. Empty: everything that needs it is hidden.",
+    "grobidInvalid": "Only an address on this computer: http://localhost:8070 or http://127.0.0.1:8070."
   },
   "errors": {
     "unknown": "Something unexpected went wrong.",
@@ -231,7 +234,10 @@
     "annotation.not_found": "This highlight no longer exists.",
     "asset.not_found": "The figure or table was not found.",
     "asset.image_invalid": "The picture must be a PNG of at most 10 MB.",
-    "asset.image_missing": "The picture is missing from the library folder."
+    "asset.image_missing": "The picture is missing from the library folder.",
+    "grobid.off": "GROBID is not set up. Give its address in Settings → Sources.",
+    "grobid.unreachable": "GROBID does not answer at the address in Settings. Is it running?",
+    "grobid.failed": "GROBID could not read this paper."
   },
   "reviews": {
     "active": "Active review",
@@ -1469,6 +1475,26 @@
       "title": "Keep a figure or table",
       "preview": "The marked area",
       "action": "Keep"
+    }
+  },
+  "structure": {
+    "tab": "Structure",
+    "read": "Read sections and references (GROBID)",
+    "readAgain": "Read again",
+    "reading": "GROBID is reading the paper…",
+    "notRead": "GROBID has not read this paper yet.",
+    "sections": "Sections",
+    "references_one": "{{count}} reference",
+    "references_other": "{{count}} references",
+    "page": "p. {{page}}",
+    "inLibrary": "in your library",
+    "types": {
+      "abstract": "Abstract",
+      "intro": "Introduction",
+      "method": "Method",
+      "results": "Results",
+      "discussion": "Discussion",
+      "other": ""
     }
   }
 }

@@ -110,7 +110,7 @@ export const useReaderSelection = create<ReaderSelection>((set) => ({
   },
 }));
 
-type ReadingTab = "highlights" | "notes" | "matrix";
+type ReadingTab = "highlights" | "notes" | "matrix" | "structure";
 
 interface ReadingPanel {
   tab: ReadingTab;

@@ -20,6 +20,7 @@ from tez.modules.library.models import (
     RetractionStatus,
 )
 from tez.modules.library.repository import AuthorInput, LibraryRepository
+from tez.shared.text import normalize_title
 
 # The system collection new files land in until the user files them (plan, "Gelen kutusu").
 INBOX = "inbox"
@@ -130,6 +131,28 @@ class PaperService:
             if scheme not in known:
                 paper.identifiers.append(PaperIdentifier(scheme=scheme, value=value))
         self._session.flush()
+
+    def match(self, doi: str | None, title: str | None) -> tuple[str, float] | None:
+        """A library paper a reference names: by DOI (score 1), else by its folded title
+        (score 0.9). None when neither finds exactly one."""
+        in_library = (Paper.library_added_at.is_not(None), Paper.deleted_at.is_(None))
+        if doi:
+            found = self.cards_where(
+                *in_library,
+                Paper.id.in_(
+                    select(PaperIdentifier.paper_id).where(
+                        PaperIdentifier.scheme == IdentifierScheme.DOI,
+                        PaperIdentifier.value == doi.lower(),
+                    )
+                ),
+            )
+            if len(found) == 1:
+                return found[0].paper.id, 1.0
+        if title and len(title) >= 12:
+            found = self.cards_where(*in_library, Paper.title_norm == normalize_title(title))
+            if len(found) == 1:
+                return found[0].paper.id, 0.9
+        return None
 
     def existing_ids(self, paper_ids: Iterable[str]) -> set[str]:
         return set(self._session.scalars(select(Paper.id).where(Paper.id.in_(set(paper_ids)))))

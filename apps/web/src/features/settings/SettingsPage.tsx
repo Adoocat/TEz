@@ -120,7 +120,49 @@ function SourcesSection() {
       <Field label={t("settings.apiKeys")} help={t("settings.apiKeysHelp")}>
         <SecretList />
       </Field>
+      <GrobidField key={settings.data.grobid_url ?? ""} initial={settings.data.grobid_url ?? ""} />
     </>
+  );
+}
+
+// GROBID on this computer only (rule 1): the PDFs go to it.
+const LOCAL_URL = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d{1,5})?\/?$/;
+
+function GrobidField({ initial }: { initial: string }) {
+  const { t } = useTranslation();
+  const update = useUpdateSettings();
+  const [url, setUrl] = useState(initial);
+  const trimmed = url.trim();
+  const invalid = trimmed !== "" && !LOCAL_URL.test(trimmed);
+  return (
+    <Field label={t("settings.grobid")} help={t("settings.grobidHelp")}>
+      <form
+        className="flex gap-2"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (!invalid) update.mutate({ grobid_url: trimmed === "" ? null : trimmed });
+        }}
+      >
+        <Input
+          aria-label={t("settings.grobid")}
+          aria-invalid={invalid}
+          placeholder="http://localhost:8070"
+          value={url}
+          onChange={(event) => {
+            setUrl(event.target.value);
+          }}
+        />
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={invalid || trimmed === initial || update.isPending}
+        >
+          {t("settings.save")}
+        </Button>
+      </form>
+      {invalid && <p className="text-meta text-danger">{t("settings.grobidInvalid")}</p>}
+      <ErrorText error={update.error} />
+    </Field>
   );
 }
 

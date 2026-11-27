@@ -40,6 +40,7 @@ from tez.modules.search.router import router as search_router
 from tez.modules.settings.router import secrets_router, settings_router
 from tez.modules.settings.secrets import KeyringSecretStore, SecretStore
 from tez.modules.snowballing.router import router as snowball_router
+from tez.modules.structure.router import router as structure_router
 from tez.modules.system.router import router as system_router
 
 # `serve --reload` hands these to the reloaded child process, which builds the app.
@@ -115,6 +116,7 @@ def create_app(
     app.include_router(export_router, dependencies=secured, responses=needs_library)
     app.include_router(settings_router, dependencies=secured, responses=needs_library)
     app.include_router(snowball_router, dependencies=secured, responses=needs_library)
+    app.include_router(structure_router, dependencies=secured, responses=needs_library)
     app.include_router(greylit_router, dependencies=secured, responses=needs_library)
     app.include_router(prisma_router, dependencies=secured, responses=needs_library)
     app.include_router(
