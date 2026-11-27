@@ -2016,6 +2016,47 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/grobid": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Grobid Status
+         * @description Whether a GROBID address is set; while not, the app shows nothing that needs it.
+         */
+        get: operations["grobid_status_grobid_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/attachments/{attachment_id}/structure": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Structure */
+        get: operations["get_structure_attachments__attachment_id__structure_get"];
+        put?: never;
+        /**
+         * Read Structure
+         * @description Have GROBID read the file's sections and references (a worker job).
+         */
+        post: operations["read_structure_attachments__attachment_id__structure_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/reviews/{review_id}/grey-literature": {
         parameters: {
             query?: never;
@@ -2293,6 +2334,8 @@ export interface components {
             theme: "light" | "dark" | "system";
             /** Sources Email */
             sources_email?: string | null;
+            /** Grobid Url */
+            grobid_url?: string | null;
         };
         /** AssetCreate */
         AssetCreate: {
@@ -3185,6 +3228,14 @@ export interface components {
             doi?: string | null;
             /** Abstract */
             abstract?: string | null;
+        };
+        /**
+         * GrobidStatus
+         * @description Whether GROBID is set up; everything that needs it is hidden while it is not.
+         */
+        GrobidStatus: {
+            /** Configured */
+            configured: boolean;
         };
         /** Health */
         Health: {
@@ -4106,6 +4157,25 @@ export interface components {
          * @enum {string}
          */
         RecordWarning: "no_authors" | "no_year" | "no_identifier" | "bad_year" | "bad_link";
+        /** ReferenceView */
+        ReferenceView: {
+            /** Ord */
+            ord: number;
+            /** Raw Text */
+            raw_text: string;
+            /** Title */
+            title: string | null;
+            /** Authors */
+            authors: string[];
+            /** Year */
+            year: number | null;
+            /** Doi */
+            doi: string | null;
+            /** Page */
+            page: number | null;
+            /** Matched Paper Id */
+            matched_paper_id: string | null;
+        };
         /** RelatedPaper */
         RelatedPaper: {
             /** Paper Id */
@@ -4434,6 +4504,17 @@ export interface components {
             /** Value */
             value: string;
         };
+        /** SectionView */
+        SectionView: {
+            /** Type */
+            type: string;
+            /** Heading */
+            heading: string;
+            /** Page Start */
+            page_start: number | null;
+            /** Page End */
+            page_end: number | null;
+        };
         /** SelectionResult */
         SelectionResult: {
             /** Added */
@@ -4452,6 +4533,8 @@ export interface components {
             theme?: ("light" | "dark" | "system") | null;
             /** Sources Email */
             sources_email?: string | null;
+            /** Grobid Url */
+            grobid_url?: string | null;
         };
         /** SideDecision */
         SideDecision: {
@@ -4707,6 +4790,25 @@ export interface components {
             /** Retrieved */
             retrieved: number;
             status: components["schemas"]["RunStatus"];
+        };
+        /** StructureQueued */
+        StructureQueued: {
+            /** Job Id */
+            job_id: string;
+        };
+        /**
+         * StructureView
+         * @description What GROBID read from a file; empty lists until it was read.
+         */
+        StructureView: {
+            /** Read At */
+            read_at: string | null;
+            /** Error */
+            error: string | null;
+            /** Sections */
+            sections: components["schemas"]["SectionView"][];
+            /** References */
+            references: components["schemas"]["ReferenceView"][];
         };
         /** TagCreate */
         TagCreate: {
@@ -12505,6 +12607,178 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SnowballSeed"][];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    grobid_status_grobid_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GrobidStatus"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    get_structure_attachments__attachment_id__structure_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StructureView"];
+                };
+            };
+            /** @description Missing or invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description No library is open */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Invalid request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    read_structure_attachments__attachment_id__structure_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attachment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StructureQueued"];
                 };
             };
             /** @description Missing or invalid token */

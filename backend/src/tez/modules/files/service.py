@@ -197,6 +197,12 @@ def attachments_in(session: Session, paper_id: str) -> list[AttachmentView]:
     return [view(a) for a in FilesRepository(session).for_paper(paper_id)]
 
 
+def rel_path(session: Session, attachment_id: str) -> str | None:
+    """Where an attachment's file is, relative to the library; None when it is gone."""
+    attachment = FilesRepository(session).get(attachment_id)
+    return attachment.rel_path if attachment is not None else None
+
+
 def get_attachment(db: Database, attachment_id: str) -> AttachmentView:
     with db.session() as session:
         attachment = FilesRepository(session).get(attachment_id)

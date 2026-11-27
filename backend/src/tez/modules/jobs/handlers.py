@@ -9,6 +9,7 @@ from tez.modules.files.open_access import FETCH_JOB, fetch_open_access
 from tez.modules.files.service import EXTRACT_JOB, INSPECT_JOB, inspect_attachment
 from tez.modules.jobs.registry import JobContext, Registry
 from tez.modules.snowballing.service import SNOWBALL_JOB, snowball_job
+from tez.modules.structure.service import READ_JOB, read_structure
 
 registry = Registry()
 registry.handler(INSPECT_JOB)(inspect_attachment)
@@ -16,6 +17,7 @@ registry.handler(EXTRACT_JOB)(read_text)
 registry.handler(FETCH_JOB)(fetch_open_access)
 registry.handler(BACKUP_JOB)(backup_job)
 registry.handler(SNOWBALL_JOB)(snowball_job)
+registry.handler(READ_JOB)(read_structure)
 
 
 @registry.handler("diagnostics.sleep")

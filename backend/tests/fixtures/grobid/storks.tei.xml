@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The shape of GROBID 0.8's answer to /api/processFulltextDocument with
+     teiCoordinates=head,biblStruct and includeRawCitations=1, cut down to a short paper. -->
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:space="preserve">
+  <teiHeader xml:lang="tr">
+    <fileDesc>
+      <titleStmt><title level="a" type="main">Leyleklerin yuva seçimi</title></titleStmt>
+      <sourceDesc><biblStruct><analytic><title level="a" type="main">Leyleklerin yuva seçimi</title></analytic><monogr><imprint/></monogr></biblStruct></sourceDesc>
+    </fileDesc>
+    <profileDesc>
+      <abstract><div><p>Bu çalışma leyleklerin yuva seçimini inceler.</p></div></abstract>
+    </profileDesc>
+  </teiHeader>
+  <text xml:lang="tr">
+    <body>
+      <div><head n="1." coords="1,72.0,300.1,120.2,12.0">Giriş</head><p>Leylekler...</p></div>
+      <div><head n="2." coords="2,72.0,120.5,140.0,12.0">Yöntem</head><p>Gözlem yapıldı.</p></div>
+      <div><head n="3." coords="3,72.0,90.0,100.0,12.0">Bulgular</head><p>Yuvalar bacalarda.</p></div>
+      <div><head n="4." coords="5,72.0,90.0,100.0,12.0">Tartışma ve Sonuç</head><p>...</p></div>
+      <div><head>Teşekkür</head><p>...</p></div>
+    </body>
+    <back>
+      <div type="references">
+        <listBibl>
+          <biblStruct xml:id="b0" coords="6,72.0,100.0,400.0,24.0">
+            <analytic>
+              <title level="a" type="main">White stork nesting on chimneys</title>
+              <author><persName><forename type="first">Ayşe</forename><surname>Yılmaz</surname></persName></author>
+              <author><persName><forename type="first">John</forename><surname>Smith</surname></persName></author>
+              <idno type="DOI">10.5555/STORK.2019.7</idno>
+            </analytic>
+            <monogr>
+              <title level="j">Journal of Birds</title>
+              <imprint><biblScope unit="volume">12</biblScope><date type="published" when="2019">2019</date></imprint>
+            </monogr>
+            <note type="raw_reference">Yılmaz, A., Smith, J. (2019). White stork nesting on chimneys. Journal of Birds, 12.</note>
+          </biblStruct>
+          <biblStruct xml:id="b1" coords="6,72.0,130.0,400.0,24.0">
+            <monogr>
+              <title level="m" type="main">Kuşların göçü</title>
+              <author><persName><forename type="first">Mehmet</forename><surname>Kaya</surname></persName></author>
+              <imprint><date type="published">2008</date></imprint>
+            </monogr>
+            <note type="raw_reference">Kaya, M. (2008). Kuşların göçü. Ankara.</note>
+          </biblStruct>
+        </listBibl>
+      </div>
+    </back>
+  </text>
+</TEI>

@@ -6,7 +6,12 @@ from tez.modules.settings.schemas import AppSettings, SecretStatus, SettingsPatc
 from tez.modules.settings.secrets import SecretName, SecretStore
 
 # Field of AppSettings -> key in the `setting` table.
-_KEYS = {"language": "ui.language", "theme": "ui.theme", "sources_email": "sources.email"}
+_KEYS = {
+    "language": "ui.language",
+    "theme": "ui.theme",
+    "sources_email": "sources.email",
+    "grobid_url": "grobid.url",
+}
 
 
 def read_settings(db: Database) -> AppSettings:

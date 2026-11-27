@@ -30,6 +30,7 @@ type SearchResultRow = components["schemas"]["SearchResultRow"];
 type SourceProgress = components["schemas"]["SourceProgress"];
 type MatrixView = components["schemas"]["MatrixView"];
 type AssetView = components["schemas"]["AssetView"];
+type StructureView = components["schemas"]["StructureView"];
 type MatrixRowView = components["schemas"]["RowView"];
 type MatrixColumnView = components["schemas"]["ColumnView"];
 type MatrixCellView = components["schemas"]["CellView"];
@@ -89,6 +90,9 @@ export interface FakeBackend {
   matrices: MatrixView[];
   /** Kept figures and tables (Task 55); their pictures are a few bytes. */
   assets: AssetView[];
+  /** By attachment: what GROBID read (Task 56). A POST makes the next GET answer `structureNext`. */
+  structures: Record<string, StructureView>;
+  structureNext: StructureView | null;
   /** What the next POST /pdfs answers, in order; "added" when empty. */
   pdfReplies: (
     | { status: "added" | "duplicate" }
@@ -134,6 +138,8 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     annotations: {},
     matrices: [],
     assets: [],
+    structures: {},
+    structureNext: null,
     notes: [],
     noteFailures: [],
     suggestions: [],
@@ -418,6 +424,24 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
         return json(backend.findResults[q] ?? { text: "ready", pages: [], total: 0 });
       }
       if (route === "GET /assets") return json(backend.assets);
+      const structureOf = /^\/attachments\/([^/]+)\/structure$/.exec(path)?.[1];
+      if (structureOf && request.method === "POST") {
+        if (!backend.settings.grobid_url) {
+          return json({ error: { code: "grobid.off", params: {} } }, 409);
+        }
+        if (backend.structureNext) backend.structures[structureOf] = backend.structureNext;
+        return json({ job_id: "job-grobid" }, 202);
+      }
+      if (structureOf) {
+        return json(
+          backend.structures[structureOf] ?? {
+            read_at: null,
+            error: null,
+            sections: [],
+            references: [],
+          },
+        );
+      }
       const [, assetId, assetPart] = /^\/assets\/([^/]+)(\/image)?$/.exec(path) ?? [];
       if (assetId) {
         const asset = backend.assets.find((a) => a.id === assetId);

@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Segmented } from "@/components/ui/segmented";
 import { PaperCells } from "@/features/matrix/PaperCells";
+import { useSettings } from "@/features/settings/api";
+import { PaperStructure } from "@/features/structure/PaperStructure";
 import { cn } from "@/lib/cn";
 import { fold } from "@/lib/text";
 
@@ -28,7 +30,10 @@ import { useReaderSelection, useReadingPanel } from "./store";
 export function ReaderInspector() {
   const { t } = useTranslation();
   const attachmentId = useMatch("/reader/:attachmentId")?.params.attachmentId;
-  const { tab, setTab } = useReadingPanel();
+  const { tab: chosen, setTab } = useReadingPanel();
+  // GROBID is optional: its tab is not there while no address is set (Task 56).
+  const grobid = Boolean(useSettings().data?.grobid_url);
+  const tab = chosen === "structure" && !grobid ? "highlights" : chosen;
   if (!attachmentId) {
     return <p className="text-meta text-fg-muted">{t("reader.highlights.noDocument")}</p>;
   }
@@ -41,6 +46,7 @@ export function ReaderInspector() {
           { value: "highlights", label: t("reader.highlights.tab") },
           { value: "notes", label: t("reader.notes.tab") },
           { value: "matrix", label: t("matrix.reader.tab") },
+          ...(grobid ? [{ value: "structure" as const, label: t("structure.tab") }] : []),
         ]}
         onValueChange={setTab}
       />
@@ -48,8 +54,10 @@ export function ReaderInspector() {
         <Highlights key={attachmentId} attachmentId={attachmentId} />
       ) : tab === "notes" ? (
         <PaperNotes key={attachmentId} attachmentId={attachmentId} />
-      ) : (
+      ) : tab === "matrix" ? (
         <PaperCells key={attachmentId} attachmentId={attachmentId} />
+      ) : (
+        <PaperStructure key={attachmentId} attachmentId={attachmentId} />
       )}
     </div>
   );

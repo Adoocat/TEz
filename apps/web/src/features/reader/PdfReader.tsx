@@ -371,6 +371,9 @@ function OpenDocument({
     if (!opened.current || embedded) return;
     const timer = setTimeout(() => {
       rememberPage(attachmentId, page);
+      // A link out of the reader may be on its way (navigation is a transition): writing this
+      // document's page into the address then would overwrite where the link goes.
+      if (!window.location.hash.startsWith(`#/reader/${attachmentId}`)) return;
       setParams(
         (previous) => {
           const next = new URLSearchParams(previous);
