@@ -29,6 +29,7 @@ type SearchOverview = components["schemas"]["SearchOverview"];
 type SearchResultRow = components["schemas"]["SearchResultRow"];
 type SourceProgress = components["schemas"]["SourceProgress"];
 type MatrixView = components["schemas"]["MatrixView"];
+type AssetView = components["schemas"]["AssetView"];
 type MatrixRowView = components["schemas"]["RowView"];
 type MatrixColumnView = components["schemas"]["ColumnView"];
 type MatrixCellView = components["schemas"]["CellView"];
@@ -86,6 +87,8 @@ export interface FakeBackend {
   annotations: Record<string, AnnotationView[]>;
   /** Literature matrices (Tasks 51–52); type changes convert nothing here. */
   matrices: MatrixView[];
+  /** Kept figures and tables (Task 55); their pictures are a few bytes. */
+  assets: AssetView[];
   /** What the next POST /pdfs answers, in order; "added" when empty. */
   pdfReplies: (
     | { status: "added" | "duplicate" }
@@ -130,6 +133,7 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
     anchors: {},
     annotations: {},
     matrices: [],
+    assets: [],
     notes: [],
     noteFailures: [],
     suggestions: [],
@@ -412,6 +416,23 @@ export function fakeBackend(initial: Partial<AppSettings> = {}): FakeBackend {
       if (/^\/attachments\/[^/]+\/find$/.test(path)) {
         const q = new URL(request.url, "http://test").searchParams.get("q") ?? "";
         return json(backend.findResults[q] ?? { text: "ready", pages: [], total: 0 });
+      }
+      if (route === "GET /assets") return json(backend.assets);
+      const [, assetId, assetPart] = /^\/assets\/([^/]+)(\/image)?$/.exec(path) ?? [];
+      if (assetId) {
+        const asset = backend.assets.find((a) => a.id === assetId);
+        if (!asset) return json({ error: { code: "asset.not_found", params: {} } }, 404);
+        if (assetPart) {
+          return new Response(new Uint8Array([0x89, 0x50, 0x4e, 0x47]), {
+            headers: { "Content-Type": "image/png" },
+          });
+        }
+        if (request.method === "DELETE") {
+          backend.assets = backend.assets.filter((a) => a !== asset);
+          return new Response(null, { status: 204 });
+        }
+        Object.assign(asset, body);
+        return json(asset);
       }
       const matrixReply = matrixRoute(backend, request.method, path, body);
       if (matrixReply) return matrixReply;
@@ -1173,6 +1194,29 @@ export function matrixRow(overrides: Partial<MatrixRowView> = {}): MatrixRowView
     reading_status: "unread",
     included: true,
     cells: [],
+    ...overrides,
+  };
+}
+
+export function assetView(overrides: Partial<AssetView> = {}): AssetView {
+  return {
+    id: "asset-1",
+    kind: "figure",
+    label: "Figure 1",
+    caption: "",
+    page: 3,
+    attachment_id: "att-1",
+    anchor_id: "anchor-1",
+    anchor_status: "verified",
+    paper: {
+      id: "paper-1",
+      title: "Storks",
+      first_author: "Ayşe Yılmaz",
+      author_count: 2,
+      year: 2024,
+      citekey: null,
+    },
+    created_at: "2026-11-27T10:00:00Z",
     ...overrides,
   };
 }

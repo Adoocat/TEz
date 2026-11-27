@@ -4,6 +4,7 @@ import {
   BookOpen,
   FileCheck2,
   FileOutput,
+  Images,
   LayoutDashboard,
   Library,
   ListChecks,
@@ -57,6 +58,7 @@ interface NavItem {
     | "reader"
     | "notes"
     | "matrix"
+    | "gallery"
     | "export"
     | "jobs"
     | "settings";
@@ -70,6 +72,7 @@ const mainNav: NavItem[] = [
   { to: "/reader", icon: BookOpen, label: "reader" },
   { to: "/notes", icon: NotebookPen, label: "notes" },
   { to: "/matrix", icon: Table2, label: "matrix" },
+  { to: "/gallery", icon: Images, label: "gallery" },
 ];
 const bottomNav: NavItem[] = [
   { to: "/export", icon: FileOutput, label: "export" },
